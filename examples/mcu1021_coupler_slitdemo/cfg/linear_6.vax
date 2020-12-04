@@ -1,6 +1,5 @@
 #General
 epicsEnvSet("ECMC_MOTOR_NAME",            "amplitude")
-epicsEnvSet("ECMC_R",                     "amplitude-")
 epicsEnvSet("ECMC_AXIS_NO",               "6")
 epicsEnvSet("ECMC_DESC",                  "MCU1025 Amplitude of osc (6)")
 epicsEnvSet("ECMC_EGU",                   "mm")                       # Motor Record Unit

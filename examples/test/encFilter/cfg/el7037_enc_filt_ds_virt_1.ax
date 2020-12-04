@@ -1,6 +1,5 @@
 #General
 epicsEnvSet("ECMC_MOTOR_NAME",            "Axis${PHYS_AXIS}")
-epicsEnvSet("ECMC_R",                     "Axis${PHYS_AXIS}-")
 epicsEnvSet("ECMC_AXIS_NO",               "${PHYS_AXIS}")
 epicsEnvSet("ECMC_DESC",                  "Test encoder filter")
 epicsEnvSet("ECMC_EGU",                   "mm")                       # Motor Record Unit

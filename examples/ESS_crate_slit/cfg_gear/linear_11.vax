@@ -1,6 +1,5 @@
 #General
 epicsEnvSet("ECMC_MOTOR_NAME",            "xp")
-epicsEnvSet("ECMC_R",                     "xp-")
 epicsEnvSet("ECMC_AXIS_NO",               "11")
 epicsEnvSet("ECMC_DESC",                  "virtual axis 1")
 epicsEnvSet("ECMC_EGU",                   "mm")                       # Motor Record Unit

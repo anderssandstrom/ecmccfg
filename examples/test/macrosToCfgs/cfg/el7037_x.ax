@@ -1,6 +1,5 @@
 #General
 epicsEnvSet("ECMC_MOTOR_NAME",            "Axis${AXIS_ID=1}")
-epicsEnvSet("ECMC_R",                     "Axis${AXIS_ID=1}-")
 epicsEnvSet("ECMC_AXIS_NO",               "${AXIS_ID=1}")
 epicsEnvSet("ECMC_DESC",                  "Test EL7037")
 epicsEnvSet("ECMC_EGU",                   "deg")                       # Motor Record Unit

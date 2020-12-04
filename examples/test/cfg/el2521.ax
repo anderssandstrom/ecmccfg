@@ -1,6 +1,5 @@
 #General
 epicsEnvSet("ECMC_MOTOR_NAME",            "Axis1")
-epicsEnvSet("ECMC_R",                     "Axis1-")
 epicsEnvSet("ECMC_AXIS_NO",               "1")
 epicsEnvSet("ECMC_DESC",                  "EL2521 Test")
 epicsEnvSet("ECMC_EC_AXIS_HEALTH",        "")                 # Entry for axis health output (example: ec0.s1.BO_1.0)

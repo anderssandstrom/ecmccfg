@@ -1,7 +1,6 @@
 
 #General
 epicsEnvSet("ECMC_MOTOR_NAME",            "Axis${VIRT_AXIS}")
-epicsEnvSet("ECMC_R",                     "Axis${VIRT_AXIS}-")
 epicsEnvSet("ECMC_AXIS_NO",               "${VIRT_AXIS}")
 epicsEnvSet("ECMC_DESC",                  "")
 epicsEnvSet("ECMC_EGU",                   "counts")                   # Motor Record Unit

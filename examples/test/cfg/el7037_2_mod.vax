@@ -1,6 +1,5 @@
 #General
 epicsEnvSet("ECMC_MOTOR_NAME",            "Axis2")
-epicsEnvSet("ECMC_R",                     "Axis2-")
 epicsEnvSet("ECMC_AXIS_NO",               "2")
 epicsEnvSet("ECMC_DESC",                  "Test MOD for virt axis")
 epicsEnvSet("ECMC_EGU",                   "mm")                       # Motor Record Unit

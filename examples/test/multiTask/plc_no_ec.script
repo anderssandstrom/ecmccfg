@@ -24,8 +24,20 @@ $(SCRIPTEXEC) $(ecmccfg_DIR)addDataStorage.cmd "DS_ID=1, DS_SIZE=100, SAMPLE_RAT
 
 ##############################################################################
 ## PLC 0
-$(SCRIPTEXEC) $(ecmccfg_DIR)loadPLCFile.cmd, "PLC_ID=0, SAMPLE_RATE_MS=1000,FILE=./plc/plc_no_ec.plc, PLC_MACROS='PLC_ID=0,DBG='")
-dbLoadRecords("ecmcPlcAnalog.db","P=$(IOC):,PORT=MC_CPU1,ASYN_NAME=plcs.plc0.static.test,REC_NAME=-Test,TSE=0,T_SMP_MS=1000")
+$(SCRIPTEXEC) $(ecmccfg_DIR)loadPLCFile.cmd, "PLC_ID=0, SAMPLE_RATE_MS=1,FILE=./plc/plc_no_ec.plc, PLC_MACROS='PLC_ID=0,DBG='")
+
+##############################################################################
+## PLC 1
+$(SCRIPTEXEC) $(ecmccfg_DIR)loadPLCFile.cmd, "PLC_ID=1, SAMPLE_RATE_MS=100,FILE=./plc/plc_no_ec.plc, PLC_MACROS='PLC_ID=1,DBG='")
+
+#int addTask(int   priority,
+#            int   affinity,
+#            int   stacksize,
+#            int   offsetMasterCycles,
+#            int   sampleTimeMasterCycles);
+
+ecmcConfigOrDie "Cfg.AddTask(-1,-1,-1,0,100)"
+ecmcConfigOrDie "Cfg.LinkObjectToTask("plc0",0)"
 
 ##############################################################################
 ############# Configure diagnostics:

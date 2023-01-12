@@ -5,4 +5,4 @@
 #   No hardware related variables
 #
 static.test:=static.test+1;
-${DBG=#}println('No ec: ', static.test);
+println('No ec: ', static.test, 'ID', $(PLC_ID) );

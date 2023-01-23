@@ -1,0 +1,1299 @@
+#
+# Start at "2023-W04-Jan23-1608-44-CET"
+#
+# Version information:
+# European Spallation Source ERIC : iocsh (4.0.0-PID-24836)
+#
+# --->--> snip -->--> 
+# Please Use Version and other environment variables
+# in order to report or debug this shell
+#
+# HOSTDISPLAY=""
+# WINDOWID="31457374"
+# PWD="/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/ecmccfg/examples/mcu1025/jinja/single_axis"
+# USER="anderssandstrom"
+# LOGNAME="anderssandstrom"
+# EPICS_HOST_ARCH="linux-x86_64"
+# EPICS_BASE="/epics/base-7.0.6.1"
+# E3_REQUIRE_NAME="require"
+# E3_REQUIRE_VERSION="4.0.0"
+# E3_REQUIRE_LOCATION="/epics/base-7.0.6.1/require/4.0.0"
+# E3_REQUIRE_BIN="/epics/base-7.0.6.1/require/4.0.0/bin"
+# E3_REQUIRE_DB="/epics/base-7.0.6.1/require/4.0.0/db"
+# E3_REQUIRE_DBD="/epics/base-7.0.6.1/require/4.0.0/dbd"
+# E3_REQUIRE_INC="/epics/base-7.0.6.1/require/4.0.0/include"
+# E3_REQUIRE_LIB="/epics/base-7.0.6.1/require/4.0.0/lib"
+# EPICS_DRIVER_PATH="/epics/base-7.0.6.1/require/4.0.0/siteMods"
+# EPICS_CA_AUTO_ADDR_LIST=""
+# EPICS_CA_ADDR_LIST=""
+# EPICS_PVA_AUTO_ADDR_LIST=""
+# EPICS_PVA_ADDR_LIST=""
+# PATH="/epics/base-7.0.6.1/require/4.0.0/bin:/epics/base-7.0.6.1/bin/linux-x86_64:/opt/conda/condabin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/home/anderssandstrom/.local/bin:/home/anderssandstrom/bin"
+# --->--> snip -->--> 
+#
+# Set REQUIRE_IOC for its internal PVs
+epicsEnvSet REQUIRE_IOC "REQMOD:mcag-dev-asm-02-24836"
+#
+# Enable an exit subroutine for sotfioc
+dbLoadRecords "/epics/base-7.0.6.1/db/softIocExit.db" "IOC=REQMOD:mcag-dev-asm-02-24836"
+#
+# Set E3_IOCSH_TOP for the absolute path where iocsh is executed.
+epicsEnvSet E3_IOCSH_TOP "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/ecmccfg/examples/mcu1025/jinja/single_axis"
+#
+# 
+# Load require module, which has the version 4.0.0
+# 
+dlload /epics/base-7.0.6.1/require/4.0.0/lib/linux-x86_64/librequire.so
+dbLoadDatabase /epics/base-7.0.6.1/require/4.0.0/dbd/require.dbd
+require_registerRecordDeviceDriver
+Loading module info records for require
+# 
+# Set E3_CMD_TOP for the absolute path where startup.iocsh exists
+epicsEnvSet E3_CMD_TOP "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/ecmccfg/examples/mcu1025/jinja/single_axis"
+#
+iocshLoad 'startup.iocsh',''
+# dlload /usr/local/lib/libethercat.so
+##############################################################################
+## Initiation:
+epicsEnvSet("IOC" ,"IOC_TEST")
+epicsEnvSet("ECMCCFG_INIT" ,"")  #Only run startup once (auto at PSI, need call at ESS), variable set to "#" in startup.cmd
+epicsEnvSet("SCRIPTEXEC" ,"iocshLoad")
+require ecmccfg jinjaExample
+Module ecmccfg version jinjaExample found in /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods//base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/
+Loading library /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods//base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/lib/linux-x86_64/libecmccfg.so
+Loaded ecmccfg version jinjaExample
+Loading dbd file /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods//base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/dbd/ecmccfg.dbd
+Calling function ecmccfg_registerRecordDeviceDriver
+Loading module info records for ecmccfg
+# run module startup.cmd (only needed at ESS  PSI auto call at require)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/startup.cmd, "IOC=IOC_TEST,ECMC_VER=8.0.0"
+#==============================================================================
+# startup.cmd
+on error halt
+require ecmc        "8.0.0"
+Module ecmc version 8.0.0+0 found in /epics/base-7.0.6.1/require/4.0.0/siteMods/ecmc/8.0.0+0/
+Module ecmc depends on asyn 4.42.0+0
+Module asyn version 4.42.0+0 found in /epics/base-7.0.6.1/require/4.0.0/siteMods/asyn/4.42.0+0/
+Loading library /epics/base-7.0.6.1/require/4.0.0/siteMods/asyn/4.42.0+0/lib/linux-x86_64/libasyn.so
+Loaded asyn version 4.42.0+0
+Loading dbd file /epics/base-7.0.6.1/require/4.0.0/siteMods/asyn/4.42.0+0/dbd/asyn.dbd
+Calling function asyn_registerRecordDeviceDriver
+Loading module info records for asyn
+Module ecmc depends on exprtk 1.2.1+0
+Module exprtk version 1.2.1+0 found in /epics/base-7.0.6.1/require/4.0.0/siteMods/exprtk/1.2.1+0/
+Loading library /epics/base-7.0.6.1/require/4.0.0/siteMods/exprtk/1.2.1+0/lib/linux-x86_64/libexprtk.so
+Loaded exprtk version 1.2.1+0
+exprtk has no dbd file
+Loading module info records for exprtk
+Module ecmc depends on motor 7.0.7+0
+Module motor version 7.0.7+0 found in /epics/base-7.0.6.1/require/4.0.0/siteMods/motor/7.0.7+0/
+Module motor depends on asyn 4.42.0+0
+Module asyn version 4.42.0+0 already loaded
+Loading library /epics/base-7.0.6.1/require/4.0.0/siteMods/motor/7.0.7+0/lib/linux-x86_64/libmotor.so
+Loaded motor version 7.0.7+0
+Loading dbd file /epics/base-7.0.6.1/require/4.0.0/siteMods/motor/7.0.7+0/dbd/motor.dbd
+Calling function motor_registerRecordDeviceDriver
+Loading module info records for motor
+Module ecmc depends on ruckig 1.0.0+0
+Module ruckig version 1.0.0+0 found in /epics/base-7.0.6.1/require/4.0.0/siteMods/ruckig/1.0.0+0/
+Loading library /epics/base-7.0.6.1/require/4.0.0/siteMods/ruckig/1.0.0+0/lib/linux-x86_64/libruckig.so
+Loaded ruckig version 1.0.0+0
+ruckig has no dbd file
+Loading module info records for ruckig
+Loading library /epics/base-7.0.6.1/require/4.0.0/siteMods/ecmc/8.0.0+0/lib/linux-x86_64/libecmc.so
+Loaded ecmc version 8.0.0+0
+Loading dbd file /epics/base-7.0.6.1/require/4.0.0/siteMods/ecmc/8.0.0+0/dbd/ecmc.dbd
+Calling function ecmc_registerRecordDeviceDriver
+Loading module info records for ecmc
+ecmcEpicsEnvSetCalcTernary(ECMC_EXE_CMD, "'ecmcMotorRecord'='EthercatMC'", "require  EthercatMC 3.0.2 # Using EthercatMC motor record support.","# Using ecmcMotorRecord motor record support.")
+# Using ecmcMotorRecord motor record support.
+epicsEnvUnset(ECMC_EXE_CMD)
+epicsEnvSet("ECMC_CONFIG_ROOT",     "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/")
+epicsEnvSet("ECMC_CONFIG_DB",       "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/db/")
+epicsEnvSet("SCRIPTEXEC",           "iocshLoad")
+epicsEnvSet("SM_PREFIX",            "IOC_TEST:")    # colon added since IOC is _not_ PREFIX
+epicsEnvSet("ECMC_PROC_HOOK",       "")
+epicsEnvSet(ECMC_MODE, FULL)
+ecmcEpicsEnvSetCalcTernary(ECMC_SUPPORT_MOTION, "'FULL'!='DAQ'","","# MODE == DAQ, DISABLING MOTION.")
+epicsEnvShow(ECMC_SUPPORT_MOTION)
+ECMC_SUPPORT_MOTION=
+ecmcEpicsEnvSetCalcTernary(ECMC_USE_MOTOR_RECORD, "'FULL'=='FULL'","","# MODE != FULL, DISABLING MOTOR RECORD.")
+epicsEnvShow(ECMC_USE_MOTOR_RECORD)
+ECMC_USE_MOTOR_RECORD=
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/initAll.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/initAll.cmd"
+#==============================================================================
+# initAll.cmd
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/init.cmd",1)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/init.cmd
+#==============================================================================
+# init.cmd
+epicsEnvSet("ECMC_ASYN_TIMEOUT",      1)                   # Asyn timeout
+epicsEnvSet("ECMC_ASYN_ADDR",         0)                   # Asyn Address
+epicsEnvSet("ECMC_MOTOR_PORT",        "NOT SET")
+epicsEnvSet("ECMC_ASYN_PORT",         "NOT SET")
+epicsEnvSet("ECMC_PREFIX",            "NOT SET")
+epicsEnvSet("ECMC_GEN_EC_RECORDS",    "NOT SET")
+epicsEnvSet("ECMC_GEN_AX_RECORDS",    "NOT SET")
+epicsEnvSet("ECMC_EC_AXIS_HEALTH",    "NOT SET")
+epicsEnvSet("ECMC_PLC_SAMPLE_RATE_MS", "NOT SET")
+epicsEnvSet("ECMC_TSE",               -2)
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/initAxis.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/initAxis.cmd"
+#==============================================================================
+# initAxis.cmd
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmc_axis_unset.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmc_axis_unset.cmd"
+#==============================================================================
+# ecmc_axis_unset.cmd
+epicsEnvUnset(ECMC_AXISCONFIG)
+epicsEnvUnset(ECMC_AXISFIELDINIT)
+epicsEnvUnset(ECMC_PREC)
+epicsEnvUnset(ECMC_EGU)
+epicsEnvUnset(ECMC_DESC)
+epicsEnvUnset(ECMC_R)
+epicsEnvUnset(ECMC_MOTOR_NAME)
+epicsEnvUnset(ECMC_EC_AXIS_HEALTH)
+epicsEnvUnset(ECMC_MOD_RANGE)
+epicsEnvUnset(ECMC_MOD_TYPE)
+epicsEnvUnset(ECMC_EMERG_DECEL)
+epicsEnvUnset(ECMC_VELO)
+epicsEnvUnset(ECMC_ACCL)
+epicsEnvUnset(ECMC_ACCS_EGU_PER_S2)
+epicsEnvUnset(ECMC_HOME_VEL_TO)
+epicsEnvUnset(ECMC_HOME_VEL_FRM)
+epicsEnvUnset(ECMC_CNTRL_KP)
+epicsEnvUnset(ECMC_CNTRL_KI)
+epicsEnvUnset(ECMC_CNTRL_KD)
+epicsEnvUnset(ECMC_CNTRL_KFF)
+epicsEnvUnset(ECMC_EC_ENC_ACTPOS)
+epicsEnvUnset(ECMC_EC_ENC_LATCHPOS)
+epicsEnvUnset(ECMC_EC_ENC_LATCH_CONTROL)
+epicsEnvUnset(ECMC_EC_ENC_LATCH_STATUS)
+epicsEnvUnset(ECMC_HOME_LATCH_COUNT_OFFSET)
+epicsEnvUnset(ECMC_ENC_SCALE_DENOM)
+epicsEnvUnset(ECMC_ENC_SCALE_NUM)
+epicsEnvUnset(ECMC_ENC_TYPE)
+epicsEnvUnset(ECMC_ENC_BITS)
+epicsEnvUnset(ECMC_ENC_ABS_BITS)
+epicsEnvUnset(ECMC_ENC_ABS_OFFSET)
+epicsEnvUnset(ECMC_ENC_VEL_FILTER_SIZE)
+epicsEnvUnset(ECMC_ENC_POS_FILTER_SIZE)
+epicsEnvUnset(ECMC_ENC_POS_FILTER_ENABLE)
+epicsEnvUnset(ECMC_EC_ENC_RESET)
+epicsEnvUnset(ECMC_EC_ENC_ALARM_0)
+epicsEnvUnset(ECMC_EC_ENC_ALARM_1)
+epicsEnvUnset(ECMC_EC_ENC_ALARM_2)
+epicsEnvUnset(ECMC_EC_ENC_WARNING)
+epicsEnvUnset(ECMC_EC_DRV_CONTROL)
+epicsEnvUnset(ECMC_EC_DRV_STATUS)
+epicsEnvUnset(ECMC_EC_DRV_VELOCITY)
+epicsEnvUnset(ECMC_EC_DRV_BRAKE)
+epicsEnvUnset(ECMC_EC_DRV_REDUCE_TORQUE)
+epicsEnvUnset(ECMC_EC_DRV_RESET)
+epicsEnvUnset(ECMC_EC_DRV_ALARM_0)
+epicsEnvUnset(ECMC_EC_DRV_ALARM_1)
+epicsEnvUnset(ECMC_EC_DRV_ALARM_2)
+epicsEnvUnset(ECMC_EC_DRV_WARNING)
+epicsEnvUnset(ECMC_DRV_SCALE_DENOM)
+epicsEnvUnset(ECMC_DRV_SCALE_NUM)
+epicsEnvUnset(ECMC_DRV_BRAKE_OPEN_DLY_TIME)
+epicsEnvUnset(ECMC_DRV_BRAKE_CLOSE_AHEAD_TIME)
+epicsEnvUnset(ECMC_SOFT_LOW_LIM)
+epicsEnvUnset(ECMC_DXLM_ENABLE)
+epicsEnvUnset(ECMC_SOFT_HIGH_LIM)
+epicsEnvUnset(ECMC_DXLM_ENABLE)
+epicsEnvUnset(ECMC_EC_MON_LOWLIM)
+epicsEnvUnset(ECMC_EC_MON_HIGHLIM)
+epicsEnvUnset(ECMC_EC_MON_HOME_SWITCH)
+epicsEnvUnset(ECMC_EC_MON_EXT_INTERLOCK)
+epicsEnvUnset(ECMC_MON_AT_TARGET_TOL)
+epicsEnvUnset(ECMC_MON_AT_TARGET_TIME)
+epicsEnvUnset(ECMC_MON_AT_TARGET_ENA)
+epicsEnvUnset(ECMC_MON_LAG_MON_TOL)
+epicsEnvUnset(ECMC_MON_LAG_MON_TIME)
+epicsEnvUnset(ECMC_MON_LAG_MON_ENA)
+epicsEnvUnset(ECMC_MON_VELO_MAX)
+epicsEnvUnset(ECMC_MON_VELO_MAX_ENA)
+epicsEnvUnset(ECMC_MON_VELO_MAX_DRV_TIME)
+epicsEnvUnset(ECMC_MON_VELO_MAX_TRAJ_TIME)
+epicsEnvUnset(ECMC_JOG_VEL)
+epicsEnvUnset(ECMC_JAR)
+epicsEnvUnset(ECMC_HOME_PROC)
+epicsEnvUnset(ECMC_HOME_POS)
+epicsEnvUnset(ECMC_HOME_ACC)
+epicsEnvUnset(ECMC_HOME_DEC)
+epicsEnvUnset(ECMC_DRV_TYPE)
+epicsEnvUnset(ECMC_VELO)
+epicsEnvUnset(ECMC_SOFT_LOW_LIM)
+epicsEnvUnset(ECMC_SOFT_HIGH_LIM)
+epicsEnvUnset(ECMC_HOME_POS_MOVE_ENA)
+epicsEnvUnset(ECMC_HOME_POS_MOVE_TARG_POS)
+epicsEnvUnset(ECMC_TRAJ_TYPE)
+epicsEnvUnset(ECMC_JERK)
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmc_axis_sync_unset.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmc_axis_sync_unset.cmd"
+#==============================================================================
+# ecmc_axis_sync_unset.cmd
+epicsEnvUnset(ECMC_CMD_FRM_OTHER_PLC_ENABLE)
+epicsEnvUnset(ECMC_CMD_AXIS_PLC_ENABLE)
+epicsEnvUnset(ECMC_AXIS_EXPR_LINE_1)
+epicsEnvUnset(ECMC_AXIS_EXPR_LINE_2)
+epicsEnvUnset(ECMC_AXIS_EXPR_LINE_3)
+epicsEnvUnset(ECMC_AXIS_EXPR_LINE_4)
+epicsEnvUnset(ECMC_AXIS_EXPR_LINE_5)
+epicsEnvUnset(ECMC_AXIS_EXPR_LINE_6)
+epicsEnvUnse2023/01/23 16:08:44.944 
+ECMC Initializes.............
+2023/01/23 16:08:44.947 ESS Open Source EtherCAT Motion Control Epics Module2023/01/23 16:08:44.947 
+Mode: Configuration
+2023/01/23 16:08:44.947 OK
+2023/01/23 16:08:44.947 OK
+2023/01/23 16:08:44.947 OK
+2023/01/23 16:08:44.948 OK
+2023/01/23 16:08:44.963 OK
+2023/01/23 16:08:44.963 OK
+2023/01/23 16:08:44.963 OK
+t(ECMC_AXIS_EXPR_LINE_7)
+epicsEnvUnset(ECMC_AXIS_EXPR_LINE_8)
+epicsEnvUnset(ECMC_AXIS_EXPR_LINE_9)
+epicsEnvUnset(ECMC_AXIS_EXPR_LINE_10)
+epicsEnvUnset(ECMC_ENC_VELO_FILT_SIZE)
+epicsEnvUnset(ECMC_ENC_VELO_FILT_ENABLE)
+epicsEnvUnset(ECMC_ENC_SOURCE)
+epicsEnvUnset(ECMC_TRAJ_VELO_FILT_SIZE)
+epicsEnvUnset(ECMC_TRAJ_VELO_FILT_ENABLE)
+epicsEnvUnset(ECMC_TRAJ_SOURCE)
+epicsEnvSet("ECMC_EGU",               "mm")
+epicsEnvSet("ECMC_PREC",              3)
+epicsEnvSet("ECMC_AXISFIELDINIT",     "")                  # Extra field init to motor record
+epicsEnvSet("ECMC_AXISCONFIG",        "")                  # Extra parameters to driver
+############################################################
+############# ASYN Configuration:
+epicsEnvSet("ECMC_MOTOR_PORT"     "MCU1")
+epicsEnvSet("ECMC_ASYN_PORT"      "MC_CPU1")
+epicsEnvSet("ECMC_PREFIX"         "IOC_TEST:")
+ecmcAsynPortDriverConfigure(MC_CPU1,1000,0,0,100)
+ecmcAsynPortDriverConfigure: portName = MC_CPU1, paramTableSize = 1000, disableAutoConnect = 0, priority = 0, defaultSampleRateMS = 100.000000
+asynOctetSetOutputEos(MC_CPU1, -1, ";\n")
+asynOctetSetInputEos(MC_CPU1, -1, ";\n")
+asynSetTraceMask(MC_CPU1, -1, 0x41)
+asynSetTraceIOMask(MC_CPU1, -1, 6)
+asynSetTraceInfoMask(MC_CPU1, -1, 1)
+ecmcMotorRecordCreateController(MCU1, MC_CPU1, "64", 200, 1000, "")
+############################################################
+############# Misc settings:
+# Disable function call trace printouts
+ecmcConfigOrDie "Cfg.SetEnableFuncCallDiag(0)"
+# Disable on change printouts from objects (enable for easy logging)
+ecmcConfigOrDie "Cfg.SetTraceMaskBit(15,0)"
+# Choose to generate EPICS-records for EtherCAT-entries
+# (For records use ECMC_GEN_EC_RECORDS="-records" otherwise ECMC_GEN_EC_RECORDS="")
+epicsEnvSet("ECMC_GEN_EC_RECORDS",          "-records")
+# Choose to generate EPICS-records for ax-entries (PosAct, SetPos,..)
+# (For records use ECMC_GEN_AX_RECORDS="-records" otherwise ECMC_GEN_AX_RECORDS="")
+epicsEnvSet("ECMC_GEN_AX_RECORDS",          "-records")
+# suffix for pva enabled scripts, templates and substitutions
+ecmcEpicsEnvSetCalcTernary(ECMC_PVA, "0", "Pva","")
+# Set EtherCAT frequency (defaults to 1000)
+ecmcConfigOrDie "Cfg.SetSampleRate(1000)"
+epicsEnvSet("ECMC_EC_SAMPLE_RATE" ,   1000)
+ecmcEpicsEnvSetCalc("ECMC_EC_SAMPLE_RATE_MS" ,1000/1000)
+# Update records in 10ms (100Hz) for FULL MODE and in EC_RATE for DAQ mode
+ecmcEpicsEnvSetCalcTernary(ECMC_SAMPLE_RATE_MS, "'FULL'=='DAQ'","1","10")
+epicsEnvSet("ECMC_P_SCRIPT",        "mXsXXX")
+ecmcEpicsEnvSetCalcTernary(ECMC_MASTER_CMD, "0>=0", "","#- ")
+ ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/addMaster.cmd",1)
+ iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/addMaster.cmd", "MASTER_ID=0"
+#===============================================================================
+# addMaster.cfg
+epicsEnvSet("ECMC_EC_MASTER_ID"          "0")
+# Claim master
+ecmcConfigOrDie "Cfg.EcSetMaster(0)"
+epicsEnvSet("ECMC_EC_MASTER_ID" ,0)
+epicsEnvSet("ECMC_TMP_DIR",         "/tmp/IOC_TEST/EcMaster_0/")
+system "mkdir -p /tmp/IOC_TEST/EcMaster_0/"
+epicsEnvSet("ECMC_TMP_DIR",         "/tmp/IOC_TEST/EcMaster_0/")
+system "mkdir -p /tmp/IOC_TEST/EcMaster_0/"
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/setDiagnostics.cmd",1)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/setDiagnostics.cmd
+#==============================================================================
+# setDiagnostics.cmd
+ecmcConfigOrDie "Cfg.EcSetDiagnostics(1)"
+ecmcConfigOrDie "Cfg.EcEnablePrintouts(0)"
+ecmcConfigOrDie "Cfg.EcSetDomainFailedCyclesLimit(100)"
+epicsEnvSet("ECMCCFG_INIT" ,"#")
+epicsEnvSet("DEV", "DEV")
+## HW
+#Configure EK1100 coupler terminal
+epicsEnvSet(ECMC_EC_SLAVE_NUM,0)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/addSlave.c2023/01/23 16:08:44.964 OK
+2023/01/23 16:08:44.965 OK
+md, "SLAVE_ID=0, HW_DESC=EK1100"
+#==============================================================================
+# addSlave.cmd
+epicsEnvSet("ECMC_EC_SLAVE_NUM",  "0")
+epicsEnvSet("HW_DESC",            "EK1100")
+epicsEnvSet("P_SCRIPT",           "mXsXXX")
+# add ${HW_DESC} to the bus at position ${SLAVE_ID}
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEK1100.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEK1100.cmd" "NELM=1"
+epicsEnvSet("ECMC_EC_HWTYPE"             "EK1100")
+epicsEnvSet("ECMC_EC_VENDOR_ID"          "0x2")
+epicsEnvSet("ECMC_EC_PRODUCT_ID"         "0x044c2c52")
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/slaveVerify.cmd
+ecmcEpicsEnvSetCalcTernary(SLAVE_VERIFY, "0==0","","#- ")
+ecmcConfigOrDie "Cfg.EcSlaveVerify(0,0,0x2,0x044c2c52)"
+ecmcEpicsEnvSetCalcTernary(SLAVE_RESET, "0>0","","#- ")
+epicsEnvSet(ECMC_EC_SLAVE_FW, "0x0000")
+ecmcEpicsEnvSetCalcTernary(SLAVE_FW, "0>0","","#- ")
+epicsEnvUnset(SLAVE_VERIFY)
+epicsEnvUnset(SLAVE_RESET)
+epicsEnvUnset(SLAVE_FW)
+ecmcConfigOrDie "Cfg.EcAddSlave(0,0,0x2,0x044c2c52)"
+# deduce what the prefix should be
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd" "MASTER_ID=0,SLAVE_POS=0,HWTYPE=EK1100"
+#==============================================================================
+# ecmcmXsXXX.cmd
+ecmcEpicsEnvSetCalc("sid", "0","%03d")
+ecmcEpicsEnvSetCalc("mid", "0","%01d")
+epicsEnvSet("ECMC_G",            "IOC_TEST:m0s000")
+epicsEnvSet("ECMC_P",            "IOC_TEST:m0s000-")
+epicsEnvUnset(sid)
+epicsEnvUnset(mid)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SUBS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applySubstitutions.cmd" "SUBST_FILE=ecmcEK1100.substitutions,ECMC_P=IOC_TEST:m0s000-"
+#==============================================================================
+# applySubstitutions.cmd
+ecmcFileExist(ecmcEK1100.substitutions,1,1)
+dbLoadTemplate(ecmcEK1100.substitutions,"ECMC_P=IOC_TEST:m0s000-,ECMC_G=IOC_TEST:m0s000,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=0,HWTYPE=EK1100,T_SMP_MS=10,TSE=-2,NELM=1")
+epicsEnvUnset(DEFAULT_SUBS)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SLAVE_PVS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applyTemplate.cmd" "TEMPLATE_FILE=ecmcEcSlave.template,ECMC_P=IOC_TEST:m0s000-,ECMC_G=IOC_TEST:m0s000"
+#==============================================================================
+# applyTemplate.cmd
+ecmcFileExist(ecmcEcSlave.template,1,1)
+dbLoadRecords("ecmcEcSlave.template", "ECMC_P=IOC_TEST:m0s000-,ECMC_G=IOC_TEST:m0s000,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=0,HWTYPE=EK1100,T_SMP_MS=10,TSE=-2,")
+epicsEnvUnset(DEFAULT_SLAVE_PVS)
+# increment SLAVE_ID
+ecmcEpicsEnvSetCalc("SLAVE_ID", "0+1","%d")
+#Configure EL1018 digital input terminal
+ecmcEpicsEnvSetCalc(ECMC_EC_SLAVE_NUM, "0+1")
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/addSlave.cmd, "SLAVE_ID=1, HW_DESC=EL1018"
+#==============================================================================
+# addSlave.cmd
+epicsEnvSet("ECMC_EC_SLAVE_NUM",  "1")
+epicsEnvSet("HW_DESC",            "EL1018")
+epicsEnvSet("P_SCRIPT",           "mXsXXX")
+# add ${HW_DESC} to the bus at position ${SLAVE_ID}
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL1018.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL1018.cmd" "NELM=1"
+epicsEn2023/01/23 16:08:44.969 OK
+2023/01/23 16:08:44.970 OK
+2023/01/23 16:08:44.970 OK
+2023/01/23 16:08:44.970 OK
+2023/01/23 16:08:44.970 OK
+2023/01/23 16:08:44.971 OK
+2023/01/23 16:08:44.971 OK
+2023/01/23 16:08:44.971 OK
+2023/01/23 16:08:44.971 OK
+vSet("ECMC_EC_HWTYPE"             "EL1018")
+epicsEnvSet("ECMC_EC_VENDOR_ID"          "0x2")
+epicsEnvSet("ECMC_EC_PRODUCT_ID"         "0x03fa3052")
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/slaveVerify.cmd
+ecmcEpicsEnvSetCalcTernary(SLAVE_VERIFY, "0==0","","#- ")
+ecmcConfigOrDie "Cfg.EcSlaveVerify(0,1,0x2,0x03fa3052)"
+ecmcEpicsEnvSetCalcTernary(SLAVE_RESET, "0>0","","#- ")
+epicsEnvSet(ECMC_EC_SLAVE_FW, "0x0000")
+ecmcEpicsEnvSetCalcTernary(SLAVE_FW, "0>0","","#- ")
+epicsEnvUnset(SLAVE_VERIFY)
+epicsEnvUnset(SLAVE_RESET)
+epicsEnvUnset(SLAVE_FW)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEX1008.cmd
+ecmcConfigOrDie "Cfg.EcAddEntryDT(1,0x2,0x03fa3052,2,0,0x1a00,0x6000,0x1,B1,binaryInput01)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(1,0x2,0x03fa3052,2,0,0x1a01,0x6010,0x1,B1,binaryInput02)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(1,0x2,0x03fa3052,2,0,0x1a02,0x6020,0x1,B1,binaryInput03)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(1,0x2,0x03fa3052,2,0,0x1a03,0x6030,0x1,B1,binaryInput04)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(1,0x2,0x03fa3052,2,0,0x1a04,0x6040,0x1,B1,binaryInput05)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(1,0x2,0x03fa3052,2,0,0x1a05,0x6050,0x1,B1,binaryInput06)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(1,0x2,0x03fa3052,2,0,0x1a06,0x6060,0x1,B1,binaryInput07)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(1,0x2,0x03fa3052,2,0,0x1a07,0x6070,0x1,B1,binaryInput08)"
+# deduce what the prefix should be
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd" "MASTER_ID=0,SLAVE_POS=1,HWTYPE=EL1018"
+#==============================================================================
+# ecmcmXsXXX.cmd
+ecmcEpicsEnvSetCalc("sid", "1","%03d")
+ecmcEpicsEnvSetCalc("mid", "0","%01d")
+epicsEnvSet("ECMC_G",            "IOC_TEST:m0s001")
+epicsEnvSet("ECMC_P",            "IOC_TEST:m0s001-")
+epicsEnvUnset(sid)
+epicsEnvUnset(mid)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SUBS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applySubstitutions.cmd" "SUBST_FILE=ecmcEL1018.substitutions,ECMC_P=IOC_TEST:m0s001-"
+#==============================================================================
+# applySubstitutions.cmd
+ecmcFileExist(ecmcEL1018.substitutions,1,1)
+dbLoadTemplate(ecmcEL1018.substitutions,"ECMC_P=IOC_TEST:m0s001-,ECMC_G=IOC_TEST:m0s001,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=1,HWTYPE=EL1018,T_SMP_MS=10,TSE=-2,NELM=1")
+epicsEnvUnset(DEFAULT_SUBS)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SLAVE_PVS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applyTemplate.cmd" "TEMPLATE_FILE=ecmcEcSlave.template,ECMC_P=IOC_TEST:m0s001-,ECMC_G=IOC_TEST:m0s001"
+#==============================================================================
+# applyTemplate.cmd
+ecmcFileExist(ecmcEcSlave.template,1,1)
+dbLoadRecords("ecmcEcSlave.template", "ECMC_P=IOC_TEST:m0s001-,ECMC_G=IOC_TEST:m0s001,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=1,HWTYPE=EL1018,T_SMP_MS=10,TSE=-2,")
+epicsEnvUnset(DEFAULT_SLAVE_PVS)
+# increment SLAVE_ID
+ecmcEpicsEnvSetCalc("SLAVE_ID", "1+1","%d")
+#Configure EL2808 digital output terminal
+ecmcEpicsEnvSetCalc(ECMC_EC_SLAVE_NUM, "1+1")
+epicsEnvShow("ECMC_EC_SLAVE_NUM")
+ECMC_EC_SLAVE_NUM=2
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/addSlave.cmd, "SLAVE_ID=2, HW_DESC=EL2808"
+#==============================================================================
+# addSlave.cmd
+epicsEnvSet("ECMC_EC_SLAVE_NUM",  "2")
+epicsEnvSet("HW_DESC",            "EL2808")
+epicsEnvSet("P_SCRIPT",           "mXsXXX")
+# add ${HW_DESC} to the bus at position ${SLAVE_ID}
+ecmcFileExist("/home/ande2023/01/23 16:08:44.974 OK
+2023/01/23 16:08:44.975 OK
+2023/01/23 16:08:44.975 OK
+2023/01/23 16:08:44.975 OK
+2023/01/23 16:08:44.975 OK
+2023/01/23 16:08:44.975 OK
+2023/01/23 16:08:44.975 OK
+2023/01/23 16:08:44.975 OK
+2023/01/23 16:08:44.975 OK
+2023/01/23 16:08:44.978 OK
+2023/01/23 16:08:44.978 OK
+2023/01/23 16:08:44.978 OK
+2023/01/23 16:08:44.978 OK
+rssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL2808.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL2808.cmd" "NELM=1"
+epicsEnvSet("ECMC_EC_HWTYPE"             "EL2808")
+epicsEnvSet("ECMC_EC_VENDOR_ID"          "0x2")
+epicsEnvSet("ECMC_EC_PRODUCT_ID"         "0x0af83052")
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/slaveVerify.cmd
+ecmcEpicsEnvSetCalcTernary(SLAVE_VERIFY, "0==0","","#- ")
+ecmcConfigOrDie "Cfg.EcSlaveVerify(0,2,0x2,0x0af83052)"
+ecmcEpicsEnvSetCalcTernary(SLAVE_RESET, "0>0","","#- ")
+epicsEnvSet(ECMC_EC_SLAVE_FW, "0x0000")
+ecmcEpicsEnvSetCalcTernary(SLAVE_FW, "0>0","","#- ")
+epicsEnvUnset(SLAVE_VERIFY)
+epicsEnvUnset(SLAVE_RESET)
+epicsEnvUnset(SLAVE_FW)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEX2008.cmd
+ecmcConfigOrDie "Cfg.EcAddEntryDT(2,0x2,0x0af83052,1,0,0x1600,0x7000,0x1,B1,binaryOutput01)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(2,0x2,0x0af83052,1,0,0x1601,0x7010,0x1,B1,binaryOutput02)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(2,0x2,0x0af83052,1,0,0x1602,0x7020,0x1,B1,binaryOutput03)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(2,0x2,0x0af83052,1,0,0x1603,0x7030,0x1,B1,binaryOutput04)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(2,0x2,0x0af83052,1,0,0x1604,0x7040,0x1,B1,binaryOutput05)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(2,0x2,0x0af83052,1,0,0x1605,0x7050,0x1,B1,binaryOutput06)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(2,0x2,0x0af83052,1,0,0x1606,0x7060,0x1,B1,binaryOutput07)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(2,0x2,0x0af83052,1,0,0x1607,0x7070,0x1,B1,binaryOutput08)"
+# deduce what the prefix should be
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd" "MASTER_ID=0,SLAVE_POS=2,HWTYPE=EL2808"
+#==============================================================================
+# ecmcmXsXXX.cmd
+ecmcEpicsEnvSetCalc("sid", "2","%03d")
+ecmcEpicsEnvSetCalc("mid", "0","%01d")
+epicsEnvSet("ECMC_G",            "IOC_TEST:m0s002")
+epicsEnvSet("ECMC_P",            "IOC_TEST:m0s002-")
+epicsEnvUnset(sid)
+epicsEnvUnset(mid)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SUBS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applySubstitutions.cmd" "SUBST_FILE=ecmcEL2808.substitutions,ECMC_P=IOC_TEST:m0s002-"
+#==============================================================================
+# applySubstitutions.cmd
+ecmcFileExist(ecmcEL2808.substitutions,1,1)
+dbLoadTemplate(ecmcEL2808.substitutions,"ECMC_P=IOC_TEST:m0s002-,ECMC_G=IOC_TEST:m0s002,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=2,HWTYPE=EL2808,T_SMP_MS=10,TSE=-2,NELM=1")
+epicsEnvUnset(DEFAULT_SUBS)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SLAVE_PVS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applyTemplate.cmd" "TEMPLATE_FILE=ecmcEcSlave.template,ECMC_P=IOC_TEST:m0s002-,ECMC_G=IOC_TEST:m0s002"
+#==============================================================================
+# applyTemplate.cmd
+ecmcFileExist(ecmcEcSlave.template,1,1)
+dbLoadRecords("ecmcEcSlave.template", "ECMC_P=IOC_TEST:m0s002-,ECMC_G=IOC_TEST:m0s002,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=2,HWTYPE=EL2808,T_SMP_MS=10,TSE=-2,")
+epicsEnvUnset(DEFAULT_SLAVE_PVS)
+# increment SLAVE_ID
+ecmcEpicsEnvSetCalc("SLAVE_ID", "2+1","%d")
+# Set all outputs to feed switches
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(2,binaryOutput01,1)"
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(2,binaryOutput02,1)"
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(2,binaryOutput03,1)"
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(2,binaryOutput04,1)"
+ecmcConfigOrDie "Cfg.WriteEcEntryIDStr2023/01/23 16:08:44.978 OK
+2023/01/23 16:08:44.978 OK
+2023/01/23 16:08:44.978 OK
+2023/01/23 16:08:44.978 OK
+2023/01/23 16:08:44.979 OK
+2023/01/23 16:08:45.004 OK
+2023/01/23 16:08:45.004 OK
+2023/01/23 16:08:45.004 OK
+2023/01/23 16:08:45.005 OK
+2023/01/23 16:08:45.005 OK
+ing(2,binaryOutput05,1)"
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(2,binaryOutput06,1)"
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(2,binaryOutput07,1)"
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(2,binaryOutput08,1)"
+#Configure EL5002 2-channel SSI encoder terminal, motor 1
+ecmcEpicsEnvSetCalc(ECMC_EC_SLAVE_NUM, "2+1")
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/addSlave.cmd, "SLAVE_ID=3, HW_DESC=EL5002"
+#==============================================================================
+# addSlave.cmd
+epicsEnvSet("ECMC_EC_SLAVE_NUM",  "3")
+epicsEnvSet("HW_DESC",            "EL5002")
+epicsEnvSet("P_SCRIPT",           "mXsXXX")
+# add ${HW_DESC} to the bus at position ${SLAVE_ID}
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL5002.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL5002.cmd" "NELM=1"
+epicsEnvSet("ECMC_EC_HWTYPE"             "EL5002")
+epicsEnvSet("ECMC_EC_VENDOR_ID"          "0x2")
+epicsEnvSet("ECMC_EC_PRODUCT_ID"         "0x138a3052")
+ecmcFileExist(/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/slaveVerify.cmd,1)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/slaveVerify.cmd "RESET=true"
+ecmcEpicsEnvSetCalcTernary(SLAVE_VERIFY, "0==0","","#- ")
+ecmcConfigOrDie "Cfg.EcSlaveVerify(0,3,0x2,0x138a3052)"
+ecmcEpicsEnvSetCalcTernary(SLAVE_RESET, "true>0","","#- ")
+ecmcConfigOrDie "Cfg.EcWriteSdo(3,0x1011,0x1,1684107116,4)"
+epicsEnvSet(ECMC_EC_SLAVE_FW, "0x0000")
+ecmcEpicsEnvSetCalcTernary(SLAVE_FW, "0>0","","#- ")
+epicsEnvUnset(SLAVE_VERIFY)
+epicsEnvUnset(SLAVE_RESET)
+epicsEnvUnset(SLAVE_FW)
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(3,0x2,0x138a3052,2,3,0x1a00,0x6000,0x1,16,encoderStatus01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(3,0x2,0x138a3052,2,3,0x1a00,0x6000,0x11,32,positionActual01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(3,0x2,0x138a3052,2,3,0x1a01,0x6010,0x1,16,encoderStatus02)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(3,0x2,0x138a3052,2,3,0x1a01,0x6010,0x11,32,positionActual02)"
+# deduce what the prefix should be
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd" "MASTER_ID=0,SLAVE_POS=3,HWTYPE=EL5002"
+#==============================================================================
+# ecmcmXsXXX.cmd
+ecmcEpicsEnvSetCalc("sid", "3","%03d")
+ecmcEpicsEnvSetCalc("mid", "0","%01d")
+epicsEnvSet("ECMC_G",            "IOC_TEST:m0s003")
+epicsEnvSet("ECMC_P",            "IOC_TEST:m0s003-")
+epicsEnvUnset(sid)
+epicsEnvUnset(mid)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SUBS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applySubstitutions.cmd" "SUBST_FILE=ecmcEL5002.substitutions,ECMC_P=IOC_TEST:m0s003-"
+#==============================================================================
+# applySubstitutions.cmd
+ecmcFileExist(ecmcEL5002.substitutions,1,1)
+dbLoadTemplate(ecmcEL5002.substitutions,"ECMC_P=IOC_TEST:m0s003-,ECMC_G=IOC_TEST:m0s003,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=3,HWTYPE=EL5002,T_SMP_MS=10,TSE=-2,NELM=1")
+epicsEnvUnset(DEFAULT_SUBS)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SLAVE_PVS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applyTemplate.cmd" "TEMPLATE_FILE=ecmcEcSlave.template,ECMC_P=IOC_TEST:m0s003-,ECMC_G=IOC_TEST:m0s003"
+#==============================================================================
+# applyTemplate.cmd
+ecmcFileExist(ecmcEcSlave.template,1,1)
+dbLoadRecords("ecmcEcSlave.template", "ECMC_P=IOC_TEST:m0s003-,ECMC_G=IOC_TE2023/01/23 16:08:45.007 OK
+2023/01/23 16:08:45.007 OK
+2023/01/23 16:08:45.008 OK
+2023/01/23 16:08:45.008 OK
+2023/01/23 16:08:45.008 OK
+2023/01/23 16:08:45.008 OK
+2023/01/23 16:08:45.008 OK
+2023/01/23 16:08:45.008 OK
+2023/01/23 16:08:45.008 OK
+2023/01/23 16:08:45.009 OK
+2023/01/23 16:08:45.009 OK
+2023/01/23 16:08:45.009 OK
+2023/01/23 16:08:45.009 OK
+2023/01/23 16:08:45.009 OK
+2023/01/23 16:08:45.009 OK
+2023/01/23 16:08:45.009 OK
+2023/01/23 16:08:45.009 OK
+2023/01/23 16:08:45.009 OK
+ST:m0s003,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=3,HWTYPE=EL5002,T_SMP_MS=10,TSE=-2,")
+epicsEnvUnset(DEFAULT_SLAVE_PVS)
+# increment SLAVE_ID
+ecmcEpicsEnvSetCalc("SLAVE_ID", "3+1","%d")
+#Configure Baumer encoder for EL5002 2-channel SSI encoder terminal (Channel 1)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applySlaveConfig.cmd "CONFIG=-Encoder-ch1-Baumer-BMMH30D1G24C1213P55"
+#===============================================================================
+# applySlaveConfig.cmd
+# Arguments: CONFIG _or_ LOCAL_CONFIG
+epicsEnvSet("ECMC_CONFIG_FN", "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL5002-Encoder-ch1-Baumer-BMMH30D1G24C1213P55.cmd")
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL5002-Encoder-ch1-Baumer-BMMH30D1G24C1213P55.cmd",1)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL5002-Encoder-ch1-Baumer-BMMH30D1G24C1213P55.cmd
+epicsEnvSet("ECMC_EC_SDO_INDEX"               "0x8000")     # CH1=0x8000. CH2=0x8010
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL5002-Encoder-Baumer-BMMH30D1G24C1213P55.cmd
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8000,0x1,0,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8000,0x2,0,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8000,0x3,0,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8000,0x4,0,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8000,0x6,1,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8000,0x9,3,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8000,0xF,2,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8000,0x11,27,2)"
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8000,0x12,25,2)"
+#Configure Baumer encoder for EL5002 2-channel SSI encoder terminal (Channel 2)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applySlaveConfig.cmd "CONFIG=-Encoder-ch2-Baumer-BMMH30D1G24C1213P55"
+#===============================================================================
+# applySlaveConfig.cmd
+# Arguments: CONFIG _or_ LOCAL_CONFIG
+epicsEnvSet("ECMC_CONFIG_FN", "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL5002-Encoder-ch2-Baumer-BMMH30D1G24C1213P55.cmd")
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL5002-Encoder-ch2-Baumer-BMMH30D1G24C1213P55.cmd",1)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL5002-Encoder-ch2-Baumer-BMMH30D1G24C1213P55.cmd
+epicsEnvSet("ECMC_EC_SDO_INDEX"               "0x8010")     # CH1=0x8000. CH2=0x8010
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL5002-Encoder-Baumer-BMMH30D1G24C1213P55.cmd
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8010,0x1,0,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8010,0x2,0,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8010,0x3,0,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8010,0x4,0,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8010,0x6,1,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8010,0x9,3,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8010,0xF,2,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8010,0x11,27,2)"
+ecmcConfigOrDie "Cfg.EcAddSdo(3,0x8010,0x12,25,2)"
+# Configure EL9505 Power supply terminal 5V
+ecmcEpicsEnvSetCalc(ECMC_EC_SLAVE_NUM, "3+1")
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/addSlave.cmd, "SLAVE_ID=4, HW_DESC=EL9505"
+#==============================================================================
+# addSlave.cmd
+epicsEnvSet("ECMC_EC_SLAVE_NUM",  "4")
+epicsEnvSet("HW_DESC",            "EL9505")
+epicsEnvSet("P_SCRIPT",           "mXsXXX")
+# add ${HW_DESC} to the bus at position ${SLAVE_ID}
+ecmcFileExist("/home/anderssandstrom/sources/test_2023/01/23 16:08:45.010 OK
+2023/01/23 16:08:45.010 OK
+2023/01/23 16:08:45.010 OK
+jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL9505.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL9505.cmd" "NELM=1"
+epicsEnvSet("ECMC_EC_HWTYPE"             "EL9505")
+epicsEnvSet("ECMC_EC_VENDOR_ID"          "0x2")
+epicsEnvSet("ECMC_EC_PRODUCT_ID"         "0x25213052")
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/slaveVerify.cmd
+ecmcEpicsEnvSetCalcTernary(SLAVE_VERIFY, "0==0","","#- ")
+ecmcConfigOrDie "Cfg.EcSlaveVerify(0,4,0x2,0x25213052)"
+ecmcEpicsEnvSetCalcTernary(SLAVE_RESET, "0>0","","#- ")
+epicsEnvSet(ECMC_EC_SLAVE_FW, "0x0000")
+ecmcEpicsEnvSetCalcTernary(SLAVE_FW, "0>0","","#- ")
+epicsEnvUnset(SLAVE_VERIFY)
+epicsEnvUnset(SLAVE_RESET)
+epicsEnvUnset(SLAVE_FW)
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(4,0x2,0x25213052,2,0,0x1a00,0x6000,0x1,1,powerOk01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(4,0x2,0x25213052,2,0,0x1a00,0x6000,0x2,1,overload01)"
+# deduce what the prefix should be
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd" "MASTER_ID=0,SLAVE_POS=4,HWTYPE=EL9505"
+#==============================================================================
+# ecmcmXsXXX.cmd
+ecmcEpicsEnvSetCalc("sid", "4","%03d")
+ecmcEpicsEnvSetCalc("mid", "0","%01d")
+epicsEnvSet("ECMC_G",            "IOC_TEST:m0s004")
+epicsEnvSet("ECMC_P",            "IOC_TEST:m0s004-")
+epicsEnvUnset(sid)
+epicsEnvUnset(mid)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SUBS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applySubstitutions.cmd" "SUBST_FILE=ecmcEL9505.substitutions,ECMC_P=IOC_TEST:m0s004-"
+#==============================================================================
+# applySubstitutions.cmd
+ecmcFileExist(ecmcEL9505.substitutions,1,1)
+dbLoadTemplate(ecmcEL9505.substitutions,"ECMC_P=IOC_TEST:m0s004-,ECMC_G=IOC_TEST:m0s004,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=4,HWTYPE=EL9505,T_SMP_MS=10,TSE=-2,NELM=1")
+epicsEnvUnset(DEFAULT_SUBS)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SLAVE_PVS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applyTemplate.cmd" "TEMPLATE_FILE=ecmcEcSlave.template,ECMC_P=IOC_TEST:m0s004-,ECMC_G=IOC_TEST:m0s004"
+#==============================================================================
+# applyTemplate.cmd
+ecmcFileExist(ecmcEcSlave.template,1,1)
+dbLoadRecords("ecmcEcSlave.template", "ECMC_P=IOC_TEST:m0s004-,ECMC_G=IOC_TEST:m0s004,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=4,HWTYPE=EL9505,T_SMP_MS=10,TSE=-2,")
+epicsEnvUnset(DEFAULT_SLAVE_PVS)
+# increment SLAVE_ID
+ecmcEpicsEnvSetCalc("SLAVE_ID", "4+1","%d")
+# Configure EL1252 digital input terminal
+ecmcEpicsEnvSetCalc(ECMC_EC_SLAVE_NUM, "4+1")
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/addSlave.cmd, "SLAVE_ID=5, HW_DESC=EL1252"
+#==============================================================================
+# addSlave.cmd
+epicsEnvSet("ECMC_EC_SLAVE_NUM",  "5")
+epicsEnvSet("HW_DESC",            "EL1252")
+epicsEnvSet("P_SCRIPT",           "mXsXXX")
+# add ${HW_DESC} to the bus at position ${SLAVE_ID}
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL1252.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL1252.cmd" "NELM=1"
+epicsEnvSet("ECMC_EC_HWTYPE"             "EL1252")
+epicsEnvSet("ECMC_EC_VENDOR_ID"          "0x2")
+epicsEnvSet("ECMC_EC_PRODUCT_ID"         "0x04e43052")
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base2023/01/23 16:08:45.013 OK
+2023/01/23 16:08:45.013 OK
+2023/01/23 16:08:45.013 OK
+2023/01/23 16:08:45.013 OK
+2023/01/23 16:08:45.013 OK
+2023/01/23 16:08:45.013 OK
+2023/01/23 16:08:45.013 OK
+2023/01/23 16:08:45.014 OK
+2023/01/23 16:08:45.014 OK
+-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/slaveVerify.cmd
+ecmcEpicsEnvSetCalcTernary(SLAVE_VERIFY, "0==0","","#- ")
+ecmcConfigOrDie "Cfg.EcSlaveVerify(0,5,0x2,0x04e43052)"
+ecmcEpicsEnvSetCalcTernary(SLAVE_RESET, "0>0","","#- ")
+epicsEnvSet(ECMC_EC_SLAVE_FW, "0x0000")
+ecmcEpicsEnvSetCalcTernary(SLAVE_FW, "0>0","","#- ")
+epicsEnvUnset(SLAVE_VERIFY)
+epicsEnvUnset(SLAVE_RESET)
+epicsEnvUnset(SLAVE_FW)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEX1002.cmd
+ecmcConfigOrDie "Cfg.EcAddEntryDT(5,0x2,0x04e43052,2,0,0x1a00,0x6000,0x1,B1,binaryInput01)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(5,0x2,0x04e43052,2,0,0x1a01,0x6010,0x1,B1,binaryInput02)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(5,0x2,0x04e43052,2,1,0x1a13,0x1d09,0xae,U8,status01)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(5,0x2,0x04e43052,2,1,0x1a13,0x1d09,0xaf,U8,status02)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(5,0x2,0x04e43052,2,1,0x1a13,0x1d09,0xb0,U64,timestampLatchPositive01)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(5,0x2,0x04e43052,2,1,0x1a13,0x1d09,0xb8,U64,timestampLatchNegative01)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(5,0x2,0x04e43052,2,1,0x1a13,0x1d09,0xc0,U64,timestampLatchPositive02)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(5,0x2,0x04e43052,2,1,0x1a13,0x1d09,0xc8,U64,timestampLatchNegative02)"
+# deduce what the prefix should be
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd" "MASTER_ID=0,SLAVE_POS=5,HWTYPE=EL1252"
+#==============================================================================
+# ecmcmXsXXX.cmd
+ecmcEpicsEnvSetCalc("sid", "5","%03d")
+ecmcEpicsEnvSetCalc("mid", "0","%01d")
+epicsEnvSet("ECMC_G",            "IOC_TEST:m0s005")
+epicsEnvSet("ECMC_P",            "IOC_TEST:m0s005-")
+epicsEnvUnset(sid)
+epicsEnvUnset(mid)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SUBS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applySubstitutions.cmd" "SUBST_FILE=ecmcEL1252.substitutions,ECMC_P=IOC_TEST:m0s005-"
+#==============================================================================
+# applySubstitutions.cmd
+ecmcFileExist(ecmcEL1252.substitutions,1,1)
+dbLoadTemplate(ecmcEL1252.substitutions,"ECMC_P=IOC_TEST:m0s005-,ECMC_G=IOC_TEST:m0s005,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=5,HWTYPE=EL1252,T_SMP_MS=10,TSE=-2,NELM=1")
+epicsEnvUnset(DEFAULT_SUBS)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SLAVE_PVS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applyTemplate.cmd" "TEMPLATE_FILE=ecmcEcSlave.template,ECMC_P=IOC_TEST:m0s005-,ECMC_G=IOC_TEST:m0s005"
+#==============================================================================
+# applyTemplate.cmd
+ecmcFileExist(ecmcEcSlave.template,1,1)
+dbLoadRecords("ecmcEcSlave.template", "ECMC_P=IOC_TEST:m0s005-,ECMC_G=IOC_TEST:m0s005,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=5,HWTYPE=EL1252,T_SMP_MS=10,TSE=-2,")
+epicsEnvUnset(DEFAULT_SLAVE_PVS)
+# increment SLAVE_ID
+ecmcEpicsEnvSetCalc("SLAVE_ID", "5+1","%d")
+# Configure EL9410 Power supply with refresh of E-Bus.
+ecmcEpicsEnvSetCalc(ECMC_EC_SLAVE_NUM, "5+1")
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/addSlave.cmd, "SLAVE_ID=6, HW_DESC=EL9410"
+#==============================================================================
+# addSlave.cmd
+epicsEnvSet("ECMC_EC_SLAVE_NUM",  "6")
+epicsEnvSet("HW_DESC",            "EL9410")
+epicsEnvSet("P_SCRIPT",           "mXsXXX")
+# add ${HW_DESC} to the bus at position ${SLAVE_ID}
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL9410.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ec2023/01/23 16:08:45.016 OK
+2023/01/23 16:08:45.017 OK
+2023/01/23 16:08:45.017 OK
+mccfg/jinjaExample/ecmcEL9410.cmd" "NELM=1"
+epicsEnvSet("ECMC_EC_HWTYPE"             "EL9410")
+epicsEnvSet("ECMC_EC_VENDOR_ID"          "0x2")
+epicsEnvSet("ECMC_EC_PRODUCT_ID"         "0x24c23052")
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/slaveVerify.cmd
+ecmcEpicsEnvSetCalcTernary(SLAVE_VERIFY, "0==0","","#- ")
+ecmcConfigOrDie "Cfg.EcSlaveVerify(0,6,0x2,0x24c23052)"
+ecmcEpicsEnvSetCalcTernary(SLAVE_RESET, "0>0","","#- ")
+epicsEnvSet(ECMC_EC_SLAVE_FW, "0x0000")
+ecmcEpicsEnvSetCalcTernary(SLAVE_FW, "0>0","","#- ")
+epicsEnvUnset(SLAVE_VERIFY)
+epicsEnvUnset(SLAVE_RESET)
+epicsEnvUnset(SLAVE_FW)
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(6,0x2,0x24c23052,2,0,0x1a00,0x6000,0x1,1,underVoltageEbus01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(6,0x2,0x24c23052,2,0,0x1a01,0x6000,0x1,1,underVoltagePower01)"
+# deduce what the prefix should be
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd" "MASTER_ID=0,SLAVE_POS=6,HWTYPE=EL9410"
+#==============================================================================
+# ecmcmXsXXX.cmd
+ecmcEpicsEnvSetCalc("sid", "6","%03d")
+ecmcEpicsEnvSetCalc("mid", "0","%01d")
+epicsEnvSet("ECMC_G",            "IOC_TEST:m0s006")
+epicsEnvSet("ECMC_P",            "IOC_TEST:m0s006-")
+epicsEnvUnset(sid)
+epicsEnvUnset(mid)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SUBS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applySubstitutions.cmd" "SUBST_FILE=ecmcEL9410.substitutions,ECMC_P=IOC_TEST:m0s006-"
+#==============================================================================
+# applySubstitutions.cmd
+ecmcFileExist(ecmcEL9410.substitutions,1,1)
+dbLoadTemplate(ecmcEL9410.substitutions,"ECMC_P=IOC_TEST:m0s006-,ECMC_G=IOC_TEST:m0s006,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=6,HWTYPE=EL9410,T_SMP_MS=10,TSE=-2,NELM=1")
+epicsEnvUnset(DEFAULT_SUBS)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SLAVE_PVS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applyTemplate.cmd" "TEMPLATE_FILE=ecmcEcSlave.template,ECMC_P=IOC_TEST:m0s006-,ECMC_G=IOC_TEST:m0s006"
+#==============================================================================
+# applyTemplate.cmd
+ecmcFileExist(ecmcEcSlave.template,1,1)
+dbLoadRecords("ecmcEcSlave.template", "ECMC_P=IOC_TEST:m0s006-,ECMC_G=IOC_TEST:m0s006,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=6,HWTYPE=EL9410,T_SMP_MS=10,TSE=-2,")
+epicsEnvUnset(DEFAULT_SLAVE_PVS)
+# increment SLAVE_ID
+ecmcEpicsEnvSetCalc("SLAVE_ID", "6+1","%d")
+#Configure EL7037 stepper drive terminal, motor 1
+ecmcEpicsEnvSetCalc(ECMC_EC_SLAVE_NUM, "6+1")
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/configureSlave.cmd, "SLAVE_ID=7, HW_DESC=EL7037, CONFIG=-Motor-Nanotec-ST4118L1804-B, CFG_MACROS='I_RUN_MA=900,I_STDBY_MA=200'"
+#==============================================================================
+# configureSlave.cmd
+epicsEnvSet("ECMC_EC_SLAVE_NUM",  "7")
+epicsEnvSet("HW_DESC",            "EL7037")
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/addSlave.cmd",1)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/addSlave.cmd "SLAVE_ID=7, HW_DESC=EL7037, NELM=1"
+#==============================================================================
+# addSlave.cmd
+epicsEnvSet("ECMC_EC_SLAVE_NUM",  "7")
+epicsEnvSet("HW_DESC",            "EL7037")
+epicsEnvSet("P_SCRIPT",           "mXsXXX")
+# add ${HW_DESC} to the bus at position ${SLAVE_ID}
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecm2023/01/23 16:08:45.019 OK
+2023/01/23 16:08:45.078 OK
+2023/01/23 16:08:45.079 OK
+2023/01/23 16:08:45.079 OK
+2023/01/23 16:08:45.079 OK
+2023/01/23 16:08:45.079 OK
+2023/01/23 16:08:45.079 OK
+2023/01/23 16:08:45.080 OK
+2023/01/23 16:08:45.080 OK
+2023/01/23 16:08:45.080 OK
+2023/01/23 16:08:45.080 OK
+2023/01/23 16:08:45.080 OK
+2023/01/23 16:08:45.080 OK
+2023/01/23 16:08:45.080 OK
+ccfg/jinjaExample/ecmcEL7037.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL7037.cmd" "NELM=1"
+epicsEnvSet("ECMC_EC_HWTYPE"             "EL7037")
+epicsEnvSet("ECMC_EC_VENDOR_ID"          "0x2")
+epicsEnvSet("ECMC_EC_PRODUCT_ID"         "0x1b7d3052")
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/slaveVerify.cmd "RESET=true"
+ecmcEpicsEnvSetCalcTernary(SLAVE_VERIFY, "0==0","","#- ")
+ecmcConfigOrDie "Cfg.EcSlaveVerify(0,7,0x2,0x1b7d3052)"
+ecmcEpicsEnvSetCalcTernary(SLAVE_RESET, "true>0","","#- ")
+ecmcConfigOrDie "Cfg.EcWriteSdo(7,0x1011,0x1,1684107116,4)"
+epicsEnvSet(ECMC_EC_SLAVE_FW, "0x0000")
+ecmcEpicsEnvSetCalcTernary(SLAVE_FW, "0>0","","#- ")
+epicsEnvUnset(SLAVE_VERIFY)
+epicsEnvUnset(SLAVE_RESET)
+epicsEnvUnset(SLAVE_FW)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEX70XX.cmd
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(7,0x2,0x1b7d3052,1,2,0x1600,0x7000,0x01,16,encoderControl01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(7,0x2,0x1b7d3052,1,2,0x1600,0x7000,0x11,16,encoderValue01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(7,0x2,0x1b7d3052,1,2,0x1602,0x7010,0x1,16,driveControl01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(7,0x2,0x1b7d3052,1,2,0x1604,0x7010,0x21,16,1,velocitySetpoint01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(7,0x2,0x1b7d3052,2,3,0x1a00,0x6000,0x0,16,encoderStatus01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(7,0x2,0x1b7d3052,2,3,0x1a00,0x6000,0x11,16,positionActual01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(7,0x2,0x1b7d3052,2,3,0x1a00,0x6000,0x12,16,encoderLatchPostion01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(7,0x2,0x1b7d3052,2,3,0x1a03,0x6010,0x1,16,driveStatus01)"
+ecmcConfigOrDie "Cfg.EcAddSdo(7,0x8012,0x5,1,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(7,0x8012,0xA,1,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(7,0x8012,0x8,1,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(7,0x8012,0x9,0,1)"
+# deduce what the prefix should be
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd" "MASTER_ID=0,SLAVE_POS=7,HWTYPE=EL7037"
+#==============================================================================
+# ecmcmXsXXX.cmd
+ecmcEpicsEnvSetCalc("sid", "7","%03d")
+ecmcEpicsEnvSetCalc("mid", "0","%01d")
+epicsEnvSet("ECMC_G",            "IOC_TEST:m0s007")
+epicsEnvSet("ECMC_P",            "IOC_TEST:m0s007-")
+epicsEnvUnset(sid)
+epicsEnvUnset(mid)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SUBS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applySubstitutions.cmd" "SUBST_FILE=ecmcEL7037.substitutions,ECMC_P=IOC_TEST:m0s007-"
+#==============================================================================
+# applySubstitutions.cmd
+ecmcFileExist(ecmcEL7037.substitutions,1,1)
+dbLoadTemplate(ecmcEL7037.substitutions,"ECMC_P=IOC_TEST:m0s007-,ECMC_G=IOC_TEST:m0s007,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=7,HWTYPE=EL7037,T_SMP_MS=10,TSE=-2,NELM=1")
+epicsEnvUnset(DEFAULT_SUBS)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SLAVE_PVS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applyTemplate.cmd" "TEMPLATE_FILE=ecmcEcSlave.template,ECMC_P=IOC_TEST:m0s007-,ECMC_G=IOC_TEST:m0s007"
+#==============================================================================
+# applyTemplate.cmd
+ecmcFileExist(ecmcEcSlave.template,1,1)
+dbLoadRecords("ecmcEcSlave.template", "ECMC_P=IOC_TEST:m0s007-,ECMC_G=IOC_TEST:m0s007,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=7,HWTYPE=EL7037,T_SMP_MS=10,TSE=-2,")
+epicsEnvUnset(DEFAULT_SLAVE_PVS)
+# increment SLAVE_ID
+ecmcEpicsEnvSetCalc("SLAVE_ID", "7+1","%d")
+# apply config ${CONFIG} for ${HW_DESC}
+ecmcFileExist("/home/and2023/01/23 16:08:45.084 OK
+2023/01/23 16:08:45.084 OK
+2023/01/23 16:08:45.084 OK
+2023/01/23 16:08:45.084 OK
+2023/01/23 16:08:45.084 OK
+2023/01/23 16:08:45.084 OK
+2023/01/23 16:08:45.085 OK
+erssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL7037-Motor-Nanotec-ST4118L1804-B.cmd",1)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL7037-Motor-Nanotec-ST4118L1804-B.cmd "I_RUN_MA=900,I_STDBY_MA=200"
+epicsEnvSet(I_MAX_MA_LOCAL,"1500")
+epicsEnvSet(I_RUN_MA_LOCAL,900)
+epicsEnvSet(I_STDBY_MA_LOCAL,200)
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/chkValidCurrentSetOrDie.cmd",1)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/chkValidCurrentSetOrDie.cmd "I_RUN_MA=900,I_STDBY_MA=200,I_MAX_MA=1500"
+#==============================================================================
+# chkValidCurrentSetOrDie.cmd
+# Ensure running current is below max current otherwise exit
+ecmcEpicsEnvSetCalcTernary(ECMC_EXE_CMD, "900>1500 or 900<=0", "ecmcExit Error: Run current setpoint to high or negative...","# Run current setting OK (900)...")
+# Result: 
+# Run current setting OK (900)...
+epicsEnvUnset(ECMC_EXE_CMD)
+# Ensure standby current is below max current otherwise exit
+ecmcEpicsEnvSetCalcTernary(ECMC_EXE_CMD, "200>1500 or 200<0", "ecmcExit Error: Standby current setpoint to high or negative...","# Standby current setting OK (200)...")
+# Result: 
+# Standby current setting OK (200)...
+epicsEnvUnset(ECMC_EXE_CMD)
+# Ensure standby current is below run current otherwise exit
+ecmcEpicsEnvSetCalcTernary(ECMC_EXE_CMD, "200>900", "ecmcExit Error: Standby current higher than run current...","# Standby current and run current setting OK (200<900)...")
+# Result: 
+# Standby current and run current setting OK (200<900)...
+epicsEnvUnset(ECMC_EXE_CMD)
+ecmcConfigOrDie "Cfg.EcAddSdo(7,0x8010,0x1,900,2)"
+ecmcConfigOrDie "Cfg.EcAddSdo(7,0x8010,0x2,200,2)"
+ecmcConfigOrDie "Cfg.EcAddSdo(7,0x8010,0x3,2400,2)"
+ecmcConfigOrDie "Cfg.EcAddSdo(7,0x8010,0x4,175,2)"
+ecmcConfigOrDie "Cfg.EcAddSdo(7,0x8010,0x6,200,2)"
+ecmcConfigOrDie "Cfg.EcAddSdo(7,0x8010,0xA,330,2)"
+epicsEnvUnset("I_RUN_MA_LOCAL")
+epicsEnvUnset("I_STDBY_MA_LOCAL")
+epicsEnvUnset("I_MAX_MA_LOCAL")
+#Configure EL7037 stepper drive terminal, motor 2
+ecmcEpicsEnvSetCalc(ECMC_EC_SLAVE_NUM, "7+1")
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/configureSlave.cmd, "SLAVE_ID=8, HW_DESC=EL7037, CONFIG=-Motor-Nanotec-ST4118L1804-B"
+#==============================================================================
+# configureSlave.cmd
+epicsEnvSet("ECMC_EC_SLAVE_NUM",  "8")
+epicsEnvSet("HW_DESC",            "EL7037")
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/addSlave.cmd",1)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/addSlave.cmd "SLAVE_ID=8, HW_DESC=EL7037, NELM=1"
+#==============================================================================
+# addSlave.cmd
+epicsEnvSet("ECMC_EC_SLAVE_NUM",  "8")
+epicsEnvSet("HW_DESC",            "EL7037")
+epicsEnvSet("P_SCRIPT",           "mXsXXX")
+# add ${HW_DESC} to the bus at position ${SLAVE_ID}
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL7037.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL7037.cmd" "NELM=1"
+epicsEnvSet("ECMC_EC_HWTYPE"             "EL7037")
+epicsEnvSet("ECMC_EC_VENDOR_ID"          "0x2")
+epicsEnvSet("ECMC_EC_PRODUCT_ID"         "0x1b7d3052")
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/slaveVerify.cmd "RESET=true"
+ecmcEpicsEnvSetCalcTernary(SLAVE_VERIFY, "0==0","","#- ")
+ecmcConfigOrDie "Cfg.EcSlaveVerify(0,8,0x2,0x1b7d3052)"
+ecmcEpicsEnvSetCalcTernary(SLAVE_RESET, "true>0","","#- ")
+ecmcConfigOrDie "Cfg.EcWrit2023/01/23 16:08:45.142 OK
+2023/01/23 16:08:45.143 OK
+2023/01/23 16:08:45.143 OK
+2023/01/23 16:08:45.143 OK
+2023/01/23 16:08:45.143 OK
+2023/01/23 16:08:45.143 OK
+2023/01/23 16:08:45.143 OK
+2023/01/23 16:08:45.143 OK
+2023/01/23 16:08:45.143 OK
+2023/01/23 16:08:45.143 OK
+2023/01/23 16:08:45.143 OK
+2023/01/23 16:08:45.143 OK
+2023/01/23 16:08:45.143 OK
+eSdo(8,0x1011,0x1,1684107116,4)"
+epicsEnvSet(ECMC_EC_SLAVE_FW, "0x0000")
+ecmcEpicsEnvSetCalcTernary(SLAVE_FW, "0>0","","#- ")
+epicsEnvUnset(SLAVE_VERIFY)
+epicsEnvUnset(SLAVE_RESET)
+epicsEnvUnset(SLAVE_FW)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEX70XX.cmd
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(8,0x2,0x1b7d3052,1,2,0x1600,0x7000,0x01,16,encoderControl01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(8,0x2,0x1b7d3052,1,2,0x1600,0x7000,0x11,16,encoderValue01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(8,0x2,0x1b7d3052,1,2,0x1602,0x7010,0x1,16,driveControl01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(8,0x2,0x1b7d3052,1,2,0x1604,0x7010,0x21,16,1,velocitySetpoint01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(8,0x2,0x1b7d3052,2,3,0x1a00,0x6000,0x0,16,encoderStatus01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(8,0x2,0x1b7d3052,2,3,0x1a00,0x6000,0x11,16,positionActual01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(8,0x2,0x1b7d3052,2,3,0x1a00,0x6000,0x12,16,encoderLatchPostion01)"
+ecmcConfigOrDie "Cfg.EcAddEntryComplete(8,0x2,0x1b7d3052,2,3,0x1a03,0x6010,0x1,16,driveStatus01)"
+ecmcConfigOrDie "Cfg.EcAddSdo(8,0x8012,0x5,1,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(8,0x8012,0xA,1,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(8,0x8012,0x8,1,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(8,0x8012,0x9,0,1)"
+# deduce what the prefix should be
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd",1)
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcmXsXXX.cmd" "MASTER_ID=0,SLAVE_POS=8,HWTYPE=EL7037"
+#==============================================================================
+# ecmcmXsXXX.cmd
+ecmcEpicsEnvSetCalc("sid", "8","%03d")
+ecmcEpicsEnvSetCalc("mid", "0","%01d")
+epicsEnvSet("ECMC_G",            "IOC_TEST:m0s008")
+epicsEnvSet("ECMC_P",            "IOC_TEST:m0s008-")
+epicsEnvUnset(sid)
+epicsEnvUnset(mid)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SUBS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applySubstitutions.cmd" "SUBST_FILE=ecmcEL7037.substitutions,ECMC_P=IOC_TEST:m0s008-"
+#==============================================================================
+# applySubstitutions.cmd
+ecmcFileExist(ecmcEL7037.substitutions,1,1)
+dbLoadTemplate(ecmcEL7037.substitutions,"ECMC_P=IOC_TEST:m0s008-,ECMC_G=IOC_TEST:m0s008,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=8,HWTYPE=EL7037,T_SMP_MS=10,TSE=-2,NELM=1")
+epicsEnvUnset(DEFAULT_SUBS)
+ecmcEpicsEnvSetCalcTernary(DEFAULT_SLAVE_PVS, "True", "","#- ")
+iocshLoad "/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applyTemplate.cmd" "TEMPLATE_FILE=ecmcEcSlave.template,ECMC_P=IOC_TEST:m0s008-,ECMC_G=IOC_TEST:m0s008"
+#==============================================================================
+# applyTemplate.cmd
+ecmcFileExist(ecmcEcSlave.template,1,1)
+dbLoadRecords("ecmcEcSlave.template", "ECMC_P=IOC_TEST:m0s008-,ECMC_G=IOC_TEST:m0s008,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,SLAVE_POS=8,HWTYPE=EL7037,T_SMP_MS=10,TSE=-2,")
+epicsEnvUnset(DEFAULT_SLAVE_PVS)
+# increment SLAVE_ID
+ecmcEpicsEnvSetCalc("SLAVE_ID", "8+1","%d")
+# apply config ${CONFIG} for ${HW_DESC}
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL7037-Motor-Nanotec-ST4118L1804-B.cmd",1)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ecmcEL7037-Motor-Nanotec-ST4118L1804-B.cmd ""
+epicsEnvSet(I_MAX_MA_LOCAL,"1500")
+epicsEnvSet(I_RUN_MA_LOCAL,1000)
+epicsEnvSet(I_STDBY_MA_LOCAL,500)
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/chkValidCurrentSetOrDie.cmd",1)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExa2023/01/23 16:08:45.147 OK
+2023/01/23 16:08:45.147 OK
+2023/01/23 16:08:45.147 OK
+2023/01/23 16:08:45.147 OK
+2023/01/23 16:08:45.147 OK
+2023/01/23 16:08:45.148 OK
+2023/01/23 16:08:45.148 OK
+[4mcfg/ax1.yaml[0m
+  [2m57:101[0m    [33mwarning[0m  line too long (107 > 100 characters)  [2m(line-length)[0m
+  [2m58:101[0m    [33mwarning[0m  line too long (108 > 100 characters)  [2m(line-length)[0m
+  [2m98:101[0m    [33mwarning[0m  line too long (112 > 100 characters)  [2m(line-length)[0m
+  [2m101:101[0m   [33mwarning[0m  line too long (129 > 100 characters)  [2m(line-length)[0m
+
+[4mcfg/ax1.yaml[0m
+  [2m57:101[0m    [33mwarning[0m  line too long (107 > 100 characters)  [2m(line-length)[0m
+  [2m58:101[0m    [33mwarning[0m  line too long (108 > 100 characters)  [2m(line-length)[0m
+  [2m98:101[0m    [33mwarning[0m  line too long (112 > 100 characters)  [2m(line-length)[0m
+  [2m101:101[0m   [33mwarning[0m  line too long (129 > 100 characters)  [2m(line-length)[0m
+
+2023/01/23 16:08:45.853 OK
+2023/01/23 16:08:45.853 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+mple/chkValidCurrentSetOrDie.cmd "I_RUN_MA=1000,I_STDBY_MA=500,I_MAX_MA=1500"
+#==============================================================================
+# chkValidCurrentSetOrDie.cmd
+# Ensure running current is below max current otherwise exit
+ecmcEpicsEnvSetCalcTernary(ECMC_EXE_CMD, "1000>1500 or 1000<=0", "ecmcExit Error: Run current setpoint to high or negative...","# Run current setting OK (1000)...")
+# Result: 
+# Run current setting OK (1000)...
+epicsEnvUnset(ECMC_EXE_CMD)
+# Ensure standby current is below max current otherwise exit
+ecmcEpicsEnvSetCalcTernary(ECMC_EXE_CMD, "500>1500 or 500<0", "ecmcExit Error: Standby current setpoint to high or negative...","# Standby current setting OK (500)...")
+# Result: 
+# Standby current setting OK (500)...
+epicsEnvUnset(ECMC_EXE_CMD)
+# Ensure standby current is below run current otherwise exit
+ecmcEpicsEnvSetCalcTernary(ECMC_EXE_CMD, "500>1000", "ecmcExit Error: Standby current higher than run current...","# Standby current and run current setting OK (500<1000)...")
+# Result: 
+# Standby current and run current setting OK (500<1000)...
+epicsEnvUnset(ECMC_EXE_CMD)
+ecmcConfigOrDie "Cfg.EcAddSdo(8,0x8010,0x1,1000,2)"
+ecmcConfigOrDie "Cfg.EcAddSdo(8,0x8010,0x2,500,2)"
+ecmcConfigOrDie "Cfg.EcAddSdo(8,0x8010,0x3,2400,2)"
+ecmcConfigOrDie "Cfg.EcAddSdo(8,0x8010,0x4,175,2)"
+ecmcConfigOrDie "Cfg.EcAddSdo(8,0x8010,0x6,200,2)"
+ecmcConfigOrDie "Cfg.EcAddSdo(8,0x8010,0xA,330,2)"
+epicsEnvUnset("I_RUN_MA_LOCAL")
+epicsEnvUnset("I_STDBY_MA_LOCAL")
+epicsEnvUnset("I_MAX_MA_LOCAL")
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/applyConfig.cmd
+#===============================================================================
+# applyConfig.cfg
+ecmcConfigOrDie "Cfg.EcApplyConfig(1)"
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/loadYamlAxis.cmd,   "FILE=cfg/ax1.yaml, DEV=DEV, DRV_SLAVE=7, ENC_SLAVE=3, ENC_CHANNEL=01, SWITCH_SLAVE=1"
+on error halt
+system ". /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/pythonVenv.sh -d /tmp/IOC_TEST/EcMaster_0/; python /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/axisYamlJinja2.py -d /tmp/IOC_TEST/EcMaster_0/ -T /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/ -D cfg/ax1.yaml -o /tmp/IOC_TEST/EcMaster_0/cfg/ax1.yaml.axis"
+epicsEnvSet("ECMC_PREFIX"      "DEV:")
+ecmcFileExist("/tmp/IOC_TEST/EcMaster_0/cfg/ax1.yaml.axis",1)
+iocshLoad "/tmp/IOC_TEST/EcMaster_0/cfg/ax1.yaml.axis"
+ecmcConfigOrDie "Cfg.CreateAxis(1,1,0,1)"
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject("","ax1.health")"
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s3.positionActual01","ax1.enc.actpos")"
+ecmcConfigOrDie "Cfg.SetAxisEncScaleDenom(1,4096.0)"
+ecmcConfigOrDie "Cfg.SetAxisEncScaleNum(1,-60.0)"
+ecmcConfigOrDie "Cfg.SetAxisEncSourceType(1,0)"
+ecmcConfigOrDie "Cfg.SetAxisEncType(1,1)"
+ecmcConfigOrDie "Cfg.SetAxisEncBits(1,25)"
+    ecmcConfigOrDie "Cfg.SetAxisEncAbsBits(1,25)"
+ecmcConfigOrDie "Cfg.SetAxisEncOffset(1,491455)"
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s7.driveControl01","ax1.drv.control")"
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s7.driveStatus01","ax1.drv.status")"
+    ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s7.velocitySetpoint01","ax1.drv.velocity")"
+        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s7.driveControl01.2","ax1.drv.reducetorque")"
+        ecmcConfigOrDie "Cfg.SetAxisDrvReduceTorqueEnable(1, 1)"
+    ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s7.driveControl01.1","ax1.drv.reset")"
+    ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s7.driveStatus01.7","ax1.drv.warning")"
+            ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s7.driveStatus01.3","ax1.drv.alarm0")"
+ecmcConfigOrDie "Cfg.SetAxisDrvScaleNum(1,600)"
+ecmcConfigOrDie "Cfg.SetAxisDrvScaleDenom(1,32768)"
+ecmcConfigOrDie "Cfg.SetAxisCntrlKp(1,10)"
+ecmcConfigOrDie "Cfg.2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.854 OK
+2023/01/23 16:08:45.855 OK
+2023/01/23 16:08:45.855 OK
+2023/01/23 16:08:45.855 OK
+2023/01/23 16:08:45.855 OK
+2023/01/23 16:08:45.855 OK
+2023/01/23 16:08:45.855 OK
+2023/01/23 16:08:45.855 OK
+2023/01/23 16:08:45.855 OK
+2023/01/23 16:08:45.855 OK
+2023/01/23 16:08:45.855 OK
+2023/01/23 16:08:45.855 OK
+2023/01/23 16:08:45.855 OK
+2023/01/23 16:08:45.855 OK
+2023/01/23 16:08:45.855 OK
+2023/01/23 16:08:45.855 OK
+2023/01/23 16:08:45.855 OK
+2023/01/23 16:08:45.856 OK
+2023/01/23 16:08:45.856 OK
+2023/01/23 16:08:45.856 OK
+2023/01/23 16:08:45.856 OK
+2023/01/23 16:08:45.856 OK
+2023/01/23 16:08:45.856 OK
+2023/01/23 16:08:45.857 OK
+2023/01/23 16:08:46.862 EtherCAT bus ready (not scaning).
+2023/01/23 16:08:46.862 INFO: Locking memory
+2023/01/23 16:08:46.903 Starting up EtherCAT bus: 0 second(s). Max wait time 30 second(s).
+2023/01/23 16:08:46.963 ../devEcmcSup/motion/ecmcMonitor.cpp/checkLimits:501: ERROR_MON_BOTH_LIMIT_INTERLOCK (0x14c10).
+2023/01/23 16:08:46.963 ../devEcmcSup/motion/ecmcAxisReal.cpp/execute:185: ERROR_AXIS_HARDWARE_STATUS_NOT_OK (0x14315).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:374: ERROR: Slave 0: Not operational (0x24011).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:379: ERROR_EC_SLAVE_NOT_OPERATIONAL (0x24011).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:374: ERROR: Slave 1: Not operational (0x24011).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:379: ERROR_EC_SLAVE_NOT_OPERATIONAL (0x24011).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:374: ERROR: Slave 2: Not operational (0x24011).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:379: ERROR_EC_SLAVE_NOT_OPERATIONAL (0x24011).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:374: ERROR: Slave 3: Not operational (0x24011).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:379: ERROR_EC_SLAVE_NOT_OPERATIONAL (0x24011).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:374: ERROR: Slave 4: Not operational (0x24011).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:379: ERROR_EC_SLAVE_NOT_OPERATIONAL (0x24011).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:374: ERROR: Slave 5: Not operational (0x24011).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:379: ERROR_EC_SLAVE_NOT_OPERATIONAL (0x24011).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:374: ERROR: Slave 6: Not operational (0x24011).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:379: ERROR_EC_SLAVE_NOT_OPERATIONAL (0x24011).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:374: ERROR: Slave 7: Not operational (0x24011).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:379: ERROR_EC_SLAVE_NOT_OPERATIONAL (0x24011).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:374: ERROR: Slave 8: Not operational (0x24011).
+2023/01/23 16:08:46.963 ../devEcmcSup/ethercat/ecmcEcSlave.cpp/checkConfigState:379: ERROR_EC_SLAVE_NOT_OPERATIONAL (0x24011).
+2023/01/23 16:08:46.963 ecmc::  Ax     PosSet     PosAct     PosErr    PosTarg   DistLeft    CntrOut   VelFFSet     VelAct   VelFFRaw VelRaw  Error Co CD St IL LI TS ES En Ex Bu Ta Hd L- L+ Ho
+2023/01/23 16:08:46.963 ecmc::   1      0.000 491455.000 -491455.000      0.000 -491455.000      0.000      0.000      0.000      0.000      0  14315  0  0  0  7 16  0  0 00  0  0  1  1  0  0  0
+2023/01/23 16:08:47.064 ecmc::   1      0.000 491455.000 -491455.000      0.000 -491455.000      0.000      0.000      0.000      0.000      0  14315  0  0  0  7  7  0  0 00  0  0  1  1  0  0  0
+2023/01/23 16:08:47.165 ecmc::   1      0.000 491455.000 -491455.000      0.000 -491455.000      0.000      0.000      0.000      0.000      0  14315  0  0  0 16 16  0  0 00  0  0  1  1  1  1  0
+2023/01/23 16:08:47.569 ecmc::   1      0.000 491455.000 -491455.000      0.000 -491455.000      0.000      0.000      0.000      0.000      0  14315  0  0  0 16 16  0  0 00  0  0  0  1  1  1  0
+2023/01/23 16:08:47.670 ecmc::   1      0.000 491455.000 -491455.000      0.000 -491455.000      0.000      0.000      0.000      0.000      0  14315  0  0  0 16 16  0  0 00  0  0  1  1  1  1  0
+2023/01/23 16:08:47.904 Starting up EtherCAT bus: 1 second(s). Max wait time 30 second(s).
+2023/01/23 16:08:47.974 ../devEcmcSup/main/ecmcError.cpp/errorReset:103: NO_ERROR (0x0).
+2023/01/23 16:08:47.974 ../devEcmcSup/main/ecmcError.cpp/errorReset:103: NO_ERROR (0x0).
+2023/01/23 16:08:47.974 ../devEcmcSup/main/ecmcError.cpp/errorReset:103: NO_ERROR (0x0).
+2023/01/23 16:08:48.074 ecmc::   1     49.917     49.917      0.000      0.000    -49.917      0.000      0.000      0.000      0.000      0      0  0  0  0  0  0  0  0 00  0  0  1  1  1  1  0
+2023/01/23 16:08:49.904 EtherCAT bus started!
+2023/01/23 16:08:49.904 OK
+Starting iocInit
+SetAxisCntrlKi(1,0.001)"
+ecmcConfigOrDie "Cfg.SetAxisCntrlKd(1,0.0)"
+ecmcConfigOrDie "Cfg.SetAxisCntrlKff(1,1.0)"
+    
+ecmcConfigOrDie "Cfg.SetAxisTrajSourceType(1,0)"
+ecmcConfigOrDie "Cfg.SetAxisJerk(1,5)"
+ecmcConfigOrDie "Cfg.SetAxisAcc(1,5)"
+ecmcConfigOrDie "Cfg.SetAxisDec(1,5.0)"
+ecmcConfigOrDie "Cfg.SetAxisVel(1,10)"
+ecmcConfigOrDie "Cfg.SetAxisEmergDeceleration(1,50.0)"
+ecmcConfigOrDie "Cfg.SetAxisJogVel(1,10)"
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject(ec0.s1.binaryInput02.0,"ax1.mon.highlim")"
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject(ec0.s1.binaryInput01.0,"ax1.mon.lowlim")"
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject(ec0.s1.binaryInput03.0,"ax1.mon.homesensor")"
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject(ec0.s1.ONE.0,"ax1.mon.extinterlock")"
+    ecmcConfigOrDie "Cfg.SetAxisHomePosition(1,30)"
+        ecmcConfigOrDie "Cfg.SetAxisHomePostMoveEnable(1,1)"
+        ecmcConfigOrDie "Cfg.SetAxisHomePostMoveTargetPosition(1,0)"
+    ecmcConfigOrDie "Cfg.SetAxisHomeVelTowardsCam(1,10)"
+    ecmcConfigOrDie "Cfg.SetAxisHomeVelOffCam(1,5)"
+        ecmcConfigOrDie "Cfg.SetAxisMonEnableLagMon(1,1)"
+        ecmcConfigOrDie "Cfg.SetAxisMonPosLagTol(1,2)"
+        ecmcConfigOrDie "Cfg.SetAxisMonPosLagTime(1,100)"
+        ecmcConfigOrDie "Cfg.SetAxisMonEnableAtTargetMon(1,1)"
+        ecmcConfigOrDie "Cfg.SetAxisMonAtTargetTol(1,0.1)"
+        ecmcConfigOrDie "Cfg.SetAxisMonAtTargetTime(1,100)"
+        ecmcConfigOrDie "Cfg.SetAxisMonEnableMaxVel(1,1)"
+        ecmcConfigOrDie "Cfg.SetAxisMonMaxVel(1,60)"
+        ecmcConfigOrDie "Cfg.SetAxisMonMaxVelTrajILDelay(1,100)"
+            ecmcConfigOrDie "Cfg.SetAxisMonMaxVelDriveILDelay(1,200)"
+ecmcFileExist("ecmcAxis.db",1,1)
+dbLoadRecords("ecmcAxis.db","P=DEV:,AXIS_NAME='TRX1',EGU='mm',PREC=3,AXIS_NO=1,HOMEPROC=4,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,T_SMP_MS=10,TSE=-2")
+ecmcConfigOrDie "Cfg.SetAxisPLCEnable(1,0)"
+ecmcConfigOrDie "Cfg.SetAxisAllowCommandsFromPLC(1,1)"
+ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterSize(1,100)"
+ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterEnable(1,0)"
+ecmcConfigOrDie "Cfg.SetAxisEncSourceType(1,0)"
+ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(1,100)"
+ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterEnable(1,0)"
+system "rm -rf /tmp/IOC_TEST/EcMaster_0/cfg/ax1.yaml.axis"
+epicsEnvSet("ECMC_PREFIX"      "IOC_TEST:")
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/setAppMode.cmd
+#==============================================================================
+# setAppMode.cmd
+ecmcFileExist("/home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/general.cmd",1)
+iocshLoad /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods/base-7.0.6.1/require-4.0.0/ecmccfg/jinjaExample/general.cmd
+#==============================================================================
+# general.cmd
+ecmcFileExist("ecmcGeneral.db",1,1)
+dbLoadRecords("ecmcGeneral.db","P=IOC_TEST:,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,T_SMP_MS=10,TSE=-2,ECMC_PROC_HOOK=")
+# Examples of commands for info:
+# ecmcReport <level> or asynReport <level>
+# ecmcReport 3
+# ecmcGrepParam <pattern>
+# List all ecmc params for ethercat slave 2:
+# ecmcGrepParam *s2*
+#
+ecmcEpicsEnvSetCalcTernary(ECMC_MASTER_CMD, "0>=0", "","#- ")
+ ecmcFileExist("ecmcEc.db",1,1)
+ dbLoadRecords("ecmcEc.db","P=IOC_TEST:,ECMC_EC_MP=m,PORT=MC_CPU1,ADDR=0,TIMEOUT=1,MASTER_ID=0,T_SMP_MS=10,TSE=-2")
+ecmcConfigOrDie "Cfg.SetAppMode(1)"
+asynSetTraceMask(MC_CPU1, -1, 0x01)
+asynSetTraceIOMask(MC_CPU1, -1, 6)
+asynSetTraceInfoMask(MC_CPU1, -1, 1)
+ecmcConfigOrDie "ControllerErrorReset()"
+iocInit()
+############################################################################
+## EPICS R7.0.6.1-E3-7.0.6.1-patch
+## Rev. 2022-03-09T15:26+0100
+############################################################################
+ECATtimestamp aSubRecord: IOC_TEST:m0s005-BI01-TimeRiseTS
+ECATtimestamp aSubRecord: IOC_TEST:m0s005-BI01-TimeFallTS
+ECATtimestamp aSubRecord: IOC_TEST:m0s005-BI02-TimeRiseTS
+ECATtimestamp aSubRecord: IOC_TEST:m0s005-BI02-TimeFallTS
+iocRun: All initialization complete
+epicsEnvSet EPICS_DRIVER_PATH /home/anderssandstrom/sources/test_jinja/e3-ecmccfg/cellMods//base-7.0.6.1/require-4.0.0:/epics/base-7.0.6.1/require/4.0.0/siteMods
+# Set the IOC Prompt String One 
+epicsEnvSet IOCSH_PS1 "mcag-dev-asm-02-24836 > "
+#
+[?1034hmcag-dev-asm-02-24836 > 
+mcag-dev-asm-02-24836 > 
+mcag-dev-asm-02-24836 > 

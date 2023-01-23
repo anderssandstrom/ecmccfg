@@ -1,0 +1,93 @@
+#- manually load the ethercat lib, as this somehow fails on debian11
+# dlload /usr/local/lib/libethercat.so
+
+##############################################################################
+## Initiation:
+epicsEnvSet("IOC" ,"$(IOC="IOC_TEST")")
+epicsEnvSet("ECMCCFG_INIT" ,"")  #Only run startup once (auto at PSI, need call at ESS), variable set to "#" in startup.cmd
+epicsEnvSet("SCRIPTEXEC" ,"$(SCRIPTEXEC="iocshLoad")")
+
+
+#- ecmccfg, choose the versions for your environment5.000 mm/s
+require ecmccfg jinjaExample
+
+# run module startup.cmd (only needed at ESS  PSI auto call at require)
+$(ECMCCFG_INIT)$(SCRIPTEXEC) ${ecmccfg_DIR}startup.cmd, "IOC=$(IOC),ECMC_VER=8.0.0"
+
+epicsEnvSet("DEV", "DEV")
+
+## HW
+#Configure EK1100 coupler terminal
+epicsEnvSet(ECMC_EC_SLAVE_NUM,${ECMC_EC_SLAVE_NUM=0})
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=${ECMC_EC_SLAVE_NUM}, HW_DESC=EK1100"
+
+#Configure EL1018 digital input terminal
+ecmcEpicsEnvSetCalc(ECMC_EC_SLAVE_NUM, "${ECMC_EC_SLAVE_NUM}+1")
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=${ECMC_EC_SLAVE_NUM}, HW_DESC=EL1018"
+
+#Configure EL2808 digital output terminal
+ecmcEpicsEnvSetCalc(ECMC_EC_SLAVE_NUM, "${ECMC_EC_SLAVE_NUM}+1")
+epicsEnvShow("ECMC_EC_SLAVE_NUM")
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=${ECMC_EC_SLAVE_NUM}, HW_DESC=EL2808"
+
+# Set all outputs to feed switches
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},binaryOutput01,1)"
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},binaryOutput02,1)"
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},binaryOutput03,1)"
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},binaryOutput04,1)"
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},binaryOutput05,1)"
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},binaryOutput06,1)"
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},binaryOutput07,1)"
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},binaryOutput08,1)"
+
+#Configure EL5002 2-channel SSI encoder terminal, motor 1
+ecmcEpicsEnvSetCalc(ECMC_EC_SLAVE_NUM, "${ECMC_EC_SLAVE_NUM}+1")
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=${ECMC_EC_SLAVE_NUM}, HW_DESC=EL5002"
+
+#Configure Baumer encoder for EL5002 2-channel SSI encoder terminal (Channel 1)
+${SCRIPTEXEC} ${ecmccfg_DIR}applySlaveConfig.cmd "CONFIG=-Encoder-ch1-Baumer-BMMH30D1G24C1213P55"
+
+#Configure Baumer encoder for EL5002 2-channel SSI encoder terminal (Channel 2)
+${SCRIPTEXEC} ${ecmccfg_DIR}applySlaveConfig.cmd "CONFIG=-Encoder-ch2-Baumer-BMMH30D1G24C1213P55"
+
+# Configure EL9505 Power supply terminal 5V
+ecmcEpicsEnvSetCalc(ECMC_EC_SLAVE_NUM, "${ECMC_EC_SLAVE_NUM}+1")
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=${ECMC_EC_SLAVE_NUM}, HW_DESC=EL9505"
+
+# Configure EL1252 digital input terminal
+ecmcEpicsEnvSetCalc(ECMC_EC_SLAVE_NUM, "${ECMC_EC_SLAVE_NUM}+1")
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=${ECMC_EC_SLAVE_NUM}, HW_DESC=EL1252"
+
+# Configure EL9410 Power supply with refresh of E-Bus.
+ecmcEpicsEnvSetCalc(ECMC_EC_SLAVE_NUM, "${ECMC_EC_SLAVE_NUM}+1")
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=${ECMC_EC_SLAVE_NUM}, HW_DESC=EL9410"
+
+#Configure EL7037 stepper drive terminal, motor 1
+ecmcEpicsEnvSetCalc(ECMC_EC_SLAVE_NUM, "${ECMC_EC_SLAVE_NUM}+1")
+${SCRIPTEXEC} ${ecmccfg_DIR}configureSlave.cmd, "SLAVE_ID=${ECMC_EC_SLAVE_NUM}, HW_DESC=EL7037, CONFIG=-Motor-Nanotec-ST4118L1804-B, CFG_MACROS='I_RUN_MA=900,I_STDBY_MA=200'"
+
+#Configure EL7037 stepper drive terminal, motor 2
+ecmcEpicsEnvSetCalc(ECMC_EC_SLAVE_NUM, "${ECMC_EC_SLAVE_NUM}+1")
+${SCRIPTEXEC} ${ecmccfg_DIR}configureSlave.cmd, "SLAVE_ID=${ECMC_EC_SLAVE_NUM}, HW_DESC=EL7037, CONFIG=-Motor-Nanotec-ST4118L1804-B"
+
+${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}applyConfig.cmd
+
+#- #############################################################################
+#- motion
+#- Axis configuration for top axis
+
+${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}loadYamlAxis.cmd,   "FILE=cfg/ax1.yaml, DEV=${DEV}, DRV_SLAVE=7, ENC_SLAVE=3, ENC_CHANNEL=01, SWITCH_SLAVE=1"
+
+#- #############################################################################
+#- go active
+${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}setAppMode.cmd
+
+#- be quiet
+asynSetTraceMask(MC_CPU1, -1, 0x01)
+asynSetTraceIOMask(MC_CPU1, -1, 6)
+asynSetTraceInfoMask(MC_CPU1, -1, 1)
+
+#- reset all errors
+ecmcConfigOrDie "ControllerErrorReset()"
+
+iocInit()

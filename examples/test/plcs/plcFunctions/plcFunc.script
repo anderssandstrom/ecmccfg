@@ -23,7 +23,7 @@ $(SCRIPTEXEC) $(ecmccfg_DIR)loadPLCFile.cmd, "PLC_ID=0, SAMPLE_RATE_MS=1000,FILE
 
 # test load a plc function
 ecmcConfigOrDie "Cfg.LoadPLCFunction(0,./plc/add_numbers.func)"
-ecmcConfigOrDie "Cfg.LoadPLCFunction(0,./plc/mult_numbers.func)"
+#ecmcConfigOrDie "Cfg.LoadPLCFunction(0,./plc/mult_numbers.func)"
 
 # go active
 $(SCRIPTEXEC) ($(ecmccfg_DIR)setAppMode.cmd)

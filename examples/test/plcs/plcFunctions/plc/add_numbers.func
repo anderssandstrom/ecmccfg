@@ -1,5 +1,5 @@
 # Test function
 # 
-function add_numbers(x,y,z,a)
-  x/x; # just test
-  x+y+z+a;
+function add_numbers(x)
+  sin(x);
+  

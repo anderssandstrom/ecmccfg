@@ -2,4 +2,4 @@
 # 
 function mult_numbers(x,y,z,a)
   x/x; # just test
-  x+y+z+a;
+  x*y*z*a;

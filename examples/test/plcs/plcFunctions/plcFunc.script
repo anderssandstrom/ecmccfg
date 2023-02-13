@@ -1,0 +1,35 @@
+##############################################################################
+## test load PLC function
+
+##############################################################################
+## Initiation:
+epicsEnvSet("IOC" ,"$(IOC="IOC_TEST")")
+epicsEnvSet("ECMCCFG_INIT" ,"")  #Only run startup once (auto at PSI, need call at ESS), variable set to "#" in startup.cmd
+epicsEnvSet("SCRIPTEXEC" ,"$(SCRIPTEXEC="iocshLoad")")
+
+require ecmccfg master
+
+# run module startup.cmd (only needed at ESS  PSI auto call at require)
+$(ECMCCFG_INIT)$(SCRIPTEXEC) ${ecmccfg_DIR}startup.cmd, "IOC=$(IOC),ECMC_VER=addCompFunc, MASTER_ID=-1"
+
+##############################################################################
+## Configure hardware:
+
+# No EtherCAT hardware..
+
+##############################################################################
+## PLC 0
+$(SCRIPTEXEC) $(ecmccfg_DIR)loadPLCFile.cmd, "PLC_ID=0, SAMPLE_RATE_MS=1000,FILE=./plc/plc_main.plc, PLC_MACROS='PLC_ID=0,DBG='")
+
+# test load a plc function
+ecmcConfigOrDie "Cfg.LoadPLCFunction(0,./plc/add_numbers.func)"
+ecmcConfigOrDie "Cfg.LoadPLCFunction(0,./plc/mult_numbers.func)"
+
+# go active
+$(SCRIPTEXEC) ($(ecmccfg_DIR)setAppMode.cmd)
+
+iocInit()
+
+dbl > pvs.log
+
+dbpf IOC_TEST:Axis1.SPAM 1023

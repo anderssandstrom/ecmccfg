@@ -1,0 +1,4 @@
+
+
+println('Add numbers :',add_numbers(1,2,3,4);)
+println('Mult numbers:',mult_numbers(1,2,3,4);)

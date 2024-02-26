@@ -11,10 +11,10 @@
 |CTRL_KI        | 0.0             |        | double | Position controller integral gain. |
 |CTRL_KD        | 0.0             |        | double | Position controller derivative gain. |
 |CTRL_KFF       | 1.0             |        | double | Position controller feed-forward gain. | 
-|CTRL_INR_TOL    | MON_AT_TARG_TOL |  EGU   | double | Position inner controller tolerance (CTRL_INR* will be used when inside this tolerance distance to target position). |
-|CTRL_INR_KP     | 0.0             |        | double | Position inner controller proportinal gain. |
-|CTRL_INR_KI     | 0.0             |        | double | Position inner controller integral gain. |
-|CTRL_INR_KD     | 0.0             |        | double | Position inner controller derivative gain. |
+|CTRL_INR_TOL   | MON_AT_TRG_TOL |  EGU   | double | Position inner controller tolerance (CTRL_INR* will be used when inside this tolerance distance to target position). |
+|CTRL_INR_KP    | 0.0             |        | double | Position inner controller proportinal gain. |
+|CTRL_INR_KI    | 0.0             |        | double | Position inner controller integral gain. |
+|CTRL_INR_KD    | 0.0             |        | double | Position inner controller derivative gain. |
 |CTRL_LIM_MIN   |                 |        | double | Minimum output of controller. Function activates if macro is set. |
 |CTRL_LIM_MAX   |                 |        | double | Maximum output of controller. Function activates if macro is set. |
 |CTRL_LIM_I_MIN |                 |        | double | Minimum integrator output of controller. Function activates if macro is set. |
@@ -26,7 +26,7 @@
 
 | Macro           | Default   | Unit   | Type   | Description |
 |--               |--         |--      |--      |--           |
-|MON_AT_TARG_TOL  | Mandatory | EGU    | double | At target monitoring tolerance | 
+|MON_AT_TRG_TOL   | Mandatory | EGU    | double | At target monitoring tolerance | 
 
 # Drive
 

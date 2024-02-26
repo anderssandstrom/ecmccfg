@@ -7,8 +7,8 @@ ecmcConfigOrDie "Cfg.SetAxisCntrlKd(${ID},${CTRL_KD=0})"
 ecmcConfigOrDie "Cfg.SetAxisCntrlKff(${ID},${CTRL_KFF=1})"
 
 #- Set inner controller parameters tolerance defaults to at target tol
-ecmcIf("${CTRL_IN_KP='NAN'}!='NAN' or ${CTRL_IN_KI='NAN'}!='NAN' ${CTRL_IN_KD='NAN'}!='NAN")
-${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisCntrlInnerParams(${ID},${CTRL_IN_KP=0},${CTRL_IN_KI=0},${CTRL_IN_KD=0},${CTRL_IN_TOL=${MON_AT_TARG_TOL=0})"
+ecmcIf("${CTRL_INR_KP='NAN'}!='NAN' or ${CTRL_INR_KI='NAN'}!='NAN' or ${CTRL_INR_KD='NAN'}!='NAN")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisCntrlInnerParams(${ID},${CTRL_INR_KP=0},${CTRL_INR_KI=0},${CTRL_INR_KD=0},${CTRL_INR_TOL=${MON_AT_TARG_TOL=0})"
 ecmcEndIf()
 
 #- Controller limits

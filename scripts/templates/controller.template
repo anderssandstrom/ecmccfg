@@ -1,0 +1,35 @@
+#- =============================================================================
+#- Controller
+#- =============================================================================
+ecmcConfigOrDie "Cfg.SetAxisCntrlKp(${ID},${CTRL_KP=0})"
+ecmcConfigOrDie "Cfg.SetAxisCntrlKi(${ID},${CTRL_KI=0})"
+ecmcConfigOrDie "Cfg.SetAxisCntrlKd(${ID},${CTRL_KD=0})"
+ecmcConfigOrDie "Cfg.SetAxisCntrlKff(${ID},${CTRL_KFF=1})"
+
+#- Set inner controller parameters tolerance defaults to at target tol
+ecmcIf("${CTRL_IN_KP='NAN'}!='NAN' or ${CTRL_IN_KI='NAN'}!='NAN' ${CTRL_IN_KD='NAN'}!='NAN")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisCntrlInnerParams(${ID},${CTRL_IN_KP=0},${CTRL_IN_KI=0},${CTRL_IN_KD=0},${CTRL_IN_TOL=${MON_AT_TARG_TOL=0})"
+ecmcEndIf()
+
+#- Controller limits
+ecmcIf("${CTRL_LIM_MIN='NAN'}!='NAN'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisCntrlOutLL(${ID},${CTRL_LIM_MIN=0})"
+ecmcEndIf()
+
+ecmcIf("${CTRL_LIM_MAX='NAN'}!='NAN'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisCntrlOutHL(${ID},${CTRL_LIM_MAX=0})"
+ecmcEndIf()
+
+ecmcIf("${CTRL_LIM_I_MIN='NAN'}!='NAN'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisCntrlIPartLL(${ID},${CTRL_LIM_I_MIN=0})"
+ecmcEndIf()
+
+ecmcIf("${CTRL_LIM_I_MAX='NAN'}!='NAN'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisCntrlIPartHL(${ID},${CTRL_LIM_I_MAX=0})"
+ecmcEndIf()
+
+#- Controller deadband
+ecmcIf("${CTRL_DB_TOL='NAN'}!='NAN'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisCntrlDeadband(${ID},${CTRL_DB_TOL=0})"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisCntrlDeadbandTime(${ID},${CTRL_DB_TIME=0})"
+ecmcEndIf()

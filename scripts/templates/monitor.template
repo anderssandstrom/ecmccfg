@@ -65,10 +65,10 @@ ${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonPosLagTime(${ID},${MON_POS_LAG_TIME=1})
 ecmcEndIf()
 
 #- At target
-ecmcIf("'${MON_AT_TARG_TOL=NA}'!='NA'")
-${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonAtTargetTol(${ID},${MON_AT_TARG_TOL})"
+ecmcIf("'${MON_AT_TRG_TOL=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonAtTargetTol(${ID},${MON_AT_TRG_TOL})"
 ${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonEnableAtTargetMon(${ID},1)"
-${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonAtTargetTime(${ID},${MON_AT_TARG_TIME=1})"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonAtTargetTime(${ID},${MON_AT_TRG_TIME=1})"
 ecmcEndIf()
 
 #- Max velo
@@ -89,4 +89,15 @@ ${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonVelDiffTrajILDelay(${ID},${MON_DIFF_VEL
 ${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonVelDiffDriveILDelay(${ID},${MON_DIFF_VEL_DRV_IL_TIME=${MON_DIFF_VEL_TRJ_IL_TIME=1}})"
 #- else
 ${IF_FALSE}ecmcConfigOrDie "Cfg.SetAxisMonEnableVelocityDiff(${ID},0)"
+ecmcEndIf()
+
+#- Soft limits
+ecmcIf("'${MON_SLIM_FWD=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisSoftLimitPosFwd(${ID},${MON_SLIM_FWD})"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisEnableSoftLimitFwd(${ID},1)"
+ecmcEndIf()
+
+ecmcIf("'${MON_SLIM_BWD=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisSoftLimitPosBwd(${ID},${MON_SLIM_BWD})"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisEnableSoftLimitBwd(${ID},1)"
 ecmcEndIf()

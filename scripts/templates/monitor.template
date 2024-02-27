@@ -1,0 +1,56 @@
+#- =============================================================================
+#- Monitoring
+#- =============================================================================
+
+#- Forward limit
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject(${MON_EC_LIM_FWD},"ax${ID}.mon.highlim")"
+ecmcIf("'${MON_LIM_FWD_POL=NC}'=='NO'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonLimitFwdPolarity(${ID},1)"
+#- else
+${IF_FALSE}ecmcConfigOrDie "Cfg.SetAxisMonLimitFwdPolarity(${ID},0)"
+ecmcEndIf()
+
+#- Backward limit
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject(${MON_EC_LIM_BWD},"ax${ID}.mon.lowlim")"
+ecmcIf("'${MON_LIM_BWD_POL=NC}'=='NO'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonLimitBwdPolarity(${ID},1)"
+#- else
+${IF_FALSE}ecmcConfigOrDie "Cfg.SetAxisMonLimitBwdPolarity(${ID},0)"
+ecmcEndIf()
+
+#- Limit switch latching
+ecmcIf("'${MON_LIM_LTCH=YES}'=='YES'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonLatchLimit(${ID},1)"
+#- else
+${IF_FALSE}ecmcConfigOrDie "Cfg.SetAxisMonLatchLimit(${ID},0)"
+ecmcEndIf()
+
+#- Interlock
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject(${MON_EC_HW_IL},"ax${ID}.mon.extinterlock")"
+ecmcIf("'${MON_HW_IL_POL=NC}'=='NO'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonExtHWInterlockPolarity(${ID},1)"
+#- else
+${IF_FALSE}ecmcConfigOrDie "Cfg.SetAxisMonExtHWInterlockPolarity(${ID},0)"
+ecmcEndIf()
+
+#- Home sensor
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject(${MON_EC_HME},"ax${ID}.mon.homesensor")"
+ecmcIf("'${MON_HME_POL=NC}'=='NO'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonHomeSwitchPolarity(${ID},1)"
+#- else
+${IF_FALSE}ecmcConfigOrDie "Cfg.SetAxisMonHomeSwitchPolarity(${ID},0)"
+ecmcEndIf()
+
+#- Analog interlock
+ecmcIf("'${MON_EC_ANA_IL=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject(${MON_EC_ANA_IL},"ax${ID}.mon.analoginterlock")"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonEnableAnalogInterlock(${ID},1)"
+ecmcEndIf()
+ecmcIf("'${MON_ANA_IL_POL=NC}'=='NO'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonAnalogInterlockPolarity(${ID},1)"
+#- else
+${IF_FALSE}ecmcConfigOrDie "Cfg.SetAxisMonAnalogInterlockPolarity(${ID},0)"
+ecmcEndIf()
+ecmcIf("'${MON_ANA_IL_RAW_LIM=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonAnalogInterlockRawLimit(${ID},${MON_ANA_IL_RAW_LIM})"
+ecmcEndIf()

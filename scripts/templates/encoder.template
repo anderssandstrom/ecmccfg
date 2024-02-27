@@ -1,0 +1,187 @@
+#- =============================================================================
+#- Encoder
+#- =============================================================================
+
+#- Get current encoder index beeing configured (index of encoder added), needed for PV names
+ecmcConfig "GetAxisEncConfigIndex($(ECMC_AXIS_NO))"
+# Current encoder index beeing configured
+epicsEnvShow(ECMC_CONFIG_RETURN_VAL)
+epicsEnvSet(ECMC_ENC_CFG_ID,${ECMC_CONFIG_RETURN_VAL})
+
+#- =============================================================================
+#- General
+
+#- ENC_EGU defaults to EGU
+epicsEnvSet(ENC_EGU,${ENC_EGU=${EGU=""}})
+
+#- Links
+ecmcIf("'${ENC_EC_ACTPOS=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${ENC_EC_ACTPOS}","ax${ID}.enc.actpos")"
+ecmcEndIf()
+
+#- Source
+ecmcIf("'${ENC_SRC=INT}'=='PLC'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisEncSourceType(${ID},1)"
+#- else
+${IF_FALSE}ecmcConfigOrDie "Cfg.SetAxisEncSourceType(${ID},0)"
+ecmcEndIf()
+
+#- Scale
+ecmcIf("'${ENC_SCL_NUM=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisDrvScaleNum(${ID},${ENC_SCL_NUM})"
+ecmcEndIf()
+ecmcIf("'${ENC_SCL_DENOM=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisDrvScaleDenom(${ID},${ENC_SCL_DENOM})"
+ecmcEndIf()
+
+#- Bit count
+ecmcIf("'${ENC_BITS=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisEncBits(${ID},${ENC_BITS})"
+ecmcEndIf()
+
+#- Set type
+ecmcIf("'${ENC_TYPE=ABS}'=='ABS'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisEncType(${ID},1)"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisEncAbsBits(${ID},${ENC_ABS_BITS=${ENC_BITS=NA}})"
+#- else
+${IF_FALSE}ecmcConfigOrDie "Cfg.SetAxisEncType(${ID},0)"
+ecmcEndIf()
+
+ecmcConfigOrDie "Cfg.SetAxisEncOffset(${ID},${ENC_ABS_OFF=0})"
+
+ecmcIf("'${ENC_MASK=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisEncRawMask(${ID},${ENC_MASK})"
+ecmcEndIf()
+
+#- =============================================================================
+#- Errors
+ecmcIf("'${ENC_EC_RST=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${ENC_EC_RST}","ax${ID}.enc.reset")"
+ecmcEndIf()
+
+#- Warning, if ENC_WRN_BIT is set then use control word
+ecmcIf("'${ENC_WRN_BIT=NA}'!='NA'")
+${IF_TRUE}epicsEnvSet(ENC_EC_WARN,"${ENC_EC_STAT_WD}.${ENC_WRN_BIT}")
+ecmcEndIf()
+
+ecmcIf("'${ENC_EC_WRN=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${ENC_EC_WRN}","ax${ID}.enc.warning")"
+ecmcEndIf()
+
+#- Error 1, if ENC_ERR_1_BIT is set then use control word
+ecmcIf("'${ENC_ERR_1_BIT=NA}'!='NA'")
+${IF_TRUE}epicsEnvSet(ENC_EC_ERR_1,"${ENC_EC_STAT_WD}.${ENC_ERR_1_BIT}")
+ecmcEndIf()
+
+ecmcIf("'${ENC_EC_ERR_1=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${ENC_EC_ERR_1}","ax${ID}.enc.error00")"
+ecmcEndIf()
+
+#- Error 2, if ENC_ERR_2_BIT is set then use control word
+ecmcIf("'${ENC_ERR_2_BIT=NA}'!='NA'")
+${IF_TRUE}epicsEnvSet(ENC_EC_ERR_2,"${ENC_EC_STAT_WD}.${ENC_ERR_2_BIT}")
+ecmcEndIf()
+
+ecmcIf("'${ENC_EC_ERR_2=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${ENC_EC_ERR_2}","ax${ID}.enc.error01")"
+ecmcEndIf()
+
+#- Error 3, if ENC_ERR_3_BIT is set then use control word
+ecmcIf("'${ENC_ERR_3_BIT=NA}'!='NA'")
+${IF_TRUE}epicsEnvSet(ENC_EC_ERR_3,"${ENC_EC_STAT_WD}.${ENC_ERR_3_BIT}")
+ecmcEndIf()
+
+ecmcIf("'${ENC_EC_ERR_3=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${ENC_EC_ERR_3}","ax${ID}.enc.error02")"
+ecmcEndIf()
+
+#- =============================================================================
+#- Latching
+ecmcIf("'${ENC_EC_LTCH_POS=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${ENC_EC_LTCH_POS}","ax${ID}.enc.latchpos")"
+ecmcEndIf()
+
+ecmcIf("'${ENC_ARM_LTCH_BIT=NA}'!='NA'")
+${IF_TRUE}epicsEnvSet(ENC_EC_ARM_LTCH,"${ENC_EC_CTRL_WD}.${ENC_ARM_LTCH_BIT}")
+ecmcEndIf()
+
+ecmcIf("'${ENC_EC_ARM_LTCH=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${ENC_EC_ARM_LTCH}","ax${ID}.enc.latchcontrol")"
+ecmcEndIf()
+
+ecmcIf("'${ENC_LTCHD_BIT=NA}'!='NA'")
+${IF_TRUE}epicsEnvSet(ENC_EC_LTCHD,"${ENC_EC_STAT_WD}.${ENC_LTCHD_BIT}")
+ecmcEndIf()
+
+ecmcIf("'${ENC_EC_LTCHD=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${ENC_EC_LTCHD}","ax${ID}.enc.latchstatus")"
+ecmcEndIf()
+
+#- =============================================================================
+#- Filters
+ecmcIf("'${ENC_FLT_VEL_SIZE=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisEncVelFilterSize(${ID},${ENC_FLT_VEL_SIZE=1})"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisEncVelFilterEnable(${ID},1)"
+ecmcEndIf()
+
+ecmcIf("'${ENC_FLT_POS_SIZE=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisEncPosFilterSize(${ID},${ENC_FLT_POS_SIZE=1})"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisEncPosFilterEnable(${ID},1)"
+ecmcEndIf()
+
+#- =============================================================================
+#- Multi encoder support
+ecmcIf("'${ENC_PRIM=NA}'=='YES'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SelectAxisEncPrimary(${ID},${ECMC_ENC_CFG_ID=1})"
+ecmcEndIf()
+
+ecmcIf("'${ENC_MAX_DIFF_TO_PRIM=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisEncMaxDiffToPrimEnc(${ID},${ENC_MAX_DIFF_TO_PRIM})"
+ecmcEndIf()
+
+#- =============================================================================
+#- Homing
+ecmcIf("'${ENC_HME_SEQ=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisHomeSeqId(${ID},${ENC_HME_SEQ})"
+ecmcEndIf()
+
+ecmcIf("'${ENC_HME_POS=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisHomePosition(${ID},${ENC_HME_POS=0})"
+ecmcEndIf()
+
+ecmcIf("'${ENC_HME_PST_MV_POS=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisHomePostMoveTargetPosition(${ID},${ENC_HME_PST_MV_POS=0})"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisHomePostMoveEnable(${ID},1)"
+ecmcEndIf()
+
+ecmcIf("'${ENC_HME_LTCH_CNT=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisHomeLatchCountOffset(${ID},${ENC_HME_LTCH_CNT=0})"
+ecmcEndIf()
+
+ecmcIf("'${ENC_HME_VEL_TO_CAM=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisHomeVelTowardsCam(${ID},${ENC_HME_VEL_TO_CAM})"
+${IF_TRUE}#- Set both 
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisHomeVelOffCam(${ID},${ENC_HME_VEL_TO_CAM})"
+ecmcEndIf()
+
+ecmcIf("'${ENC_HME_VEL_OFF_CAM=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisHomeVelOffCam(${ID},${ENC_HME_VEL_OFF_CAM})"
+ecmcEndIf()
+
+ecmcIf("'${ENC_HME_SEQ_TME_OUT=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisSeqTimeout(${ID},${ENC_HME_SEQ_TME_OUT})"
+ecmcEndIf()
+
+ecmcIf("'${ENC_HME_REF_TO_ENC_AT_STRT=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisEncRefToOtherEncAtStartup(${ID},${ENC_HME_REF_TO_ENC_AT_STRT})"
+ecmcEndIf()
+
+ecmcIf("'${ENC_HME_REF_AT_HME=NA}'=='YES'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisEncEnableRefAtHome(${ID},1)"
+ecmcEndIf()
+
+ecmcIf("'${ENC_HME_EC_EXT_TRG=NA}'!='NA' and '${ENC_HME_EC_EXT_RDY=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${ENC_HME_EC_EXT_TRG}","ax${ID}.enc.homing_trigg")"
+${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${ENC_HME_EC_EXT_RDY}","ax${ID}.enc.homing_stat")"
+ecmcEndIf()
+

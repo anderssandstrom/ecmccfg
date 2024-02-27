@@ -28,63 +28,63 @@ ${IF_TRUE}ecmcExit
 ecmcEndIf()
 
 ecmcIf("'${DRV_MODE=CSV}'!='CSV'")
-${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${DRV_EC_SET}","ax${ID}.drv.velocity")"
+${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${DRV_EC_SETPOS}","ax${ID}.drv.velocity")"
 #- else CSP
-${IF_FALSE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${DRV_EC_SET}","ax${ID}.drv.position")"
+${IF_FALSE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${DRV_EC_SETPOS}","ax${ID}.drv.position")"
 ecmcEndIf()
 
 #- Reduce torque, if DRV_RED_TRQ_BIT is set then use control word
-ecmcIf("'${DRV_RED_TRQ_BIT=NAN}'!='NAN'")
+ecmcIf("'${DRV_RED_TRQ_BIT=NA}'!='NA'")
 ${IF_TRUE}epicsEnvSet(DRV_EC_RED_TRQ,"${DRV_EC_CTRL_WD}.${DRV_RED_TRQ_BIT}")
 ecmcEndIf()
 
-ecmcIf("'${DRV_EC_RED_TRQ=NAN}'!='NAN'")
+ecmcIf("'${DRV_EC_RED_TRQ=NA}'!='NA'")
 ${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${DRV_EC_RED_TRQ}","ax${ID}.drv.reducetorque")"
 ${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisDrvReduceTorqueEnable(${ID},1)"
 ecmcEndIf()
 
 #- Reset, if DRV_RST_BIT is set then use control word
-ecmcIf("'${DRV_RST_BIT=NAN}'!='NAN'")
+ecmcIf("'${DRV_RST_BIT=NA}'!='NA'")
 ${IF_TRUE}epicsEnvSet(DRV_EC_RST,"${DRV_EC_CTRL_WD}.${DRV_RST_BIT}")
 ecmcEndIf()
 
-ecmcIf("'${DRV_EC_RST=NAN}'!='NAN'")
+ecmcIf("'${DRV_EC_RST=NA}'!='NA'")
 ${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${DRV_EC_RST}","ax${ID}.drv.reset")"
 ecmcEndIf()
 
 #- Warning, if DRV_WRN_BIT is set then use control word
-ecmcIf("'${DRV_WRN_BIT=NAN}'!='NAN'")
-${IF_TRUE}epicsEnvSet(DRV_EC_WARN,"${DRV_EC_CTRL_WD}.${DRV_WRN_BIT}")
+ecmcIf("'${DRV_WRN_BIT=NA}'!='NA'")
+${IF_TRUE}epicsEnvSet(DRV_EC_WARN,"${DRV_EC_STAT_WD}.${DRV_WRN_BIT}")
 ecmcEndIf()
 
-ecmcIf("'${DRV_EC_WRN=NAN}'!='NAN'")
+ecmcIf("'${DRV_EC_WRN=NA}'!='NA'")
 ${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${DRV_EC_WRN}","ax${ID}.drv.warning")"
 ecmcEndIf()
 
 #- Error 1, if DRV_ERR_1_BIT is set then use control word
-ecmcIf("'${DRV_ERR_1_BIT=NAN}'!='NAN'")
-${IF_TRUE}epicsEnvSet(DRV_EC_ERR_1,"${DRV_EC_CTRL_WD}.${DRV_ERR_1_BIT}")
+ecmcIf("'${DRV_ERR_1_BIT=NA}'!='NA'")
+${IF_TRUE}epicsEnvSet(DRV_EC_ERR_1,"${DRV_EC_STAT_WD}.${DRV_ERR_1_BIT}")
 ecmcEndIf()
 
-ecmcIf("'${DRV_EC_ERR_1=NAN}'!='NAN'")
+ecmcIf("'${DRV_EC_ERR_1=NA}'!='NA'")
 ${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${DRV_EC_ERR_1}","ax${ID}.drv.error00")"
 ecmcEndIf()
 
 #- Error 2, if DRV_ERR_2_BIT is set then use control word
-ecmcIf("'${DRV_ERR_2_BIT=NAN}'!='NAN'")
-${IF_TRUE}epicsEnvSet(DRV_EC_ERR_2,"${DRV_EC_CTRL_WD}.${DRV_ERR_2_BIT}")
+ecmcIf("'${DRV_ERR_2_BIT=NA}'!='NA'")
+${IF_TRUE}epicsEnvSet(DRV_EC_ERR_2,"${DRV_EC_STAT_WD}.${DRV_ERR_2_BIT}")
 ecmcEndIf()
 
-ecmcIf("'${DRV_EC_ERR_2=NAN}'!='NAN'")
+ecmcIf("'${DRV_EC_ERR_2=NA}'!='NA'")
 ${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${DRV_EC_ERR_2}","ax${ID}.drv.error01")"
 ecmcEndIf()
 
 #- Error 3, if DRV_ERR_3_BIT is set then use control word
-ecmcIf("'${DRV_ERR_3_BIT=NAN}'!='NAN'")
-${IF_TRUE}epicsEnvSet(DRV_EC_ERR_3,"${DRV_EC_CTRL_WD}.${DRV_ERR_3_BIT}")
+ecmcIf("'${DRV_ERR_3_BIT=NA}'!='NA'")
+${IF_TRUE}epicsEnvSet(DRV_EC_ERR_3,"${DRV_EC_STAT_WD}.${DRV_ERR_3_BIT}")
 ecmcEndIf()
 
-ecmcIf("'${DRV_EC_ERR_3=NAN}'!='NAN'")
+ecmcIf("'${DRV_EC_ERR_3=NA}'!='NA'")
 ${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${DRV_EC_ERR_3}","ax${ID}.drv.error02")"
 ecmcEndIf()
 
@@ -93,11 +93,11 @@ ecmcConfigOrDie "Cfg.SetAxisDrvScaleNum(${ID},${DRV_SCL_NUM})"
 ecmcConfigOrDie "Cfg.SetAxisDrvScaleDenom(${ID},${DRV_SCL_DENOM})"
 
 #- Brake, if DRV_BRK_BIT is set then use control word
-ecmcIf("'${DRV_BRK_BIT=NAN}'!='NAN'")
+ecmcIf("'${DRV_BRK_BIT=NA}'!='NA'")
 ${IF_TRUE}epicsEnvSet(DRV_EC_BRK,"${DRV_EC_CTRL_WD}.${DRV_BRK_BIT}")
 ecmcEndIf()
 
-ecmcIf("'${DRV_EC_BRK=NAN}'!='NAN'")
+ecmcIf("'${DRV_EC_BRK=NA}'!='NA'")
 ${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject("${DRV_EC_BRK}","ax${ID}.drv.brake")"
 ${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisDrvBrakeEnable(${ID},1)"
 ${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisDrvBrakeOpenDelayTime(${ID},${DRV_BRK_OPN_DLY=0})"

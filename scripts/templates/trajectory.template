@@ -1,0 +1,29 @@
+#- =============================================================================
+#- Trajectory
+#- =============================================================================
+
+#- Source
+ecmcIf("'${TRJ_SRC=INT}'=='PLC'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisTrajSourceType(${ID},1)"
+#- else
+${IF_FALSE}ecmcConfigOrDie "Cfg.SetAxisTrajSourceType(${ID},0)"
+ecmcEndIf()
+
+ecmcConfigOrDie "Cfg.SetAxisJerk(${ID},${TRJ_JERK=${TRJ_ACC}})"
+ecmcConfigOrDie "Cfg.SetAxisAcc(${ID},${TRJ_ACC})"
+ecmcConfigOrDie "Cfg.SetAxisDec(${ID},${TRJ_DEC})"
+
+ecmcEpicsEnvSetCalc(TRJ_DEC_EMERG_TEMP, "${TRJ_ACC}*10")
+ecmcConfigOrDie "Cfg.SetAxisEmergDeceleration(${ID},${TRJ_DEC_EMERG=${TRJ_DEC_EMERG_TEMP}})"
+epicsEnvUnset(TRJ_DEC_EMERG_TEMP)
+ecmcConfigOrDie "Cfg.SetAxisVel(${ID},${TRJ_VEL})"
+ecmcConfigOrDie "Cfg.SetAxisJogVel(${ID},${TRJ_JVEL=${TRJ_VEL}})"
+
+#- Modulo
+ecmcIf("'${TRJ_MOD_RNG=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisModRange(${ID},${TRJ_MOD_RNG})"
+ecmcEndIf()
+
+ecmcIf("'${TRJ_MOD_TYP=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisModType(${ID},${TRJ_MOD_TYP})"
+ecmcEndIf()

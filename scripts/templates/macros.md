@@ -1,3 +1,7 @@
+# General
+
+Most functionalites can be disabled by setting the macro to NA
+
 # Axis
 
 | Macro         | Default    | Unit   | Type   | Description |
@@ -33,8 +37,8 @@
 
 | Macro           | Default                 | Unit   | Type   | Description |
 |--               |--                       |--      |--      |--           |
-|DRV_TYPE         | STEPPER                 |        | string | Drive type: STEPPER=simple stepper; DS402=servo or advanced stepper. |
-|DRV_MODE         | CSV                     |        | string | Drive mode: CSV=Cyclic Sync. Velocity Setpoint, CSP=Cyclic Sync. Position setpoint. |
+|DRV_TYPE         | STEPPER                 | STEPPER/DS402 | string | Drive type: STEPPER=simple stepper; DS402=servo or advanced stepper. |
+|DRV_MODE         | CSV                     | CSV/CSP| string | Drive mode: CSV=Cyclic Sync. Velocity Setpoint, CSP=Cyclic Sync. Position setpoint. |
 |DRV_SCL_NUM      | Mandatory for phys axis |        | double | Output scaling numerator. Scale factor is calc=DRV_SCL_NUM/DRV_SCL_DENOM (CSV: scale velo setpoint; CSP: Scale position setpoint). |
 |DRV_SCL_DENOM    | Mandatory for phys axis |        | double | Output scaling denominator. Scale factor is calc=DRV_SCL_NUM/DRV_SCL_DENOM (CSV: scale velo setpoint; CSP: Scale position setpoint). |
 |DRV_EC_CTRL_WD   | Mandatory for phys axis |        | string | Control word EtherCAT link. |
@@ -69,7 +73,7 @@
 |ENC_EC_STAT_WD             | Mandatory if any of the ENC*BIT macros are used |        | string | Status word EtherCAT link. |
 |ENC_SCL_NUM                | Mandatory for internal source |        | double | Input scaling numerator. |
 |ENC_SCL_DENOM              | Mandatory for internal source |        | double | Input scaling denominator. |
-|ENC_SRC                    | INT (internal)                |        | string | INT = internal source; PLC = External source. |
+|ENC_SRC                    | INT (internal)                | INT/PLC| string | Encoder source. INT = internal source; PLC = External source. |
 |ENC_TYPE                   | ABS                           | ABS/INC| string | ABS = Absolute encoder; INC = Incremental encoder. |
 |ENC_BITS                   | Mandatory for internal source |        | uint   | Encoder bit count. |
 |ENC_ABS_BITS               | ENC_BITS                      |        | uint   | Encoder absoulute bit count. |
@@ -111,7 +115,7 @@
 # Trajectory
 | Macro                     | Default                       | Unit      | Type   | Description |
 |--                         |--                             |--         |--      |--           |
-|TRJ_SRC                    | INT                           |           | string | Trajectory source. |
+|TRJ_SRC                    | INT                           | INT/PLC   | string | Trajectory source. INT = internal source; PLC = External source. |
 |TRJ_VEL                    | Mandatory                     | EGU/s     | double | Trajectory velocity |
 |TRJ_JVEL                   | TRJ_VEL                       | EGU/s     | double | Trajectory jog velocity |
 |TRJ_ACC                    | Mandatory                     | EGU/s/s   | double | Trajectory acceleration |
@@ -122,17 +126,33 @@
 |TRJ_MOD_TYP                |                               |           | uint   | Modulo type |
 
 # Monitor
-MON_EC_LIM_FWD
-MON_LIM_FWD_POL NC/NO
-MON_EC_LIM_BWD
-MON_LIM_BWD_POL NC/NO
-MON_EC_HW_IL
-MON_HW_IL_POL   NC/NO
-MON_EC_HME
-MON_HME_POL     NC/NO
-MON_EC_ANA_IL
-MON_ANA_IL_POL  NC/NO
-MON_ANA_IL_RAW_LIM
+
+| Macro                     | Default                       | Unit      | Type   | Description |
+|--                         |--                             |--         |--      |--           |
+|MON_EC_LIM_FWD             | Mandatory                     |           | string | Ethercat link for forward limit switch. |
+|MON_LIM_FWD_POL            | NC                            | NC/NO     | string | Polarity of forward limit switch. |
+|MON_EC_LIM_BWD             | Mandatory                     |           | string | Ethercat link for backward limit switch. |
+|MON_LIM_BWD_POL            | NC                            | NC/NO     | string | Polarity of Backward limit switch. |
+|MON_EC_LIM_BWD             | Mandatory                     |           | string | Ethercat link for backward limit switch. |
+|MON_LIM_BWD_POL            | NC                            | NC/NO     | string | Polarity of Backward limit switch. |
+|MON_EC_HW_IL               | Mandatory                     |           | string | Ethercat link for hardware interlock. |
+|MON_HW_IL_POL              | NC                            | NC/NO     | string | Polarity of hardware interlock. |
+|MON_EC_HME                 | Mandatory                     |           | string | Ethercat link for home sensor. |
+|MON_HME_POL                | NC                            | NC/NO     | string | Polarity of home sensor. |
+|MON_EC_ANA_IL              |                               |           | string | Ethercat link for analog interlock, will disable drive if, for NO polarity, a value of MON_EC_ANA_IL > MON_ANA_IL_RAW_LIM (one usecase is temperature sensors, vacuum motors) |
+|MON_ANA_IL_POL             | N0                            | NC/NO   | string | Polarity of analog interlock (NO = High value is bad; NC = Low value is bad) |
+|MON_ANA_IL_RAW_LIM         | 0                             |  raw  (as MON_EC_ANA_IL) | string | Raw limit to trigger disable axis. |
+|MON_POS_LAG_TOL            |                               |  EGU | double | Position lag tolerance |
+|MON_POS_LAG_TIME           | 1                             |  cycles | double | Position lag time (if position error is > MON_POS_LAG_TOL for more than MON_POS_LAG_TIME axis will stop) |
+|MON_AT_TARG_TOL            | mandatory for motor record    |  EGU | double | At target tolerance. |
+|MON_AT_TARG_TIME           | 1                             |  cycles | double | At target filter time (if actpos-targetpos < MON_AT_TARG_TOL for more than MON_AT_TARG_TIME the axis will be considered to have reached target) |
+|MON_MAX_VEL                |                               |  EGU/s  | double | Maximum velocity |
+|MON_MAX_VEL_TRJ_IL_TIME    | 1                             |  cycles | uint   | Max velocity filter time for controlled rampdown. If velo > MON_MAX_VEL for more than MON_MAX_VEL_TRJ_IL_TIME then axis will initiate a ramp down |
+|MON_MAX_VEL_DRV_IL_TIME    | MON_MAX_VEL_TRJ_IL_TIME       |  cycles | uint   | Max velocity filter time for disabling of axis. If velo > MON_MAX_VEL for more than MON_MAX_VEL_DRV_IL_TIME then axis will be disabled |
+|MON_DIFF_VEL               |                               |  EGU/s  | double | Maximum difference between actual velocity and setpoint velocity |
+|MON_DIFF_VEL_TRJ_IL_TIME   | 1                             |  cycles | uint   | Diff velocity filter time for controlled rampdown. If abs(veloact-veloset) > MON_DIFF_VEL for more than MON_DIFF_VEL_TRJ_IL_TIME then axis will initiate a ramp down |
+|MON_DIFF_VEL_DRV_IL_TIME   | MON_DIFF_VEL_TRJ_IL_TIME       |  cycles | uint   | Diff velocity filter time for disabling of axis. If abs(veloact-veloset) > MON_DIFF_VEL for more than MON_DIFF_VEL_DRV_IL_TIME then axis will be disabled |
+
 
 # handle in other files:
 

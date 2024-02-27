@@ -46,7 +46,9 @@ ecmcIf("'${MON_EC_ANA_IL=NA}'!='NA'")
 ${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject(${MON_EC_ANA_IL},"ax${ID}.mon.analoginterlock")"
 ${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonEnableAnalogInterlock(${ID},1)"
 ecmcEndIf()
-ecmcIf("'${MON_ANA_IL_POL=NC}'=='NO'")
+
+#- Here the naming of polarity is inverted in ecmc.. TODO..
+ecmcIf("'${MON_ANA_IL_POL=NO}'=='NC'")
 ${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonAnalogInterlockPolarity(${ID},1)"
 #- else
 ${IF_FALSE}ecmcConfigOrDie "Cfg.SetAxisMonAnalogInterlockPolarity(${ID},0)"
@@ -55,49 +57,36 @@ ecmcIf("'${MON_ANA_IL_RAW_LIM=NA}'!='NA'")
 ${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonAnalogInterlockRawLimit(${ID},${MON_ANA_IL_RAW_LIM})"
 ecmcEndIf()
 
+#- Position lag
+ecmcIf("'${MON_POS_LAG_TOL=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonPosLagTol(${ID},${MON_POS_LAG_TOL})"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonEnableLagMon(${ID},1)"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonPosLagTime(${ID},${MON_POS_LAG_TIME=1})"
+ecmcEndIf()
 
+#- At target
+ecmcIf("'${MON_AT_TARG_TOL=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonAtTargetTol(${ID},${MON_AT_TARG_TOL})"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonEnableAtTargetMon(${ID},1)"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonAtTargetTime(${ID},${MON_AT_TARG_TIME=1})"
+ecmcEndIf()
 
-{%- if monitoring %}
-    #- =============================================================================
-    #- Monitoring
-    #- =============================================================================
-    {%- set lag = None if monitoring.lag is undefined else monitoring.lag %}
-    {%- set target = None if monitoring.target is undefined else monitoring.target %}
-    {%- set velocity = None if monitoring.velocity is undefined else monitoring.velocity %}
-    {%- if lag.enable %}
-        #- lag error if |planned-actual|>{{ monitoring.lag.tolerance }} for >{{ monitoring.lag.time }} cycles
-        ecmcConfigOrDie "Cfg.SetAxisMonEnableLagMon({{ axis.id }},{{ monitoring.lag.enable|int }})"
-        ecmcConfigOrDie "Cfg.SetAxisMonPosLagTol({{ axis.id }},{{ monitoring.lag.tolerance }})"
-        ecmcConfigOrDie "Cfg.SetAxisMonPosLagTime({{ axis.id }},{{ monitoring.lag.time }})"
-    {%- else  %}
-        ecmcConfigOrDie "Cfg.SetAxisMonEnableLagMon({{ axis.id }},0)"
-    {%- endif %}
-    {%- if target.enable %}
-        #- at target if |target-actual|<{{ monitoring.target.tolerance }} for >{{ monitoring.target.time }} cycles
-        ecmcConfigOrDie "Cfg.SetAxisMonEnableAtTargetMon({{ axis.id }},{{ monitoring.target.enable|int }})"
-        ecmcConfigOrDie "Cfg.SetAxisMonAtTargetTol({{ axis.id }},{{ monitoring.target.tolerance }})"
-        ecmcConfigOrDie "Cfg.SetAxisMonAtTargetTime({{ axis.id }},{{ monitoring.target.time }})"
-    {%- endif %}
-    {%- if velocity.enable %}
-        #- velocity: v_max = {{ monitoring.velocity.max}}
-        ecmcConfigOrDie "Cfg.SetAxisMonEnableMaxVel({{ axis.id }},{{ monitoring.velocity.enable|int }})"
-        ecmcConfigOrDie "Cfg.SetAxisMonMaxVel({{ axis.id }},{{ monitoring.velocity.max }})"
-        ecmcConfigOrDie "Cfg.SetAxisMonMaxVelTrajILDelay({{ axis.id }},{{ monitoring.velocity.time.trajectory }})"
-        {%- if monitoring.velocity.time.drive is defined %}
-            ecmcConfigOrDie "Cfg.SetAxisMonMaxVelDriveILDelay({{ axis.id }},{{ monitoring.velocity.time.drive }})"
-        {%- endif  %}
-    {%- else %}
-        ecmcConfigOrDie "Cfg.SetAxisMonEnableMaxVel({{ axis.id }},0)"
-    {%- endif %}
-    {%- if monitoring.velocityDifference is defined %}
-        {%- if monitoring.velocityDifference.enable %}
-            #- velocity difference: max diff = {{ monitoring.velocityDifference.max}}
-            ecmcConfigOrDie "Cfg.SetAxisMonEnableVelocityDiff({{ axis.id }},{{ monitoring.velocityDifference.enable|int }})"
-            ecmcConfigOrDie "Cfg.SetAxisMonVelDiffTol({{ axis.id }},{{ monitoring.velocityDifference.max }})"
-            ecmcConfigOrDie "Cfg.SetAxisMonVelDiffTrajILDelay({{ axis.id }},{{ monitoring.velocityDifference.time.trajectory }})"
-            {%- if monitoring.velocity.time.drive is defined %}
-                ecmcConfigOrDie "Cfg.SetAxisMonVelDiffDriveILDelay({{ axis.id }},{{ monitoring.velocityDifference.time.drive }})"
-            {%- endif  %}
-        {%- endif  %}
-    {%- endif %}
-{%- endif %}
+#- Max velo
+ecmcIf("'${MON_MAX_VEL=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonMaxVel(${ID},${MON_MAX_VEL})"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonEnableMaxVel(${ID},1)"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonMaxVelTrajILDelay(${ID},${MON_MAX_VEL_TRJ_IL_TIME=1})"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonMaxVelDriveILDelay(${ID},${MON_MAX_VEL_DRV_IL_TIME=${MON_MAX_VEL_TRJ_IL_TIME=1}})"
+#- else
+${IF_FALSE}ecmcConfigOrDie "Cfg.SetAxisMonEnableMaxVel(${ID},0)"
+ecmcEndIf()
+
+#- Velo diff (act vs set)
+ecmcIf("'${MON_DIFF_VEL=NA}'!='NA'")
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonVelDiffTol(${ID},${MON_DIFF_VEL})"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonEnableVelocityDiff(${ID},1)"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonVelDiffTrajILDelay(${ID},${MON_DIFF_VEL_TRJ_IL_TIME=1})"
+${IF_TRUE}ecmcConfigOrDie "Cfg.SetAxisMonVelDiffDriveILDelay(${ID},${MON_DIFF_VEL_DRV_IL_TIME=${MON_DIFF_VEL_TRJ_IL_TIME=1}})"
+#- else
+${IF_FALSE}ecmcConfigOrDie "Cfg.SetAxisMonEnableVelocityDiff(${ID},0)"
+ecmcEndIf()

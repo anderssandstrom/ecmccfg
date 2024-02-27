@@ -159,20 +159,6 @@ Most functionalites can be disabled by setting the macro to NA
 |PLC_FILE                   |                               |         | string/path | Path to plc code file |
 |PLC_MACROS                 |                               |         | string | Macros for PLC file |
 
-
-ecmcConfigOrDie "Cfg.SetAxisPLCEnable(${ID},${PLC_EN=0})"
-ecmcConfigOrDie "Cfg.SetAxisAllowCommandsFromPLC(${ID},${PLC_ALLW_CMDS=0})"
-
-#- PLC code
-#- {%- if plc.code %}
-#-     {%- for line in plc.code %}
-#-         ecmcConfigOrDie "Cfg.AppendAxisPLCExpr(${ID})={{ line|replace(';', '|') }}"
-#-     {%- endfor %}
-#- {%- endif %}
-
-${SCRIPTEXEC} ${ecmccfg_DIR}loadAxisPLCFile.cmd "AX_ID=${ID}, FILE=${PLC_FILE}, PLC_MACROS='${PLC_MACROS=''}'"
-
-
 # handle in other files:
 
 HOME_POS = ENC_HME_POS

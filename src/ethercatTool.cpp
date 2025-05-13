@@ -17,6 +17,8 @@ static char scriptPath[512];
 static char globalStausPvName[64];
 static volatile int hasJob = 0;
 
+const char* ecmcEcToolScriptPath;
+
 void updateStatEtherCATTool(const char *statusStr) {	
 	char status[16];
     strncpy(status, statusStr, sizeof(status) - 1);
@@ -151,3 +153,40 @@ static long runEtherCATTool(struct aSubRecord *rec) {
     return 0;
 }
 epicsRegisterFunction(runEtherCATTool);
+
+// Function to set path to scripts
+void ecmcSetEcToolScriptPathHelp() {
+  printf("\n");
+  printf("       Use \"ecmcSetEcToolScriptPath(<path>)\" to set EC-Tool script paths\n");
+  printf("          <path> : path to scripts (normally ecmccfg_DIR)");
+  printf("       Example: ecmcSetEcToolScriptPath(${ecmccfg_DIR})");
+  printf("\n");
+}
+
+int ecmcSetEcToolScriptPath(const char *path) {
+
+  if(!path) {
+    ecmcSetEcToolScriptPathHelp();
+    return asynError;
+  }
+
+  ecmcEcToolScriptPath = path;
+  return asynSuccess;
+}
+
+static const iocshArg initArg0_1 =
+{ "EC-tool script path; ", iocshArgString };
+
+static const iocshArg *const initArgs_0[] = { &initArg0_1};
+
+static const iocshFuncDef initFuncDef_0 =
+{ "ecmcSetEcToolScriptPath", 1, initArgs_0 };
+static void initCallFunc_0(const iocshArgBuf *args) {
+  ecmcSetEcToolScriptPath(args[0].sval);
+}
+
+void ecmccfgEcToolDriverRegister(void) {
+  iocshRegister(&initFuncDef_15, initCallFunc_0);
+}
+
+epicsExportRegistrar(ecmccfgEcToolDriverRegister);

@@ -1,8 +1,21 @@
+#-d /**
+#-d   \brief hardware script for EL1259
+#-d   \author Anders Sandstroem
+#-d   \file
+#-d */
 
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,1,0x1a13,0x1d09,0xae,U8,status01)"
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,1,0x1a13,0x1d09,0xaf,U8,status02)"
-#- timestamps
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,1,0x1a13,0x1d09,0xb0,U64,timestampLatchPositive01)"
+epicsEnvSet("ECMC_EC_HWTYPE"             "EL1259")
+epicsEnvSet("ECMC_EC_VENDOR_ID"          "0x2")
+epicsEnvSet("ECMC_EC_PRODUCT_ID"         "0x04eb3052")
+
+#- verify slave
+${SCRIPTEXEC} ${ecmccfg_DIR}slaveVerify.cmd
+
+
+#ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,1,0x1a13,0x1d09,0xae,U8,status01)"
+#ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,1,0x1a13,0x1d09,0xaf,U8,status02)"
+##- timestamps
+#ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,1,0x1a13,0x1d09,0xb0,U64,timestampLatchPositive01)"
 
 
 
@@ -587,3 +600,6 @@ ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${EC
 #    PDO entry 0x60f1:49, 32 bit, "Input event time 9"
 #    PDO entry 0x60f1:4a, 32 bit, "Input event time 10"
 #
+
+
+

@@ -70,7 +70,6 @@ class Schema:
 
     metaSchema = {
         'type': 'dict',
-        'default': {},
         'schema': {
             'author': {'type': 'string'},
             'facility': {'type': 'string', 'default': 'SLS 2.0'},
@@ -83,7 +82,6 @@ class Schema:
     plcVeloFilterSchema = {
         'type': 'dict',
         'required': False,
-        'default': {},
         'schema': {
             'trajectory': {
                 'type': 'dict',                    
@@ -105,7 +103,6 @@ class Schema:
     filterSchema = {
         'type': 'dict',
         'required': False,
-        'default': {},
         'schema': {
             'velocity': {
                 'type': 'dict',
@@ -183,6 +180,12 @@ class Schema:
             'feedSwitchesOutput': {'type': 'string'},
             'feedSwitchesValue': {'type': 'integer'},
             'group': {'type': 'string'},
+            'tweakDist': {'type': 'float','default': 1.0},
+            'autoEnable': {'type': 'dict', 'schema': {
+                'enableTimeout': {'type': 'float','default': -1.0},
+                'disableTimeout': {'type': 'float','default': -1.0},
+                'atStartup': {'type': 'boolean','default': False},
+            }},
             'autoMode': {'type': 'dict', 'schema': {
                 'modeSet': {'type': 'string'},
                 'modeAct': {'type': 'string'},
@@ -211,14 +214,12 @@ class Schema:
     epicsSchema = {
         'type': 'dict',
         'required': False,
-        'default': {'name': 'axis'},
         'schema': {
             'name': {'default': 'axis'},
             'precision': {'type': 'integer', 'min': 0, 'default': 3},
             'unit': {'type': 'string', 'default': 'mm'},
             'motorRecord': {
                 'type': 'dict',
-                'default': {'enable': True},
                 'schema': {
                     'enable': {'type': 'boolean', 'default': True},
                     'fieldInit': {'type': 'string'},
@@ -228,8 +229,9 @@ class Schema:
                         'schema': {
                         'npoints': {'default': 0},
                         'nreadback': {'default': 0},
-                        }
-                    }
+                        }                    
+                    },
+                    'syncSoftLimits': {'type': 'boolean', 'default': False},
                 }
             }
         }
@@ -315,19 +317,20 @@ class Schema:
                 'schema': {
                     'position': {'required': True, 'type': 'string'},
                     'control': {'type': 'integer', 'default': 0},
+                    'armCmd': {'type': 'integer', 'default': 1},
+                    'armBits': {'type': 'integer', 'default': 1},
                     'status': {'type': 'integer', 'default': 0},
                 }
             },
-            'primary': {'type': 'integer', 'default': -1},
+            'primary': {'type': ['boolean', 'integer' ]},
             'homing': homingSchema,
-            'useAsCSPDrvEnc': {'type': 'integer', 'default': -1},
+            'useAsCSPDrvEnc': {'type': ['boolean', 'integer' ]},
         }
     }
 
     controllerSchema = {
         'type': 'dict',
         'required': False,
-        'default': {'controller': {'Kp': 1}},
         'schema': {
             'Kp': {'type': 'float', 'default': 1., 'min': 0},
             'Ki': {'type': 'float', 'default': 0., 'min': 0},
@@ -413,9 +416,9 @@ class Schema:
                     'latchInput': {'type': 'boolean'}
                 }
             },
-            'home': {'required': True, 'type': 'string'},
+            'home': {'required': False, 'type': 'string'},
             'homePolarity': {'type': 'integer', 'allowed': [0, 1]},
-            'interlock': {'required': True, 'type': 'string'},
+            'interlock': {'required': False, 'type': 'string'},
             'interlockPolarity': {'type': 'integer', 'allowed': [0, 1]},
             'analog': {
                 'type': 'dict',
@@ -460,7 +463,6 @@ class Schema:
     softlimitsSchema = {
         'type': 'dict',
         'required': False,
-        'default': {'enable': False},
         'schema': {
             'enable': {'required': False, 'type': 'boolean'},
             'forwardEnable': {'type': 'boolean', 'dependencies': ['forward', 'enable']},

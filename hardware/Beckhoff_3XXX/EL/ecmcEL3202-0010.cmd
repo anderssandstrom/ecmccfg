@@ -1,16 +1,16 @@
 #-d /**
 #-d   \brief hardware script for EL3202-0010
-#-d   \details 2 channel PT100 temperature sensor input  (selectable range and other configs for sensors as SDO)
+#-d   \details 2 channel PT100 temperature sensor input  (selectable range, high-precision)
 #-d   \author Anders Sandstroem
 #-d   \file
 #-d   \note SDOS
 #-d   \param [out] SDO 0x1011:01 --> 1684107116 \b reset
-#-d   \note Selected range: +-10V (actually +-10.737V)
+#-d   \note Range: -200…+850°C (Pt); -60…+250°C (Ni); -200…+320°C (high-precision)
 #-d */
 
 #- ###########################################################
 #- ############ Information:
-#-  Description: 2 channel PT100 temperature sensor input  (selectable range and other configs for sensors as SDO
+#-  Description: 2 channel PT100 temperature sensor input  (selectable range, high-precision)
 #-
 #-  Bits: 16
 #-  Connection: 4-wire

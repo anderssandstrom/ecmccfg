@@ -19,6 +19,8 @@
 #- halt the ioc startup in case of an error
 on error halt
 
+epicsEnvSet(ECMC_IS_LOAD_YAML_ENC, 1)
+
 #- setup python venv and run `plcYamlJinja2.py`
 #- MUST be in the same 'system'-context!!!
 ecmcIf("'$(ECMC_CFG_TOOL=jinja)'=='ecb'")
@@ -36,5 +38,6 @@ ${SCRIPTEXEC} "${ECMC_TMP_DIR}${FILE}.enc"
 
 #- cleanup
 system "rm -rf ${ECMC_TMP_DIR}${FILE}.enc"
+epicsEnvUnset(ECMC_IS_LOAD_YAML_ENC)
 #- reset PREFIX
 epicsEnvSet("ECMC_PREFIX"      "${SM_PREFIX}")

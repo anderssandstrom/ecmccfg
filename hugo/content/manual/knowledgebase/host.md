@@ -1,7 +1,7 @@
-+++  
-title = "host / ecmc server"   
++++
+title = "host / ecmc server"
 weight = 17
-chapter = false  
+chapter = false
 +++
 
 ## Topics
@@ -54,7 +54,7 @@ There are some restrictions on the sample rate. Normally, a rate in the range 10
 {{% /notice %}}
 
 ** Affinity**
-Setting the affinity of the ecmc realtime thread can often improve the performance. First check how many cores the controller has. 
+Setting the affinity of the ecmc realtime thread can often improve the performance. First check how many cores the controller has.
 {{% notice warning %}}
 At PSI, core 0 is always isolated, do not move any threads to core 0.
 {{% /notice %}}
@@ -69,7 +69,7 @@ epicsThreadSetAffinity ecmc_rt 5
 ```
 If more than one ecmc ioc is running on the server, then make sure the ecmc_rt threads run on different cores.
 
-Further tuning might include moving other cpu intensive threads to dedicated cores, for instance the epics thread ```cbLow```: 
+Further tuning might include moving other cpu intensive threads to dedicated cores, for instance the epics thread ```cbLow```:
 ```
 afterInit "epicsThreadSetAffinity cbLow 6"
 ```

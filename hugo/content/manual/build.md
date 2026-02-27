@@ -1,8 +1,8 @@
-+++  
-title = "build at PSI"   
++++
+title = "build at PSI"
 weight = 1
-chapter = false  
-+++  
+chapter = false
++++
 
 {{% notice warning %}}
 These instructions only work at PSI!

@@ -1,8 +1,8 @@
-+++  
-title = "iocsh utilities"   
++++
+title = "iocsh utilities"
 weight = 17
-chapter = false  
-+++  
+chapter = false
++++
 
 ## ECMC Iocsh Utilities
 
@@ -13,7 +13,7 @@ chapter = false
   * motion scaling
   * record fields
   * ...
-  
+
 ```text
 ecmcEpicsEnvSetCalc -h
 
@@ -22,7 +22,7 @@ ecmcEpicsEnvSetCalc -h
           <expression> : Calculation expression (see exprTK for available functionality). Examples:
                          Simple expression:"5.5+${TEST_SCALE}*sin(${TEST_ANGLE}/10)".
                          Use of "RESULT" variable: "if(${TEST_VAL}>5){RESULT:=100;}else{RESULT:=200;};".
-                         Strings are used within '<str>': "'test'='test'". Note: expression result must be numeric and 
+                         Strings are used within '<str>': "'test'='test'". Note: expression result must be numeric and
                          not string (in this case expression result is 1 => <envVarName> will be set to "1").
           <format>     : Optional format string. Example "%lf", "%8.3lf", "%x", "%04d" or "%d", defaults to "%d".
                          Can contain text like "0x%x" or "Hex value is 0x60%x".
@@ -89,7 +89,7 @@ result=0
  * Choose different files to load like plc-files, axis configurations, db-files or..
  * making conditional ecmc settings
  * ...
-  
+
 ```text
 ecmcEpicsEnvSetCalcTernary -h
 
@@ -100,8 +100,8 @@ ecmcEpicsEnvSetCalcTernary -h
           <expression>  : Calculation expression (see exprTK for available functionality). Examples:
                           Simple expression:"5.5+${TEST_SCALE}*sin(${TEST_ANGLE}/10)".
                           Use of "RESULT" variable: "if(${TEST_VAL}>5){RESULT:=100;}else{RESULT:=200;};".
-                          Strings are used within '<str>': "'test'='test'". Note: expression result must be numeric and 
-                          not string (in this case expression result is 1 => <envVarName> will be set to <trueString>).                          
+                          Strings are used within '<str>': "'test'='test'". Note: expression result must be numeric and
+                          not string (in this case expression result is 1 => <envVarName> will be set to <trueString>).
           <trueString>  : String to set <envVarName> if expression (or "RESULT") evaluates to true.
           <falseString> : String to set <envVarName> if expression (or "RESULT") evaluates to false.
 
@@ -136,7 +136,7 @@ result=no_use_this_file.cfg
 
 ### ecmcIf(\<expression\>,\<optional true macro\>,\<optional false macro\>)
 ecmcIf() set two macros depending on the value of the evaluated expression. If it evaluates to true:
-1. IF_TRUE=""        Allows execution of a line of code   
+1. IF_TRUE=""        Allows execution of a line of code
 2. IF_FALSE= "#-"    Block execution of a line of code
 
 If expression evaluates to false:
@@ -255,7 +255,7 @@ epicsEnvShow(ECMC_CONFIG_RETURN_VAL)
 ECMC_CONFIG_RETURN_VAL=14640
 
 ```
-The variable "ECMC_CONFIG_RETURN_VAL" then can be used to set record fields, name or alias for instance.. 
+The variable "ECMC_CONFIG_RETURN_VAL" then can be used to set record fields, name or alias for instance..
 
 ### Example: Read "ID" PDO from EK1101 (shown in detail in aliasRecordFromPdoData.script)
 Note: PDO reads need to be after "SetAppMode(1)" since cyclic value
@@ -265,7 +265,7 @@ ecmcConfig "ReadEcEntryIDString(${ECMC_SLAVE_NUM},"ID")"
 epicsEnvShow(ECMC_CONFIG_RETURN_VAL)
 ECMC_CONFIG_RETURN_VAL=1024
 ```
-The variable "ECMC_CONFIG_RETURN_VAL" then can be used to set record fields, name or alias for instance.. 
+The variable "ECMC_CONFIG_RETURN_VAL" then can be used to set record fields, name or alias for instance..
 
 ### Todo
 Add docs for:

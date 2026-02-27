@@ -1,7 +1,7 @@
-+++  
++++
 title = "stepper and biss-c"
 weight = 15
-chapter = false  
+chapter = false
 +++
 
 ## setup
@@ -40,7 +40,7 @@ encoder:
   bits: 26                                             # Total bit count of encoder raw data
   absBits: 26                                          # Absolute bit count (for absolute encoders) always least significant part of 'bits'
   absOffset: -1408.794                                 # Encoder offset in eng units (for absolute encoders)
-  position: ec0.s$(ENC_SID).positionActual${ENC_CH=01} # Ethercat entry for actual position input (encoder)
+  position: ec0.s$(ENC_SID).positionActual${ENC_CH=01} # EtherCAT entry for actual position input (encoder)
   status: ec0.s$(ENC_SID).encoderStatus${ENC_CH=01}    # mandatory only if 'warning' or 'error' are used
   ready: 2                                             # Bit in encoder status word for encoder ready
   warning: 0                                           # Warning (optional)
@@ -71,7 +71,7 @@ encoder:
   bits: 16                                    # Total bit count of encoder raw data
   absBits: 0                                  # Absolute bit count (for absolute encoders)
   absOffset: 0                                # Encoder offset in eng units (for absolute encoders)
-  position: ec0.s$(DRV_SID).positionActual01  # Ethercat entry for actual position input (encoder)
+  position: ec0.s$(DRV_SID).positionActual01  # EtherCAT entry for actual position input (encoder)
   homing:
     refToEncIDAtStartup: 1                    # Ref encoder at startup (to BISS value)
 
@@ -89,13 +89,13 @@ drive:
   denominator: 32768                            # I/O range for ECMC_EC_ALIAS_DRV_VELO_SET (normally +-16bit)
   type: 0                                       # Stepper: 0. DS402: 1 (DS402 = servos and advanced stepper drives)
   setpoint: ec0.s$(DRV_SID).velocitySetpoint01  # Velocity setpoint if CSV. Position setpoint if CSP
-  control: ec0.s$(DRV_SID).driveControl01       # Control word ethercat entry
+  control: ec0.s$(DRV_SID).driveControl01       # Control word EtherCAT entry
   enable: 0                                     # Enable bit index in control word (not used if DS402)
   reset: 1                                      # Reset bit in control word (if no drive reset bit then leave empty)
   reduceTorque: 2                               # Reduce torque bit in drive control word
   reduceTorqueEnable: True                      # Enable reduce torque functionality
-  status: ec0.s$(DRV_SID).driveStatus01         # Status word ethercat entry
-  enabled: 1                                    # Enabled bit index in status word (not used if DS402)  
+  status: ec0.s$(DRV_SID).driveStatus01         # Status word EtherCAT entry
+  enabled: 1                                    # Enabled bit index in status word (not used if DS402)
   warning: 2                                    # Warning bit in status word (if no drive warning bit then leave empty)
   error:                                        # max 3 error bits in status word
     - 3                                         # Error 0 (if no drive error bit then leave empty)
@@ -109,25 +109,25 @@ However, the configuration for feeding switches (axis.feedSwitchesOutput) have b
 ```
 axis:
   id: 1                                               # Axis id
-  feedSwitchesOutput: ec0.s5.binaryOutput01           # Ethercat entry for feed switches
+  feedSwitchesOutput: ec0.s5.binaryOutput01           # EtherCAT entry for feed switches
 
 ```
 
-At PSI, the limit switches are connected directly to the 2 inputs of the EL70xx stepper drives and are accessible in the status word, bit 11 and 12: 
+At PSI, the limit switches are connected directly to the 2 inputs of the EL70xx stepper drives and are accessible in the status word, bit 11 and 12:
 ```
 input:
   limit:
-    forward: ec0.s$(DRV_SID).driveStatus01.12         # Ethercat entry for low limit switch input
-    backward: ec0.s$(DRV_SID).driveStatus01.11        # Ethercat entry for high limit switch input
-  home: 'ec0.s$(DRV_SID).ONE.0'                       # Ethercat entry for home switch
-  interlock: 'ec0.s$(DRV_SID).ONE.0'                  # Ethercat entry for interlock switch input
+    forward: ec0.s$(DRV_SID).driveStatus01.12         # EtherCAT entry for low limit switch input
+    backward: ec0.s$(DRV_SID).driveStatus01.11        # EtherCAT entry for high limit switch input
+  home: 'ec0.s$(DRV_SID).ONE.0'                       # EtherCAT entry for home switch
+  interlock: 'ec0.s$(DRV_SID).ONE.0'                  # EtherCAT entry for interlock switch input
 ```
 
 {{% notice warning %}}
 Always verify where the switches are connected in the electrical drawings.
 {{% /notice %}}
 
-All switches in the "input" section needs to be linked. If not used, then the simulation registers, "ONE" and "ZERO", can be used:
+All switches in the "input" section need to be linked. If not used, then the simulation registers, "ONE" and "ZERO", can be used:
 * 32 bit register of ones (rw): ec\<master_id\>.s\<slave_id\>.ONE.<bit>
 * 32 bit register of zeros (rw): ec\<master_id\>.s\<slave_id\>.ZERO.<bit>
 
@@ -137,5 +137,5 @@ ec0.s1.ONE.1
 ```
 
 {{% notice tip %}}
-If no ethercat slave is defined, slave number "-1" can be used: ec\<master_id\>.s-1.ONE.<bit>
+If no EtherCAT slave is defined, slave number "-1" can be used: ec\<master_id\>.s-1.ONE.<bit>
 {{% /notice %}}

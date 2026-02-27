@@ -1,19 +1,19 @@
-+++  
++++
 title = "direction of motion"
 weight = 21
-chapter = false  
+chapter = false
 +++
 
-The direction of motion can be affected by multiple means.
-Namely, on the [slave level](#ethercat-slave), in the [axis scaling](#ecmc-scaling) or in the [motorRecord](#epics-motorrecord).
+The direction of motion can be affected in several ways:
+on the [slave level](#ethercat-slave), in [axis scaling](#ecmc-scaling), or in the [EPICS motor record](#epics-motorrecord).
 
 {{% notice tip %}}
-The best option is to change the direction of motion on the slave level. The alternatives lead to unintuitive scaling factors or mismatch between ECMC and EPICS.
+The best option is to change direction at the slave level. The alternatives can lead to unintuitive scaling factors or mismatches between ECMC and EPICS.
 {{% /notice %}}
 
 ## EtherCAT slave
 
-ecmccfg allows SDOs to set individual SDOs in the startup-script of the IOC or in dedicated config files for slaves.
+ecmccfg allows SDOs to be set in the IOC startup script or in dedicated slave configuration files.
 As most slaves have an SDO to invert the direction of motion or counting, it's only natural to make use of this feature.
 The benefit of changing the direction on the slave is obvious.
 All axes move in their natural direction, as given by the machine coordinate system.
@@ -26,11 +26,11 @@ Consult the respective slave manual for the correct SDO.
 
 ### encoder direction
 
-In many cases inversion of the encoder value is possible in the EtherCAT slave. 
-By using INV_DIR macro to applyComponent.cmd, the direction can be changed.
+In many cases, inversion of the encoder value is possible in the EtherCAT slave.
+By using the `INV_DIR` macro with `applyComponent.cmd`, the direction can be changed.
 
 {{% notice info %}}
-For EL5042, example below, the inversion leads to a very high number since the data size is 64bit. Therefore, it's advisable to switch sign in the axis configuration instead.
+For EL5042 (example below), inversion can lead to a very high number since the data size is 64-bit. Therefore, it is advisable to invert the sign in the axis configuration instead.
 {{% /notice %}}
 
 ```shell
@@ -53,17 +53,17 @@ A negative numerator can be used to change the direction of motion.
 Refer to the [scaling](../scaling) section for details.
 
 {{% notice info %}}
-This will result in negative values for `MRES` of the motorRecord.
+This results in negative values for `MRES` in the motor record.
 {{% /notice %}}
 
-## EPICS motorRecord
+## EPICS motor record
 
-The `epics` key of the [axis config](./axisyaml/) allows for motorRecord fields to be initialized.
-By initalizing the `DIR` field to `Neg`, the motorRecord will start inverted.
+The `epics` key in the [axis config](./axisYaml/) allows motor record fields to be initialized.
+By initializing the `DIR` field to `Neg`, the motor record starts inverted.
 
 ```yaml
 epics:
-  name: reveredAxis
+  name: reversedAxis
   precision: 1
   unit: deg
   motorRecord:
@@ -73,5 +73,5 @@ epics:
 ```
 
 {{% notice warning %}}
-This will affect the motorRecord only, thus ECMC internally is still moving in the _wrong_ direction. You have been warned!
+This affects only the motor record; ECMC internally still moves in the _wrong_ direction.
 {{% /notice %}}

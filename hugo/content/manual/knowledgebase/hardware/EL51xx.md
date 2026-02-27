@@ -1,7 +1,7 @@
-+++  
-title = "EL51xx"   
++++
+title = "EL51xx"
 weight = 20
-chapter = false  
+chapter = false
 +++
 
 ## Overview
@@ -14,20 +14,20 @@ The EL51xx series covers incremental encoder interfaces:
 6. [Diagnostics](#Diagnostics)
 
 ### General
-Normally, the incremental encoder interfaces do not require any SDO configuration. Therefore, the ecmccomp/applyComponent.cmd, which many times are needed after the ecmccfg/addSlave.cmd, is in most cases not needed. 
+Normally, the incremental encoder interfaces do not require any SDO configuration. Therefore, the ecmccomp/applyComponent.cmd, which many times are needed after the ecmccfg/addSlave.cmd, is in most cases not needed.
 
 ### Adding the slave
 Make sure you use the correct slave type when adding the slave. Some of the slaves have the same product id but totally different process data which can result in that the slave will not go into OP mode and ecmc will fail to start and a timeout will occur.
 
 For example, the EL5101-**0010** and EL5101-**0011** has the same product id but very different process data.
-So, if an EL5101-**0011** is added to the configuration but the actual slave connected is an EL5101-**0010**, the initial product id verification will not catch the miss match. However, later the slave will not go online since the process data is wrong. 
+So, if an EL5101-**0011** is added to the configuration but the actual slave connected is an EL5101-**0010**, the initial product id verification will not catch the miss match. However, later the slave will not go online since the process data is wrong.
 
 The issue can be diagnosed by checking the dmesg logs:
 ```bash
 # first login to host (ecmc server)
 sudo dmesg
 ```
-Configuring the wrong process data will lead to an error message  "* EtherCAT * Invalid input configuration" 
+Configuring the wrong process data will lead to an error message  "* EtherCAT * Invalid input configuration"
 
 The solution is to use the correct configuration script.
 
@@ -46,7 +46,7 @@ In the above example, for each ethercat frame, an array of 100 elements will be 
 
 {{% notice note %}}
 NELM cannot be freely defined, depending on the ethercat rate different NELM values will be accepted. Consult the EL5101-0011 manual for more information.
-Normally, NELM needs to be an integer value, like 10,20,50, 100. 
+Normally, NELM needs to be an integer value, like 10,20,50, 100.
 {{% /notice %}}
 
 ### EL5112
@@ -62,7 +62,7 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=16, HW_DESC=EL5112_AB"
 ```
 
 ### EL5131
-This terminal supports setting cam/trigger outputs at certain counter values (for predefined time, and direction).  
+This terminal supports setting cam/trigger outputs at certain counter values (for predefined time, and direction).
 
 8 predefined threshold counter values can be entered and configured switch outputs on or off. These thresholds can also be accessed/updated during runtime.
 

@@ -1,7 +1,7 @@
-+++  
++++
 title = "function libs"
 weight = 17
-chapter = false  
+chapter = false
 +++
 
 ## function libs
@@ -56,7 +56,7 @@ function <name>() {
   * open
   * close
   * write
-  * read",  
+  * read",
   * getline
   * eof
  5. vectors in the calculations (but NOT as parameter or return value).
@@ -78,7 +78,7 @@ function add(a,b,c,d,e) {
   return[a+b+c+d+e+${OFFSET=0}];
 };
 
-function prod(a,b,c,d,e) {  
+function prod(a,b,c,d,e) {
   println('This is prod, add2 :    ',  add(a,b,c,d,e));
   println('This is prod, prod:     ',  a*b*c*d*e);
   return [a * b * c * d * e + ${OFFSET=0}];

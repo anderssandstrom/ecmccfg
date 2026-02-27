@@ -1,8 +1,8 @@
-+++  
-title = "ecmc command reference"   
++++
+title = "ecmc command reference"
 weight = 20
-chapter = false  
-+++  
+chapter = false
++++
 
 ## ecmc command reference
 
@@ -170,7 +170,7 @@ chapter = false
 | `Cfg.SetAxisHomePostMoveTargetPosition(<int>,<float>)` | Set homing post movement target position * After successfull homing sequence an absolute positioning command can be executed. |
 | `Cfg.SetAxisHomePostMvPos(<int>,<float>)` | Set homing post movement target position * After successfull homing sequence an absolute positioning command can be executed. |
 | `Cfg.SetAxisHomeSeqId(<int>,<int>)` | Set homing sequence id for current encoder beeing configured. |
-| `Cfg.SetAxisHomeSwitchEnable(<int>,<int>)` | Enable use of home sensor * Enable use of home sensor Will be automatically enabled if an etehrcat entry is linked |
+| `Cfg.SetAxisHomeSwitchEnable(<int>,<int>)` | Enable use of home sensor * Enable use of home sensor Will be automatically enabled if an EtherCAT entry is linked |
 | `Cfg.SetAxisHomeSwitchPLCOverride(<int>,<int>)` | Override home switch with PLC code * If overridden then the home switch does not need to be linked instead the switch value must be set in plc code |
 | `Cfg.SetAxisHomeVelOffCam(<int>,<float>)` | Set off cam referencing/homing velocity setpoint. |
 | `Cfg.SetAxisHomeVelTowardsCam(<int>,<float>)` | Set Towards cam referencing/homing velocity setpoint. |
@@ -254,19 +254,19 @@ chapter = false
 | `Cfg.EcResetMaster(<int>)` | Retry configuring slaves for an selected EtherCAT master. |
 | `Cfg.EcSelectReferenceDC(<int>,<int>)` | Select EtherCAT reference clock. |
 | `Cfg.EcSetAllowOffline(<int>)` | Allow master to be offline |
-| `Cfg.EcSetDelayECOkAtStartup(<int>)` | Delay ethercat OK status for a time * This can be usefull to allow extra time foir DC clocks to syncronize or for slave that do not report correct data directlly when enter OP. |
+| `Cfg.EcSetDelayECOkAtStartup(<int>)` | Delay ethercat OK status for a time * This can be useful to allow extra time for DC clocks to synchronize or for slaves that do not report correct data directly when entering OP. |
 | `Cfg.EcSetDiagnostics(<int>)` | Enable EtherCAT bus diagnostics. |
 | `Cfg.EcSetDomainAllowOffline(<int>)` | Allow domain to be offline |
 | `Cfg.EcSetDomainFailedCyclesLimit(<int>)` | Set allowed bus cycles in row of none complete domain data transfer. |
 | `Cfg.EcSetEntryUpdateInRealtime(<int>,<str>,<int>)` | Set update in realtime bit for an entry * If set to zero the entry will not be updated during realtime operation. |
 | `Cfg.EcSetMaster(<int>)` | Selects EtherCAT master to use. |
-| `Cfg.EcSetSlaveEnableSDOCheck(<int>,<int>)` | Enable SDO setting check for a slave SDO setting check is defualt true for slaves linked to a motion axis. |
+| `Cfg.EcSetSlaveEnableSDOCheck(<int>,<int>)` | Enable SDO setting check for a slave SDO setting check is default true for slaves linked to a motion axis. |
 | `Cfg.EcSetSlaveNeedSDOSettings(<int>,<int>,<int>)` | Set bit that slave needs SDO settings * This slave needs SDO settings i.e. |
 | `Cfg.EcSetSlaveSDOSettingsDone(<int>,<int>,<int>)` | Set bit that all SDOs has been set for this slave * After SDOs have been set this function should be called to tell ecmc that. |
 | `Cfg.EcSlaveConfigDC(<int>,0x<hex>,<int>,<int>,<int>,<int>)` | Configure slave DC clock. |
 | `Cfg.EcSlaveConfigWatchDog(<int>,<int>,<int>)` | Configure Slave watch dog. |
-| `Cfg.EcSlaveVerify(<int>,<int>,0x<hex>,0x<hex>)` | Verfy slave at position * The command verifys that the actual slave at a certain position\ have the correct alias, position, vendor id, product code and revision number. |
-| `Cfg.EcSlaveVerify(<int>,<int>,0x<hex>,0x<hex>,0x<hex>)` | Verfy slave at position * The command verifys that the actual slave at a certain position\ have the correct alias, position, vendor id, product code and revision number. |
+| `Cfg.EcSlaveVerify(<int>,<int>,0x<hex>,0x<hex>)` | Verify slave at position * The command verifies that the actual slave at a certain position\ has the correct alias, position, vendor id, product code and revision number. |
+| `Cfg.EcSlaveVerify(<int>,<int>,0x<hex>,0x<hex>,0x<hex>)` | Verify slave at position * The command verifies that the actual slave at a certain position\ has the correct alias, position, vendor id, product code and revision number. |
 | `Cfg.EcUseClockRealtime(<int>)` | Use CLOCK_REALTIME * Ecmc will as default use CLOCK_MONOTONIC as clock source both for the RT loop and the ethercat bus. |
 | `Cfg.EcVerifySdo(<int>,0x<hex>,0x<hex>,0x<hex>,<int>)` | Verify a Service Data Object. |
 | `Cfg.EcVerifySdo(<int>,0x<hex>,0x<hex>,<int>,<int>)` | Verify a Service Data Object. |
@@ -442,4 +442,3 @@ chapter = false
 | `Cfg.SetSampleRate(<float>)` | No public header brief found (parser-specific or undocumented). |
 | `Cfg.SetTraceMask(<int>)` | No public header brief found (parser-specific or undocumented). |
 | `Cfg.SetTraceMaskBit(<int>,<int>)` | No public header brief found (parser-specific or undocumented). |
-

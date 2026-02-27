@@ -1,7 +1,7 @@
-+++  
++++
 title = "PLC"
 weight = 26
-chapter = false  
+chapter = false
 +++
 
 ## Introduction

@@ -1,7 +1,7 @@
-+++  
-title = "Technosoft iPOS4808, iPOS8020"   
++++
+title = "Technosoft iPOS4808, iPOS8020"
 weight = 30
-chapter = false  
+chapter = false
 +++
 
 ### iPOSXXXX
@@ -28,7 +28,7 @@ In order to avoid the need to download configs to each drive with local RS232 co
 These configurations files can be found in `ecmccfg/hardware/Technosoft_slaves/config/`.
 
 Note: These configurations are very basic and does not allow for use of all hardware supported by the drive. Not supported:
-* encoders (not possible to cfg over SDOs), need a dedicated configuration file for each BISS bit count. 
+* encoders (not possible to cfg over SDOs), need a dedicated configuration file for each BISS bit count.
 * ...
 
 #### Download config over FoE (File over EtherCAT)
@@ -51,7 +51,7 @@ Requirements from Technosoft CoE manual (https://technosoftmotion.com/wp-content
 
 ##### Example:
 Example for:
-* Master id: 0 
+* Master id: 0
 * Slave id:  21
 * Config file (binary): "FOESW_OL48.bin"
 ```
@@ -62,7 +62,7 @@ ethercat states -m0 -p21 BOOT
 # 3b. Check that slave is in boot state
 ethercat slaves
 # 4. Download configuration file
-ethercat foe_write -m0 -p21 FOESW_OL48.bin 
+ethercat foe_write -m0 -p21 FOESW_OL48.bin
 # 5. Now power cycle drive
 ```
 #### Upload file (read file):
@@ -104,7 +104,7 @@ epicsEnvSet("ECMC_EC_SLAVE_NUM_DRIVE",        "$(ECMC_EC_SLAVE_NUM)")
 #- Apply component: Oriental motor PKE244A
 #- For IPOS4808 some macros are mandatory:
 #-  * I_CTRL_GAIN   : Current loop gain
-#-  * I_CTRL_INT    : Current loop integrator gain 
+#-  * I_CTRL_INT    : Current loop integrator gain
 #-  * I_MAX_MA      : Mandatory if Motor-Generic-2Phase-Stepper is used
 #-  * I_STDBY_MA    : Mandatory if Motor-Generic-2Phase-Stepper is used
 #- The values can be taken from EasyMotionStudio or by trial and error (BTW, coil resistance and inductance are not used in the iPOS cfgs)

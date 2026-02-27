@@ -1,8 +1,8 @@
-+++  
-title = "startup.cmd"   
++++
+title = "startup.cmd"
 weight = 11
-chapter = false  
-+++  
+chapter = false
++++
 
 ## startup.cmd
 startup.cmd takes the following arguments:
@@ -23,7 +23,7 @@ startup.cmd takes the following arguments:
  PVA               = YES / NO
  TMP_DIR           = directory for temporary files
  ENG_MODE          = 1/0. If ENG_MODE is set then PVs used for commissioning will be avaialble
- EC_TOOL_PATH      = Path to ethercat tool defaults to ethercat tool in ECmasterECMC_DIR, 
+ EC_TOOL_PATH      = Path to ethercat tool defaults to ethercat tool in ECmasterECMC_DIR,
  otherwise            "/opt/etherlab/bin/ethercat"
  MAX_PARAM_COUNT   = Maximum asyn param count, defaults to 1500
 

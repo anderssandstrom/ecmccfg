@@ -1,7 +1,7 @@
-+++  
-title = "ethercat command line interface"   
++++
+title = "ethercat command line interface"
 weight = 13
-chapter = false  
+chapter = false
 +++
 
 ### `ethercat` CLI
@@ -116,8 +116,8 @@ ethercat slaves
 33  0:33  OP     +  EP5001-0002 1K. SSI Encoder
 34  0:34  PREOP  +  EP7041-0002 1K. Schrittmotor-Endstufe (50V, 5A)
 35  0:35  PREOP  +  EP7211-0034 1Ch. MDP742 Servo motor output stage with OCT (50V,
-36  0:36  PREOP  +  EP7211-0034 1K. MDP742 Servo-Motor-Endstufe mit OCT (50V, 4,5A 
-37  0:37  PREOP  +  EP7211-0034 1K. MDP742 Servo-Motor-Endstufe mit OCT (50V, 4,5A 
+36  0:36  PREOP  +  EP7211-0034 1K. MDP742 Servo-Motor-Endstufe mit OCT (50V, 4,5A
+37  0:37  PREOP  +  EP7211-0034 1K. MDP742 Servo-Motor-Endstufe mit OCT (50V, 4,5A
 ```
 
 ### `ethercat sdos`
@@ -169,5 +169,5 @@ This is helpful when a slave is stuck, e.g. with an error. Rather than cycle the
 Alternatively, cycling to 'INIT' and back to 'OP' might also be attempted.
 
 {{% notice info %}}
-A power cycling of the of the EtherCAT components is the **last** resort! 
+A power cycling of the of the EtherCAT components is the **last** resort!
 {{% /notice %}}

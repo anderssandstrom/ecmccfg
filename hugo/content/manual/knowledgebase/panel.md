@@ -1,7 +1,7 @@
-+++  
-title = "panel"   
++++
+title = "panel"
 weight = 20
-chapter = false  
+chapter = false
 +++
 
 ### Overview panel
@@ -11,7 +11,7 @@ The ecmcMain.ui covers most parts of an ecmc system:
     - Jitter
     - Cycle time
 * EtherCAT:
-    - Status 
+    - Status
     - Lost frames
     - Slave count
     - master Id

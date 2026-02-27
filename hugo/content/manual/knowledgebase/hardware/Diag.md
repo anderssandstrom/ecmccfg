@@ -1,7 +1,7 @@
-+++  
-title = "Diagnostics"   
++++
+title = "Diagnostics"
 weight = 16
-chapter = false  
+chapter = false
 +++
 
 ### Diagnostics
@@ -10,7 +10,7 @@ The more advanced Bechoff EtherCAT slaves, like drives and encoder readers, have
 
 Example: EL7211-9014
 ```
-python3 ec_diagnostic_messages.py -m1 -s3  
+python3 ec_diagnostic_messages.py -m1 -s3
 
 DEVICE INFORMATION:
 ===================
@@ -25,10 +25,10 @@ host time:	2026-02-05 11:33:41.191176
 
 DIAGNOSTIC MESSAGES:
 ====================
-msg_no  time                        text_id  text  flags  diag_code   dynamic  
-1       2000-01-01 00:00:00         0x4411         0x1    0x1c21e000  0x0      
-2       2026-02-05 10:30:39.407639  0x8406         0x2    0x1c21e000  0x0      
-3       2026-02-05 10:30:39.407639  0x8105         0x2    0x1c21e000  0x0    
+msg_no  time                        text_id  text  flags  diag_code   dynamic
+1       2000-01-01 00:00:00         0x4411         0x1    0x1c21e000  0x0
+2       2026-02-05 10:30:39.407639  0x8406         0x2    0x1c21e000  0x0
+3       2026-02-05 10:30:39.407639  0x8105         0x2    0x1c21e000  0x0
 ```
 
 Sometimes the text_id are converted to a readable message by the tool and sometimes not. In the case above we need to look for the meaning of the text_id-s on Beckhoffs website.

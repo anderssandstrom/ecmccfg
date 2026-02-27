@@ -1,8 +1,8 @@
-+++  
-title = "modes"   
++++
+title = "modes"
 weight = 15
-chapter = false  
-+++  
+chapter = false
++++
 
 ### ecmc modes
 ecmc can be started in different modes by setting the MODE parameter to startup.cmd (or require ecmccfg):
@@ -51,4 +51,4 @@ In this mode all features are supported, but motor record will not be created fo
 
 #### ENG_MODE
 
-Setting the parameter ENG_MODE=1 will result in loading of extra PVs usefull for commissioning, i.e. controller parameters for motion axes.
+Setting the parameter ENG_MODE=1 will result in loading of extra PVs useful for commissioning, i.e. controller parameters for motion axes.

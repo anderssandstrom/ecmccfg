@@ -1,7 +1,7 @@
-+++  
-title = "tuning"   
++++
+title = "tuning"
 weight = 16
-chapter = false  
+chapter = false
 +++
 
 ### Tuning
@@ -23,15 +23,15 @@ For other drives, consult the dedicated manual.
 #### EL7062
 EL7062 has an autotune feature that works well. For more info see knowledge-base/hardware/el7062.
 
-#### Backlash 
-Tuning systems with backlash can be difficult. Sometimes a D-part helps to reduce spikes in the centralized ecmc position loop controller output, and a small I is almost always needed to reach the final position. To conclude, the following is normally good: 
+#### Backlash
+Tuning systems with backlash can be difficult. Sometimes a D-part helps to reduce spikes in the centralized ecmc position loop controller output, and a small I is almost always needed to reach the final position. To conclude, the following is normally good:
 * Low velocity
 * Small I part to integrate the backlash
 * Some D-part to dampen the output mainly from integrator
 
 If the system cannot be tuned, it may be necessary to run the system in open loop (with the option of using motor record retries). Note, this is not a good option for axes involved in a kinematic system.
 
-##### Motor record backlash compensation 
+##### Motor record backlash compensation
 The motor record backlash compensation fields can be used if needed. Basically they ensure that the system always approaches from the same direction by issuing two move commands:
 1. A first move that is longer `target + BDST` or shorter `target - BDST` (depending on which direction to approach from)
 2. An approach command to go to the final target position

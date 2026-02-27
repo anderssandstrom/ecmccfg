@@ -1,8 +1,8 @@
-+++  
-title = "ecmc versions"   
++++
+title = "ecmc versions"
 weight = 10
 chapter = false
-+++  
++++
 
 ### Features
 New features are described in the RELEASE.md file of ecmc:
@@ -12,7 +12,7 @@ https://github.com/epics-modules/ecmc/blob/master/RELEASE.md
 Some new features that might be useful in ecmc v11:
 * Position Velocity Time motion (profile move)
 * CSP-PC mode (CSP Position Control). Enable ecmc centralized position loop also in CSP mode. Typical use cases:
-  * A drive (El7062 or Ex72xx) in CSP that also needs to close the loop on a linear encoder. 
+  * A drive (El7062 or Ex72xx) in CSP that also needs to close the loop on a linear encoder.
   * Motion based on analog I/O, analog output corresponds to a position. In order to close the loop in ecmc layer "CSP-PC" must be used.
 * PID parameters can be set from motor record fields but should be a factor 100 smaller (this because the fields are limited to the range 0..1.0).
 
@@ -110,7 +110,7 @@ The following configurations needs to be updated:
 * Remove including/loading of axis_sm.plc_inc code in plc files
 * Add an ecmc state machine for each master slave system by the ecmccfg-cmd "addMasterSlaveSM.cmd":
 ```
-#- Add state machine to sync the virtual and physical axes (the groups are defined in the yaml axis-cfg files) 
+#- Add state machine to sync the virtual and physical axes (the groups are defined in the yaml axis-cfg files)
 ${SCRIPTEXEC} ${ecmccfg_DIR}addMasterSlaveSM.cmd "NAME=Slit_SM, MST_GRP_NAME=virtualAxes, SLV_GRP_NAME=realAxes"
 ```
 MACROS used in "addMasterSlaveSM.cmd":
@@ -142,7 +142,7 @@ input:
 ...
 plc:
   enable: true                                        # Enable axis plc
-  externalCommands: true                              # Allow axis to inputs from PLC  
+  externalCommands: true                              # Allow axis to inputs from PLC
   code:                                               # Sync code (appended after code in plc.file)
     - ax${AX_ID=1}.mon.lowlim:=ec_chk_bit(ec0.s$(DRV_SID).binaryInputs01,0) and ec_chk_bit(ec0.s$(DRV_SID).ONE,0);
     - ax${AX_ID=1}.mon.highlim:=ec_chk_bit(ec0.s$(DRV_SID).binaryInputs01,1) and ec_chk_bit(ec0.s$(DRV_SID).ONE,1);
@@ -154,7 +154,7 @@ A misspelled macro could in worse case lead to that a current setting for a driv
 1. the hw-snippet called by "addSlave.cmd" for drive terminals, i.e EX7XXX, executes an ecmc-command that tells ecmc that a SDO configuration is needed for a certain channel.
 2. "applyComponent.cmd" with a motor configuration: Executes an ecmc-command that tells ecmc that SDO configuration has been performed for a certain channel.
     If "applySlaveConfig.cmd, or configureSlave.cmd" is used, then independent on which configuration is downloaded to the slave, the command telling ecmc that SDO configuration for channel 1 and 2 is executed. This is of course not optimal but safer than without check. Please try to move to applyComponent.cmd for higher security. If the drive has more than 2 channels, like EL7062, and one channel is unused then also this channel needs a configuration. "applyComponent.cmd  "COMP=Generic-Ch-Not-Used,          CH_ID=2'"
- 
+
 3. If the SDO cfgs have not been downloaded for a channel, the IOC will stop at validation just before iocInit.
 4. If all the needed channels have been configured with SDOs then the IOC will start.
 

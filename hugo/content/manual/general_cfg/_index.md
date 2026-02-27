@@ -1,8 +1,8 @@
-+++  
-title = "general"   
++++
+title = "general"
 weight = 7
-chapter = false  
-+++  
+chapter = false
++++
 
 ***
 ## Topics

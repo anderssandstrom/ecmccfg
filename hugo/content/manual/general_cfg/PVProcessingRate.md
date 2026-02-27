@@ -1,8 +1,8 @@
-+++  
++++
 title = "PV Processing Rate"
 weight = 30
-chapter = false  
-+++  
+chapter = false
++++
 
 ## PV Processing Rate:
 Normally the the EPICS PVs will update at a lower rate than the EtherCAT master rate. However it's possible to configure the system so that the records update at a custom rate (integer of the EtherCAT rate).

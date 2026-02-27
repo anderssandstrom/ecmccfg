@@ -1,8 +1,8 @@
-+++  
-title = "manual"   
++++
+title = "manual"
 weight = 1
-chapter = true  
-+++  
+chapter = true
++++
 
 # ecmccfg
 
@@ -88,7 +88,7 @@ The configuration framework contains the necessary files to configure an EPICS I
   # slave 17 {ecmcEL7037}, addSlave, with immediate call off applySlaveConfig. Please use applyComponent.cmd instead
   ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}addSlave.cmd,       "HW_DESC=EL7037"
   ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}applySlaveConfig,   "CONFIG=-Motor-Nanotec-ST4118L1804-B"
-  
+
   # slave with local configuration, in this case provided by the module `ECMC_AGIR`
   epicsEnvSet("CFG_ROOT", "${ECMC_AGIR_DIR}/")
   ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}addSlave.cmd,       "HW_DESC=EP7211-0034_ALL"
@@ -105,7 +105,7 @@ The configuration framework contains the necessary files to configure an EPICS I
   If a limit switch needs to be fed from a binary output then this can be configured in the yaml configuration for the axis by setting (cleaner solution):
 
   ```bash
-  axis: 
+  axis:
     feedSwitchesOutput: ec0.s1.binaryOutput04
   ```
 
@@ -121,7 +121,7 @@ The configuration framework contains the necessary files to configure an EPICS I
   epicsEnvSet("DEV",      "STEST-MYDEVICE")
   ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}configureAxis.cmd,  "CONFIG=./cfg/axis_1"
   ```
-  
+
 6. adding a virtual motor axis, please use yaml config instead.
   ```bash
   ${SCRIPTEXEC} ${ecmccfg_DIR}configureVirtualAxis.cmd,     "CONFIG=./cfg/axis_11_virt"
@@ -131,7 +131,7 @@ The configuration framework contains the necessary files to configure an EPICS I
   ```bash
   ${SCRIPTEXEC} ${ecmccfg_DIR}applyAxisSynchronization.cmd, "CONFIG=./cfg/axis_1_sync"
   ${SCRIPTEXEC} ${ecmccfg_DIR}applyAxisSynchronization.cmd, "CONFIG=./cfg/axis_11_sync"
-  ```   
+  ```
 
 8. loading a PLC from file
   * classic PLC-file
@@ -142,7 +142,7 @@ The configuration framework contains the necessary files to configure an EPICS I
   ```bash
   ${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}loadYamlPlc.cmd" "FILE=./plc1.yaml, ECMC_TMPDIR=/tmp/"
   ```
-  * pure yaml based PLC, please use classic PLC-file load instead, with classic PLC-file, 
+  * pure yaml based PLC, please use classic PLC-file load instead, with classic PLC-file,
   Note: `file` key in yaml config will overwrite anything in the `code` key!
   ```bash
   ${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}loadYamlPlc.cmd" "FILE=./plc1File.yaml, ECMC_TMPDIR=/tmp/"

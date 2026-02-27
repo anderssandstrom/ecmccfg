@@ -1,8 +1,8 @@
-+++  
-title = "best practice"   
++++
+title = "best practice"
 weight = 6
 chapter = false
-+++  
++++
 
 ### links to best practice:
 * [General](../general_cfg/best_practice/)

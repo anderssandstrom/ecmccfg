@@ -435,6 +435,28 @@
         <string/>
        </property>
       </widget>
+      <widget class="caShellCommand" name="cashellcommand_16">
+       <property name="geometry">
+        <rect>
+         <x>25</x>
+         <y>175</y>
+         <width>91</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="label">
+        <string notr="true">            Docs           </string>
+       </property>
+       <property name="labels">
+        <string>Open first axis</string>
+       </property>
+       <property name="files">
+        <string>xdg-open https://paulscherrerinstitute.github.io/ecmccfg/manual/</string>
+       </property>
+       <property name="args">
+        <string/>
+       </property>
+      </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_4">
       <property name="geometry">

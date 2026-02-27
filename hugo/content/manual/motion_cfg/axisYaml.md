@@ -32,6 +32,17 @@ The [script](../../../source/scripts/jinja2/loadyamlaxis/) invokes a Python scri
 If you use the external [ecmc_cfg_tool](../ecmc_cfg_tool/), treat it as a runtime inspection/tuning layer with access to the ecmc command parser. Initial config loading still happens through `loadYamlAxis.cmd`.
 {{% /notice %}}
 
+## Companion References
+Use this page as the configuration guide, and use the two pages below as fast references:
+- [Axis YAML settings table](../axisyaml-table/) for compact key-by-key lookup.
+- [Axis YAML settings (heading view)](../axisyaml-headings/) for grouped section overview.
+
+Related motion docs:
+- [Drive modes CSV, CSP, CSP-PC](../modes_CSV_CSP_CSP_PC/)
+- [scaling](../scaling/)
+- [direction](../direction/)
+- [homing](../homing/)
+
 The configuration is separated into the following mandatory sections:
 
 - [axis](#axis)

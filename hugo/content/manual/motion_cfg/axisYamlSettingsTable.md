@@ -5,6 +5,11 @@ weight = 16
 chapter = false
 +++
 
+Reference companion to [yaml configuration](../axisyaml/).
+Use this page when you need a compact key list; use the heading view for grouped navigation.
+
+See also: [Axis YAML settings (heading view)](../axisyaml-headings/).
+
 | Key | Description | Optional |
 | --- | --- | --- |
 | axis.id | Axis id | No |

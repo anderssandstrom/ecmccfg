@@ -1,6 +1,6 @@
 +++
 title = "Motor Record"
-weight = 30
+weight = 23
 chapter = false
 +++
 

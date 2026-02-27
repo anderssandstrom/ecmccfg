@@ -1,6 +1,6 @@
 +++
 title = "ecmc_cfg_tool"
-weight = 18
+weight = 24
 chapter = false
 +++
 
@@ -63,6 +63,6 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd, "FILE=./cfg/ax1.yaml, DEV=${DEV}, 
 ```
 
 ## Notes
-- Keep site-specific macros and hardware IDs in IOC startup/substitution layers.
 - Treat `ecmc_cfg_tool` runtime changes as temporary until reflected in versioned config files.
+- At PSI, the tool can also be started from the generic `ecmcMain.ui` panel.
 - Follow the `ecmc_cfg_tool` repository README for exact install/CLI usage, as that tool can evolve independently of `ecmccfg`.

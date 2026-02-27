@@ -1,6 +1,6 @@
 +++
 title = "direction of motion"
-weight = 21
+weight = 20
 chapter = false
 +++
 

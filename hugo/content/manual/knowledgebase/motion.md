@@ -155,7 +155,7 @@ input:
 
 ## YAML parser installation error
 
-ecmc YAML motion axis configuration depends on a Python venv with certain libraries. The required venv is installed in the `/tmp` directory when the first axis YAML file is loaded in a startup file.
+If you use the default `jinja` backend, YAML loading depends on a Python venv with certain libraries. The venv is created in `/tmp` when the first YAML axis/plc file is loaded.
 
 If the ecmc-server is not allowed to install with `pip` (for example in machine networks), then the error message below is printed in iocsh and axis loading fails:
 ```
@@ -177,5 +177,5 @@ Collecting wheel
 PSI specific: The solution is to use the `ecmc_server_cfg` repo as described in its `README.md`. This repo ensures that the correct Python venv is copied after each boot, so installation is not needed at IOC startup.
 
 {{% notice info %}}
-In a future release of ecmc/ecmccfg, the YAML parser will be moved into ecmc (C++), making the Python venv obsolete. This is WIP.
+As an alternative to the Python backend, ecmccfg can use the C++ tool `ecb` as YAML parser/render backend (`ECMC_CFG_TOOL=ecb`). See [motion_cfg/ecb](../../motion_cfg/ecb/).
 {{% /notice %}}

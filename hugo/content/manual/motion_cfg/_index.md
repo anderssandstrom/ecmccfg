@@ -30,6 +30,9 @@ ECMC motion covers two axis classes:
 - [ecmc_cfg_tool]({{< relref "/manual/motion_cfg/ecmc_cfg_tool.md" >}}) for runtime inspection and tuning via the ecmc command parser.
 - [motion knowledge base]({{< relref "/manual/knowledgebase/motion.md" >}}) and [tuning knowledge base]({{< relref "/manual/knowledgebase/tuning.md" >}}) for troubleshooting/tuning workflows.
 
+### YAML parser backend
+- [ecb]({{< relref "/manual/motion_cfg/ecb.md" >}}) for C++ schema validation/rendering backend used by YAML loaders (`ECMC_CFG_TOOL=ecb`).
+
 ### Reusable component-level slave configuration
 - [ecmccomp]({{< relref "/manual/motion_cfg/ecmccomp.md" >}}) for applying validated motor/encoder/slave components using `applyComponent.cmd`.
 
@@ -50,6 +53,11 @@ ECMC motion covers two axis classes:
 1. [ecmc_cfg_tool]({{< relref "/manual/motion_cfg/ecmc_cfg_tool.md" >}})
 2. [tuning knowledge base]({{< relref "/manual/knowledgebase/tuning.md" >}})
 3. Reflect validated runtime changes back into [YAML config]({{< relref "/manual/motion_cfg/axisYaml.md" >}}) or startup scripts.
+
+### YAML parser backend selection
+1. [ecb]({{< relref "/manual/motion_cfg/ecb.md" >}})
+2. [YAML config]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
+3. [knowledge base motion parser notes]({{< relref "/manual/knowledgebase/motion.md" >}})
 
 ### Component-library based hardware setup
 1. [ecmccomp]({{< relref "/manual/motion_cfg/ecmccomp.md" >}})

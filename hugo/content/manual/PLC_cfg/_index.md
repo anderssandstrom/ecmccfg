@@ -26,6 +26,10 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd, "FILE=<filename>, INC=<include_dirs
 ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}loadYamlPlc.cmd, "FILE=./plc.yaml, ECMC_TMPDIR=/tmp/"
 ```
 
+YAML PLC loading supports both parser backends:
+- `jinja` (default, Python-based)
+- `ecb` (C++ backend via `ECMC_CFG_TOOL=ecb`, see [ecb]({{< relref "/manual/motion_cfg/ecb.md" >}}))
+
 ### Understand language/syntax and available variables
 - [syntax]({{< relref "/manual/PLC_cfg/syntax.md" >}}) for operators, declarations, comments, examples, and axis/ec/ds/plc variable namespaces.
 

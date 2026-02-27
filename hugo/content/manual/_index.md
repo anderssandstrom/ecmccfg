@@ -15,6 +15,7 @@ The configuration framework contains the necessary files to configure an EPICS I
 ## Navigation
 - [Quickstart](./quickstart/) for a minimal single-axis bring-up
 - [Motion configuration](./motion_cfg/) for scaling, direction, homing, and YAML axis details
+- [Plugins](./plugins/) for available ecmc plugins and when to use each one
 - [PLC configuration](./PLC_cfg/) for PLC syntax, utilities, and best practices
 - [Knowledge base](./knowledgebase/) for troubleshooting, hardware notes, and diagnostics
 - [Examples](./examples/) for ready-to-adapt scenarios and scripts

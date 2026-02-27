@@ -20,12 +20,15 @@ Use 2 spaces per indentation level.
 
 ## Introduction
 {{% notice info %}}
-`Python 3.x` is required.
+YAML loading supports two backends:
+- `jinja` (default): Python-based
+- `ecb`: C++-based (`ECMC_CFG_TOOL=ecb`)
 {{% /notice %}}
-The config is processed by a Python script with a `jinja2` backend. The processor reports missing mandatory keys and populates missing optional keys with defaults.
+The loader validates YAML keys/types and renders the ecmccfg templates. Missing mandatory keys are reported, and optional keys can be populated by defaults.
 
 {{% notice info %}}
-The [script](../../../source/scripts/jinja2/loadyamlaxis/) invokes a Python script that uses `jinja2` to render templates. The script creates a Python virtual environment and installs required libraries automatically.
+Default (`jinja`) path: `loadYamlAxis.cmd` invokes Python tooling and creates a virtual environment automatically.
+If `ECMC_CFG_TOOL=ecb`, the same loader uses the external C++ tool [`ecb`](../ecb/) instead.
 {{% /notice %}}
 
 {{% notice tip %}}

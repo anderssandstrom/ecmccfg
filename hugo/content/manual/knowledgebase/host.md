@@ -9,6 +9,7 @@ chapter = false
 2. [Latency issues / lost frames](#latency-issues--lost-frames)
 3. [EtherCAT rate (EC_RATE)](#ethercat-rate-ec_rate)
 4. [PSI specific](#psi-specific)
+5. [ECMC server cfg repository](#ecmc-server-cfg-repository)
 
 ### Preferred NICs
 
@@ -119,6 +120,26 @@ In order to successfully run an ecmc EtherCAT system at higher rates, some tunin
 * consider use of more than one domain
 
 ### PSI specific
+#### ECMC server cfg repository
+The repository `ecmc_server_cfg` (local path `../ecmc_server_cfg`) is used at PSI as a host configuration template for ecmc servers.
+
+Typical deployment location on host:
+```bash
+/ioc/hosts/<hostname>/cfg
+```
+
+Main content:
+- `ETHERCATDRVR`: EtherCAT driver selection and network interface mapping (`DEVICE_MODULES="igb generic"` plus optional `LINK_DEVICES`/`LINK_DEVICE_MACS`).
+- `AutoStart.sh`: executes startup scripts in `AutoStart/` in lexical order.
+- `AutoStart/S00-install-ethercat-drvr`: installs/starts EtherCAT driver package and service (where applicable).
+- `AutoStart/S10-performance`: sets CPU governor to `performance` and disables turbo.
+- `AutoStart/S10-ecmc-python-venv`: copies the PSI ecmc Python venv to `/tmp` (Debian-version dependent).
+- `AutoStart/S10-eth-irq-prio`: sets EtherCAT IRQ thread priority (relevant when generic driver is used).
+
+{{% notice warning %}}
+`ecmc_server_cfg` is a template. Always validate and adapt settings for the specific machine, and reboot to apply host-level changes.
+{{% /notice %}}
+
 #### Debian 12
 For Debian 12, a different Python venv needs to be copied to the tmp dir at startup.
 The venv can be found here: `/ioc/NeedfulThings/ecmc_python_venv/.venv_deb12/`

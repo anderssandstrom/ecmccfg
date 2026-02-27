@@ -24,13 +24,28 @@ Which loop is tuned in ecmc versus drive depends on operation mode:
 
 For full mode details, see [CSV/CSP/CSP_PC modes]({{< relref "/manual/motion_cfg/modes_CSV_CSP_CSP_PC.md" >}}).
 
+#### Feedforward
+Feedforward is used to push known motion demand directly into the control chain so the PID loops only need to correct residual error.
+In practice this reduces following error and improves response, especially during acceleration/deceleration.
+
+Because the position trajectory is known, its derivatives are also known:
+* Planned velocity can be fed forward to the velocity-related control action.
+* Planned acceleration can be fed forward to the current/torque-related control action, although this is not always implemented.
+
+This means less corrective work for feedback loops and usually smoother, more accurate tracking.
+
+Feedforward behavior is tightly coupled to scaling. If drive/encoder scaling is wrong, feedforward looks wrong and PID tuning becomes misleading.
+For scaling details, see [drive and encoder scaling]({{< relref "/manual/motion_cfg/scaling.md" >}}).
+
 #### Before tuning: verify scaling first
 Bad tuning behavior is often caused by scaling or backlash issues, not PID gains.
 
 Recommended quick check:
-1. Set `Kp=0`, `Ki=0`, `Kd=0`.
+1. Set `Kp=0`, `Ki=0`, `Kd=0` (keep `Kff`/feedforward active).
 2. Execute a move and compare setpoint vs actual position.
 3. Interpret result: different slopes between setpoint and actual indicate scaling mismatch; similar slopes with offset/hysteresis indicate backlash.
+
+These controller/feedforward parameters can be adjusted at runtime with the [ecmc_cfg_tool `cntrl` app]({{< relref "/manual/motion_cfg/ecmc_cfg_tool.md" >}}).
 
 #### Position loop
 The position loop parameters are available through PVs. For many axes, pure P control is enough.
@@ -96,9 +111,9 @@ For setup patterns, see:
 * [Synchronization examples]({{< relref "/manual/examples.md" >}})
 
 #### Notes
-* Many small Beckhoff EL/EP drives (48 V class) do not support full autotune.
+* Many small Beckhoff EL/EP drives (48 V class) do not support autotune.
 * Virtual axes do not use physical PID loops; tuning applies to physical axes.
-* Advanced ecmc options (for example inner/near-target parameter sets and anti-windup behavior) are configured in axis YAML. See [axis YAML settings]({{< relref "/manual/motion_cfg/axisYaml.md" >}}).
+* Advanced ecmc options (for example inner/near-target parameter sets and anti-windup behavior) are configured in axis YAML. See [axis YAML settings]({{< relref "/manual/motion_cfg/axisYaml.md" >}}) and the [ecmc_cfg_tool `cntrl` app]({{< relref "/manual/motion_cfg/ecmc_cfg_tool.md" >}}).
 
 #### Control mode in practice: closed loop vs open loop
 Most systems should run in closed loop. Open loop can be used as a fallback strategy for stepper systems together with motor-record retries.

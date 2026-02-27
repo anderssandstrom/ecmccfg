@@ -17,7 +17,7 @@ Most field issues are not EtherCAT protocol faults but physical/system integrati
 
 ## First Checks (Before Any Restart)
 1. Open `ecmcMain.ui` and inspect overall status:
-   - realtime thread
+   - real-time thread
    - EtherCAT master
    - slave overview
    - motion axes and PLCs
@@ -42,7 +42,7 @@ Use the pages below for terminal/drive-specific diagnostics:
 - [EL1xxx]({{< relref "/manual/knowledgebase/hardware/EL1xxx.md" >}})
 - [EL5042]({{< relref "/manual/knowledgebase/hardware/EL5042.md" >}})
 - [EL51xx]({{< relref "/manual/knowledgebase/hardware/EL51xx.md" >}})
-- [Ex70x1]({{< relref "/manual/knowledgebase/hardware/EL70x1.md" >}})
+- [EL/EP70x1]({{< relref "/manual/knowledgebase/hardware/EL70x1.md" >}})
 - [EL7062]({{< relref "/manual/knowledgebase/hardware/EL7062.md" >}})
 - [EL72xx]({{< relref "/manual/knowledgebase/hardware/EL72xx.md" >}})
 - [EL9xxx]({{< relref "/manual/knowledgebase/hardware/EL9xxx.md" >}})

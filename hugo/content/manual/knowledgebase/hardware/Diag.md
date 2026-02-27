@@ -4,9 +4,9 @@ weight = 14
 chapter = false
 +++
 
-### Diagnostics
+## Diagnostics
 
-The more advanced Bechoff EtherCAT slaves, like drives and encoder readers, have a diagnostics buffer which can be read with the `ec_diagnostic_messages.py` tool:
+The more advanced Beckhoff EtherCAT slaves, like drives and encoder readers, have a diagnostics buffer that can be read with the `ec_diagnostic_messages.py` tool:
 
 Example: EL7211-9014
 ```
@@ -31,7 +31,7 @@ msg_no  time                        text_id  text  flags  diag_code   dynamic
 3       2026-02-05 10:30:39.407639  0x8105         0x2    0x1c21e000  0x0
 ```
 
-Sometimes the text_id are converted to a readable message by the tool and sometimes not. In the case above we need to look for the meaning of the text_id-s on Beckhoffs website.
+Sometimes the `text_id` values are converted to readable messages by the tool, and sometimes not. In the case above, we need to look up the `text_id` values on Beckhoff's website.
 
 Searching the web for the slave type and error code normally gives you the information:
 * 0x4411 : Warning "Drive. DC-Link undervoltage. (Warning). The DC link voltage of the terminal is lower than the parameterized minimum voltage"

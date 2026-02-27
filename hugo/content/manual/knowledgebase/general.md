@@ -38,7 +38,7 @@ ecmcConfigOrDie "Cfg.EcSlaveVerify(0,0,0x2,0x044c2c52)"
 ECMC command "Cfg.EcSlaveVerify(0,0,0x2,0x044c2c52)" returned error: ERROR_EC_MAIN_INVALID_SLAVE_INDEX (0x26002)
 ```
 
-Diagnose the issue by logging into the host/server and run the "ethercat slaves" command. Ensure that the slaves are there and powered.
+Diagnose the issue by logging into the host/server and running the `ethercat slaves` command. Ensure that the slaves are present and powered.
 
 #### Asyn parameter count exceeded
 
@@ -64,4 +64,3 @@ To increase the use the following command in the top of your startup script:
 callbackSetQueueSize(<size>)
 ```
 Increasing the callback queue size could solve issues like "WARNING dbEvent possible queue stall".
-

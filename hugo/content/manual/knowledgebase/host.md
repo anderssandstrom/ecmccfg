@@ -5,61 +5,61 @@ chapter = false
 +++
 
 ## Topics
-1. [Prefered NICs](#Prefered-NICs)
-2. [latency issues / lost frames](#latency-issues--lost-frames)
-3. [EtherCAT rate (EC_RATE)](#EtherCAT-rate-(EC_RATE))
-4. [PSI specific](#PSI-specific)
+1. [Preferred NICs](#preferred-nics)
+2. [Latency issues / lost frames](#latency-issues--lost-frames)
+3. [EtherCAT rate (EC_RATE)](#ethercat-rate-ec_rate)
+4. [PSI specific](#psi-specific)
 
-### Prefered NICs
+### Preferred NICs
 
 igb driver (ec_igb):
 * Intel Corporation I210 Gigabit Network Connection (rev 03)
 * Intel Corporation I350 Gigabit Network Connection (rev 01)
 
-### latency issues / lost frames
+### Latency issues / lost frames
 
-High latency, more than 30% of the ethercat cycle time, can result in lost ethercat frames, which means data are lost. High latency of the ecmc_rt thread can be related to:
+High latency, more than 30% of the EtherCAT cycle time, can result in lost EtherCAT frames, which means data is lost. High latency of the `ecmc_rt` thread can be related to:
 1. The generic device driver is used
 2. High load on system
 3. ...
 
-#### generic device driver is used
+#### Generic device driver is used
 Check which driver is in use by running (on the ecmc server):
 ```
 lsmod | grep ec_
 ```
-If the ec_master is using the ec_generic driver then a switch to igb driver is recommended.
+If `ec_master` is using the `ec_generic` driver then a switch to the `igb` driver is recommended.
 
-The file /ioc/hosts/\<hostname\>/cfg/ETHERCATDRVR is listing the available drivers.
+The file `/ioc/hosts/<hostname>/cfg/ETHERCATDRVR` lists the available drivers.
 
-The recommended contents of the ETHERCATDRVR file is:
+The recommended contents of the `ETHERCATDRVR` file are:
 ```
 DEVICE_MODULES="igb generic"
 ```
-In this case, the system will first try to use igb driver, if not possible it will fallback to the generic driver.
+In this case, the system will first try to use the `igb` driver. If not possible, it will fall back to the generic driver.
 After editing the file, the host needs to be rebooted in order for the changes to take effect.
 
-#### high load on system
+#### High load on system
 
 ** Reduce sample rate**
-Reducing the ethercat cycle time is often very efficient when it comes to reduce latency. Do not run the ecmc systems faster than needed.
-The default ecmc sample rate is 1Khz, which in many cases is not needed.
+Reducing the EtherCAT cycle time is often very efficient when it comes to reducing latency. Do not run ecmc systems faster than needed.
+The default ecmc sample rate is 1kHz, which in many cases is not needed.
 
 The sample rate is defined when require ecmccfg (example set to 500Hz, instead of 1kHz):
 ```
 require ecmccfg "EC_RATE=500"
 ```
 {{% notice info %}}
-There are some restrictions on the sample rate. Normally, a rate in the range 100Hz-1Khz is a good choice. For other rates, please check the documentation of slaves in use. See heading "EtherCAT rate" below for more information.
+There are some restrictions on the sample rate. Normally, a rate in the range 100Hz-1kHz is a good choice. For other rates, please check the documentation of the slaves in use. See the "EtherCAT rate" heading below for more information.
 {{% /notice %}}
 
 ** Affinity**
-Setting the affinity of the ecmc realtime thread can often improve the performance. First check how many cores the controller has.
+Setting the affinity of the ecmc real-time thread can often improve performance. First check how many cores the controller has.
 {{% notice warning %}}
 At PSI, core 0 is always isolated, do not move any threads to core 0.
 {{% /notice %}}
 
-In order to pin the ecmc thread to a single core, add the following line to the startup script (after setAppMode.cmd):
+In order to pin the ecmc thread to a single core, add the following lines to the startup script (after `setAppMode.cmd`):
 ```
 #- go active (create ecmc_rt)
 ${SCRIPTEXEC} ${ecmccfg_DIR}setAppMode.cmd
@@ -67,14 +67,14 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}setAppMode.cmd
 #- Set affinity of ecmc_rt (core 5)
 epicsThreadSetAffinity ecmc_rt 5
 ```
-If more than one ecmc ioc is running on the server, then make sure the ecmc_rt threads run on different cores.
+If more than one ecmc IOC is running on the server, then make sure the `ecmc_rt` threads run on different cores.
 
-Further tuning might include moving other cpu intensive threads to dedicated cores, for instance the epics thread ```cbLow```:
+Further tuning might include moving other CPU-intensive threads to dedicated cores, for instance the EPICS thread `cbLow`:
 ```
 afterInit "epicsThreadSetAffinity cbLow 6"
 ```
 {{% notice info %}}
-```cbLow``` is created at iocInit, therefore the "epicsThreadSetAffinity" must be executed with the "afterInit" command.
+`cbLow` is created at `iocInit`, therefore `epicsThreadSetAffinity` must be executed with the `afterInit` command.
 {{% /notice %}}
 
 {{% notice note %}}
@@ -102,41 +102,40 @@ Issues that could occur in rates below 100Hz:
 * some slaves might not support it
 
 #### Higher rates
-Issues that could occur in rates over 1Kz:
+Issues that could occur at rates over 1kHz:
 * missed frames
 * issues with dc clock syncs
 * some slaves might not support it.
 
-NOTE: Some slave might support a high rate but could have built in signal filters of several ms which then makes sampling at higher freqs unnecessary/not needed.
+NOTE: Some slaves might support a high rate but could have built-in signal filters of several ms, which makes sampling at higher frequencies unnecessary.
 
-In order to successfully run an ecmc ethercat system at higher rates some tuning might be needed:
+In order to successfully run an ecmc EtherCAT system at higher rates, some tuning might be needed:
 * minimize slave count (and ensure that the slaves support it)
 * minimize amount of processing (PLC, motion)
 * use a performant host/controller
-* use native ethercat driver (igb, not generic)
-* only transfer the needed PVs to epics.
-* affinity: Use a dedicated core for the ecmc_rt thread and move other high prio threads to other cores. see "high load on system
-" above.
+* use native EtherCAT driver (`igb`, not generic)
+* only transfer the needed PVs to EPICS
+* affinity: use a dedicated core for the `ecmc_rt` thread and move other high-priority threads to other cores (see "High load on system" above).
 * consider use of more than one domain
 
 ### PSI specific
 #### Debian 12
-For debian 12 a different phyton venv needs to be copied to the tmp dir at startup.
-The venv can be found here: /ioc/NeedfulThings/ecmc_python_venv/.venv_deb12/
+For Debian 12, a different Python venv needs to be copied to the tmp dir at startup.
+The venv can be found here: `/ioc/NeedfulThings/ecmc_python_venv/.venv_deb12/`
 
 #### iocsh startup
-ecmc needs to be started with root priviledges (or with a user in realtime group), without ecmc might segfault.
+ecmc needs to be started with root privileges (or with a user in the realtime group); otherwise ecmc might segfault.
 
 #### c6025-0010 startup
 Need to change boot setting:
-* At PSI: make normal warewulf and packet fence setup, DON'T FORGETT THE USB DONGLE!!!
+* At PSI: make normal Warewulf and PacketFence setup, don't forget the USB dongle.
 * Go to boot menu
-* Boot menu: Set boot option 1 to "Usb stick"
+* Boot menu: Set boot option 1 to "USB stick"
 * Advanced->Network stack configuration: Enable network stack and PXE support
 * Save and exit
 
 #### No visible slaves
-Wrong MAC addresses in the ethercat configuration could lead to that the ethercat masters are "waiting form devices":
+Wrong MAC addresses in the EtherCAT configuration could lead to EtherCAT masters "waiting for devices":
 ```
 dmesg
 ...
@@ -150,4 +149,4 @@ dmesg
 [ 1169.518830] EtherCAT ERROR 2: Master still waiting for devices!
 ...
 ```
-Check that the correct MAC adresses are defined for the ethercat masters. At PSI the MACS are defined in the ETHERCATDRVR file (`/ioc/hosts/<hostname>/cfg/ETHERCATDRVR`).
+Check that the correct MAC addresses are defined for the EtherCAT masters. At PSI the MACs are defined in the `ETHERCATDRVR` file (`/ioc/hosts/<hostname>/cfg/ETHERCATDRVR`).

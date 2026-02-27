@@ -17,16 +17,16 @@ Companion pages:
 - `=` or `==`: equal comparison
 
 ### functions
-PLC do _not_ immediately write to the bus!
-The PLC will execute synchronous to the cycle, or at an integer fraction of it.
-The processed data will be send to the bus with the next cycle.
+PLCs do _not_ immediately write to the bus.
+The PLC will execute synchronously with the cycle, or at an integer fraction of it.
+The processed data will be sent to the bus with the next cycle.
 PLCs do _not_ delay the bus!
 
 ### statement terminator
 Statements are terminated by a semicolon `;`
 
 ### variables
-All variables are initiated to `0`
+All variables are initialized to `0`
 
 #### declaration
 Variables can be declared in the beginning of the PLC code by defining a `VAR..END_VAR` block:
@@ -36,14 +36,14 @@ VAR
 END_VAR
 ```
 
-`<var_name>` in the plc code will then be substituted by `<address>` before compile.
+`<var_name>` in the PLC code will then be substituted by `<address>` before compile.
 
 The following "addresses" are supported:
 * global:
   - `global.<name>`
 * static
   - `static.<name>`
-* ethercat
+* EtherCAT
   - `ec<mid>`
   - `ec<mid>.s<sid>`
   - `ec<mid>.s<sid>.<name>`
@@ -89,7 +89,7 @@ PLC can access:
 - [variables](#variables)
 - [process data](#process-data)
 - [axis](#axis)
-- [PLCs](#PLC)
+- [PLCs](#plc)
 - [data storage](#data-storage)
 
 [Function](#functions) examples are given at the end.
@@ -99,7 +99,7 @@ Custom function libs in exprtk syntax can be added and loaded to the PLC objects
 {{% /notice %}}
 
 {{% notice tip %}}
-Custom plc functions can be written in c in plugins.
+Custom PLC functions can be written in C in plugins.
 {{% /notice %}}
 
 ### general
@@ -147,9 +147,9 @@ Custom plc functions can be written in c in plugins.
 
 #### EtherCAT
 ```text
-  1.  ec<ecid>.s<sid>.<alias>      ethetcat data                (rw)
-                                   ecid:  ethercat master index
-                                   sid:   ethercat slave bus position
+  1.  ec<ecid>.s<sid>.<alias>      EtherCAT data               (rw)
+                                   ecid:  EtherCAT master index
+                                   sid:   EtherCAT slave bus position
                                    alias: entry name as defined in
                                           "Cfg.EcAddEntryComplete()
   2.  ec<ecid>.masterstatus        Status of master (1=OK)
@@ -172,9 +172,9 @@ Custom plc functions can be written in c in plugins.
                                   source > 0: actual pos from expr
  11. ax<id>.enc.homed             encoder homed                    (rw)
  12. ax<id>.enc.homepos           homing position                  (rw)
- 13. ax<id>.traj.setpos           curent trajectory setpoint       (rw)
+ 13. ax<id>.traj.setpos           current trajectory setpoint      (rw)
  14. ax<id>.traj.targetpos        target position                  (rw)
- 15. ax<id>.traj.extsetpos        current trajecrory setpoint from
+ 15. ax<id>.traj.extsetpos        current trajectory setpoint from
                                   plc sync. expression             (rw)
  16. ax<id>.traj.targetvel        target velocity setpoint         (rw)
  17. ax<id>.traj.targetacc        target acceleration setpoint     (rw)
@@ -311,7 +311,7 @@ Custom plc functions can be written in c in plugins.
                           <startBit>       : Start bit index (lsb is bit 0)
                           <stopBit>        : Stop bit index
                           );
-     Write wrtValue to a range of bits (statBit..stopBit) of value. Returns the new value.
+     Write wrtValue to a range of bits (startBit..stopBit) of value. Returns the new value.
 
   4. retvalue = ec_clr_bit(
                           <value>,         : Value to change
@@ -362,7 +362,7 @@ Custom plc functions can be written in c in plugins.
      order they are created (starting at 0). The smallest memmap size will define the
      amount of data copied. Returns 0 for success or an error code.
 
-     Note: The mmId can be retrieved by the bellow ecmc command (and feed into plc via macro):
+     Note: The mmId can be retrieved by the below ecmc command (and fed into PLC via macro):
         ecmcConfig "EcGetMemMapId(ec0.s11.mm.analogInputArray01)"
         epicsEnvSet(MM_CH_1_IN,${ECMC_CONFIG_RETURN_VAL})
 
@@ -387,7 +387,7 @@ Custom plc functions can be written in c in plugins.
          13 = F32
          14 = F64
 
-     Note: The mmId can be retrived by the bellow ecmc command (and feed into plc via macro):
+     Note: The mmId can be retrieved by the below ecmc command (and fed into PLC via macro):
         ecmcConfig "EcGetMemMapId(ec0.s11.mm.analogInputArray01)"
         epicsEnvSet(MM_CH_1_IN,${ECMC_CONFIG_RETURN_VAL})
 
@@ -398,7 +398,7 @@ Custom plc functions can be written in c in plugins.
                           );
      Reads data element at index from memmap with srcId and returns value.
 
-     Note: The mmId can be retrived by the bellow ecmc command (and feed into plc via macro):
+     Note: The mmId can be retrieved by the below ecmc command (and fed into PLC via macro):
         ecmcConfig "EcGetMemMapId(ec0.s11.mm.analogInputArray01)"
         epicsEnvSet(MM_CH_1_IN,${ECMC_CONFIG_RETURN_VAL})
 
@@ -409,7 +409,7 @@ Custom plc functions can be written in c in plugins.
                           );
      Writes data element at index from memmap with srcId. Returns 0 for success or an error code.
 
-     Note: The mmId can be retrived by the bellow ecmc command (and feed into plc via macro):
+     Note: The mmId can be retrieved by the below ecmc command (and fed into PLC via macro):
         ecmcConfig "EcGetMemMapId(ec0.s11.mm.analogInputArray01)"
         epicsEnvSet(MM_CH_1_IN,${ECMC_CONFIG_RETURN_VAL})
 
@@ -419,7 +419,7 @@ Custom plc functions can be written in c in plugins.
      Returns number of elements (of type "ec_get_mm_type()")in memmap with srcId.
      If return value is less than zero it should be considered to be an error code.
 
-     Note: The mmId can be retrived by the bellow ecmc command (and feed into plc via macro):
+     Note: The mmId can be retrieved by the below ecmc command (and fed into PLC via macro):
         ecmcConfig "EcGetMemMapId(ec0.s11.mm.analogInputArray01)"
         epicsEnvSet(MM_CH_1_IN,${ECMC_CONFIG_RETURN_VAL})
 
@@ -428,7 +428,7 @@ Custom plc functions can be written in c in plugins.
                           <dsId>);      : Destination data storage index
      Returns Error code or zero if success
 
-     Note: The mmId can be retrived by the bellow ecmc command (and feed into plc via macro):
+     Note: The mmId can be retrieved by the below ecmc command (and fed into PLC via macro):
         ecmcConfig "EcGetMemMapId(ec0.s11.mm.analogInputArray01)"
         epicsEnvSet(MM_CH_1_IN,${ECMC_CONFIG_RETURN_VAL})
 
@@ -440,14 +440,14 @@ Custom plc functions can be written in c in plugins.
 
      Returns Error code or zero if success
 
-     Note: The mmId can be retrived by the bellow ecmc command (and feed into plc via macro):
+     Note: The mmId can be retrieved by the below ecmc command (and fed into PLC via macro):
         ecmcConfig "EcGetMemMapId(ec0.s11.mm.analogInputArray01)"
         epicsEnvSet(MM_CH_1_IN,${ECMC_CONFIG_RETURN_VAL})
 
   17. retvalue = ec_mm_push_asyn(
                         <mmId>)       : Source memmap index.
       push memap data to epics (can be used if T_SMP_MS=-1 for the param)
-     Note: The mmId can be retrived by the bellow ecmc command (and feed into plc via macro):
+     Note: The mmId can be retrieved by the below ecmc command (and fed into PLC via macro):
         ecmcConfig "EcGetMemMapId(ec0.s11.mm.analogInputArray01)"
         epicsEnvSet(MM_CH_1_IN,${ECMC_CONFIG_RETURN_VAL})
 
@@ -473,7 +473,7 @@ Custom plc functions can be written in c in plugins.
 
   22. retvalue = ec_get_time_offset_mono():
 
-     Returns current time offset in nano seconds if selected clock source is CLOC_MONOTONIC otherwise 0 monotonic.
+     Returns current time offset in nano seconds if selected clock source is CLOCK_MONOTONIC, otherwise 0.
 
   23. retvalue = ec_get_time_local_hour(
                              <ns_since_ec_epoch>);  : Nano seconds since jan 1:st 2000.
@@ -485,12 +485,12 @@ Custom plc functions can be written in c in plugins.
 
   25. retvalue = ec_get_time_local_sec(
                              <ns_since_ec_epoch>);  : Nano seconds since jan 1:st 2000.
-                  returns the seocods part, 0..59, within the minute,
+                  returns the seconds part, 0..59, within the minute,
 
 
   26. retvalue = ec_get_time_local_nsec(
                              <ns_since_ec_epoch>);  : Nano seconds since jan 1:st 2000.
-                  returns the nanoseocods part, 0..1E9-1, within the second,
+                  returns the nanoseconds part, 0..1E9-1, within the second,
 
 
   27. retvalue = ec_get_dom_state(
@@ -507,7 +507,7 @@ Custom plc functions can be written in c in plugins.
 #### Master to Master communication (within same host)
 
 Support for communication between different ecmc ioc:s running on the same host.
-A shared memory buffer of 120 doubles can be accessed for read and write operations by alll ecmc ioc running on the same master.
+A shared memory buffer of 120 doubles can be accessed for read and write operations by all ecmc IOCs running on the same master.
 
 ```text
  1. retvalue = m2m_write(
@@ -522,7 +522,7 @@ A shared memory buffer of 120 doubles can be accessed for read and write operati
 
  3. retvalue = m2m_stat();
 
-    returns 1 if connection to shared memory is OK, else 0 or a negative value with an errro code.
+    returns 1 if connection to shared memory is OK, else 0 or a negative value with an error code.
 
  4. m2m_err_rst();
 
@@ -538,7 +538,7 @@ A shared memory buffer of 120 doubles can be accessed for read and write operati
 
  7. retvalue = m2m_ioc_run(<master_index>);
 
-    checks of a certian master is running (negative master id is ioc:s without ec master).
+    checks if a certain master is running (negative master id is IOCs without EC master).
 ```
 
 #### Motion
@@ -576,7 +576,7 @@ A shared memory buffer of 120 doubles can be accessed for read and write operati
                          );
     Move to current external plc position. Functions intended use is to
     move to the start position for synchronized axes. This command is exactly
-    the same as issueing "mc_move_pos()" with the target postion ax<id>.traj.extsetpos.
+    the same as issuing "mc_move_pos()" with the target position ax<id>.traj.extsetpos.
     Motion is triggered with a positive edge on <execute> input.
     returns 0 if success or error code.
 

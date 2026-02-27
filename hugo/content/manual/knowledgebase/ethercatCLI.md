@@ -17,7 +17,7 @@ The command will show the state of _all_ masters. To limit the command to a sing
 {{% /notice %}}
 
 {{% notice tip %}}
-The `-m` parameter is available to all `ethercat` commands, and is even require by some in case of multiple masters. Check the help by issuing `ethercat -h` for details.
+The `-m` parameter is available to all `ethercat` commands, and is even required by some in case of multiple masters. Check the help by issuing `ethercat -h` for details.
 {{% /notice %}}
 
 Example:

@@ -10,25 +10,23 @@ The more advanced Beckhoff EtherCAT slaves, like drives and encoder readers, hav
 
 Example: EL7211-9014
 ```
-python3 ec_diagnostic_messages.py -m1 -s3
-
+python3 ec_diagnostic_messages.py -m3 -s14
+ 
 DEVICE INFORMATION:
 ===================
-
+ 
 name:		EL7211-9014
-master id:	1
-slave id:	3
+master id:	3
+slave id:	14
 vendor id:	0x2
 product id:	0x1c2b3052
-host time:	2026-02-05 11:33:41.191176
-
-
+host time:	2026-02-24 15:39:38.197238
+ 
+ 
 DIAGNOSTIC MESSAGES:
 ====================
-msg_no  time                        text_id  text  flags  diag_code   dynamic
-1       2000-01-01 00:00:00         0x4411         0x1    0x1c21e000  0x0
-2       2026-02-05 10:30:39.407639  0x8406         0x2    0x1c21e000  0x0
-3       2026-02-05 10:30:39.407639  0x8105         0x2    0x1c21e000  0x0
+time                        text_id  text                 flags  dynamic                 
+2026-02-23 14:56:55.174172  0x8105   (error) PD-Watchdog  0x2    0x0000000000000000000000
 ```
 
 Sometimes the `text_id` values are converted to readable messages by the tool, and sometimes not. In the case above, we need to look up the `text_id` values on Beckhoff's website.

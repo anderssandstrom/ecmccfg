@@ -38,4 +38,4 @@ Bring up an IOC with a single axis using the YAML-based configuration.
 ## Next steps
 - See [motion cfg](../motion_cfg/) for scaling, direction, and homing
 - See [PLC cfg](../PLC_cfg/) for PLC hooks and synchronization
-- See [troubleshooting](../troubleshooting/) for common startup issues
+- See [troubleshooting](../knowledgebase/troubleshooting/) for common startup issues

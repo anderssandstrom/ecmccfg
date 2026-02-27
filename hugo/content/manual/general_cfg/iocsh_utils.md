@@ -1,6 +1,6 @@
 +++
 title = "iocsh utilities"
-weight = 17
+weight = 14
 chapter = false
 +++
 

@@ -1,6 +1,6 @@
 +++
-title = "best practice"
-weight = 25
+title = "general best practice"
+weight = 16
 chapter = false
 +++
 
@@ -18,10 +18,10 @@ As a comparison, TwinCAT default EtherCAT rates are:
 * 100Hz for PLC
 * 500Hz for motion
 
-See [host/ecmc_server](../../knowledgebase/host/) for more information.
+See [host/ecmc_server]({{< relref "/manual/knowledgebase/host.md" >}}) for more information.
 
 {{% notice info %}}
-The EPICS PVs will update at a lower rate than the ethercat master rate. See PVProcessingRate.md for more information.
+The EPICS PVs will update at a lower rate than the EtherCAT master rate. See [PV Processing Rate]({{< relref "/manual/general_cfg/PVProcessingRate.md" >}}) for more information.
 {{% /notice %}}
 
 ## ecmc server setup
@@ -29,4 +29,4 @@ The EPICS PVs will update at a lower rate than the ethercat master rate. See PVP
 
 For more information see:
 * https://git.psi.ch/motion/ecmc_server_cfg
-* [ecmc_server](../../knowledgebase/hardware/host/) for more information.
+* [ecmc_server]({{< relref "/manual/knowledgebase/host.md" >}}) for more information.

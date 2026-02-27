@@ -1,6 +1,6 @@
 +++
 title = "ecmc command reference"
-weight = 20
+weight = 30
 chapter = false
 +++
 

@@ -4,14 +4,14 @@ weight = 6
 chapter = false
 +++
 
-### links to best practice:
+### Links to Best Practice
 * [General](../general_cfg/best_practice/)
 * [Motion](../motion_cfg/best_practice/)
-* [PLC](../plc_cfg/best_practice/)
+* [PLC](../PLC_cfg/best_practice/)
 
-### ECMC core notes (from ecmc release docs)
-For recent core changes and recommendations, see the ecmc release notes (e.g. `RELEASE.md` in the ecmc repo).
-Highlights to factor into your configurations:
+### ECMC Core Notes (From ecmc Release Docs)
+For recent core changes and recommendations, see the ecmc release notes (for example `RELEASE.md` in the ecmc repo).
+Highlights to consider in your configurations:
 - Use native axis auto-enable/disable (`axis.autoEnable`), added in ecmc v11.
 - Keep SDO verification enabled to catch drive current/SDO mismatches before startup.
 - You can declare PLC variables with `VAR ... END_VAR` blocks for clearer PLC code.

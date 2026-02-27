@@ -1,6 +1,6 @@
 +++
 title = "Diagnostics"
-weight = 16
+weight = 14
 chapter = false
 +++
 
@@ -39,4 +39,3 @@ Searching the web for the slave type and error code normally gives you the infor
 * 0x8105 : Error   "General. PD-Watchdog. Communication between the fieldbus and the output stage is secured by a Watchdog."
 
 Here we can see that the drive is missing DC-link voltage (motor power). The watchdog error probably happens during startup of the IOC and is nothing to worry about.
-

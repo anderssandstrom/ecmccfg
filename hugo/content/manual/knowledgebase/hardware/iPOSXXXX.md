@@ -1,6 +1,6 @@
 +++
 title = "Technosoft iPOS4808, iPOS8020"
-weight = 30
+weight = 24
 chapter = false
 +++
 

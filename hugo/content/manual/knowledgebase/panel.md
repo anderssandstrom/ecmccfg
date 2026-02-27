@@ -1,6 +1,6 @@
 +++
 title = "panel"
-weight = 20
+weight = 11
 chapter = false
 +++
 

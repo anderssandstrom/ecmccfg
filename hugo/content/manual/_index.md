@@ -16,9 +16,9 @@ The configuration framework contains the necessary files to configure an EPICS I
 - [Quickstart](./quickstart/) for a minimal single-axis bring-up
 - [Motion configuration](./motion_cfg/) for scaling, direction, homing, and YAML axis details
 - [PLC configuration](./PLC_cfg/) for PLC syntax, utilities, and best practices
-- [Hardware knowledge base](./knowledgebase/hardware/) for terminal-specific notes
+- [Knowledge base](./knowledgebase/) for troubleshooting, hardware notes, and diagnostics
 - [Examples](./examples/) for ready-to-adapt scenarios and scripts
-- [Troubleshooting](./troubleshooting/) for common startup and motion issues
+- [Troubleshooting](./knowledgebase/troubleshooting/) for common startup and motion issues
 - [Upgrades](./upgrades/) for migration checklists and breaking changes
 
 ***

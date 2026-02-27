@@ -1,6 +1,6 @@
 +++
 title = "hardware"
-weight = 22
+weight = 16
 chapter = false
 +++
 
@@ -8,42 +8,43 @@ chapter = false
 {{% children %}}
 ---
 
-### culprit
+## Scope
+Most field issues are not EtherCAT protocol faults but physical/system integration problems:
+- cabling
+- missing or partial power
+- drive/motor/encoder mismatch
+- wrong slave/axis mapping in configuration
 
-From experience, very few issues are related to the EtherCAT hardware itself.
-Mostly the **cabling**, **missing power** or the actual motor/encoder hardware is to blame.
-
-Even more likely is human error, such as:
-* wrong scaling of the axis
-* writing to the wrong hardware (forgot to select the right slave in the axis config)
-* ...
-
-#### check the status
-Before anything is restarted or power cycled, check the status of the system.
-
-A simple way to get an overview of the entire ecmc system is to start the ecmcMain.ui panel. This panel contains, or links to, almost the entire ecmc IOC:
-* thread status
-* EtherCAT master status
-* EtherCAT slaves status (overview of all configured slaves)
-* motion axes (all axes in the system are reachable)
-* PLC:s
-* ...
+## First Checks (Before Any Restart)
+1. Open `ecmcMain.ui` and inspect overall status:
+   - realtime thread
+   - EtherCAT master
+   - slave overview
+   - motion axes and PLCs
+2. Confirm slave states from shell (`ethercat slaves`) and/or `iocsh`.
+3. Verify that expected slaves are in `OP`.
 
 ```bash
 caqtdm -macro "IOC=<iocname>" ecmcMain.ui
 ```
 
-Remember, `red` is not necessarily a bad sign!
-It can also indicate that certain channels are not connected.
-Whether those channels _should_ be connected is beyond the scope of this guide.
+`red` channels are not automatically wrong; they can also indicate intentionally unconnected signals.
 
-Next step is to diagnose from a dedicated shell, or from within the `iocsh`.
-
-If all slaves are in 'OP' state, at least data is exchanged between the hardware and the master.
-
-#### restarting the IOC
 {{% notice warning %}}
-Blindly restarting the IOC, with only partially working EtherCAT hardware, WILL RESULT IN TOTAL FAILURE OF THE IOC!!!
+Do not blindly restart the IOC with partially working EtherCAT hardware.
+This can leave the IOC in a non-recovering startup state.
 {{% /notice %}}
 
-Check the hardware BEFORE restarting the IOC!
+## Device-Specific Articles
+Use the pages below for terminal/drive-specific diagnostics:
+- [Diagnostics]({{< relref "/manual/knowledgebase/hardware/Diag.md" >}})
+- [ELxxxx]({{< relref "/manual/knowledgebase/hardware/ELxxxx.md" >}})
+- [EL1xxx]({{< relref "/manual/knowledgebase/hardware/EL1xxx.md" >}})
+- [EL5042]({{< relref "/manual/knowledgebase/hardware/EL5042.md" >}})
+- [EL51xx]({{< relref "/manual/knowledgebase/hardware/EL51xx.md" >}})
+- [Ex70x1]({{< relref "/manual/knowledgebase/hardware/EL70x1.md" >}})
+- [EL7062]({{< relref "/manual/knowledgebase/hardware/EL7062.md" >}})
+- [EL72xx]({{< relref "/manual/knowledgebase/hardware/EL72xx.md" >}})
+- [EL9xxx]({{< relref "/manual/knowledgebase/hardware/EL9xxx.md" >}})
+- [Hardware issues]({{< relref "/manual/knowledgebase/hardware/hardware_issues.md" >}})
+- [Technosoft iPOS4808, iPOS8020]({{< relref "/manual/knowledgebase/hardware/iPOSXXXX.md" >}})

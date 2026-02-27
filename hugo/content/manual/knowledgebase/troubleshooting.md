@@ -1,7 +1,8 @@
 +++
 title = "Troubleshooting"
-weight = 60
+weight = 18
 chapter = false
+aliases = ["/manual/troubleshooting/"]
 +++
 
 ## Startup issues
@@ -21,4 +22,3 @@ chapter = false
 ## Diagnostics
 - Use `read_el70xx_diag.sh` or `read_el5042_diag.sh` for Beckhoff drives/encoders.
 - Check `iocsh` output for YAML lint/schema errors (v8+).
-- If live reload in docs fails, ensure `hugo server` is running and port is free.

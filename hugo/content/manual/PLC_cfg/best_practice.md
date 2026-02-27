@@ -1,6 +1,6 @@
 +++
-title = "best practice"
-weight = 20
+title = "PLC best practice"
+weight = 14
 chapter = false
 +++
 

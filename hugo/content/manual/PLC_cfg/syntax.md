@@ -1,11 +1,15 @@
 +++
 title = "syntax"
-weight = 15
+weight = 13
 chapter = false
 +++
 
 In `ECMC`, PLCs are based on the `exprtk` expression evaluation library.
 For detailed syntax help please visit the [exprtk website](https://github.com/ArashPartow/exprtk)
+
+Companion pages:
+- [best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}})
+- [function libs]({{< relref "/manual/PLC_cfg/function_libs.md" >}})
 
 ## common errors, misconceptions and info
 ### operators

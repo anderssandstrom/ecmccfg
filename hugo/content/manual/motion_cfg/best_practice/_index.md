@@ -1,5 +1,5 @@
 +++
-title = "best practice"
+title = "motion best practice"
 weight = 30
 chapter = false
 +++
@@ -36,4 +36,3 @@ https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_p
 #### [No motor record](motor)
 Example of configuration without motor:
 https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_bissc_no_mr
-

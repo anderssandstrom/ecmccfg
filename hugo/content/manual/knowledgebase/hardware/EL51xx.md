@@ -1,6 +1,6 @@
 +++
 title = "EL51xx"
-weight = 20
+weight = 19
 chapter = false
 +++
 
@@ -85,4 +85,3 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=16, HW_DESC=EL5131_DC"
 ### Diagnostics
 
 See the hardware diagnostics page.
-

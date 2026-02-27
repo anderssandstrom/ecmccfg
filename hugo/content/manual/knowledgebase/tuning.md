@@ -37,6 +37,45 @@ This means less corrective work for feedback loops and usually smoother, more ac
 Feedforward behavior is tightly coupled to scaling. If drive/encoder scaling is wrong, feedforward looks wrong and PID tuning becomes misleading.
 For scaling details, see [drive and encoder scaling]({{< relref "/manual/motion_cfg/scaling.md" >}}).
 
+#### ecmc controller structure (overview)
+The ecmc position controller chain can be read as:
+1. Compute position error: `e = setpoint - actual` (actual value is mapped through encoder scaling).
+2. Apply PID on `e` using one of two parameter sets:
+   * outer set when `e > tol`
+   * inner set when `e < tol` (fine positioning near target)
+3. Add feedforward contribution (`Kff`) scaled by drive scaling (`num/denom`).
+4. Apply output shaping/limits (for example deadband and related constraints) before commanding the process/drive.
+5. Close the loop with measured position feedback and evaluate at-target logic (`e < tol` for configured time/cycles).
+
+Mode-specific behavior:
+* `CSV`: drive command is typically set to `0` at target.
+* `CSP_PC`: ecmc PID can be frozen at target to avoid loop fighting near standstill.
+
+##### Controller sketch
+```mermaid
+flowchart LR
+  SP["Position setpoint"] --> SUM["(-) error: e = setpoint - actual"]
+  ACT["Actual position"] --> ES["Encoder scale<br/>num / denom"] --> SUM
+
+  SUM --> SEL{"Error vs tolerance"}
+  SEL -->|e > tol| OPID["Outer PID set<br/>Kp, Ki, Kd"]
+  SEL -->|e < tol| IPID["Inner PID set<br/>Kp, Ki, Kd"]
+  OPID --> PSUM["(+)"]
+  IPID --> PSUM
+
+  TRJ["Known trajectory<br/>(position, velocity, acceleration)"] --> FF["Feedforward term"]
+  FF --> KFF["Kff"]
+  KFF --> PSUM
+
+  PSUM --> DB["Deadband / shaping / limits"]
+  DB --> DS["Drive scale<br/>num / denom"]
+  DS --> MODE["Mode behavior near target<br/>CSV: cmd -> 0<br/>CSP_PC: PID freeze"]
+  MODE --> PROC["Process / drive / mechanics"]
+  PROC --> ACT
+
+  AT["At-target condition:<br/>|e| < tol for configured time/cycles"] -.monitor.-> MODE
+```
+
 #### Before tuning: verify scaling first
 Bad tuning behavior is often caused by scaling or backlash issues, not PID gains.
 

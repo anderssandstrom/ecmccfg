@@ -9,10 +9,13 @@ chapter = false
 {{% children %}}
 ---
 
-## axis
+## Axis Overview
 
-ECMC has two types of axes, (1) physical axes, aka joints, and (2) virtual axes, aka end effector.
-Both types are classes in ECMC, the physical axis is a super-set of the virtual axes, as the latter lacks the hardware.
+ECMC has two axis types:
+1. Physical axes (joints)
+2. Virtual axes (end effectors)
+
+Both are classes in ECMC. A physical axis is effectively a superset of a virtual axis, since it includes hardware coupling.
 
 ### [YAML config](axisYaml)
 Since v7, axes can be configured with YAML files.
@@ -27,6 +30,9 @@ This check will point out errors in the structure of the configuration as well a
 ### [PLC YAML config](axisPLC)
 Synchronization configuration
 
+### [ecmc_cfg_tool](ecmc_cfg_tool)
+Runtime tool for inspecting and adjusting settings through the ecmc command parser.
+
 ### [scaling](scaling)
 Configuration of scaling
 
@@ -35,3 +41,10 @@ Defining the direction of motion
 
 ### [homing](homing)
 Configuration of homing
+
+## Recommended Reading Order
+1. Start with [YAML config](axisYaml) to understand required sections and examples.
+2. Continue with [scaling](scaling) and [direction](direction) before tuning.
+3. Add [homing](homing) once basic motion is stable.
+4. Use the [motion knowledge base](../knowledgebase/motion/) for troubleshooting.
+5. Use [ecmc_cfg_tool](ecmc_cfg_tool) for runtime inspection/tuning via the ecmc command parser.

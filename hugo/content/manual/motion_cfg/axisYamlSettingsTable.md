@@ -128,10 +128,10 @@ chapter = false
 | trajectory.jog.velocity | Default velocity for JOG (motor record) | No |
 | trajectory.modulo.range | Modulo range 0..360 | No |
 | trajectory.modulo.type | Modulo type | No |
-| input.limit.forward | EtherCAT entry for low limit switch input, | No |
+| input.limit.forward | EtherCAT entry for low limit switch input | No |
 | input.limit.forwardPolarity | Polarity of forward limit switch | No |
 | input.limit.backward | EtherCAT entry for high limit switch input | No |
-| input.limit.backwardPolarity | Polarity of forward limit switch | No |
+| input.limit.backwardPolarity | Polarity of backward limit switch | No |
 | input.home | EtherCAT entry for home switch | No |
 | input.homePolarity | Polarity of home switch | No |
 | input.interlock | EtherCAT entry for interlock switch input | No |
@@ -152,7 +152,7 @@ chapter = false
 | monitoring.target.tolerance | Allowed tolerance | No |
 | monitoring.target.time | Filter time inside tolerance to be at target | No |
 | monitoring.velocity.enable | Enable velocity monitoring | No |
-| monitoring.velocity.max | Allowed max velocitycity | No |
+| monitoring.velocity.max | Allowed max velocity | No |
 | monitoring.velocity.time.trajectory | Time allowed outside max velocity before system init halt | No |
 | monitoring.velocity.time.drive | Time allowed outside max velocity before system disables drive | No |
 | monitoring.velocityDifference.enable | Enable velocity difference monitoring (velocity set vs velocity actual) | No |
@@ -163,7 +163,7 @@ chapter = false
 | monitoring.stall.time.timeout | If not at target after "timeout" cycles after trajectory generator is ready then drive will disable | No |
 | monitoring.stall.time.factor | Measures duration of last motion command (busy high edge to busy low edge). The new timeout will be defined as this duration multiplied by this factor. The timeout finally used for stall detection will be the longest (of time.timeout and calculated from time.factor). | No |
 | plc.enable | Enable axis plc | No |
-| plc.externalCommands | Allow axis to inputs from PLC | No |
+| plc.externalCommands | Allow axis input from PLC | No |
 | plc.file | File with plc code | No |
 | plc.code[0] | Enable axis if one of master axes is enabled | No |
 | plc.code[1] | Calculate set position for physical axis | No |

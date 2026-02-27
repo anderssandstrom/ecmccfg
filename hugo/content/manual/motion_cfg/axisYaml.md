@@ -5,27 +5,31 @@ weight = 15
 chapter = false
 +++
 
-Since `ecmccfg` v7, the axis configuration is based on YAML files.
+Since `ecmccfg` v7, axis configuration is YAML-based.
 {{% notice info %}}
-Backwards compatibility for classic EPICS environment variable based configuration is assured for legacy systems.
+Backward compatibility with classic EPICS environment-variable based configuration is retained for legacy systems.
 {{% /notice %}}
 
 {{% notice warning %}}
-`yaml` is - like `python` - indentation sensitive!
+`YAML` is, like `Python`, indentation-sensitive.
 {{% /notice %}}
 
 {{% notice tip %}}
-Indent with 2 spaces.
+Use 2 spaces per indentation level.
 {{% /notice %}}
 
-## introduction
+## Introduction
 {{% notice info %}}
-`python 3.x` is required
+`Python 3.x` is required.
 {{% /notice %}}
-The config is processed by a python script with a `jinja2` backend. The processor will complain if mandatory keys are missing. Likewise, missing optional keys are populated with default values.
+The config is processed by a Python script with a `jinja2` backend. The processor reports missing mandatory keys and populates missing optional keys with defaults.
 
 {{% notice info %}}
-The [script](../../../source/scripts/jinja2/loadyamlaxis/) invokes a python script which subsequently uses a `jinja2` processor to render the respective templates. The script will create a `python` virtual environment and install the required libraries automatically.
+The [script](../../../source/scripts/jinja2/loadyamlaxis/) invokes a Python script that uses `jinja2` to render templates. The script creates a Python virtual environment and installs required libraries automatically.
+{{% /notice %}}
+
+{{% notice tip %}}
+If you use the external [ecmc_cfg_tool](../ecmc_cfg_tool/), treat it as a runtime inspection/tuning layer with access to the ecmc command parser. Initial config loading still happens through `loadYamlAxis.cmd`.
 {{% /notice %}}
 
 The configuration is separated into the following mandatory sections:
@@ -38,14 +42,14 @@ The configuration is separated into the following mandatory sections:
 - [trajectory](#trajectory)
 - [input](#input)
 
-in addition the following optional sections are available.
+In addition, the following optional sections are available:
 
 - [output](#output)
 - [homing](#homing)
 - [softlimits](#softlimits)
 - [monitoring](#monitoring)
 
-Each section provides an example, the optional keys are commented.
+Each section provides an example; optional keys are commented.
 
 ***
 
@@ -72,7 +76,7 @@ axis:
 
 #### ecmc native (preferred way)
 Native ecmc auto-enable/disable is the preferred way and can be configured by:
-```
+```yaml
 axis:
   autoEnable:                                         # ecmc auto enable of axis (Please use this instead of motor record version..)
     enableTimeout: 5.0                                # If defined, ecmc tries to auto-enable for a maximum enableTimeout seconds.
@@ -91,7 +95,7 @@ Please use the ecmc-native auto-enable/disable described above.
 
 Auto enable/disable is enabled by default in the motor record. However, this solution is not optimal since the motor record only polls information from ecmc, and all motor records can block when one motor waits for enable.
 This is how the timing parameters can be changed.
-```
+```yaml
 axis:
   parameters: powerAutoOnOff=2;powerOnDelay=6.0;powerOffDelay=1.0;
 ```
@@ -106,7 +110,7 @@ Note the mandatory ";" in the end of the parameters string. If not present, then
 
 ### Tweak value
 The ecmc and motor record tweak value can be defined in `axis.tweakDist`:
-```
+```yaml
 axis:
   tweakDist: 5.0                                    # Tweak distance
 ```
@@ -127,7 +131,7 @@ optional
 - `precision`: PREC field; default 3
 - `unit`: EGU field; optional default mm
 - `motorRecord`
-  * `enable`: set to false to disable motorRecord
+  * `enable`: set to false to disable motor record
   * `description`: DESC field; default ''
   * `fieldInit`: string with additional field initial values; default ''
 

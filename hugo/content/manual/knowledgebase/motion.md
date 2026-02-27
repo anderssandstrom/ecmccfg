@@ -7,9 +7,9 @@ chapter = false
 ## Topics
 1. [both_limits error](#both_limits-error)
 2. [position lag error, (following error)](#position-lag-error)
-4. [drive refuse to enable](#drive-refuse-to-enable)
-5. [force manual motion](#force-manual-motion)
-6. [double limit switches](#double-limit-switches)
+3. [drive refuses to enable](#drive-refuses-to-enable)
+4. [force manual motion](#force-manual-motion)
+5. [double limit switches](#double-limit-switches)
 
 ---
 
@@ -17,7 +17,7 @@ chapter = false
 The "BOTH_LIMITS" error can be related to limit switches not being powered with 24V. At PSI, limits are normally fed from 24V outputs, typically an EL2819 terminal. The outputs therefore need to be set to `1` to power the switches. Check the schematics to find which output powers the switches for a given axis, then use one of the following approaches to set it to `1`:
 
 Define the output in the axis YAML file:
-```
+```yaml
 axis:
   id: 1                                               # Axis id
   ...
@@ -25,8 +25,8 @@ axis:
   ...
 ```
 
-By using the command Cfg.WriteEcEntryEcPath(ec\<master\_id\>.s\<slave\_id\>.binaryOutput\<id\>,\<value\>):
-```
+By using the command `Cfg.WriteEcEntryEcPath(ec<master_id>.s<slave_id>.binaryOutput<id>,<value>)`:
+```iocsh
 ecmcConfigOrDie "Cfg.WriteEcEntryEcPath(ec0.s5>.binaryOutput02,1)"
 ```
 
@@ -71,7 +71,7 @@ If a velocity outside the velocity range is requested, the velocity setpoint wil
 For EL70xx drives the velocity range can be configured to other values than the default +-2000full-steps/s. See
 [el70x1 speed range](../hardware/el70x1#speed-range) for setting other velocity range.
 
-## drive refuse to enable
+## drive refuses to enable
 First check the dedicated hardware drive panel for diagnostics and errors/warnings.
 For EL70x1 drive diagnostics, check [el70x1](../hardware/el70x1).
 
@@ -105,7 +105,7 @@ For this however, the IOC needs to be reconfigured to _not_ link the hardware to
 
 ## double limit switches
 For axes with dual limit switches, or where special logic is needed, limit switches can be overridden by the keyword `plcOverride`:
-```
+```yaml
 ...
 input:
   limit:
@@ -114,7 +114,7 @@ input:
 ...
 ```
 The limits must then be written from PLC code. Any logic can be applied to set the limits, for example:
-```
+```txt
 ...
 plc:
   enable: true                                        # Enable axis plc
@@ -137,7 +137,7 @@ To configure this, add a PLC where the two limit switches are combined with an `
 4. Use the selected simulation bit in the YAML config.
 
 Example (use ec0.s2.ZERO.31 as combined limit switch):
-```
+```txt
 # Master 0
 # Drive slave  3 (can be any slave)
 # Bit 31
@@ -146,7 +146,7 @@ Example (use ec0.s2.ZERO.31 as combined limit switch):
 ec0.s3.ZERO:=ec_wrt_bit(ec0.s3.ZERO,ec0.s5.binaryInput01 and ec0.s5.binaryInput02,31);
 ```
 Then use it as a forward or backward bit in YAML:
-```
+```yaml
 input:
   limit:
     forward: ec0.s2.ZERO.31     # In PLC "ec0.s5.binaryInput01 and ec0.s5.binaryInput02"

@@ -18,7 +18,7 @@ ecmcConfigOrDie "Cfg.LoadSafetyPlugin(<lib>,<cfg>)"
 ```
 
 ## Available plugin repositories
-The list below is based on current local repositories matching `../ecmc_plugin*`.
+The list below is based on currently available `ecmc_plugin*` repositories.
 
 | Plugin | Primary use | Typical entry points |
 |---|---|---|

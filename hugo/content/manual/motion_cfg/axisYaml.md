@@ -28,11 +28,11 @@ The loader validates YAML keys/types and renders the ecmccfg templates. Missing 
 
 {{% notice info %}}
 Default (`jinja`) path: `loadYamlAxis.cmd` invokes Python tooling and creates a virtual environment automatically.
-If `ECMC_CFG_TOOL=ecb`, the same loader uses the external C++ tool [`ecb`](../ecb/) instead.
+If `ECMC_CFG_TOOL=ecb`, the same loader uses the external C++ tool [`ecb`]({{< relref "/manual/motion_cfg/ecb.md" >}}) instead.
 {{% /notice %}}
 
 {{% notice tip %}}
-If you use the external [ecmc_cfg_tool](../ecmc_cfg_tool/), treat it as a runtime inspection/tuning layer with access to the ecmc command parser. Initial config loading still happens through `loadYamlAxis.cmd`.
+If you use the external [ecmc_cfg_tool]({{< relref "/manual/motion_cfg/ecmc_cfg_tool.md" >}}), treat it as a runtime inspection/tuning layer with access to the ecmc command parser. Initial config loading still happens through `loadYamlAxis.cmd`.
 {{% /notice %}}
 
 ## Companion References

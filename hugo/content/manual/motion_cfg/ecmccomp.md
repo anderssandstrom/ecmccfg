@@ -4,7 +4,7 @@ weight = 25
 chapter = false
 +++
 
-`ecmccomp` is the component library for ecmc (`../ecmccomp`).
+`ecmccomp` is the component library for ecmc.
 It provides reusable component definitions (motors, encoders, and slave-specific configs) that are applied to EtherCAT slaves at IOC startup.
 
 ## What It Is Good For
@@ -52,4 +52,4 @@ ${SCRIPTEXEC} ${ecmccomp_DIR}applyComponent.cmd, "COMP_S_ID=12,EC_COMP_TYPE=EL70
 
 ## Notes
 - `ecmccomp` complements `ecmccfg`: use `ecmccfg` for system/axis startup flow and `ecmccomp` for reusable component-level slave configuration.
-- Supported macro sets are component/slave-type dependent; check each component/slave `.cmd` file in `../ecmccomp`.
+- Supported macro sets are component/slave-type dependent; check each component/slave `.cmd` file in the `ecmccomp` repository.

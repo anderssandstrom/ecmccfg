@@ -4,7 +4,7 @@ weight = 26
 chapter = false
 +++
 
-`ecb` (ECMC Configuration Builder, `../ecb`, https://github.com/paulscherrerinstitute/ecb) is a C++ YAML validation/rendering tool that can be used as backend for ecmccfg YAML loaders.
+`ecb` (ECMC Configuration Builder, https://github.com/paulscherrerinstitute/ecb) is a C++ YAML validation/rendering tool that can be used as backend for ecmccfg YAML loaders.
 
 ## What It Is Good For
 - Validating YAML data against schema definitions.
@@ -26,4 +26,4 @@ The ecb module startup file sets this automatically.
 - Default backend remains `jinja` if `ECMC_CFG_TOOL` is not set to `ecb`.
 - Using `ecb` avoids Python venv/pip dependency during YAML parsing.
 - `ecb` supports the subset of Jinja syntax needed by ecmccfg templates (implemented via Inja, with ecb-specific compatibility handling).
-- For CLI details and schema behavior, see `../ecb/doc/ecb.md`.
+- For CLI details and schema behavior, see the `ecb` repository documentation.

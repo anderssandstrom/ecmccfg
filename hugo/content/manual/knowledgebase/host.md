@@ -5,11 +5,60 @@ chapter = false
 +++
 
 ## Topics
-1. [Preferred NICs](#preferred-nics)
-2. [Latency issues / lost frames](#latency-issues--lost-frames)
-3. [EtherCAT rate (EC_RATE)](#ethercat-rate-ec_rate)
-4. [PSI specific](#psi-specific)
-5. [ECMC server cfg repository](#ecmc-server-cfg-repository)
+1. [PSI specific](#psi-specific)
+2. [ECMC server cfg repository](#ecmc-server-cfg-repository)
+3. [Preferred NICs](#preferred-nics)
+4. [Latency issues / lost frames](#latency-issues--lost-frames)
+5. [EtherCAT rate (EC_RATE)](#ethercat-rate-ec_rate)
+
+### PSI specific
+#### ECMC server cfg repository
+The repository `ecmc_server_cfg` is used at PSI as a host configuration template for ecmc servers.
+
+Typical deployment location on host:
+```bash
+/ioc/hosts/<hostname>/cfg
+```
+
+Main content:
+- `ETHERCATDRVR`: EtherCAT driver selection and network interface mapping (`DEVICE_MODULES="igb generic"` plus optional `LINK_DEVICES`/`LINK_DEVICE_MACS`).
+- `AutoStart.sh`: executes startup scripts in `AutoStart/` in lexical order.
+- `AutoStart/S00-install-ethercat-drvr`: installs/starts EtherCAT driver package and service (where applicable).
+- `AutoStart/S10-performance`: sets CPU governor to `performance` and disables turbo.
+- `AutoStart/S10-ecmc-python-venv`: copies the PSI ecmc Python venv to `/tmp` (Debian-version dependent).
+- `AutoStart/S10-eth-irq-prio`: sets EtherCAT IRQ thread priority (relevant when generic driver is used).
+
+{{% notice warning %}}
+`ecmc_server_cfg` is a template. Always validate and adapt settings for the specific machine, and reboot to apply host-level changes.
+{{% /notice %}}
+
+#### iocsh startup
+ecmc needs to be started with root privileges (or with a user in the realtime group); otherwise ecmc might segfault.
+
+#### c6025-0010 startup
+Need to change boot setting:
+* At PSI: make normal Warewulf and PacketFence setup, don't forget the USB dongle.
+* Go to boot menu
+* Boot menu: Set boot option 1 to "USB stick"
+* Advanced->Network stack configuration: Enable network stack and PXE support
+* Save and exit
+
+#### No visible slaves
+Wrong MAC addresses in the EtherCAT configuration could lead to EtherCAT masters "waiting for devices":
+```
+dmesg
+...
+[ 1154.773837] EtherCAT: Requesting master 2...
+[ 1154.773839] EtherCAT ERROR 2: Master still waiting for devices!
+[ 1169.412719] EtherCAT: Requesting master 1...
+[ 1169.412721] EtherCAT ERROR 1: Master still waiting for devices!
+[ 1169.518489] EtherCAT: Requesting master 0...
+[ 1169.518491] EtherCAT ERROR 0: Master still waiting for devices!
+[ 1169.518829] EtherCAT: Requesting master 2...
+[ 1169.518830] EtherCAT ERROR 2: Master still waiting for devices!
+...
+```
+Check that the correct MAC addresses are defined for the EtherCAT masters. At PSI the MACs are defined in the `ETHERCATDRVR` file (`/ioc/hosts/<hostname>/cfg/ETHERCATDRVR`).
 
 ### Preferred NICs
 
@@ -118,56 +167,3 @@ In order to successfully run an ecmc EtherCAT system at higher rates, some tunin
 * only transfer the needed PVs to EPICS
 * affinity: use a dedicated core for the `ecmc_rt` thread and move other high-priority threads to other cores (see "High load on system" above).
 * consider use of more than one domain
-
-### PSI specific
-#### ECMC server cfg repository
-The repository `ecmc_server_cfg` (local path `../ecmc_server_cfg`) is used at PSI as a host configuration template for ecmc servers.
-
-Typical deployment location on host:
-```bash
-/ioc/hosts/<hostname>/cfg
-```
-
-Main content:
-- `ETHERCATDRVR`: EtherCAT driver selection and network interface mapping (`DEVICE_MODULES="igb generic"` plus optional `LINK_DEVICES`/`LINK_DEVICE_MACS`).
-- `AutoStart.sh`: executes startup scripts in `AutoStart/` in lexical order.
-- `AutoStart/S00-install-ethercat-drvr`: installs/starts EtherCAT driver package and service (where applicable).
-- `AutoStart/S10-performance`: sets CPU governor to `performance` and disables turbo.
-- `AutoStart/S10-ecmc-python-venv`: copies the PSI ecmc Python venv to `/tmp` (Debian-version dependent).
-- `AutoStart/S10-eth-irq-prio`: sets EtherCAT IRQ thread priority (relevant when generic driver is used).
-
-{{% notice warning %}}
-`ecmc_server_cfg` is a template. Always validate and adapt settings for the specific machine, and reboot to apply host-level changes.
-{{% /notice %}}
-
-#### Debian 12
-For Debian 12, a different Python venv needs to be copied to the tmp dir at startup.
-The venv can be found here: `/ioc/NeedfulThings/ecmc_python_venv/.venv_deb12/`
-
-#### iocsh startup
-ecmc needs to be started with root privileges (or with a user in the realtime group); otherwise ecmc might segfault.
-
-#### c6025-0010 startup
-Need to change boot setting:
-* At PSI: make normal Warewulf and PacketFence setup, don't forget the USB dongle.
-* Go to boot menu
-* Boot menu: Set boot option 1 to "USB stick"
-* Advanced->Network stack configuration: Enable network stack and PXE support
-* Save and exit
-
-#### No visible slaves
-Wrong MAC addresses in the EtherCAT configuration could lead to EtherCAT masters "waiting for devices":
-```
-dmesg
-...
-[ 1154.773837] EtherCAT: Requesting master 2...
-[ 1154.773839] EtherCAT ERROR 2: Master still waiting for devices!
-[ 1169.412719] EtherCAT: Requesting master 1...
-[ 1169.412721] EtherCAT ERROR 1: Master still waiting for devices!
-[ 1169.518489] EtherCAT: Requesting master 0...
-[ 1169.518491] EtherCAT ERROR 0: Master still waiting for devices!
-[ 1169.518829] EtherCAT: Requesting master 2...
-[ 1169.518830] EtherCAT ERROR 2: Master still waiting for devices!
-...
-```
-Check that the correct MAC addresses are defined for the EtherCAT masters. At PSI the MACs are defined in the `ETHERCATDRVR` file (`/ioc/hosts/<hostname>/cfg/ETHERCATDRVR`).

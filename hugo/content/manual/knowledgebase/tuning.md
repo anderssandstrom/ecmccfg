@@ -53,7 +53,7 @@ The position loop parameters are available through PVs. For many axes, pure P co
 For runtime inspection and tuning of controller-related parameters via the ecmc command parser, use [ecmc_cfg_tool]({{< relref "/manual/motion_cfg/ecmc_cfg_tool.md" >}}), especially the dedicated controller app (`cntrl`).
 
 Typical sequence:
-1. Run repeated forward/backward moves.
+1. Run repeated forward/backward moves (the [ecmc_cfg_tool `mtn` app]({{< relref "/manual/motion_cfg/ecmc_cfg_tool.md" >}}) is convenient for this).
 2. Increase `Kp` until oscillation starts.
 3. Reduce `Kp` to about 40% of that oscillation threshold.
 4. Add small `Ki` and `Kd` only when needed (for example backlash handling or `CSP_PC`).

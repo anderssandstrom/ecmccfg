@@ -87,7 +87,7 @@ If macro substitution is needed, please use the traditional approach using `load
 
 PLC can access:
 - [variables](#variables)
-- [process data](#process-data)
+- [process data](#ethercat)
 - [axis](#axis)
 - [PLCs](#plc)
 - [data storage](#data-storage)

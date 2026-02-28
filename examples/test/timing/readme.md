@@ -19,12 +19,12 @@ ax${ECMC_AXIS_TIME_NUM}.enc.actpos:=(currtime-trunc(currtime))*360;")
 
 ## phys axis
 
-The pysical asix is coonnected to the actual hardware (stepper motor). 
+The physical axis is coonnected to the actual hardware (stepper motor).
 This axis is configured with external PLC code for setpoint:
 ```
 epicsEnvSet("ECMC_AXIS_EXPR_LINE_5",           "ax${ECMC_AXIS_PHYS_NUM}.traj.setpos:=ax${ECMC_AXIS_TIME_NUM}.enc.actpos-ax${ECMC_AXIS_PHASE_NUM}.traj.setpos|")
 ```
-Right now this code is in the phase.sax since the phys.sax will not execute untill tyhe source have been changed.
+Right now this code is in the phase.sax since the phys.sax will not execute until tyhe source have been changed.
 
 ## phase axis
 

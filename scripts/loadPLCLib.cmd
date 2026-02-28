@@ -3,7 +3,7 @@
 #- Arguments: FILE, [PLC_ID], [SAMPLE_RATE_MS], [PLC_MACROS]
 
 #-d /**
-#-d   \brief Script for loading a PLC from lib from file.
+#-d   \brief Script for loading a PLC library from file.
 #-d   \details Adds a PLC defined in FILE. Also adds PLC specific EPICS PVs, i.e. for enable/disable.
 #-d   \author Anders Sandström
 #-d   \file
@@ -14,7 +14,7 @@
 #-d          * "SELF"    = "plc${SELF_ID}"
 #-d          * "M_ID"    = EtherCAT master ID
 #-d          * "M"       = "ec${M_ID}"
-#-d   \param INC (optional) List of directories for include files to pass to MSI (if several paths thendivide with ':').
+#-d   \param INC (optional) List of directories for include files to pass to MSI (if several paths then divide with ':').
 #-d   \param TMP_PATH (optional) directory to dump the temporary plc file after macro substitution
 #-d   \param PRINT_PLC_FILE (optional) 1/0, printout msi parsed plc file (default enable(1)).
 #-d   \note Example call:

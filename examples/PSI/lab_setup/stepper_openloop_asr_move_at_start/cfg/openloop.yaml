@@ -15,10 +15,10 @@ epics:
 drive:
   numerator: 3600                                     # Fastest speed in engineering units
   denominator: 32768                                  # I/O range for ECMC_EC_ALIAS_DRV_VELO_SET
-  control: ec0.s$(DRV_SLAVE).driveControl01           # Control word ethercat entry
+  control: ec0.s$(DRV_SLAVE).driveControl01           # Control word EtherCAT entry
   enable: 0                                           # Enable bit index in control word (not used if DS402)
   enabled: 1                                          # Enabled bit index in status word (not used if DS402)
-  status: ec0.s$(DRV_SLAVE).driveStatus01             # Status word ethercat entry
+  status: ec0.s$(DRV_SLAVE).driveStatus01             # Status word EtherCAT entry
   setpoint: ec0.s$(DRV_SLAVE).velocitySetpoint01      # Velocity setpoint if CSV. Position setpoint if CSP
   reduceTorque: 2                                     # Reduce torque bit in drive control word
   reduceTorqueEnable: True                            # Enable reduce torque functionality
@@ -28,7 +28,7 @@ encoder:
   denominator: 12800                                  # Scaling denominator example 4096 ticks per 360 degree
   type: 0                                             # Type: 0=Incremental, 1=Absolute
   bits: 16                                            # Total bit count of encoder raw da
-  position: ec0.s$(DRV_SLAVE).positionActual01        # Ethercat entry for actual position input (encoder)
+  position: ec0.s$(DRV_SLAVE).positionActual01        # EtherCAT entry for actual position input (encoder)
   control: ec0.s$(DRV_SLAVE).encoderControl01         # mandatory only if 'reset' is used
   status: ec0.s$(DRV_SLAVE).encoderStatus01           # mandatory only if 'warning' or 'error' are used
   homing:
@@ -54,10 +54,10 @@ trajectory:
 
 input:
   limit:
-    forward: ec0.s$(DRV_SLAVE).driveStatus01.12       # Ethercat entry for low limit switch input
-    backward: ec0.s$(DRV_SLAVE).driveStatus01.11      # Ethercat entry for high limit switch input
-  home: 'ec0.s$(DRV_SLAVE).ONE.0'                     # Ethercat entry for home switch
-  interlock: 'ec0.s$(DRV_SLAVE).ONE.0'                # Ethercat entry for interlock switch input
+    forward: ec0.s$(DRV_SLAVE).driveStatus01.12       # EtherCAT entry for low limit switch input
+    backward: ec0.s$(DRV_SLAVE).driveStatus01.11      # EtherCAT entry for high limit switch input
+  home: 'ec0.s$(DRV_SLAVE).ONE.0'                     # EtherCAT entry for home switch
+  interlock: 'ec0.s$(DRV_SLAVE).ONE.0'                # EtherCAT entry for interlock switch input
 
 
 softlimits:

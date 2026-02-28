@@ -6,8 +6,8 @@ require ecmccomp sandst_a
 
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=3,HW_DESC=EL7062"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Motor-Generic-2Phase-Stepper, CH_ID=1, MACROS='I_MAX_MA=1000, I_STDBY_MA=100, U_NOM_MV=24000,L_COIL_UH=3100,R_COIL_MOHM=2620'"
-#- Use autotune to get the controller parameter, resistance and inductance (trigger in hw expert panel) 
-#- Note "Motor-Generic-2Phase-Stepper" also require to define R and L (put any value).
+#- Use autotune to get the controller parameters, resistance, and inductance (trigger in hw expert panel) 
+#- Note "Motor-Generic-2Phase-Stepper" also requires defining R and L (put any value).
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Drive-Generic-Ctrl-Params,    CH_ID=1, MACROS='L_COIL_UH=3100,R_COIL_MOHM=2620,I_TI=12,I_KP=59,V_TI=150,V_KP=176,P_KP=10'"
 #- Must tell ecmc that channel is not used
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Generic-Ch-Not-Used,          CH_ID=2'"

@@ -13,7 +13,7 @@
 ##     DBF_STRING:         "One"     
 ##     raspberrypi-16970 > Pushing data to EPICS....
 ##
-## data storage data (waveform) is accesible in this pv: IOC_TEST:ds0-Data-Act
+## data storage data (waveform) is accessible in this pv: IOC_TEST:ds0-Data-Act
 ##
 ##
 

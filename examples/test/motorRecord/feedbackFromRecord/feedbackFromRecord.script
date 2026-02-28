@@ -3,9 +3,9 @@
 ## RTRY : Max retry count
 ## RMOD : Retry Mode
 ## UEIP : Use encoder if present
-## RDBD : Readtry deadband 
+## RDBD : Retry deadband 
 ## URIP : Use RDBL Link If Present
-## RDBL : Readback link (position form EPICS variable)
+## RDBL : Readback link (position from EPICS variable)
 ##
 ## Example based on  ESS crate of type MCU1021 with coupler.
 ##
@@ -56,9 +56,9 @@ iocInit()
 ## RTRY : Max retry count
 ## RMOD : Retry Mode
 #- UEIP : Use encoder if present
-## RDBD : Readtry deadband 
+## RDBD : Retry deadband 
 #- URIP : Use RDBL Link If Present
-## RDBL : Readback link (position form EPICS variable)
+## RDBL : Readback link (position from EPICS variable)
 
 
 dbgf ${IOC}:Axis1.RTRY

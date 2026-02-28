@@ -7,7 +7,7 @@ Config for scaling in mm, mm/s, mm/s2
 
 ## Motor AM8111-XFX0
 Data about the motor can be found here:
-https://infosys.beckhoff.com/english.php?content=../content/1033/am8100/index.html&id=
+https://infosys.beckhoff.com/english.php?content=../content/1033/am8100/index.html
 
 Important for scaling factors in axis.yaml is the motor pole count. For the AM8111-XFX0 motor the pole count is 6.
 
@@ -23,10 +23,10 @@ However, when connecting to an Ex72xx drive the single turn count will be 20bits
 * encoder.denominator: Resolution: 1048576 counts (20bits) per = 1mm
 * encoder.absBits: 32 bits (20bits+12bits)
 * encoder.type: Absolute (type 1)
-* ecnoder.absOffset: Offset to 0 position of linear stage (-1000 in this example)
+* encoder.absOffset: Offset to 0 position of linear stage (-1000 in this example)
 
 ```
-# The encoder on most motors are 20bit single turn and 12 bit multiturn (4096 turns)
+# The encoder on most motors is 20-bit single-turn and 12-bit multi-turn (4096 turns)
 encoder:
   type: 1
   position: ec0.s$(DRV_ID).positionActual01
@@ -41,11 +41,11 @@ encoder:
 
 **IMPORTANT NOTE:**
 
-The below explained scaling might have changed in drive firmware (or differnt for different Ex72XX drives), needs further investigation. Could be that both 6 pole and 8 pole motors should be configured with max speed 8000 revs/s. Check scaling by:
-* Enable pos lag monitoring, and max velo monitoring in yaml with resonable settings
+The below explained scaling might have changed in drive firmware (or different for different Ex72XX drives), needs further investigation. Could be that both 6 pole and 8 pole motors should be configured with max speed 8000 revs/s. Check scaling by:
+* Enable pos lag monitoring, and max velo monitoring in yaml with reasonable settings
 * Set the ecmc position controller params to 0
 * Make sure the axis is in a safe motion range and that limit switches are working.
-* Enable axcis and execute a small move (always be prepared to kill axes, or E-stop).
+* Enable axis and execute a small move (always be prepared to kill axes, or E-stop).
 * In this "open loop" move, the setpoint and actual position should track well. If you see an error corresponding to approx. 25% of the move distance, then the scaling is most likely wrong, then test the other scaling factor.
 
 Max scale for motors depend on the pole count:
@@ -74,5 +74,5 @@ However, the configuration for feeding switches (axis.feedSwitchesOutput) have b
 ```
 axis:
   id: ${AX_ID=1}
-  feedSwitchesOutput: ec0.s$(BO_ID).binaryOutput01.0 # Ethercat entry for feed switches
+  feedSwitchesOutput: ec0.s$(BO_ID).binaryOutput01.0 # EtherCAT entry for feed switches
 ```

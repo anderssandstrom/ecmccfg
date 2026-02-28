@@ -11,7 +11,7 @@
 ## 5. Now the 4 motors should show system time
 ##
 ## Notes:;
-## 1. This demo does not utilize the dc clocks of teh terminals
+## 1. This demo does not utilize the dc clocks of the terminals
 ## 2. Actually only the nanos axis needs a virtual phase axes, because of speed. But for consistensy all 4 axes are controlled through avirt axis.
 ## 3. The idea is that system time should be controlled by ptp or mrf (time2ntp).
 ##

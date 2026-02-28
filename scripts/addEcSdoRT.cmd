@@ -9,7 +9,7 @@
 #-d   \param INDEX  sdo index
 #-d   \param SUBINDEX  sdo subindex
 #-d   \param DT  data type
-#-d   \param NAME  name to be used for adressing and suffix of PV name
+#-d   \param NAME  name to be used for addressing and suffix of PV name
 #-d   \param P_SCRIPT (optional) naming convention prefix script
 #-d */
 
@@ -35,5 +35,4 @@ ${ECMC_EXE_CMD_FLOAT}ecmcFileExist("ecmcSDOAsyncFloat.template",1,1)
 ${ECMC_EXE_CMD_FLOAT}dbLoadRecords("ecmcSDOAsyncFloat.template","ECMC_P=${ECMC_P},MASTER_ID=${ECMC_EC_MASTER_ID=0},SLAVE_POS=${SLAVE_ID=0},NAME=${NAME},PORT=${ECMC_ASYN_PORT},ADDR=0,TIMEOUT=1,T_SMP_MS=${ECMC_SAMPLE_RATE_MS},TSE=${ECMC_TSE}")
 epicsEnvUnset(ECMC_EXE_CMD_INT)
 epicsEnvUnset(ECMC_EXE_CMD_FLOAT)
-
 

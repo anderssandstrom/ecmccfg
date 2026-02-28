@@ -1,5 +1,5 @@
 # Test iocsh function "ecmcEpicsEnvSetCalc()" to evaluate expressions and set 
-# result to EPCIS environment variables.
+# result to EPICS environment variables.
 #
 #       Use "ecmcEpicsEnvSetCalc(<envVarName>,  <expression>, <format>)" to evaluate the expression and assign the variable.
 #          <envVarName> : EPICS environment variable name.

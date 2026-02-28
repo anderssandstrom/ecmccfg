@@ -3,10 +3,10 @@ axis:
   type: joint                                         # this is for future selection of axis type
   # mode: CSV                                         # supported mode, CSV and CSP, defaults CSV
   # parameters: 'axisPar'                             # Additional params to motor record driver
-  #healthOutput: ec0...                               # Ethercat entry for health output
+  #healthOutput: ec0...                               # EtherCAT entry for health output
   # autoMode:                                         # Switch drive modes automaticaly for normal motion and homing (smaract for instance)
-  #   modeSet: ec0..                                  # Ethercat entry drive mode write (set CSV,CSP,homing)
-  #   modeAct: ec0..                                  # Ethercat entry drive mode reading (set CSV,CSP,homing)
+  #   modeSet: ec0..                                  # EtherCAT entry drive mode write (set CSV,CSP,homing)
+  #   modeAct: ec0..                                  # EtherCAT entry drive mode reading (set CSV,CSP,homing)
   #   modeCmdMotion: 9                                # Drive mode value for normal motion (written to axis.drvMode.modeSet when normal motion)
   #   modeCmdHome: 10                                 # Drive mode value for when homing (written to axis.drvMode.modeSet when homing)
   # features:
@@ -32,16 +32,16 @@ drive:
   numerator: 3600                                     # Fastest speed in engineering units
   denominator: 32768                                  # I/O range for ECMC_EC_ALIAS_DRV_VELO_SET
   # type: 0                                           # Stepper: 0. DS402: 1 (DS402 = servos and advanced stepper drives)
-  control: ec0.s$(DRV_SLAVE).driveControl01           # Control word ethercat entry
+  control: ec0.s$(DRV_SLAVE).driveControl01           # Control word EtherCAT entry
   enable: 0                                           # Enable bit index in control word (not used if DS402)
   enabled: 1                                          # Enabled bit index in status word (not used if DS402)
-  status: ec0.s$(DRV_SLAVE).driveStatus01             # Status word ethercat entry
+  status: ec0.s$(DRV_SLAVE).driveStatus01             # Status word EtherCAT entry
   setpoint: ec0.s$(DRV_SLAVE).velocitySetpoint01      # Velocity setpoint if CSV. Position setpoint if CSP
 #  reduceTorque: 2                                    # Reduce torque bit in drive control word
 #  reduceTorqueEnable: True                           # Enable reduce torque functionality
 #  brake:
 #    enable: true                                     # Enable brake
-#    output: ec0...                                   # Ethercat link to brake output
+#    output: ec0...                                   # EtherCAT link to brake output
 #    openDelay: 0                                     # Brake timing parameter in cycles (default 1kHz)
 #    closeAhead: 0                                    # Brake timing parameter in cycles (default 1kHz)
 #  reset: 1                                           # Reset   (if no drive reset bit then leave empty)
@@ -59,11 +59,11 @@ encoder:
   # absBits: 0                                        # Absolute bit count (for absolute encoders) always least significant part of 'bits'
   # absOffset: 0                                      # Encoder offset in eng units (for absolute encoders)
   # mask: '0xFFF00'                                   # Mask applied to raw encoder value
-  position: ec0.s$(DRV_SLAVE).positionActual01        # Ethercat entry for actual position input (encoder)
+  position: ec0.s$(DRV_SLAVE).positionActual01        # EtherCAT entry for actual position input (encoder)
   control: ec0.s$(DRV_SLAVE).encoderControl01         # mandatory only if 'reset' is used
   status: ec0.s$(DRV_SLAVE).encoderStatus01           # mandatory only if 'warning' or 'error' are used
   # ready: 10                                         # Bit in encoder status word for encoder ready
-  # source: 0                                         # 0 = Encoder value from etehrcat hardware, 1 = Encoder value from PLC
+  # source: 0                                         # 0 = Encoder value from EtherCAT hardware, 1 = Encoder value from PLC
   # reset: 1                                          # Reset   (optional)
   # warning: 2                                        # Warning (optional)
   # error:                                            # max 3 (optional)
@@ -93,10 +93,10 @@ encoder:
   #    refToEncIDAtStartup: 1                         # At startup then set the start value of this encoder to actpos of this encoder id
   #    refAtHome: 1                                   # If homing is executed then set position of this encoder
   #    tolToPrim: 0                                   # If set then this is the max allowed tolerance between prim encoder and this encoder
-  #    postMoveEnable: yes                            # Enable move after successfull homing
-  #    postMovePosition: 10                           # Position to move to after successfull homing
-  #    trigg: ec0..                                   # Ethercat entry for triggering drive internal homing seq (seq id 26)
-  #    ready: ec0..                                   # Ethercat entry for readinf drive internal homing seq ready (seq id 26)
+  #    postMoveEnable: yes                            # Enable move after successful homing
+  #    postMovePosition: 10                           # Position to move to after successful homing
+  #    trigg: ec0..                                   # EtherCAT entry for triggering drive internal homing seq (seq id 26)
+  #    ready: ec0..                                   # EtherCAT entry for reading drive internal homing seq ready (seq id 26)
 
 controller:
   Kp: 10                                              # Kp proportinal gain
@@ -133,13 +133,13 @@ trajectory:
 
 input:
   limit:
-    forward: ec${M_ID=0}.s$(DRV_SLAVE).driveStatus01.12       # Ethercat entry for low limit switch input
+    forward: ec${M_ID=0}.s$(DRV_SLAVE).driveStatus01.12       # EtherCAT entry for low limit switch input
   #  forwardPolarity: 0                               # Polarity of forward limit switch
-    backward: ec${M_ID=0}.s$(DRV_SLAVE).driveStatus01.11      # Ethercat entry for high limit switch input
+    backward: ec${M_ID=0}.s$(DRV_SLAVE).driveStatus01.11      # EtherCAT entry for high limit switch input
   #  backwardPolarity: 0                              # Polarity of forward limit switch
-  home: 'ec0.s$(DRV_SLAVE).ONE.0'                     # Ethercat entry for home switch
+  home: 'ec0.s$(DRV_SLAVE).ONE.0'                     # EtherCAT entry for home switch
   # homePolarity: 0                                   # Polarity of home switch
-  interlock: 'ec0.s$(DRV_SLAVE).ONE.0'                # Ethercat entry for interlock switch input
+  interlock: 'ec0.s$(DRV_SLAVE).ONE.0'                # EtherCAT entry for interlock switch input
   # interlockPolarity: 0                              # Polarity of interlock switch
 
 # homing:
@@ -153,8 +153,8 @@ input:
 #   refToEncIDAtStartup: 1                            # At startup then set the start value of this encoder to actpos of this encoder id
 #   refAtHome: 1                                      # If homing is executed then set position of this encoder
 #   tolToPrim: 0                                      # If set then this is the max allowed tolerance between prim encoder and this encoder
-#   postMoveEnable: yes                               # Enable move after successfull homing
-#   postMovePosition: 10                              # Position to move to after successfull homing
+#   postMoveEnable: yes                               # Enable move after successful homing
+#   postMovePosition: 10                              # Position to move to after successful homing
 #   timeout: 100                                      # Sequence timeout
 
 softlimits:

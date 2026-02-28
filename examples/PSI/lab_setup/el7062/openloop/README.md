@@ -1,6 +1,6 @@
 # CSV openloop 20250407
 
-Do not use EL7062 in CSV mode openloop!!!!! 
+Do not use EL7062 in CSV mode openloop!!!!!
 
 The EL7062 has a rather sever bug when running openloop CSV.
 When the drive is disabled the openloop counter jumps to closest full turn (one turn is 1048576counts, 20bits).

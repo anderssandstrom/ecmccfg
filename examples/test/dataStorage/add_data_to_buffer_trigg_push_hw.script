@@ -3,7 +3,7 @@
 ## Buffer 10000 values from encoder
 ## Push to epics when high limit is triggered (falling edge)
 ##
-## data storage data (waveform) is accesible in this pv: IOC_TEST:ds0-Data-Act
+## data storage data (waveform) is accessible in this pv: IOC_TEST:ds0-Data-Act
 ##
 
 ##############################################################################

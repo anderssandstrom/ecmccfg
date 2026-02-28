@@ -7,7 +7,7 @@ epicsEnvSet("IOC" ,"$(IOC="IOC_TEST")")
 epicsEnvSet("ECMCCFG_INIT" ,"")  #Only run startup once (auto at PSI, need call at ESS), variable set to "#" in startup.cmd
 epicsEnvSet("SCRIPTEXEC" ,"$(SCRIPTEXEC="iocshLoad")")
 
-#system("ethercat rescan")  # Can be usefull if slave is stuck for some reason
+#system("ethercat rescan")  # Can be useful if slave is stuck for some reason
 system("ethercat slaves")
 
 require ecmccfg develop

@@ -1,7 +1,7 @@
 #==============================================================================
 # addEcDataItem.cmd
 #-d /**
-#-d   \brief Script for adding a ethercat data item.
+#-d   \brief Script for adding an EtherCAT data item.
 #-d   \details The EtherCAT data item allows access to already configured EtherCAT domain data in a flexible
 #-d   way by defining a start entry, byte and bit offset, and data type. Basically, it is a pointer directly into the process image.
 #-d   \author Anders Sandström

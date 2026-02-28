@@ -3,7 +3,7 @@ Function libs can be loaded into ecmc-PLCs
 ```
 ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}loadPLCLib.cmd,     "FILE=./plc/test.plc_lib, PLC_MACROS='OFFSET=3'"
 ```
-The functions must be defined accordning to template: 
+The functions must be defined according to template:
 ```
 function <name>(<param1>,...<param5>) {
   <code body>;
@@ -20,7 +20,7 @@ function <name>() {
 * The parameters aswell as the return value must be scalars, however, local vectors can be defined and used in calculations (initiations of vector can be done with MACROS, constants or parameters).
 * "#" as a first char in a line is considered a comment (the line will be removed before compile).
 * MSI: The lib file will be parsed through MSI allowing macro expansion, "include" and "subsitute" commands. For more info check the msi documentation/help.
-  
+
 ### Can be used in a function:
 1. The parameters
 2. Other functions (also recursive)
@@ -35,7 +35,7 @@ function <name>() {
   * open
   * close
   * write
-  * read",  
+  * read",
   * getline
   * eof
  5. vectors in the calculations (but NOT as parameter or return value).
@@ -56,7 +56,7 @@ function add(a,b,c,d,e) {
   return[a+b+c+d+e+${OFFSET=0}];
 };
 
-function prod(a,b,c,d,e) {  
+function prod(a,b,c,d,e) {
   println('This is prod, add2 :    ',  add(a,b,c,d,e));
   println('This is prod, prod:     ',  a*b*c*d*e);
   return [a * b * c * d * e + ${OFFSET=0}];

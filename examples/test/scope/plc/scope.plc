@@ -32,7 +32,7 @@ if(ec_mm_append_to_ds(${ID_MM},${ID_DS_BUF})) {
 };
 
 ##### STATE 0: Fill buffer
-#Wait untill Buffer is full before accepting triggers
+#Wait until Buffer is full before accepting triggers
 if(static.state==0 and ds_is_full(${ID_DS_BUF})) {
   println('Buffer full. Wait for trigger..');
   static.state:=1; # Wait for trigger

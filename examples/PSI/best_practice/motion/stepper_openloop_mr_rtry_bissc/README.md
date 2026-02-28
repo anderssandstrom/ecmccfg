@@ -2,20 +2,20 @@
 The motion axis in this example is configured to move in open loop but executing retries based on an absolute encoder.
 
 ## General configuration
-Two encoders are configutred for teh motion object:
+Two encoders are configured for the motion object:
 * **01**: BISS-C absolute encoder
 * **02**: Open loop counter
 
 The system will startup with the open loop encoder as primary (used for control) and the motor record are configured to use retries to control on the absolute BISS-C encoder.
 
 ## Motor record
-Important motor record fields are: 
+Important motor record fields are:
 1. **RTRY** : Max retry count
 2. **RMOD** : Retry Mode
 3. **UEIP** : Use encoder if present
-4. **RDBD** : Readtry deadband 
+4. **RDBD** : Retry deadband
 5. **URIP** : Use RDBL Link If Present
-6. **RDBL** : Readback link (position form EPICS variable)
+6. **RDBL** : Readback link (position from EPICS variable)
 
 ### RTRY : Max retry count
 maximum retry count. Needs to be set to a number higher than 0
@@ -53,15 +53,15 @@ Any vars added to `epics.motorRecord.fieldInit` will be forwarded to motor recor
 # RTRY : Max retry count
 # RMOD : Retry Mode
 # UEIP : Use encoder if present
-# RDBD : Readtry deadband 
+# RDBD : Retry deadband
 # URIP : Use RDBL Link If Present
-# RDBL : Readback link (position form EPICS variable)
+# RDBL : Readback link (position from EPICS variable)
 
 epics:
   name: ${AX_NAME=M1}                                 # Axis name
   precision: 3                                        # Decimal count
   description: Test cfg                               # Axis description
-  unit: mm                                            # Unit  
+  unit: mm                                            # Unit
   motorRecord:
     syncSoftLimits: False
     fieldInit: 'FOFF=Frozen,RRES=1.0,RTRY=2,RMOD=1,UEIP=0,RDBD=0.1,URIP=1,RDBL=$(IOC):${AX_NAME=M1}-Enc${RTRY_ENC_CH=01}-PosAct'
@@ -98,11 +98,11 @@ The simulated position is configured like this:
 **IMPORTANT:** If you use an incremental encoder linked to calc record, you can sometimes experience stops during homing sequence since then the motion axis might go outside of the alarm limits defined. Normally motor record driver will not update the position during homing but I will happen for instance when activating limit switch or homing switch. Then a stop could occur
 This is of course no problem if the RDBL linked value is absolute like intended.
 
-## How to move when RDBL alarm interlock 
+## How to move when RDBL alarm interlock
 
 If motion is interlocked by the RDBL alarm then motion can be executed by setting the URIP to 0 (disabling RDBL).
 ```
 dbpf IOC_TEST:Axis1.URIP 0
 ```
-Motion can now be executed. 
+Motion can now be executed.
 Note: The RDBL link are now not used (retries based on RDBL will not be executed)

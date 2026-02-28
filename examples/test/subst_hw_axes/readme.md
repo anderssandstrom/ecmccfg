@@ -1,4 +1,4 @@
-# Load hw and multiple axes based on subst and template file 
+# Load hw and multiple axes based on subst and template file
 
 Three commands for loading ecmc configurations based on substitution files:
 * loadSubstConfig.cmd: Load complete config (motion and other)
@@ -239,7 +239,7 @@ monitoring:
 ## IOC shell output
 
 ```
-sandst_a@c6025a:/gfa/.mounts/sls_ioc/c6025a/ecmccfg/examples/test/subst_hw_axes$ sudo iocsh -7.0.6 startup.script 
+sandst_a@c6025a:/gfa/.mounts/sls_ioc/c6025a/ecmccfg/examples/test/subst_hw_axes$ sudo iocsh -7.0.6 startup.script
 /usr/local/epics/base-7.0.6/bin/deb10-x86_64/softIocPVA -D /usr/local/epics/base-7.0.6/dbd/softIocPVA.dbd /tmp/iocsh.startup.5378
 # date="Thu Dec 14 16:28:59 CET 2023"
 # user="root"
@@ -499,9 +499,9 @@ ecmcMotorRecordCreateController(MCU1, MC_CPU1, "64", 200, 1000, "")
 ############# Misc settings:
 # Disable function call trace printouts
 ecmcConfigOrDie "Cfg.SetEnableFuncCallDiag(0)"
-2023/12/14 16:28:59.533 
+2023/12/14 16:28:59.533
 ECMC Initializes.............
-2023/12/14 16:28:59.533 ESS Open Source EtherCAT Motion Control Epics Module2023/12/14 16:28:59.533 
+2023/12/14 16:28:59.533 ESS Open Source EtherCAT Motion Control Epics Module2023/12/14 16:28:59.533
 Mode: Configuration
 SEM object created: 0x7f1e6778c000.
 OK
@@ -543,7 +543,7 @@ epicsEnvSet("ECMC_EC_MASTER_ID" ,0)
 
 ecmcEpicsEnvSetCalcTernary(ECMC_ENG_MODE_CMD, "0>0", "","#- ")
 epicsEnvShow(ECMC_ENG_MODE_CMD)
-ECMC_ENG_MODE_CMD=#- 
+ECMC_ENG_MODE_CMD=#-
 epicsEnvSet(ECMC_ENG_MODE,0)
 
 epicsEnvSet("ECMC_TMP_DIR",         "/tmp/c6025a/EcMaster_0/")
@@ -1199,8 +1199,8 @@ OK
         ecmcConfigOrDie "Cfg.SetAxisHomeSeqId(1,15)"
 OK
         epicsEnvSet(HOME_PROC, 15)
-    
-    
+
+
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s4.driveControl01.0","ax1.drv.control")"
 OK
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s4.driveStatus01.1","ax1.drv.status")"
@@ -1239,7 +1239,7 @@ OK
 OK
     ecmcConfigOrDie "Cfg.SetAxisCntrlDeadbandTime(1,100)"
 OK
-    
+
 ecmcConfigOrDie "Cfg.SetAxisTrajSourceType(1,0)"
 OK
 ecmcConfigOrDie "Cfg.SetAxisJerk(1,720)"
@@ -1387,8 +1387,8 @@ OK
         ecmcConfigOrDie "Cfg.SetAxisHomeSeqId(2,15)"
 OK
         epicsEnvSet(HOME_PROC, 15)
-    
-    
+
+
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s4.driveControl01.0","ax2.drv.control")"
 OK
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s4.driveStatus01.1","ax2.drv.status")"
@@ -1427,7 +1427,7 @@ OK
 OK
     ecmcConfigOrDie "Cfg.SetAxisCntrlDeadbandTime(2,100)"
 OK
-    
+
 ecmcConfigOrDie "Cfg.SetAxisTrajSourceType(2,0)"
 OK
 ecmcConfigOrDie "Cfg.SetAxisJerk(2,720)"
@@ -1575,8 +1575,8 @@ OK
         ecmcConfigOrDie "Cfg.SetAxisHomeSeqId(3,15)"
 OK
         epicsEnvSet(HOME_PROC, 15)
-    
-    
+
+
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s4.driveControl01.0","ax3.drv.control")"
 OK
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s4.driveStatus01.1","ax3.drv.status")"
@@ -1615,7 +1615,7 @@ OK
 OK
     ecmcConfigOrDie "Cfg.SetAxisCntrlDeadbandTime(3,100)"
 OK
-    
+
 ecmcConfigOrDie "Cfg.SetAxisTrajSourceType(3,0)"
 OK
 ecmcConfigOrDie "Cfg.SetAxisJerk(3,720)"
@@ -1763,8 +1763,8 @@ OK
         ecmcConfigOrDie "Cfg.SetAxisHomeSeqId(4,15)"
 OK
         epicsEnvSet(HOME_PROC, 15)
-    
-    
+
+
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s4.driveControl01.0","ax4.drv.control")"
 OK
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s4.driveStatus01.1","ax4.drv.status")"
@@ -1803,7 +1803,7 @@ OK
 OK
     ecmcConfigOrDie "Cfg.SetAxisCntrlDeadbandTime(4,100)"
 OK
-    
+
 ecmcConfigOrDie "Cfg.SetAxisTrajSourceType(4,0)"
 OK
 ecmcConfigOrDie "Cfg.SetAxisJerk(4,720)"
@@ -1951,8 +1951,8 @@ OK
         ecmcConfigOrDie "Cfg.SetAxisHomeSeqId(5,15)"
 OK
         epicsEnvSet(HOME_PROC, 15)
-    
-    
+
+
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s4.driveControl01.0","ax5.drv.control")"
 OK
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s4.driveStatus01.1","ax5.drv.status")"
@@ -1991,7 +1991,7 @@ OK
 OK
     ecmcConfigOrDie "Cfg.SetAxisCntrlDeadbandTime(5,100)"
 OK
-    
+
 ecmcConfigOrDie "Cfg.SetAxisTrajSourceType(5,0)"
 OK
 ecmcConfigOrDie "Cfg.SetAxisJerk(5,720)"
@@ -2139,8 +2139,8 @@ OK
         ecmcConfigOrDie "Cfg.SetAxisHomeSeqId(6,15)"
 OK
         epicsEnvSet(HOME_PROC, 15)
-    
-    
+
+
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s4.driveControl01.0","ax6.drv.control")"
 OK
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s4.driveStatus01.1","ax6.drv.status")"
@@ -2179,7 +2179,7 @@ OK
 OK
     ecmcConfigOrDie "Cfg.SetAxisCntrlDeadbandTime(6,100)"
 OK
-    
+
 ecmcConfigOrDie "Cfg.SetAxisTrajSourceType(6,0)"
 OK
 ecmcConfigOrDie "Cfg.SetAxisJerk(6,720)"
@@ -2327,8 +2327,8 @@ OK
         ecmcConfigOrDie "Cfg.SetAxisHomeSeqId(7,15)"
 OK
         epicsEnvSet(HOME_PROC, 15)
-    
-    
+
+
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s4.driveControl01.0","ax7.drv.control")"
 OK
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s4.driveStatus01.1","ax7.drv.status")"
@@ -2367,7 +2367,7 @@ OK
 OK
     ecmcConfigOrDie "Cfg.SetAxisCntrlDeadbandTime(7,100)"
 OK
-    
+
 ecmcConfigOrDie "Cfg.SetAxisTrajSourceType(7,0)"
 OK
 ecmcConfigOrDie "Cfg.SetAxisJerk(7,720)"
@@ -2515,8 +2515,8 @@ OK
         ecmcConfigOrDie "Cfg.SetAxisHomeSeqId(8,15)"
 OK
         epicsEnvSet(HOME_PROC, 15)
-    
-    
+
+
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s4.driveControl01.0","ax8.drv.control")"
 OK
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("ec0.s4.driveStatus01.1","ax8.drv.status")"
@@ -2555,7 +2555,7 @@ OK
 OK
     ecmcConfigOrDie "Cfg.SetAxisCntrlDeadbandTime(8,100)"
 OK
-    
+
 ecmcConfigOrDie "Cfg.SetAxisTrajSourceType(8,0)"
 OK
 ecmcConfigOrDie "Cfg.SetAxisJerk(8,720)"
@@ -3180,8 +3180,8 @@ Starting iocInit
 iocRun: All initialization complete
 2023/12/14 16:29:09.013 ecmcAsynPortDriver:getEpicsState: EPICS state: initHookAfterIocRunning (16). Allow callbacks: true.
 epicsEnvSet IOCSH_PS1,"c6025a> "
-c6025a> 
-c6025a> 
+c6025a>
+c6025a>
 
 ```
 

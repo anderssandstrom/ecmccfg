@@ -65,8 +65,8 @@ ethercat upload -m0 -p3 0x8110 0x17 --type uint32
 
 # Voltage Constant
 Setting in CoE 0x8011:31 is in microV/min^-1
-Example for Beckhoff AS2021 stepper. Data sheet Motor EMF Motor EMF 239 [mV/rad/s] 
-This corrsponds to 25028microV/min^-1 which is the setting in CoE
+Example for Beckhoff AS2021 stepper. Data sheet Motor EMF Motor EMF 239 [mV/rad/s]
+This corresponds to 25028microV/min^-1 which is the setting in CoE
 
 # Other settings for AS2021 motor:
 
@@ -79,7 +79,7 @@ PS	CoE	0x1A85 C 0	01 00 10 13 10 61	download pdo 0x1A85 entries
 PS	CoE	0x1A8D C 0	01 00 10 14 10 61	download pdo 0x1A8D entries
 PS	CoE	0x1C12 C 0	04 00 00 16 06 16 80 16 86 16	download pdo 0x1C12 index
 PS	CoE	0x1C13 C 0	07 00 00 1A 01 1A 03 1A 06 1A 80 1A 81 1A 86 1A	download pdo 0x1C13 index
-IP	CoE	0xF081:01	0x00100000 (1048576)	
+IP	CoE	0xF081:01	0x00100000 (1048576)
 IP	CoE	0x10F3:05	0x0001 (1)	Enable DiagMessage as emergency
 PS	CoE	0xF800:10	0x00005DC0 (24000)	DRV Amplifier Settings / Nominal DC link voltage
 PS	CoE	0x8011:12	0x000007D0 (2000)	DRV Motor Settings Ch.1 / Rated current

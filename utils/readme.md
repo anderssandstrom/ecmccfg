@@ -49,6 +49,36 @@ python3 esi_parser.py --file ../../../beckhoff_xml/Beckhoff\ EL72xx.xml --name "
 
 
 ```
+
+## ESI mapping browser (v2 start)
+
+Simple GUI tool to inspect available PDO mappings for slaves in an ESI XML and generate ecmc hardware snippets.
+
+When you choose a new XML file in the GUI, the list updates immediately.
+
+```bash
+cd utils
+python3 esi_mapping_browser.py --file "../../Beckhoff_EtherCAT_XML-4/Beckhoff EL1xxx.xml"
+```
+
+CLI mode (no window):
+
+```bash
+cd utils
+python3 esi_mapping_browser.py --no-gui --file "../../Beckhoff_EtherCAT_XML-4/Beckhoff EL1xxx.xml"
+```
+
+Generate one hardware snippet from CLI:
+
+```bash
+cd utils
+python3 esi_mapping_browser.py --no-gui \
+  --file "../../Beckhoff_EtherCAT_XML-4/Beckhoff EL1xxx.xml" \
+  --name "EL1259*" --rev "0x120000" \
+  --generate-snippet --slave-index 1 --mapping-index 2 \
+  --snippet-out ./ecmcEL1259_example.cmd
+```
+
 ## Read EL70xx diagnostic, read_el70xx_diag.sh
 
 A tool that reads error and warning state of a EL70xx stepper drive. The error and warning diagnostics are read from the 0xA010 register.

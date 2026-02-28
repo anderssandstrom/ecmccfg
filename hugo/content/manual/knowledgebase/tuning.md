@@ -29,12 +29,12 @@ Feedforward is used to push known motion demand directly into the control chain 
 In practice this reduces following error and improves response, especially during acceleration/deceleration.
 
 Because the position trajectory is known, its derivatives are also known:
-* Planned velocity can be fed forward to the velocity-related control action.
-* Planned acceleration can be fed forward to the current/torque-related control action, although this is not always implemented.
+* Planned velocity can be fed forward to the velocity-related controller.
+* Planned acceleration can be fed forward to the current/torque-related controller, although this is not always implemented.
 
 This means less corrective work for feedback loops and usually smoother, more accurate tracking.
 
-Feedforward behavior is tightly coupled to scaling. If drive/encoder scaling is wrong, feedforward looks wrong and PID tuning becomes misleading.
+Feedforward behavior is tightly coupled to scaling. If drive/encoder scaling is wrong, feedforward is applied wrong and PID tuning becomes misleading.
 For scaling details, see [drive and encoder scaling]({{< relref "/manual/motion_cfg/scaling.md" >}}).
 
 #### ecmc controller structure (overview)

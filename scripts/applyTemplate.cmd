@@ -15,7 +15,7 @@
 #-d   \code
 #-d     ${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}applyTemplate.cmd" "TEMPLATE_FILE=ecmcEcSlave.template,ECMC_P=${ECMC_P}"
 #-d   \endcode
-#-d   \pre It's advisable to run a script to defince ECMC_P before.
+#-d   \pre It's advisable to run a script to define ECMC_P before.
 #-d */
 
 ecmcFileExist(${TEMPLATE_FILE},1,1)

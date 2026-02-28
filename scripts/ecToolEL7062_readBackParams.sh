@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Read back EL7062 tuning parameters over SDO and publish them to PVs.
+# Args: MID SID CID PREFIX
+# MID: master id
+# SID: slave id
+# CID: channel id (1-based)
+# PREFIX: PV prefix
+
 echo "EL7062: Executing readback of tuning parameters: Prefix=$4, Master=$1, Slave=$2, Ch=$3, "
 MID=$1
 SID=$2

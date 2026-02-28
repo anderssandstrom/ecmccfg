@@ -18,7 +18,7 @@
 #-d   \code
 #-d     ${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}applySubstitutions.cmd" "SUBST_FILE=${SUBST_FILE=ecmc${ECMC_EC_HWTYPE}.substitutions},ECMC_P=${ECMC_P}"
 #-d   \endcode
-#-d   \pre It's advisable to run a script to defince ECMC_P before.
+#-d   \pre It's advisable to run a script to define ECMC_P before.
 #-d   \todo TODO: for v7.0.0_RC1, substitute 'P=${ECMC_PREFIX}' by 'P=${ECMC_P}', needs all templates to be migrated before!
 #-d */
 

@@ -2,7 +2,7 @@
 # loadLUTFile.cmd
 #- Arguments: FILE, [LUT_ID]
 #-d /**
-#-d   \brief Script for craeting and adding a lookup table (LUT) from file.
+#-d   \brief Script for creating and adding a lookup table (LUT) from file.
 #-d   \author Anders Sandström
 #-d   \file
 #-d   \param FILE LUT definition file, i.e. ./plc/test.lut

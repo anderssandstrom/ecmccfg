@@ -79,6 +79,24 @@ python3 esi_mapping_browser.py --no-gui \
   --snippet-out ./ecmcEL1259_example.cmd
 ```
 
+## ecmc engineering tool (new base app)
+
+Standalone engineering GUI to create starter cfg files and maintain project objects:
+- ordered object tree (`Slave`, `Axis`, `PLC`) as the project model
+- right-click in the object tree to add/edit/move/remove objects
+- slave add popup selecting supported hardware from `ecmccfg/hardware`
+- slave add popup contains button `Add HW Support via ESI Browser...`
+- object parameter tree (left-bottom) showing object variables
+- right-side editor showing/editing files for `Axis` and `PLC` objects
+- ESI controls are in the slave popup (not in main window)
+
+Run:
+
+```bash
+cd utils
+python3 ecmc_engineering_tool.py
+```
+
 ## Read EL70xx diagnostic, read_el70xx_diag.sh
 
 A tool that reads error and warning state of a EL70xx stepper drive. The error and warning diagnostics are read from the 0xA010 register.

@@ -116,6 +116,28 @@ PDO_IN_MAP = {
     "Channel": "BI",
 }
 
+LEGACY_PDO_OUT_MAP = {
+    "DIG": "BO",
+    "ENC": "Enc",
+    "MTI": "BI",
+    "MTO": "BO",
+    "POS": "Pos",
+    "STM": "Drv",
+    "Latch": "Ltch",
+    "Channel": "BO",
+}
+
+LEGACY_PDO_IN_MAP = {
+    "DIG": "BI",
+    "ENC": "Enc",
+    "MTI": "BI",
+    "MTO": "BO",
+    "POS": "Pos",
+    "STM": "Drv",
+    "Latch": "Ltch",
+    "Channel": "BI",
+}
+
 DEV_NEEDS_INDEX = {"ENC", "MTI", "MTO", "POS", "STM", "DRV"}
 SINGLE_CH_NEEDS_INDEX = {"AI", "AO", "BI", "BO"}
 REMOVE_LAST_MAP = {"Outp-Outp": "", "Inp-Inp": ""}
@@ -260,6 +282,7 @@ class PdoInfo:
     sm: str
     index: str
     name: str
+    excludes: set[str] = field(default_factory=set)
     entries: list[PdoEntry] = field(default_factory=list)
 
 
@@ -295,6 +318,21 @@ class DcModeInfo:
 
 
 @dataclass
+class CoeInitCmdInfo:
+    transition: str
+    index: str
+    subindex: str
+    data_hex: str
+    data_bytes: str
+    byte_size: int
+    complete_access: bool = False
+    fixed: bool = False
+    overwritten_by_module: bool = False
+    data_adapt_automatically: bool = False
+    comment: str = ""
+
+
+@dataclass
 class SlaveInfo:
     type_name: str
     display_name: str
@@ -304,6 +342,7 @@ class SlaveInfo:
     pdo_by_index: dict[str, PdoInfo] = field(default_factory=dict)
     sdo_fields: dict[tuple[str, str], SdoField] = field(default_factory=dict)
     dc_modes: list[DcModeInfo] = field(default_factory=list)
+    coe_init_cmds: list[CoeInitCmdInfo] = field(default_factory=list)
 
     @property
     def short_label(self) -> str:
@@ -450,6 +489,8 @@ def _parse_pdo_definitions(
 
             sm = (pdo.get("Sm") or "").strip()
             pdo_name = _text(pdo.find("Name"))
+            excludes = {_norm_hex(_text(ex_node)) for ex_node in pdo.findall("Exclude")}
+            excludes = {idx for idx in excludes if idx}
             entries: list[PdoEntry] = []
             for entry in pdo.findall("Entry"):
                 entry_index = _norm_hex(_text(entry.find("Index")))
@@ -480,10 +521,14 @@ def _parse_pdo_definitions(
                     sm=sm,
                     index=pdo_index,
                     name=pdo_name,
+                    excludes=excludes,
                     entries=entries,
                 )
-            elif not pdo_by_index[pdo_index].entries and entries:
-                pdo_by_index[pdo_index].entries = entries
+            else:
+                if excludes:
+                    pdo_by_index[pdo_index].excludes.update(excludes)
+                if not pdo_by_index[pdo_index].entries and entries:
+                    pdo_by_index[pdo_index].entries = entries
 
     return pdo_by_index
 
@@ -503,6 +548,65 @@ def _extract_dc_modes(device: ET.Element) -> list[DcModeInfo]:
                 )
             )
     return modes
+
+
+def _bool_attr(value: str | None) -> bool:
+    if value is None:
+        return False
+    return value.strip() in ("1", "true", "True", "yes", "on")
+
+
+def _normalize_data_hex(data_text: str) -> str:
+    hex_only = "".join(ch for ch in data_text.strip() if ch in "0123456789abcdefABCDEF")
+    if not hex_only:
+        return ""
+    if len(hex_only) % 2 != 0:
+        hex_only = "0" + hex_only
+    return hex_only.upper()
+
+
+def _hex_to_spaced_bytes(data_hex: str) -> str:
+    if not data_hex:
+        return ""
+    return " ".join(data_hex[i : i + 2] for i in range(0, len(data_hex), 2))
+
+
+def _le_hex_to_int(data_hex: str) -> int:
+    if not data_hex:
+        return 0
+    return int.from_bytes(bytes.fromhex(data_hex), byteorder="little", signed=False)
+
+
+def _extract_coe_initcmds(device: ET.Element) -> list[CoeInitCmdInfo]:
+    init_cmds: list[CoeInitCmdInfo] = []
+    for init in device.findall("./Mailbox/CoE/InitCmd"):
+        transition = _text(init.find("Transition"))
+        index = _norm_hex(_text(init.find("Index")))
+        if not index:
+            continue
+        subindex = _norm_subindex(_text(init.find("SubIndex")))
+        data_node = init.find("Data")
+        data_text = _text(data_node)
+        data_hex = _normalize_data_hex(data_text)
+        data_bytes = _hex_to_spaced_bytes(data_hex)
+        byte_size = len(data_hex) // 2
+        comment = _text(init.find("Comment"))
+        init_cmds.append(
+            CoeInitCmdInfo(
+                transition=transition,
+                index=index,
+                subindex=subindex,
+                data_hex=data_hex,
+                data_bytes=data_bytes,
+                byte_size=byte_size,
+                complete_access=_bool_attr(init.get("CompleteAccess")),
+                fixed=_bool_attr(init.get("Fixed")),
+                overwritten_by_module=_bool_attr(init.get("OverwrittenByModule")),
+                data_adapt_automatically=_bool_attr(data_node.get("AdaptAutomatically") if data_node is not None else None),
+                comment=comment,
+            )
+        )
+    return init_cmds
 
 
 def _device_names_for_match(device: ET.Element, type_name: str, display_name: str) -> list[str]:
@@ -551,6 +655,7 @@ def parse_esi_file(
         sdo_lookup = _extract_sdo_lookup(device)
         pdo_by_index = _parse_pdo_definitions(device, sdo_lookup)
         dc_modes = _extract_dc_modes(device)
+        coe_init_cmds = _extract_coe_initcmds(device)
 
         slaves.append(
             SlaveInfo(
@@ -562,11 +667,326 @@ def parse_esi_file(
                 pdo_by_index=pdo_by_index,
                 sdo_fields=sdo_lookup,
                 dc_modes=dc_modes,
+                coe_init_cmds=coe_init_cmds,
             )
         )
 
     slaves.sort(key=lambda d: (d.type_name, _parse_hexish(d.revision) or 0, d.display_name))
     return slaves
+
+
+_SUPPORTED_HW_CACHE: dict[str, tuple[list[str], dict[str, list[str]], list[str]]] = {}
+
+
+def _find_ecmccfg_root(anchor: Path | None = None) -> Path | None:
+    candidates: list[Path] = []
+    if anchor is not None:
+        anchor_resolved = anchor.resolve()
+        candidates.extend([anchor_resolved, *anchor_resolved.parents])
+
+    script_dir = Path(__file__).resolve().parent
+    candidates.extend([script_dir, *script_dir.parents])
+
+    cwd = Path.cwd().resolve()
+    candidates.extend([cwd, *cwd.parents])
+
+    seen: set[Path] = set()
+    for candidate in candidates:
+        if candidate in seen:
+            continue
+        seen.add(candidate)
+        if (candidate / "hardware").is_dir() and (candidate / "scripts").is_dir():
+            return candidate
+    return None
+
+
+def _normalize_hw_token(value: str) -> str:
+    return re.sub(r"[^A-Za-z0-9]+", "", value).upper()
+
+
+def _extract_hw_desc_from_stem(stem: str) -> str:
+    if not stem.lower().startswith("ecmc"):
+        return ""
+    return stem[4:]
+
+
+def _scan_supported_hardware(
+    ecmccfg_root: Path | None = None,
+) -> tuple[Path | None, list[str], dict[str, list[str]], list[str]]:
+    root = ecmccfg_root if ecmccfg_root is not None else _find_ecmccfg_root()
+    if root is None:
+        return None, [], {}, []
+
+    cache_key = str(root.resolve())
+    cached = _SUPPORTED_HW_CACHE.get(cache_key)
+    if cached is not None:
+        descs, by_desc, rel_files = cached
+        return root, list(descs), {k: list(v) for k, v in by_desc.items()}, list(rel_files)
+
+    by_desc: dict[str, list[str]] = {}
+    rel_files: list[str] = []
+    hw_dir = root / "hardware"
+    for cmd_file in sorted(hw_dir.rglob("*.cmd")):
+        rel = cmd_file.relative_to(root).as_posix()
+        rel_files.append(rel)
+        desc = _extract_hw_desc_from_stem(cmd_file.stem)
+        if not desc:
+            continue
+        by_desc.setdefault(desc, []).append(rel)
+
+    descs = sorted(by_desc.keys(), key=lambda item: (_normalize_hw_token(item), item))
+    _SUPPORTED_HW_CACHE[cache_key] = (list(descs), {k: list(v) for k, v in by_desc.items()}, list(rel_files))
+    return root, list(descs), {k: list(v) for k, v in by_desc.items()}, list(rel_files)
+
+
+def _match_supported_hardware(
+    slave: SlaveInfo,
+    selected_hw_desc: str = "",
+    ecmccfg_root: Path | None = None,
+    limit: int = 24,
+) -> tuple[Path | None, str, list[str], list[str], dict[str, list[str]], int]:
+    root, descs, by_desc, _rel_files = _scan_supported_hardware(ecmccfg_root=ecmccfg_root)
+    total_count = len(descs)
+    preferred = selected_hw_desc.strip() or (slave.type_name or "").strip()
+
+    if not descs:
+        return root, preferred, [], [], by_desc, total_count
+
+    preferred_norm = _normalize_hw_token(preferred)
+    ranked: list[tuple[int, int, str]] = []
+    for desc in descs:
+        desc_norm = _normalize_hw_token(desc)
+        if not preferred_norm:
+            continue
+        if desc_norm == preferred_norm:
+            ranked.append((0, len(desc_norm), desc))
+        elif desc_norm.startswith(preferred_norm):
+            ranked.append((1, len(desc_norm), desc))
+        elif preferred_norm in desc_norm:
+            ranked.append((2, len(desc_norm), desc))
+    ranked.sort(key=lambda row: (row[0], row[1], row[2]))
+    matches = [row[2] for row in ranked[:limit]]
+
+    suggestions: list[str] = []
+    if not matches and preferred_norm:
+        family_match = re.match(r"([A-Z]+[0-9]{2})", preferred_norm)
+        family = family_match.group(1) if family_match else preferred_norm[:4]
+        if family:
+            for desc in descs:
+                if _normalize_hw_token(desc).startswith(family):
+                    suggestions.append(desc)
+            suggestions = suggestions[:limit]
+
+    return root, preferred, matches, suggestions, by_desc, total_count
+
+
+def _effective_pdo_indexes(
+    mapping: PdoMapping,
+    optional_pdo_indexes: list[str] | None = None,
+    selected_pdo_indexes: list[str] | None = None,
+) -> list[str]:
+    if selected_pdo_indexes is not None:
+        ordered = OrderedDict()
+        for pdo_index in selected_pdo_indexes:
+            norm = _norm_hex(pdo_index)
+            if norm:
+                ordered[norm] = None
+        return list(ordered.keys())
+
+    selected = [pdo for group in mapping.sm_groups for pdo in group.pdos]
+    if optional_pdo_indexes:
+        selected.extend(optional_pdo_indexes)
+    ordered = OrderedDict()
+    for pdo_index in selected:
+        norm = _norm_hex(pdo_index)
+        if norm:
+            ordered[norm] = None
+    return list(ordered.keys())
+
+
+def _detect_selected_channel_groups(slave: SlaveInfo, selected_indexes: list[str]) -> dict[str, list[str]]:
+    groups: dict[str, list[str]] = {}
+    for pdo_index in selected_indexes:
+        pdo = slave.pdo_by_index.get(pdo_index)
+        if pdo is None:
+            continue
+        first_token = ((pdo.name or "").strip().split(" ") or ["PDO"])[0]
+        prefix = re.sub(r"[^A-Za-z]", "", first_token).upper() or "PDO"
+        channel = _channel_from_pdo_name(pdo.name) or 1
+        label = f"{prefix}{channel:02d}"
+        groups.setdefault(prefix, [])
+        if label not in groups[prefix]:
+            groups[prefix].append(label)
+    for labels in groups.values():
+        labels.sort(
+            key=lambda item: (
+                int(re.search(r"(\d+)$", item).group(1)) if re.search(r"(\d+)$", item) else 0,
+                item,
+            )
+        )
+    return groups
+
+
+def generate_engineering_cfg(
+    slave: SlaveInfo,
+    mapping: PdoMapping,
+    mapping_index: int,
+    mapping_count: int,
+    optional_pdo_indexes: list[str] | None = None,
+    selected_pdo_indexes: list[str] | None = None,
+    hwtype_override: str | None = None,
+    selected_hw_desc: str = "",
+    ecmccfg_root: Path | None = None,
+    esi_file: str | None = None,
+) -> str:
+    selected_indexes = _effective_pdo_indexes(
+        mapping,
+        optional_pdo_indexes=optional_pdo_indexes,
+        selected_pdo_indexes=selected_pdo_indexes,
+    )
+    channel_groups = _detect_selected_channel_groups(slave, selected_indexes)
+    hwtype = _resolve_hwtype(slave, mapping_index, mapping_count, hwtype_override)
+
+    root, hw_desc, matches, suggestions, by_desc, total_supported = _match_supported_hardware(
+        slave=slave,
+        selected_hw_desc=selected_hw_desc,
+        ecmccfg_root=ecmccfg_root,
+        limit=20,
+    )
+
+    chosen_hw_desc = hw_desc or (slave.type_name or "UNKNOWN_HW")
+    drv_sid_macro = "${DRV_SID}"
+    enc_sid_macro = "${ENC_SID}"
+
+    if channel_groups.get("STM"):
+        drv_ch_match = re.search(r"(\d+)$", channel_groups["STM"][0])
+        drv_ch = drv_ch_match.group(1) if drv_ch_match else "01"
+    elif channel_groups.get("DRV"):
+        drv_ch_match = re.search(r"(\d+)$", channel_groups["DRV"][0])
+        drv_ch = drv_ch_match.group(1) if drv_ch_match else "01"
+    else:
+        drv_ch = "01"
+
+    if channel_groups.get("ENC"):
+        enc_ch_match = re.search(r"(\d+)$", channel_groups["ENC"][0])
+        enc_ch = enc_ch_match.group(1) if enc_ch_match else "01"
+    else:
+        enc_ch = "01"
+
+    rows: list[str] = []
+    rows.append("#- ecmc engineering starter cfg")
+    rows.append(
+        f"#- selected slave: type={slave.type_name or 'unknown'}, product={slave.product_code or 'unknown'}, revision={slave.revision or 'unknown'}"
+    )
+    rows.append(f"#- mapping: {mapping.name or 'unnamed'} ({mapping_index}/{mapping_count})")
+    if esi_file:
+        rows.append(f"#- source ESI file: {esi_file}")
+    rows.append("#- For new/unsupported hardware, use this ESI mapping browser to generate HW/DB/UI support first.")
+    rows.append("")
+    rows.append("### startup.cmd")
+    rows.append("require ecmccfg")
+    rows.append('epicsEnvSet("IOC"                      "${IOC=IOC_TEST}")')
+    rows.append(f'epicsEnvSet("ECMC_EC_HWTYPE"           "{hwtype}")')
+    rows.append("")
+    rows.append("#- Add slave from currently supported ecmccfg hardware:")
+    rows.append(f'${{SCRIPTEXEC}} ${{ecmccfg_DIR}}addSlave.cmd,       "SLAVE_ID=${{SLAVE_ID=0}},HW_DESC={chosen_hw_desc}"')
+    rows.append('epicsEnvSet("DRV_SID"                  "${ECMC_EC_SLAVE_NUM}")')
+    rows.append('epicsEnvSet("ENC_SID"                  "${DRV_SID}")')
+    rows.append("")
+    rows.append("#- Optional: apply components")
+    rows.append(
+        '#-${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Motor-Generic-2Phase-Stepper,CH_ID=1,MACROS=\'I_MAX_MA=1000\'"'
+    )
+    rows.append("")
+    rows.append("#- Optional: if you generated new support in this tool, execute generated HW snippet")
+    rows.append(f"#-${{SCRIPTEXEC}} ./cfg/ecmc{hwtype}.cmd")
+    rows.append("")
+    rows.append("#- Load axis/plc")
+    rows.append(
+        f'${{SCRIPTEXEC}} ${{ecmccfg_DIR}}loadYamlAxis.cmd,   "FILE=./cfg/axis.yaml, DEV=${{IOC}}, AX_NAME=M1, AXIS_ID=1, DRV_SID={drv_sid_macro}, ENC_SID={enc_sid_macro}, DRV_CH={drv_ch}, ENC_CH={enc_ch}"'
+    )
+    rows.append(
+        f'${{SCRIPTEXEC}} ${{ecmccfg_DIR}}loadPLCFile.cmd,    "FILE=./cfg/main.plc, SAMPLE_RATE_MS=100, PLC_MACROS=\'AX_ID=1,DRV_SID={drv_sid_macro},ENC_SID={enc_sid_macro},DRV_CH={drv_ch},ENC_CH={enc_ch}\'"'
+    )
+    rows.append("#-${SCRIPTEXEC} ./cfg/load_extra.cmd")
+    rows.append("")
+    rows.append("### cfg/axis.yaml")
+    rows.append("axis:")
+    rows.append("  id: ${AXIS_ID=1}")
+    rows.append("")
+    rows.append("epics:")
+    rows.append("  name: ${AX_NAME=M1}")
+    rows.append("  precision: 3")
+    rows.append("  description: Auto-generated engineering template")
+    rows.append("  unit: mm")
+    rows.append("")
+    rows.append("drive:")
+    rows.append("  type: 0")
+    rows.append("  numerator: 10")
+    rows.append("  denominator: 32768")
+    rows.append("  setpoint: ec0.s$(DRV_SID).velocitySetpoint${DRV_CH=01}")
+    rows.append("  control: ec0.s$(DRV_SID).driveControl${DRV_CH=01}")
+    rows.append("  status: ec0.s$(DRV_SID).driveStatus${DRV_CH=01}")
+    rows.append("")
+    rows.append("encoder:")
+    rows.append("  type: 1")
+    rows.append("  bits: 32")
+    rows.append("  absBits: 26")
+    rows.append("  position: ec0.s$(ENC_SID).positionActual${ENC_CH=01}")
+    rows.append("  status: ec0.s$(ENC_SID).encoderStatus${ENC_CH=01}")
+    rows.append("")
+    rows.append("trajectory:")
+    rows.append("  type: 1")
+    rows.append("  axis:")
+    rows.append("    velocity: 1")
+    rows.append("    acceleration: 10")
+    rows.append("    deceleration: 10")
+    rows.append("    emergencyDeceleration: 20")
+    rows.append("    jerk: 200")
+    rows.append("")
+    rows.append("### cfg/main.plc")
+    rows.append("if(${SELF}.firstscan) {")
+    rows.append("  var plc:=${SELF_ID};")
+    rows.append("  ${DBG=#}println('PLC ',plc,' startup');")
+    rows.append("};")
+    rows.append("")
+    rows.append("# Example:")
+    rows.append("substitute \"DRV_CH=${DRV_CH=01}\"")
+    rows.append("include \"plc_templates/drive_watchdog.plc_inc\"")
+    rows.append("")
+    rows.append("### cfg/load_extra.cmd")
+    rows.append("#- Add any additional setup commands/includes here")
+    rows.append("#-${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  \"COMP=Drive-Generic-Ctrl-Params,CH_ID=1\"")
+    rows.append("")
+    rows.append("### supported_hardware")
+    if root is None:
+        rows.append("#- ecmccfg root not found, could not scan ./hardware")
+    else:
+        rows.append(f"#- scanned: {root / 'hardware'}")
+        rows.append(f"#- total supported HW_DESC entries: {total_supported}")
+        rows.append(f"#- selected HW_DESC for addSlave: {chosen_hw_desc}")
+        if matches:
+            rows.append("#- best matches:")
+            for desc in matches:
+                paths = by_desc.get(desc, [])
+                rows.append(f"#-   {desc}" if not paths else f"#-   {desc} -> {paths[0]}")
+        elif suggestions:
+            rows.append("#- no exact match; closest family candidates:")
+            for desc in suggestions:
+                paths = by_desc.get(desc, [])
+                rows.append(f"#-   {desc}" if not paths else f"#-   {desc} -> {paths[0]}")
+        else:
+            rows.append("#- no matching HW_DESC found for this slave type")
+        rows.append("#- Use ESI mapping browser generation when no supported HW_DESC exists yet.")
+    rows.append("")
+    rows.append("### detected_pdo_groups")
+    if not channel_groups:
+        rows.append("#- none")
+    else:
+        for prefix in sorted(channel_groups.keys()):
+            rows.append(f"#- {prefix}: {', '.join(channel_groups[prefix])}")
+
+    return "\n".join(rows) + "\n"
 
 
 def print_mappings(slaves: list[SlaveInfo]) -> None:
@@ -590,7 +1010,9 @@ def print_mappings(slaves: list[SlaveInfo]) -> None:
                 print(f"          SM{group.sm_no}: {pdo_str}")
             optional_count = len(optional_pdos_for_mapping(slave, mapping))
             if optional_count > 0:
-                print(f"          optional selectable PDOs: {optional_count}")
+                print(f"          optional PDOs listed: {optional_count}")
+        if slave.coe_init_cmds:
+            print(f"     CoE InitCmd startup SDOs: {len(slave.coe_init_cmds)}")
 
 
 def _entry_to_ecmc_dt(entry: PdoEntry) -> str:
@@ -675,13 +1097,19 @@ def _is_single_channel_slave(slave: SlaveInfo | None) -> bool:
     return bool(re.search(r"\b1\s*ch\.?\b", text))
 
 
-def _pdo_type_and_prefix(pdo: PdoInfo, slave: SlaveInfo | None = None) -> tuple[str, str]:
+def _pdo_type_and_prefix(
+    pdo: PdoInfo, slave: SlaveInfo | None = None, legacy_naming: bool = False
+) -> tuple[str, str]:
     words = pdo.name.split()
     if not words:
         return ("Dev", "Dev")
 
     raw = words[0]
-    mapped = _replace_tokens(raw, PDO_IN_MAP if pdo.direction == "rx" else PDO_OUT_MAP)
+    if legacy_naming:
+        pdo_map = LEGACY_PDO_IN_MAP if pdo.direction == "rx" else LEGACY_PDO_OUT_MAP
+    else:
+        pdo_map = PDO_IN_MAP if pdo.direction == "rx" else PDO_OUT_MAP
+    mapped = _replace_tokens(raw, pdo_map)
 
     channel_no: int | None = None
     for idx in range(len(words) - 1):
@@ -694,15 +1122,22 @@ def _pdo_type_and_prefix(pdo: PdoInfo, slave: SlaveInfo | None = None) -> tuple[
 
     # Some single-channel terminals (for example EL3001) have PDO names
     # without explicit "Channel 1" text; force *_01 style prefixes.
-    if channel_no is None and mapped in SINGLE_CH_NEEDS_INDEX and _is_single_channel_slave(slave):
+    if (
+        not legacy_naming
+        and channel_no is None
+        and mapped in SINGLE_CH_NEEDS_INDEX
+        and _is_single_channel_slave(slave)
+    ):
         channel_no = 1
 
     prefix = mapped if channel_no is None else f"{mapped}{channel_no:02d}"
     return (mapped, prefix)
 
 
-def _entry_record_name(pdo: PdoInfo, entry_name: str, slave: SlaveInfo | None = None) -> str:
-    dev, prefix = _pdo_type_and_prefix(pdo, slave=slave)
+def _entry_record_name(
+    pdo: PdoInfo, entry_name: str, slave: SlaveInfo | None = None, legacy_naming: bool = False
+) -> str:
+    dev, prefix = _pdo_type_and_prefix(pdo, slave=slave, legacy_naming=legacy_naming)
     text = _chars_after_space_to_upper(entry_name)
     text = _replace_tokens(text, ENTRY_TOKEN_MAP)
     text = text.replace("__", "-")
@@ -759,9 +1194,18 @@ def _symbol_with_direction(base_name: str, direction: str, used: dict[str, int])
     return _unique_symbol(_snake(base_name), used)
 
 
-def _entry_symbol(pdo: PdoInfo, entry: PdoEntry, used: dict[str, int], slave: SlaveInfo | None = None) -> str:
-    base_name = entry.resolved_name or entry.raw_name or f"{entry.index}_{entry.subindex}"
-    record_name = _entry_record_name(pdo, base_name, slave=slave)
+def _entry_symbol(
+    pdo: PdoInfo,
+    entry: PdoEntry,
+    used: dict[str, int],
+    slave: SlaveInfo | None = None,
+    legacy_naming: bool = False,
+) -> str:
+    if legacy_naming:
+        base_name = entry.raw_name or entry.resolved_name or f"{entry.index}_{entry.subindex}"
+    else:
+        base_name = entry.resolved_name or entry.raw_name or f"{entry.index}_{entry.subindex}"
+    record_name = _entry_record_name(pdo, base_name, slave=slave, legacy_naming=legacy_naming)
     if record_name:
         return _unique_symbol(_record_to_source_name(record_name), used)
     return _symbol_with_direction(base_name, pdo.direction, used)
@@ -785,9 +1229,10 @@ def _packed_symbol_name(
     chunk_idx: int,
     used: dict[str, int],
     slave: SlaveInfo | None = None,
+    legacy_naming: bool = False,
 ) -> str:
     root = _packed_root_name(pdo)
-    _dev, prefix = _pdo_type_and_prefix(pdo, slave=slave)
+    _dev, prefix = _pdo_type_and_prefix(pdo, slave=slave, legacy_naming=legacy_naming)
     record_name = f"{prefix}-{root}"
     if chunk_idx > 1:
         record_name = f"{record_name}{chunk_idx:02d}"
@@ -905,6 +1350,103 @@ def pdo_choices_for_mapping(slave: SlaveInfo, mapping: PdoMapping) -> list[PdoCh
     return sorted(default_choices + optional_choices, key=_pdo_choice_sort_key)
 
 
+def _pdo_conflict_reason(slave: SlaveInfo, candidate_index: str, selected_indexes: set[str]) -> str:
+    candidate = slave.pdo_by_index.get(candidate_index)
+    if candidate is None:
+        return "missing in ESI PDO list"
+
+    for selected_index in selected_indexes:
+        if selected_index == candidate_index:
+            continue
+        selected = slave.pdo_by_index.get(selected_index)
+        if selected is None:
+            continue
+
+        if selected.direction != candidate.direction:
+            continue
+
+        if candidate_index in selected.excludes:
+            return f"excluded by {selected.index} ({selected.name or 'unnamed'})"
+        if selected_index in candidate.excludes:
+            return f"excludes {selected.index} ({selected.name or 'unnamed'})"
+
+    return ""
+
+
+def _build_pdo_conflict_context(
+    slave: SlaveInfo, selected_indexes: set[str]
+) -> tuple[dict[str, set[str]], dict[str, dict[str, str]]]:
+    selected_by_direction: dict[str, set[str]] = {}
+    excluded_by_direction: dict[str, dict[str, str]] = {}
+    for selected_index in selected_indexes:
+        selected = slave.pdo_by_index.get(selected_index)
+        if selected is None:
+            continue
+        direction = selected.direction
+        selected_by_direction.setdefault(direction, set()).add(selected_index)
+        ex_map = excluded_by_direction.setdefault(direction, {})
+        for excluded_idx in selected.excludes:
+            if excluded_idx and excluded_idx not in ex_map:
+                ex_map[excluded_idx] = selected_index
+    return selected_by_direction, excluded_by_direction
+
+
+def _pdo_conflict_reason_with_context(
+    slave: SlaveInfo,
+    candidate_index: str,
+    selected_indexes: set[str],
+    selected_by_direction: dict[str, set[str]],
+    excluded_by_direction: dict[str, dict[str, str]],
+) -> str:
+    candidate = slave.pdo_by_index.get(candidate_index)
+    if candidate is None:
+        return "missing in ESI PDO list"
+
+    selected_dir = selected_by_direction.get(candidate.direction, set())
+    excluded_by = excluded_by_direction.get(candidate.direction, {}).get(candidate_index)
+    if excluded_by and excluded_by in selected_indexes:
+        selected = slave.pdo_by_index.get(excluded_by)
+        if selected is not None:
+            return f"excluded by {selected.index} ({selected.name or 'unnamed'})"
+        return f"excluded by {excluded_by}"
+
+    for excluded_idx in candidate.excludes:
+        if excluded_idx not in selected_dir:
+            continue
+        selected = slave.pdo_by_index.get(excluded_idx)
+        if selected is not None:
+            return f"excludes {selected.index} ({selected.name or 'unnamed'})"
+        return f"excludes {excluded_idx}"
+
+    return ""
+
+
+def pdo_selectable_for_mapping(
+    slave: SlaveInfo,
+    mapping: PdoMapping,
+    candidate_index: str,
+    checked_selected_indexes: set[str] | None = None,
+    conflict_context: tuple[dict[str, set[str]], dict[str, dict[str, str]]] | None = None,
+) -> tuple[bool, str]:
+    if checked_selected_indexes is None:
+        selected = _mapping_pdo_set(mapping)
+    else:
+        selected = set(checked_selected_indexes)
+    selected.discard(candidate_index)
+    if conflict_context is None:
+        conflict_context = _build_pdo_conflict_context(slave, selected)
+    reason = _pdo_conflict_reason_with_context(
+        slave,
+        candidate_index,
+        selected,
+        conflict_context[0],
+        conflict_context[1],
+    )
+    if reason:
+        return False, reason
+    return True, ""
+
+
 def _default_sm_for_direction(slave: SlaveInfo, mapping: PdoMapping, direction: str) -> str:
     for group in mapping.sm_groups:
         for pdo_index in group.pdos:
@@ -946,6 +1488,8 @@ def generate_hw_snippet(
     hwtype_override: str | None = None,
     generated_entries: list[GeneratedEntry] | None = None,
     include_dc: bool = True,
+    include_coe_initcmd: bool = False,
+    legacy_naming: bool = True,
     esi_file: str | None = None,
 ) -> str:
     rows: list[str] = []
@@ -966,6 +1510,43 @@ def generate_hw_snippet(
     rows.append(f"epicsEnvSet(\"ECMC_EC_REVISION\"           \"{slave.revision}\")")
     rows.append("epicsEnvSet(\"ECMC_HW_PANEL\"              \"$(ECMC_EC_HWTYPE)\")")
     rows.append("")
+
+    if include_coe_initcmd and slave.coe_init_cmds:
+        rows.append("#- CoE InitCmd startup SDOs from ESI (Mailbox/CoE/InitCmd)")
+        rows.append("#- NOTE: ESI Transition qualifiers are informational only and kept as comments.")
+        rows.append("#- NOTE: ecmc startup SDO commands are always applied in transition PREOP -> OP.")
+        for idx, init_cmd in enumerate(slave.coe_init_cmds, start=1):
+            meta = [f"Transition={init_cmd.transition or '?'}"]
+            if init_cmd.fixed:
+                meta.append("Fixed=1")
+            if init_cmd.complete_access:
+                meta.append("CompleteAccess=1")
+            if init_cmd.overwritten_by_module:
+                meta.append("OverwrittenByModule=1")
+            if init_cmd.data_adapt_automatically:
+                meta.append("AdaptAutomatically=1")
+            rows.append(f"#- InitCmd[{idx:02d}] " + ", ".join(meta))
+            if init_cmd.comment:
+                rows.append(f"#-   Comment: {init_cmd.comment}")
+
+            if not init_cmd.data_hex:
+                rows.append(
+                    f"#- WARNING: skipped InitCmd[{idx:02d}] {init_cmd.index}:{init_cmd.subindex} (empty/non-hex data)"
+                )
+                continue
+            if init_cmd.byte_size > 4:
+                rows.append(
+                    f"#- WARNING: skipped InitCmd[{idx:02d}] {init_cmd.index}:{init_cmd.subindex} "
+                    f"(byteSize={init_cmd.byte_size} > 4, EcAddSdo supports up to 4 bytes)"
+                )
+                continue
+
+            value_int = _le_hex_to_int(init_cmd.data_hex)
+            rows.append(
+                "ecmcConfigOrDie \"Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},"
+                f"{init_cmd.index},{init_cmd.subindex},{value_int},{init_cmd.byte_size})\""
+            )
+        rows.append("")
 
     mapping_pdos = _mapping_pdo_set(mapping)
     mapping_sm_by_pdo: dict[str, str] = {}
@@ -1074,7 +1655,7 @@ def generate_hw_snippet(
                         chunk_non_padding = [it for it in chunk if it.index != "0x0"]
                         if len(chunk_non_padding) < 2:
                             for single in chunk_non_padding:
-                                symbol = _entry_symbol(pdo, single, used_symbols, slave=slave)
+                                symbol = _entry_symbol(pdo, single, used_symbols, slave=slave, legacy_naming=legacy_naming)
                                 dt = _entry_to_ecmc_dt(single)
                                 desc = single.resolved_name or single.raw_name or single.index
                                 _emit_entry_line(single.index, single.subindex, dt, symbol, desc, packed=False)
@@ -1083,7 +1664,13 @@ def generate_hw_snippet(
                         packed_group_idx += 1
                         packed_dt = "U8" if bits <= 8 else "U16"
                         packed_entry = chunk_non_padding[0]
-                        packed_symbol = _packed_symbol_name(pdo, packed_group_idx, used_symbols, slave=slave)
+                        packed_symbol = _packed_symbol_name(
+                            pdo,
+                            packed_group_idx,
+                            used_symbols,
+                            slave=slave,
+                            legacy_naming=legacy_naming,
+                        )
                         bit_comment = _build_packed_bit_comment(chunk)
                         _emit_entry_line(
                             packed_entry.index,
@@ -1094,16 +1681,14 @@ def generate_hw_snippet(
                             packed=True,
                             bit_comment=bit_comment,
                         )
-                        rows.append(
-                            f"#- NOTE: packed {len(chunk_non_padding)} bit entries ({bits} bits) into {packed_dt}"
-                        )
                         if bit_comment:
-                            rows.append(f"#-      bits: {bit_comment}")
+                            for bit_line in _bit_comment_lines(bit_comment):
+                                rows.append(f"#- {packed_symbol} {bit_line}")
 
                     entry_i = run_j
                     continue
 
-            symbol = _entry_symbol(pdo, entry, used_symbols, slave=slave)
+            symbol = _entry_symbol(pdo, entry, used_symbols, slave=slave, legacy_naming=legacy_naming)
             dt = _entry_to_ecmc_dt(entry)
             desc = entry.resolved_name or entry.raw_name or entry.index
             _emit_entry_line(entry.index, entry.subindex, dt, symbol, desc, packed=False)
@@ -1226,6 +1811,8 @@ def generate_substitutions(
     selected_pdo_indexes: list[str] | None = None,
     hwtype_override: str | None = None,
     include_dc: bool = True,
+    include_coe_initcmd: bool = False,
+    legacy_naming: bool = True,
     esi_file: str | None = None,
 ) -> str:
     collected: list[GeneratedEntry] = []
@@ -1239,6 +1826,8 @@ def generate_substitutions(
         hwtype_override=hwtype_override,
         generated_entries=collected,
         include_dc=include_dc,
+        include_coe_initcmd=include_coe_initcmd,
+        legacy_naming=legacy_naming,
         esi_file=esi_file,
     )
 
@@ -1323,6 +1912,458 @@ def generate_substitutions(
     return "\n".join(rows).rstrip() + "\n"
 
 
+def _xml_escape(value: str) -> str:
+    return (
+        value.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+        .replace("'", "&apos;")
+    )
+
+
+def _panel_row_label(entry: GeneratedEntry, row_no: int) -> str:
+    rec_name = entry.source_name.replace("_", "-")
+    head = rec_name.split("-")[0] if rec_name else ""
+    head_match = re.match(r"([A-Za-z]+)([0-9]{0,2})", head)
+    head_type = head_match.group(1).upper() if head_match else ""
+    type_map = {"DRV": "STM", "FB": "ENC"}
+    mapped_type = type_map.get(head_type, head_type)
+
+    base = (entry.desc or "").strip()
+    if not base:
+        parts = [part for part in rec_name.split("-") if part]
+        if len(parts) >= 2:
+            base = f"{parts[-2]}-{parts[-1]}"
+        elif parts:
+            base = parts[-1]
+    if mapped_type and base and not base.upper().startswith(mapped_type):
+        base = f"{mapped_type} {base}"
+    base = re.sub(r"\s+", " ", base).strip(" -:_")
+    if not base:
+        base = f"PV {row_no:02d}"
+    return base[:16]
+
+
+def _panel_group_id(entry: GeneratedEntry) -> str:
+    rec_name = entry.source_name.replace("_", "-")
+    head = rec_name.split("-")[0] if rec_name else ""
+    match = re.match(r"([A-Za-z]+)([0-9]{0,2})", head)
+    if match:
+        channel_id = match.group(2) or ""
+        if channel_id:
+            channel_num = _parse_int(channel_id)
+            if channel_num is not None:
+                return f"CH{channel_num:02d}"
+            return f"CH{channel_id}"
+    if head:
+        return "DEV"
+    return "DEV"
+
+
+def _panel_group_title(group_id: str) -> str:
+    return group_id
+
+
+def _panel_group_sort_key(group_id: str, original_order: int) -> tuple[int, int, int, str]:
+    match = re.match(r"CH([0-9]{1,2})$", group_id)
+    if not match:
+        return (1, 999, original_order, group_id)
+
+    group_num = _parse_int(match.group(1))
+    if group_num is None:
+        return (1, 999, original_order, group_id)
+    return (0, group_num, original_order, group_id)
+
+
+def _panel_entry_uses_byte(entry: GeneratedEntry) -> bool:
+    if entry.packed:
+        return True
+    return entry.dt.startswith("B")
+
+
+def _panel_byte_range(entry: GeneratedEntry) -> tuple[int, int]:
+    if entry.packed:
+        if entry.dt == "U16":
+            return (0, 15)
+        return (0, 7)
+    if entry.dt.startswith("B"):
+        bit_count = _parse_int(entry.dt[1:]) or 1
+        if bit_count < 1:
+            bit_count = 1
+        if bit_count > 16:
+            bit_count = 16
+        return (0, bit_count - 1)
+    return (0, 7)
+
+
+def generate_caqtdm_panel(
+    slave: SlaveInfo,
+    mapping: PdoMapping,
+    mapping_index: int,
+    mapping_count: int,
+    optional_pdo_indexes: list[str] | None = None,
+    selected_pdo_indexes: list[str] | None = None,
+    hwtype_override: str | None = None,
+    legacy_naming: bool = True,
+    esi_file: str | None = None,
+) -> str:
+    collected: list[GeneratedEntry] = []
+    _ = generate_hw_snippet(
+        slave=slave,
+        mapping=mapping,
+        mapping_index=mapping_index,
+        mapping_count=mapping_count,
+        optional_pdo_indexes=optional_pdo_indexes,
+        selected_pdo_indexes=selected_pdo_indexes,
+        hwtype_override=hwtype_override,
+        generated_entries=collected,
+        include_dc=False,
+        include_coe_initcmd=False,
+        legacy_naming=legacy_naming,
+        esi_file=esi_file,
+    )
+
+    grouped: OrderedDict[str, list[GeneratedEntry]] = OrderedDict()
+    for entry in collected:
+        group_id = _panel_group_id(entry)
+        grouped.setdefault(group_id, []).append(entry)
+    if not grouped:
+        grouped["GEN"] = []
+    original_pos = {group_id: idx for idx, group_id in enumerate(grouped.keys(), start=1)}
+    ordered_group_items = sorted(
+        grouped.items(),
+        key=lambda kv: _panel_group_sort_key(kv[0], original_pos.get(kv[0], 9999)),
+    )
+
+    panel_w = 100
+    panel_h = 400
+    tab_x = 1
+    tab_y = 118
+    tab_w = 98
+    tab_h = 281
+    row_y0 = 6
+    row_step = 28
+    max_rows_per_tab = max(1, (tab_h - 38) // row_step)
+
+    hwtype = _resolve_hwtype(slave, mapping_index, mapping_count, hwtype_override)
+    title = _xml_escape(slave.type_name or "ecmcSlave")
+    source_file = _xml_escape(esi_file or "")
+    has_byte_widget = any(
+        _panel_entry_uses_byte(entry)
+        for _gid, entries in ordered_group_items
+        for entry in entries[:max_rows_per_tab]
+    )
+
+    rows: list[str] = []
+    rows.append('<?xml version="1.0" encoding="UTF-8"?>')
+    rows.append("<ui version=\"4.0\">")
+    rows.append(" <class>Form</class>")
+    rows.append(" <widget class=\"QWidget\" name=\"Form\">")
+    rows.append("  <property name=\"geometry\">")
+    rows.append("   <rect>")
+    rows.append("    <x>0</x>")
+    rows.append("    <y>0</y>")
+    rows.append(f"    <width>{panel_w}</width>")
+    rows.append(f"    <height>{panel_h}</height>")
+    rows.append("   </rect>")
+    rows.append("  </property>")
+    rows.append("  <property name=\"windowTitle\">")
+    rows.append(f"   <string>{title}</string>")
+    rows.append("  </property>")
+    rows.append("  <property name=\"minimumSize\">")
+    rows.append("   <size>")
+    rows.append(f"    <width>{panel_w}</width>")
+    rows.append(f"    <height>{panel_h}</height>")
+    rows.append("   </size>")
+    rows.append("  </property>")
+    rows.append("  <property name=\"maximumSize\">")
+    rows.append("   <size>")
+    rows.append(f"    <width>{panel_w}</width>")
+    rows.append(f"    <height>{panel_h}</height>")
+    rows.append("   </size>")
+    rows.append("  </property>")
+    rows.append("  <widget class=\"caInclude\" name=\"cainclude\">")
+    rows.append("   <property name=\"geometry\">")
+    rows.append("    <rect>")
+    rows.append("     <x>0</x>")
+    rows.append("     <y>0</y>")
+    rows.append(f"     <width>{panel_w}</width>")
+    rows.append(f"     <height>{panel_h}</height>")
+    rows.append("    </rect>")
+    rows.append("   </property>")
+    rows.append("   <property name=\"macro\">")
+    rows.append("    <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string>")
+    rows.append("   </property>")
+    rows.append("   <property name=\"filename\" stdset=\"0\">")
+    rows.append("    <string notr=\"true\">ecmcE_slave_frame_S.ui</string>")
+    rows.append("   </property>")
+    rows.append("  </widget>")
+
+    rows.append(
+        f"  <!-- auto-generated for {title}, mapping M{mapping_index:02d}/{mapping_count}, hwtype={_xml_escape(hwtype)} -->"
+    )
+    if source_file:
+        rows.append(f"  <!-- source ESI file: {source_file} -->")
+
+    rows.append("  <widget class=\"QTabWidget\" name=\"tabwidget_auto\">")
+    rows.append("   <property name=\"geometry\">")
+    rows.append("    <rect>")
+    rows.append(f"     <x>{tab_x}</x>")
+    rows.append(f"     <y>{tab_y}</y>")
+    rows.append(f"     <width>{tab_w}</width>")
+    rows.append(f"     <height>{tab_h}</height>")
+    rows.append("    </rect>")
+    rows.append("   </property>")
+    rows.append("   <property name=\"currentIndex\">")
+    rows.append("    <number>0</number>")
+    rows.append("   </property>")
+
+    for tab_idx, (group_id, entries) in enumerate(ordered_group_items, start=1):
+        tab_title = _xml_escape(_panel_group_title(group_id))
+        shown = entries[:max_rows_per_tab]
+        hidden_count = max(0, len(entries) - len(shown))
+
+        rows.append(f"   <widget class=\"QWidget\" name=\"tabPage_auto_{tab_idx:02d}\">")
+        rows.append("    <attribute name=\"title\">")
+        rows.append(f"     <string>{tab_title}</string>")
+        rows.append("    </attribute>")
+
+        for row_no, entry in enumerate(shown, start=1):
+            rec_name = entry.source_name.replace("_", "-")
+            channel = _xml_escape(f"$(IOC):m$(MasterID)s$(SlaveID)-{rec_name}")
+            label_text = _xml_escape(_panel_row_label(entry, row_no))
+            tooltip_text = _xml_escape((entry.desc or rec_name).strip())
+            y = row_y0 + (row_no - 1) * row_step
+
+            is_byte = _panel_entry_uses_byte(entry)
+            label_w = 66 if is_byte else 54
+            value_x = 70 if is_byte else 58
+            value_w = 24 if is_byte else 36
+            value_h = 26 if is_byte else 16
+
+            rows.append(f"    <widget class=\"caLabel\" name=\"calabel_auto_{tab_idx:02d}_{row_no:02d}\">")
+            rows.append("     <property name=\"geometry\">")
+            rows.append("      <rect>")
+            rows.append("       <x>2</x>")
+            rows.append(f"       <y>{y}</y>")
+            rows.append(f"       <width>{label_w}</width>")
+            rows.append("       <height>16</height>")
+            rows.append("      </rect>")
+            rows.append("     </property>")
+            rows.append("     <property name=\"text\">")
+            rows.append(f"      <string>{label_text}</string>")
+            rows.append("     </property>")
+            rows.append("     <property name=\"toolTip\">")
+            rows.append(f"      <string>{tooltip_text}</string>")
+            rows.append("     </property>")
+            rows.append("    </widget>")
+
+            if is_byte:
+                start_bit, end_bit = _panel_byte_range(entry)
+                rows.append(f"    <widget class=\"caByte\" name=\"cabyte_auto_{tab_idx:02d}_{row_no:02d}\">")
+                rows.append("     <property name=\"geometry\">")
+                rows.append("      <rect>")
+                rows.append(f"       <x>{value_x}</x>")
+                rows.append(f"       <y>{y - 4}</y>")
+                rows.append(f"       <width>{value_w}</width>")
+                rows.append(f"       <height>{value_h}</height>")
+                rows.append("      </rect>")
+                rows.append("     </property>")
+                rows.append("     <property name=\"toolTip\">")
+                rows.append(f"      <string>{tooltip_text}</string>")
+                rows.append("     </property>")
+                rows.append("     <property name=\"channel\" stdset=\"0\">")
+                rows.append(f"      <string notr=\"true\">{channel}</string>")
+                rows.append("     </property>")
+                rows.append("     <property name=\"direction\">")
+                rows.append("      <enum>caByte::Up</enum>")
+                rows.append("     </property>")
+                rows.append("     <property name=\"startBit\">")
+                rows.append(f"      <number>{start_bit}</number>")
+                rows.append("     </property>")
+                rows.append("     <property name=\"endBit\">")
+                rows.append(f"      <number>{end_bit}</number>")
+                rows.append("     </property>")
+                rows.append("     <property name=\"colorMode\">")
+                rows.append("      <enum>caByte::Static</enum>")
+                rows.append("     </property>")
+                rows.append("     <property name=\"foreground\" stdset=\"0\">")
+                rows.append("      <color>")
+                rows.append("       <red>0</red>")
+                rows.append("       <green>85</green>")
+                rows.append("       <blue>0</blue>")
+                rows.append("      </color>")
+                rows.append("     </property>")
+                rows.append("    </widget>")
+            else:
+                rows.append(f"    <widget class=\"caLineEdit\" name=\"calineedit_auto_{tab_idx:02d}_{row_no:02d}\">")
+                rows.append("     <property name=\"geometry\">")
+                rows.append("      <rect>")
+                rows.append(f"       <x>{value_x}</x>")
+                rows.append(f"       <y>{y}</y>")
+                rows.append(f"       <width>{value_w}</width>")
+                rows.append("       <height>16</height>")
+                rows.append("      </rect>")
+                rows.append("     </property>")
+                rows.append("     <property name=\"toolTip\">")
+                rows.append(f"      <string>{tooltip_text}</string>")
+                rows.append("     </property>")
+                rows.append("     <property name=\"alignment\">")
+                rows.append("      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>")
+                rows.append("     </property>")
+                rows.append("     <property name=\"channel\" stdset=\"0\">")
+                rows.append(f"      <string notr=\"true\">{channel}</string>")
+                rows.append("     </property>")
+                rows.append("    </widget>")
+
+        if hidden_count > 0:
+            hidden_y = row_y0 + len(shown) * row_step
+            rows.append(f"    <widget class=\"caLabel\" name=\"calabel_auto_more_{tab_idx:02d}\">")
+            rows.append("     <property name=\"geometry\">")
+            rows.append("      <rect>")
+            rows.append("       <x>2</x>")
+            rows.append(f"       <y>{hidden_y}</y>")
+            rows.append("       <width>92</width>")
+            rows.append("       <height>16</height>")
+            rows.append("      </rect>")
+            rows.append("     </property>")
+            rows.append("     <property name=\"text\">")
+            rows.append(f"      <string>+{hidden_count} more PVs</string>")
+            rows.append("     </property>")
+            rows.append("    </widget>")
+
+        rows.append("   </widget>")
+
+    rows.append("  </widget>")
+
+    rows.append(" </widget>")
+    rows.append(" <customwidgets>")
+    rows.append("  <customwidget>")
+    rows.append("   <class>caLabel</class>")
+    rows.append("   <extends>QLabel</extends>")
+    rows.append("   <header>caLabel</header>")
+    rows.append("  </customwidget>")
+    rows.append("  <customwidget>")
+    rows.append("   <class>caInclude</class>")
+    rows.append("   <extends>QWidget</extends>")
+    rows.append("   <header>caInclude</header>")
+    rows.append("  </customwidget>")
+    rows.append("  <customwidget>")
+    rows.append("   <class>caLineEdit</class>")
+    rows.append("   <extends>QLineEdit</extends>")
+    rows.append("   <header>caLineEdit</header>")
+    rows.append("  </customwidget>")
+    if has_byte_widget:
+        rows.append("  <customwidget>")
+        rows.append("   <class>caByte</class>")
+        rows.append("   <extends>QWidget</extends>")
+        rows.append("   <header>caByte</header>")
+        rows.append("  </customwidget>")
+    rows.append(" </customwidgets>")
+    rows.append(" <resources/>")
+    rows.append(" <connections/>")
+    rows.append("</ui>")
+
+    return "\n".join(rows).rstrip() + "\n"
+
+
+def _ui_widget_rect(widget: ET.Element) -> tuple[int, int, int, int] | None:
+    rect = widget.find("./property[@name='geometry']/rect")
+    if rect is None:
+        return None
+    x = _parse_int(_text(rect.find("x")))
+    y = _parse_int(_text(rect.find("y")))
+    w = _parse_int(_text(rect.find("width")))
+    h = _parse_int(_text(rect.find("height")))
+    if x is None or y is None or w is None or h is None:
+        return None
+    return (x, y, w, h)
+
+
+def _ui_widget_string_property(widget: ET.Element, prop_name: str) -> str:
+    prop = widget.find(f"./property[@name='{prop_name}']")
+    if prop is None:
+        return ""
+    return _text(prop.find("string"))
+
+
+def parse_generated_panel_preview_items(
+    panel_ui: str,
+) -> tuple[
+    int,
+    int,
+    tuple[int, int, int, int] | None,
+    list[tuple[str, list[tuple[str, tuple[int, int, int, int], str]]]],
+]:
+    root = ET.fromstring(panel_ui)
+    form_widget = root.find("./widget[@name='Form']")
+    panel_w = 100
+    panel_h = 400
+    if form_widget is not None:
+        form_rect = _ui_widget_rect(form_widget)
+        if form_rect is not None:
+            _x, _y, panel_w, panel_h = form_rect
+
+    def _collect_items(
+        widget_iter,
+        x_off: int = 0,
+        y_off: int = 0,
+    ) -> list[tuple[str, tuple[int, int, int, int], str]]:
+        out: list[tuple[str, tuple[int, int, int, int], str]] = []
+        for widget in widget_iter:
+            cls = widget.get("class", "")
+            name = widget.get("name", "")
+            if not (
+                name.startswith("calabel_auto")
+                or name.startswith("calineedit_auto")
+                or name.startswith("cabyte_auto")
+            ):
+                continue
+            rect = _ui_widget_rect(widget)
+            if rect is None:
+                continue
+            x, y, w, h = rect
+            abs_rect = (x + x_off, y + y_off, w, h)
+            if cls == "caLabel":
+                text = _ui_widget_string_property(widget, "text")
+                out.append(("label", abs_rect, text))
+            elif cls == "caLineEdit":
+                channel = _ui_widget_string_property(widget, "channel")
+                out.append(("lineedit", abs_rect, channel))
+            elif cls == "caByte":
+                start_bit = _parse_int(_text(widget.find("./property[@name='startBit']/number")))
+                end_bit = _parse_int(_text(widget.find("./property[@name='endBit']/number")))
+                bit_text = ""
+                if start_bit is not None and end_bit is not None:
+                    bit_text = f"B{start_bit}..B{end_bit}"
+                out.append(("byte", abs_rect, bit_text))
+        return out
+
+    tabs: list[tuple[str, list[tuple[str, tuple[int, int, int, int], str]]]] = []
+    tab_rect_out: tuple[int, int, int, int] | None = None
+    tab_widget = root.find(".//widget[@name='tabwidget_auto']")
+    if tab_widget is not None:
+        tab_rect = _ui_widget_rect(tab_widget)
+        if tab_rect is not None:
+            tab_rect_out = tab_rect
+            tx, ty, tw, th = tab_rect
+            tab_pages = [node for node in tab_widget.findall("./widget") if node.get("class", "") == "QWidget"]
+            if tab_pages:
+                for page in tab_pages:
+                    tab_title = _text(page.find("./attribute[@name='title']/string")) or "Tab"
+                    page_items = _collect_items(page.findall(".//widget"), x_off=tx + 2, y_off=ty + 24)
+                    tabs.append((tab_title, page_items))
+            else:
+                tabs.append(("Panel", _collect_items(root.findall(".//widget"))))
+        else:
+            tabs.append(("Panel", _collect_items(root.findall(".//widget"))))
+    else:
+        tabs.append(("Panel", _collect_items(root.findall(".//widget"))))
+
+    return panel_w, panel_h, tab_rect_out, tabs
+
+
 def mapping_details_text(slave: SlaveInfo, mapping: PdoMapping) -> str:
     lines: list[str] = []
     lines.append(f"Name: {mapping.name}")
@@ -1342,15 +2383,31 @@ def mapping_details_text(slave: SlaveInfo, mapping: PdoMapping) -> str:
                 lines.append(f"  - {pdo_index} (missing in RxPdo/TxPdo)")
                 continue
             lines.append(f"  - {pdo.index}: {pdo.name} [{pdo.direction.upper()}]")
-            for entry in pdo.entries:
-                lines.append(
-                    f"      {entry.index}:{entry.subindex} {entry.data_type}[{entry.bitlen}] "
-                    f"{entry.resolved_name or entry.raw_name}"
-                )
         lines.append("")
 
-    optional_count = len(optional_pdos_for_mapping(slave, mapping))
-    lines.append(f"Optional selectable PDOs: {optional_count}")
+    optional = optional_pdos_for_mapping(slave, mapping)
+    optional_count = len(optional)
+    non_selectable_count = 0
+    mapping_selected = _mapping_pdo_set(mapping)
+    mapping_conflict_context = _build_pdo_conflict_context(slave, mapping_selected)
+    for pdo in optional:
+        selectable, _reason = pdo_selectable_for_mapping(
+            slave,
+            mapping,
+            pdo.index,
+            checked_selected_indexes=mapping_selected,
+            conflict_context=mapping_conflict_context,
+        )
+        if not selectable:
+            non_selectable_count += 1
+    lines.append(f"Optional PDOs listed: {optional_count}")
+    if non_selectable_count:
+        lines.append(f"Optional PDOs blocked by ESI excludes: {non_selectable_count}")
+    lines.append("")
+
+    lines.append(f"CoE InitCmd startup SDOs: {len(slave.coe_init_cmds)}")
+    if slave.coe_init_cmds:
+        lines.append("  (select entries in the CoE InitCmd list for details)")
     lines.append("")
 
     lines.append("DC modes:")
@@ -1373,6 +2430,61 @@ def mapping_details_text(slave: SlaveInfo, mapping: PdoMapping) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
+def pdo_choice_details_text(choice: PdoChoice) -> str:
+    pdo = choice.pdo
+    lines: list[str] = []
+    lines.append(f"PDO: {pdo.index}")
+    lines.append(f"Name: {pdo.name or '(unnamed)'}")
+    lines.append(f"Type: {'default' if choice.is_default else 'optional'}")
+    lines.append(f"Direction: {pdo.direction.upper()}")
+    lines.append(f"SM: {choice.sm_no}")
+    if pdo.excludes:
+        excludes = ", ".join(sorted(pdo.excludes, key=lambda idx: (_parse_hexish(idx) is None, _parse_hexish(idx) or 0, idx)))
+        lines.append(f"Exclude (ESI): {excludes}")
+    else:
+        lines.append("Exclude (ESI): none")
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def coe_initcmd_summary_text(init_cmd: CoeInitCmdInfo) -> str:
+    transition = init_cmd.transition or "?"
+    if init_cmd.byte_size <= 0:
+        data = "data=?"
+    else:
+        data = f"data={init_cmd.data_hex or '??'}"
+    return f"{transition} {init_cmd.index}:{init_cmd.subindex} {data} ({init_cmd.byte_size}B)"
+
+
+def coe_initcmd_details_text(init_cmd: CoeInitCmdInfo) -> str:
+    lines: list[str] = []
+    lines.append("CoE InitCmd")
+    lines.append(f"Transition: {init_cmd.transition or '(none)'}")
+    lines.append(f"Index/Sub: {init_cmd.index}:{init_cmd.subindex}")
+    lines.append(f"Byte size: {init_cmd.byte_size}")
+    lines.append(f"Data hex: {init_cmd.data_hex or '(none)'}")
+    lines.append(f"Data bytes: {init_cmd.data_bytes or '(none)'}")
+    lines.append(f"Fixed: {'yes' if init_cmd.fixed else 'no'}")
+    lines.append(f"CompleteAccess: {'yes' if init_cmd.complete_access else 'no'}")
+    lines.append(f"OverwrittenByModule: {'yes' if init_cmd.overwritten_by_module else 'no'}")
+    lines.append(f"AdaptAutomatically: {'yes' if init_cmd.data_adapt_automatically else 'no'}")
+    lines.append("Note: ecmc startup SDO commands are always applied in transition PREOP -> OP.")
+    if init_cmd.comment:
+        lines.append(f"Comment: {init_cmd.comment}")
+    if init_cmd.byte_size <= 4 and init_cmd.data_hex:
+        value_int = _le_hex_to_int(init_cmd.data_hex)
+        lines.append(
+            "ecmc line: "
+            f"Cfg.EcAddSdo(${{ECMC_EC_SLAVE_NUM}},{init_cmd.index},{init_cmd.subindex},{value_int},{init_cmd.byte_size})"
+        )
+    else:
+        lines.append("ecmc line: skipped (EcAddSdo supports up to 4 bytes)")
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def coe_initcmd_is_representable(init_cmd: CoeInitCmdInfo) -> bool:
+    return bool(init_cmd.data_hex) and 0 < init_cmd.byte_size <= 4
+
+
 def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
     try:
         import tkinter as tk
@@ -1386,19 +2498,34 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
             self.root = root
             self.root.title("ESI PDO Mapping Browser")
             self.root.geometry("1280x760")
+            self._setup_tree_style()
 
             self.slaves: list[SlaveInfo] = []
             self.current_mappings: list[PdoMapping] = []
             self.current_pdo_choices: list[PdoChoice] = []
             self.optional_pdo_vars: list[tk.BooleanVar] = []
+            self.pdo_row_items: list[dict[str, object]] = []
+            self.pdo_item_to_row: dict[str, int] = {}
+            self.current_coe_item_indexes: list[int] = []
             self.generated_snippet = ""
             self.generated_substitutions = ""
+            self.generated_panel = ""
             self.generated_popup: tk.Toplevel | None = None
             self.generated_hw_text: tk.Text | None = None
             self.generated_db_text: tk.Text | None = None
+            self.generated_panel_text: tk.Text | None = None
+            self.generated_panel_preview_canvas: tk.Canvas | None = None
             self.generated_edit_var: tk.BooleanVar | None = None
+            self._is_busy = False
+            self._activity_active = False
+            self._activity_status_before = ""
+            self._pending_pdo_select_after_id: str | None = None
+            self.compact_status_labels = True
             self.custom_hwtype_override = ""
             self.exclude_dc_clock = False
+            self.include_coe_initcmd = False
+            self.legacy_naming = True
+            self._mapping_overview_text = ""
             self.hwtype_label_var = tk.StringVar(value="HWTYPE: auto")
 
             top = ttk.Frame(root, padding=8)
@@ -1447,32 +2574,59 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
             self.mapping_list.pack(fill=tk.X)
             self.mapping_list.bind("<<ListboxSelect>>", self._on_mapping_select)
 
-            ttk.Label(right_frame, text="PDOs (default pre-selected)").pack(anchor=tk.W, pady=(8, 4))
+            coe_header = ttk.Frame(right_frame)
+            coe_header.pack(fill=tk.X, pady=(8, 4))
+            ttk.Label(coe_header, text="CoE InitCmd startup SDOs").pack(side=tk.LEFT)
+            self.coe_only_representable_var = tk.BooleanVar(value=False)
+            ttk.Checkbutton(
+                coe_header,
+                text="Only <=4B",
+                variable=self.coe_only_representable_var,
+                command=self._on_coe_filter_toggle,
+            ).pack(side=tk.RIGHT)
+            coe_frame = ttk.Frame(right_frame)
+            coe_frame.pack(fill=tk.X)
+            self.coe_list = tk.Listbox(coe_frame, exportselection=False, height=5)
+            self.coe_list.pack(side=tk.LEFT, fill=tk.X, expand=True)
+            coe_scroll = ttk.Scrollbar(coe_frame, orient=tk.VERTICAL, command=self.coe_list.yview)
+            coe_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+            self.coe_list.config(yscrollcommand=coe_scroll.set)
+            self.coe_list.bind("<<ListboxSelect>>", self._on_coe_select)
+
+            ttk.Label(
+                right_frame,
+                text="PDO tree (expand PDO rows to inspect entries, toggle selection in Sel column)",
+            ).pack(anchor=tk.W, pady=(8, 4))
             optional_frame = ttk.Frame(right_frame)
-            optional_frame.pack(fill=tk.X)
-            self.pdo_list_bg = self.mapping_list.cget("background")
-            self.optional_pdo_canvas = tk.Canvas(
+            optional_frame.pack(fill=tk.BOTH, expand=False)
+            self.pdo_tree = ttk.Treeview(
                 optional_frame,
-                height=220,
-                highlightthickness=1,
-                bg=self.pdo_list_bg,
+                columns=("sel", "type", "index", "dir", "sm"),
+                show="tree headings",
+                height=12,
+                style="Pdo.Treeview",
             )
-            self.optional_pdo_canvas.pack(side=tk.LEFT, fill=tk.X, expand=True)
-            optional_scroll = ttk.Scrollbar(
-                optional_frame,
-                orient=tk.VERTICAL,
-                command=self.optional_pdo_canvas.yview,
-            )
+            self.pdo_tree.heading("#0", text="PDO / Entry", anchor=tk.W)
+            self.pdo_tree.heading("sel", text="Sel", anchor=tk.W)
+            self.pdo_tree.heading("type", text="Type", anchor=tk.W)
+            self.pdo_tree.heading("index", text="Index", anchor=tk.W)
+            self.pdo_tree.heading("dir", text="Dir/DT", anchor=tk.W)
+            self.pdo_tree.heading("sm", text="SM/Bits", anchor=tk.W)
+            self.pdo_tree.column("#0", width=360, stretch=True, anchor=tk.W)
+            self.pdo_tree.column("sel", width=46, stretch=False, anchor=tk.W)
+            self.pdo_tree.column("type", width=86, stretch=False, anchor=tk.W)
+            self.pdo_tree.column("index", width=130, stretch=False, anchor=tk.W)
+            self.pdo_tree.column("dir", width=78, stretch=False, anchor=tk.W)
+            self.pdo_tree.column("sm", width=78, stretch=False, anchor=tk.W)
+            self.pdo_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+            optional_scroll = ttk.Scrollbar(optional_frame, orient=tk.VERTICAL, command=self.pdo_tree.yview)
             optional_scroll.pack(side=tk.RIGHT, fill=tk.Y)
-            self.optional_pdo_canvas.configure(yscrollcommand=optional_scroll.set)
-            self.optional_pdo_inner = tk.Frame(self.optional_pdo_canvas, bg=self.pdo_list_bg)
-            self.optional_pdo_window = self.optional_pdo_canvas.create_window(
-                (0, 0),
-                window=self.optional_pdo_inner,
-                anchor=tk.NW,
-            )
-            self.optional_pdo_inner.bind("<Configure>", self._on_optional_inner_configure)
-            self.optional_pdo_canvas.bind("<Configure>", self._on_optional_canvas_configure)
+            self.pdo_tree.configure(yscrollcommand=optional_scroll.set)
+            self.pdo_tree.tag_configure("blocked", foreground="gray55")
+            self.pdo_tree.tag_configure("normal", foreground="black")
+            self.pdo_tree.bind("<<TreeviewSelect>>", self._on_pdo_tree_select)
+            self.pdo_tree.bind("<Button-1>", self._on_pdo_tree_click)
+            self.pdo_tree.bind("<space>", self._on_pdo_tree_space)
 
             action_row = ttk.Frame(right_frame)
             action_row.pack(fill=tk.X, pady=(6, 4))
@@ -1489,7 +2643,7 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
             details_scroll.pack(side=tk.RIGHT, fill=tk.Y)
             self.details.config(yscrollcommand=details_scroll.set)
 
-            self.status_var = tk.StringVar(value="Load an ESI file to begin.")
+            self.status_var = tk.StringVar(value="Idle")
             self.busy_var = tk.StringVar(value="Idle")
             status_frame = ttk.Frame(root, padding=(8, 4), relief=tk.SUNKEN, borderwidth=1)
             status_frame.pack(side=tk.BOTTOM, fill=tk.X)
@@ -1502,10 +2656,41 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
 
             self._load()
 
+        def _setup_tree_style(self) -> None:
+            style = ttk.Style(self.root)
+            base_bg = style.lookup("Treeview", "background") or "#ffffff"
+            base_fg = style.lookup("Treeview", "foreground") or "#000000"
+            sel_bg = style.lookup("Treeview", "selectbackground") or "#c7def7"
+            sel_fg = style.lookup("Treeview", "selectforeground") or "#000000"
+
+            style.configure("Pdo.Treeview", background=base_bg, foreground=base_fg)
+            # Keep selected rows readable even when tree focus changes.
+            style.map(
+                "Pdo.Treeview",
+                background=[
+                    ("selected", sel_bg),
+                    ("selected", "!focus", sel_bg),
+                ],
+                foreground=[
+                    ("selected", sel_fg),
+                    ("selected", "!focus", sel_fg),
+                ],
+            )
+
         def _set_busy(self, busy: bool, message: str | None = None) -> None:
+            if busy and self._activity_active:
+                self._end_activity(restore_status=False)
+            self._is_busy = bool(busy)
             if message is not None:
-                self.status_var.set(message)
+                if self.compact_status_labels and busy:
+                    self.status_var.set("Working")
+                elif self.compact_status_labels and not busy:
+                    self.status_var.set("Idle")
+                else:
+                    self.status_var.set(message)
             if busy:
+                if self.compact_status_labels:
+                    self.status_var.set("Working")
                 self.busy_var.set("Working...")
                 self.progress.configure(mode="indeterminate")
                 self.progress.start(12)
@@ -1514,8 +2699,64 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
                 self.progress.stop()
                 self.progress.configure(mode="determinate", value=0)
                 self.busy_var.set("Idle")
+                if self.compact_status_labels:
+                    self.status_var.set("Idle")
                 self.root.config(cursor="")
-            self.root.update_idletasks()
+            try:
+                self.root.update_idletasks()
+                # Process pending UI events so button-state changes are immediate on all platforms.
+                self.root.update()
+            except Exception:
+                pass
+
+        def _begin_activity(self, message: str, maximum: int) -> None:
+            if self._is_busy:
+                return
+            if not self._activity_active:
+                self._activity_status_before = self.status_var.get()
+            self._activity_active = True
+            self.busy_var.set("Updating...")
+            self.status_var.set("Updating" if self.compact_status_labels else message)
+            self.progress.stop()
+            self.progress.configure(mode="determinate", maximum=max(1, maximum), value=0)
+            try:
+                self.root.update_idletasks()
+            except Exception:
+                pass
+
+        def _step_activity(self, value: int, message: str | None = None, force: bool = False) -> None:
+            if self._is_busy or not self._activity_active:
+                return
+            if message is not None:
+                self.status_var.set("Updating" if self.compact_status_labels else message)
+            elif self.compact_status_labels:
+                self.status_var.set("Updating")
+            max_value = int(float(self.progress.cget("maximum") or 1))
+            capped = max(0, min(int(value), max_value))
+            self.progress.configure(value=capped)
+            try:
+                self.root.update_idletasks()
+                if force:
+                    self.root.update()
+            except Exception:
+                pass
+
+        def _end_activity(self, restore_status: bool = True) -> None:
+            if not self._activity_active:
+                return
+            self._activity_active = False
+            self.progress.stop()
+            self.progress.configure(mode="determinate", value=0)
+            self.busy_var.set("Idle")
+            if self.compact_status_labels:
+                self.status_var.set("Idle")
+            elif restore_status and self._activity_status_before:
+                self.status_var.set(self._activity_status_before)
+            self._activity_status_before = ""
+            try:
+                self.root.update_idletasks()
+            except Exception:
+                pass
 
         def _browse_file(self) -> None:
             picked = filedialog.askopenfilename(
@@ -1535,21 +2776,26 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
 
         def _update_hwtype_indicator(self) -> None:
             dc_state = "off" if self.exclude_dc_clock else "on"
+            sdo_state = "on" if self.include_coe_initcmd else "off"
+            naming_state = "legacy" if self.legacy_naming else "modern"
             if self.custom_hwtype_override.strip():
-                self.hwtype_label_var.set(f"HWTYPE: custom={_snake(self.custom_hwtype_override)} | DC:{dc_state}")
+                self.hwtype_label_var.set(
+                    f"HWTYPE: custom={_snake(self.custom_hwtype_override)} | DC:{dc_state} | CoE-SDO:{sdo_state} | Naming:{naming_state}"
+                )
                 return
             auto_hwtype = self._auto_hwtype_for_current_selection()
             if auto_hwtype:
-                self.hwtype_label_var.set(f"HWTYPE: auto={auto_hwtype} | DC:{dc_state}")
+                self.hwtype_label_var.set(
+                    f"HWTYPE: auto={auto_hwtype} | DC:{dc_state} | CoE-SDO:{sdo_state} | Naming:{naming_state}"
+                )
             else:
-                self.hwtype_label_var.set(f"HWTYPE: auto | DC:{dc_state}")
+                self.hwtype_label_var.set(f"HWTYPE: auto | DC:{dc_state} | CoE-SDO:{sdo_state} | Naming:{naming_state}")
 
         def _open_options_popup(self) -> None:
             auto_hwtype = self._auto_hwtype_for_current_selection()
             dialog = tk.Toplevel(self.root)
             dialog.title("Generator options")
             dialog.transient(self.root)
-            dialog.grab_set()
             dialog.resizable(False, False)
 
             frame = ttk.Frame(dialog, padding=10)
@@ -1569,20 +2815,42 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
                 text="Exclude DC clock config from HW snippet",
                 variable=exclude_dc_var,
             ).grid(row=2, column=0, sticky=tk.W)
+            include_coe_var = tk.BooleanVar(value=self.include_coe_initcmd)
+            ttk.Checkbutton(
+                frame,
+                text="Include CoE InitCmd SDOs in HW snippet",
+                variable=include_coe_var,
+            ).grid(row=3, column=0, sticky=tk.W)
+            legacy_naming_var = tk.BooleanVar(value=self.legacy_naming)
+            ttk.Checkbutton(
+                frame,
+                text="Use legacy record naming (esi_parser style)",
+                variable=legacy_naming_var,
+            ).grid(row=4, column=0, sticky=tk.W)
 
             btns = ttk.Frame(frame)
-            btns.grid(row=3, column=0, sticky=tk.E, pady=(10, 0))
+            btns.grid(row=5, column=0, sticky=tk.E, pady=(10, 0))
 
             def _apply_options() -> None:
                 value = hwtype_var.get().strip()
                 self.custom_hwtype_override = value
                 self.exclude_dc_clock = bool(exclude_dc_var.get())
+                self.include_coe_initcmd = bool(include_coe_var.get())
+                self.legacy_naming = bool(legacy_naming_var.get())
                 if value:
-                    self.status_var.set(f"Options saved: HWTYPE={_snake(value)}, DC={'off' if self.exclude_dc_clock else 'on'}")
+                    self.status_var.set(
+                        f"Options saved: HWTYPE={_snake(value)}, DC={'off' if self.exclude_dc_clock else 'on'}, "
+                        f"CoE-SDO={'on' if self.include_coe_initcmd else 'off'}, Naming={'legacy' if self.legacy_naming else 'modern'}"
+                    )
                 else:
-                    self.status_var.set(f"Options saved: HWTYPE=auto, DC={'off' if self.exclude_dc_clock else 'on'}")
+                    self.status_var.set(
+                        f"Options saved: HWTYPE=auto, DC={'off' if self.exclude_dc_clock else 'on'}, "
+                        f"CoE-SDO={'on' if self.include_coe_initcmd else 'off'}, Naming={'legacy' if self.legacy_naming else 'modern'}"
+                    )
                 self._update_hwtype_indicator()
                 dialog.destroy()
+                if self.pdo_tree.winfo_exists():
+                    self.pdo_tree.focus_set()
 
             ttk.Button(btns, text="Cancel", command=dialog.destroy).pack(side=tk.RIGHT)
             ttk.Button(btns, text="Apply", command=_apply_options).pack(side=tk.RIGHT, padx=(0, 6))
@@ -1607,106 +2875,304 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
                 return None, -1
             return self.current_mappings[idx], idx
 
+        def _refresh_coe_list(self, slave: SlaveInfo) -> None:
+            self.coe_list.delete(0, tk.END)
+            self.current_coe_item_indexes = []
+            only_repr = bool(self.coe_only_representable_var.get())
+            for idx, init_cmd in enumerate(slave.coe_init_cmds):
+                if only_repr and not coe_initcmd_is_representable(init_cmd):
+                    continue
+                self.current_coe_item_indexes.append(idx)
+                self.coe_list.insert(tk.END, coe_initcmd_summary_text(init_cmd))
+            if self.coe_list.size() == 0:
+                placeholder = "(no CoE InitCmd entries)"
+                if only_repr:
+                    placeholder = "(no representable CoE InitCmd entries <=4B)"
+                self.coe_list.insert(tk.END, placeholder)
+
+        def _on_coe_filter_toggle(self) -> None:
+            slave = self._selected_slave()
+            self.details.delete("1.0", tk.END)
+            if slave is None:
+                self.coe_list.delete(0, tk.END)
+                self.current_coe_item_indexes = []
+                return
+            self._refresh_coe_list(slave)
+            filter_state = "ON" if self.coe_only_representable_var.get() else "OFF"
+            self.status_var.set(f"CoE filter 'Only <=4B' {filter_state}")
+
+        def _on_coe_select(self, _event) -> None:
+            slave = self._selected_slave()
+            if slave is None:
+                return
+            sel = self.coe_list.curselection()
+            if not sel:
+                return
+            list_idx = sel[0]
+            if not (0 <= list_idx < len(self.current_coe_item_indexes)):
+                return
+            idx = self.current_coe_item_indexes[list_idx]
+            self.details.delete("1.0", tk.END)
+            self.details.insert(tk.END, coe_initcmd_details_text(slave.coe_init_cmds[idx]))
+
         def _selected_checked_pdo_indexes(self) -> list[str]:
             indexes: list[str] = []
-            for idx, var in enumerate(self.optional_pdo_vars):
-                if var.get() and 0 <= idx < len(self.current_pdo_choices):
-                    indexes.append(self.current_pdo_choices[idx].pdo.index)
+            for row_item in self.pdo_row_items:
+                if row_item.get("checked", False):
+                    choice = row_item["choice"]
+                    indexes.append(choice.pdo.index)
             return indexes
 
-        def _on_optional_inner_configure(self, _event) -> None:
-            self.optional_pdo_canvas.configure(scrollregion=self.optional_pdo_canvas.bbox("all"))
+        def _current_checked_pdo_indexes(self, exclude_pdo_index: str | None = None) -> set[str]:
+            checked: set[str] = set()
+            for row_item in self.pdo_row_items:
+                if not row_item.get("checked", False):
+                    continue
+                choice = row_item["choice"]
+                if exclude_pdo_index is not None and choice.pdo.index == exclude_pdo_index:
+                    continue
+                checked.add(choice.pdo.index)
+            return checked
 
-        def _on_optional_canvas_configure(self, event) -> None:
-            self.optional_pdo_canvas.itemconfigure(self.optional_pdo_window, width=event.width)
+        def _selected_pdo_row_index(self) -> int:
+            selected = self.pdo_tree.selection()
+            if not selected:
+                return -1
+            item_id = selected[0]
+            if item_id in self.pdo_item_to_row:
+                return self.pdo_item_to_row[item_id]
+            parent = self.pdo_tree.parent(item_id)
+            if parent and parent in self.pdo_item_to_row:
+                return self.pdo_item_to_row[parent]
+            return -1
+
+        def _cancel_pending_pdo_details_update(self) -> None:
+            if self._pending_pdo_select_after_id is None:
+                return
+            try:
+                self.root.after_cancel(self._pending_pdo_select_after_id)
+            except Exception:
+                pass
+            self._pending_pdo_select_after_id = None
+
+        def _run_pending_pdo_details_update(self) -> None:
+            self._pending_pdo_select_after_id = None
+            row_idx = self._selected_pdo_row_index()
+            if row_idx >= 0:
+                self._show_pdo_row_details(row_idx)
+
+        def _schedule_pdo_details_update(self, delay_ms: int = 40) -> None:
+            self._cancel_pending_pdo_details_update()
+            self._pending_pdo_select_after_id = self.root.after(delay_ms, self._run_pending_pdo_details_update)
+
+        def _show_pdo_row_details(self, row_idx: int) -> None:
+            if not (0 <= row_idx < len(self.pdo_row_items)):
+                return
+            row_item = self.pdo_row_items[row_idx]
+            choice = row_item["choice"]
+            reason = row_item.get("reason", "")
+            self.details.delete("1.0", tk.END)
+            self.details.insert(tk.END, pdo_choice_details_text(choice))
+            if reason:
+                self.details.insert(tk.END, f"\nNot selectable for current mapping: {reason}\n")
+            slave = self._selected_slave()
+            mapping, _mapping_idx0 = self._selected_mapping()
+            if slave is not None and mapping is not None:
+                self.details.insert(tk.END, "\n---\n\nMapping overview (incl. DC info)\n\n")
+                overview = self._mapping_overview_text or mapping_details_text(slave, mapping)
+                self.details.insert(tk.END, overview)
 
         def _clear_optional_pdos(self) -> None:
+            self._cancel_pending_pdo_details_update()
             self.current_pdo_choices = []
             self.optional_pdo_vars = []
-            for child in self.optional_pdo_inner.winfo_children():
-                child.destroy()
-            self.optional_pdo_canvas.yview_moveto(0)
+            self.pdo_row_items = []
+            self.pdo_item_to_row = {}
+            for item_id in self.pdo_tree.get_children(""):
+                self.pdo_tree.delete(item_id)
+
+        def _update_pdo_row_states(self, slave: SlaveInfo, mapping: PdoMapping) -> None:
+            total_rows = len(self.pdo_row_items)
+            if total_rows <= 0:
+                return
+            self._begin_activity("Refreshing PDO availability...", total_rows)
+            checked_selected = self._current_checked_pdo_indexes()
+            conflict_context = _build_pdo_conflict_context(slave, checked_selected)
+            try:
+                for row_idx, row_item in enumerate(self.pdo_row_items):
+                    choice = row_item["choice"]
+                    item_id = row_item["item_id"]
+                    entry_item_ids = row_item.get("entry_items", [])
+                    checked = bool(row_item.get("checked", False))
+                    if choice.is_default:
+                        selectable = True
+                        reason = ""
+                    elif checked:
+                        selectable = True
+                        reason = ""
+                    else:
+                        selectable, reason = pdo_selectable_for_mapping(
+                            slave,
+                            mapping,
+                            choice.pdo.index,
+                            checked_selected_indexes=checked_selected,
+                            conflict_context=conflict_context,
+                        )
+
+                    row_type = "DEFAULT" if choice.is_default else "OPTIONAL"
+                    sel_mark = "[x]" if checked else "[ ]"
+                    is_blocked = (not selectable) and (not checked)
+                    row_text = choice.pdo.name or "(unnamed)"
+                    if is_blocked and reason:
+                        row_text = f"{row_text} [blocked: {reason}]"
+                    row_values = (sel_mark, row_type, choice.pdo.index, choice.pdo.direction.upper(), choice.sm_no)
+                    row_tag = ("blocked",) if is_blocked else ("normal",)
+
+                    if row_item.get("ui_text") != row_text or row_item.get("ui_values") != row_values:
+                        self.pdo_tree.item(item_id, text=row_text, values=row_values)
+                        row_item["ui_text"] = row_text
+                        row_item["ui_values"] = row_values
+
+                    if row_item.get("ui_tag") != row_tag:
+                        self.pdo_tree.item(item_id, tags=row_tag)
+                        for entry_item_id in entry_item_ids:
+                            self.pdo_tree.item(entry_item_id, tags=row_tag)
+                        row_item["ui_tag"] = row_tag
+
+                    row_item["reason"] = reason if is_blocked else ""
+                    if is_blocked:
+                        self.pdo_tree.item(item_id, open=False)
+                    self.pdo_row_items[row_idx] = row_item
+
+                    done_rows = row_idx + 1
+                    if done_rows == total_rows or (done_rows % 24) == 0:
+                        self._step_activity(
+                            done_rows,
+                            message=f"Refreshing PDO availability... {done_rows}/{total_rows}",
+                            force=(done_rows == total_rows),
+                        )
+            finally:
+                self._end_activity(restore_status=True)
+
+        def _toggle_pdo_row(self, row_idx: int) -> None:
+            if not (0 <= row_idx < len(self.current_pdo_choices)):
+                return
+            slave = self._selected_slave()
+            mapping, _mapping_idx0 = self._selected_mapping()
+            if slave is None or mapping is None:
+                return
+
+            row_item = self.pdo_row_items[row_idx]
+            choice = row_item["choice"]
+            checked_value = not bool(row_item.get("checked", False))
+
+            if checked_value and not choice.is_default:
+                selectable, reason = pdo_selectable_for_mapping(
+                    slave,
+                    mapping,
+                    choice.pdo.index,
+                    checked_selected_indexes=self._current_checked_pdo_indexes(exclude_pdo_index=choice.pdo.index),
+                )
+                if not selectable:
+                    self.status_var.set(f"PDO {choice.pdo.index} is not selectable: {reason}")
+                    checked_value = False
+
+            row_item["checked"] = checked_value
+            self.pdo_row_items[row_idx] = row_item
+            self._cancel_pending_pdo_details_update()
+            self._update_pdo_row_states(slave, mapping)
+            self._show_pdo_row_details(row_idx)
+
+        def _on_pdo_tree_select(self, _event) -> None:
+            self._schedule_pdo_details_update(delay_ms=40)
+
+        def _on_pdo_tree_click(self, event) -> str | None:
+            item_id = self.pdo_tree.identify_row(event.y)
+            if not item_id:
+                return None
+            column_id = self.pdo_tree.identify_column(event.x)
+            pdo_item_id = item_id
+            if pdo_item_id not in self.pdo_item_to_row:
+                parent = self.pdo_tree.parent(pdo_item_id)
+                if parent:
+                    pdo_item_id = parent
+            if pdo_item_id not in self.pdo_item_to_row:
+                return None
+            row_idx = self.pdo_item_to_row[pdo_item_id]
+            if column_id == "#1":
+                self.pdo_tree.selection_set(pdo_item_id)
+                self.pdo_tree.focus(pdo_item_id)
+                self._toggle_pdo_row(row_idx)
+                return "break"
+            return None
+
+        def _on_pdo_tree_space(self, _event) -> str | None:
+            row_idx = self._selected_pdo_row_index()
+            if row_idx >= 0:
+                self._toggle_pdo_row(row_idx)
+                return "break"
+            return None
 
         def _refresh_optional_pdos(self, slave: SlaveInfo, mapping: PdoMapping) -> None:
             self._clear_optional_pdos()
             self.current_pdo_choices = pdo_choices_for_mapping(slave, mapping)
-
-            if self.current_pdo_choices:
-                header = tk.Frame(self.optional_pdo_inner, bg=self.pdo_list_bg)
-                header.pack(fill=tk.X, padx=4, pady=(2, 1))
-                header.grid_columnconfigure(5, weight=1)
-                for col, (label_text, width) in enumerate(
-                    (
-                        ("Sel", 4),
-                        ("Type", 9),
-                        ("Index", 12),
-                        ("Dir", 5),
-                        ("SM", 4),
-                        ("PDO Name", 0),
+            total_choices = len(self.current_pdo_choices)
+            if total_choices > 0:
+                self._begin_activity("Building PDO tree...", total_choices)
+            try:
+                for row_idx, choice in enumerate(self.current_pdo_choices):
+                    pdo = choice.pdo
+                    item_id = self.pdo_tree.insert(
+                        "",
+                        tk.END,
+                        text=pdo.name or "(unnamed)",
+                        values=("", "", pdo.index, pdo.direction.upper(), choice.sm_no),
+                        open=False,
                     )
-                ):
-                    kwargs = {
-                        "text": label_text,
-                        "anchor": tk.W,
-                        "bg": self.pdo_list_bg,
-                        "font": ("TkDefaultFont", 9, "bold"),
-                    }
-                    if width > 0:
-                        kwargs["width"] = width
-                    tk.Label(header, **kwargs).grid(row=0, column=col, sticky=tk.W, padx=(0, 6))
+                    self.pdo_item_to_row[item_id] = row_idx
 
-            for choice in self.current_pdo_choices:
-                pdo = choice.pdo
-                row = tk.Frame(self.optional_pdo_inner, bg=self.pdo_list_bg)
-                row.pack(fill=tk.X, padx=4, pady=1)
-                row.grid_columnconfigure(5, weight=1)
+                    entry_item_ids: list[str] = []
+                    for entry in pdo.entries:
+                        entry_label = entry.resolved_name or entry.raw_name or "(unnamed)"
+                        entry_item = self.pdo_tree.insert(
+                            item_id,
+                            tk.END,
+                            text=entry_label,
+                            values=("", "ENTRY", f"{entry.index}:{entry.subindex}", entry.data_type, f"{entry.bitlen}b"),
+                        )
+                        entry_item_ids.append(entry_item)
 
-                var = tk.BooleanVar(value=choice.is_default)
-                self.optional_pdo_vars.append(var)
+                    self.pdo_row_items.append(
+                        {
+                            "choice": choice,
+                            "item_id": item_id,
+                            "entry_items": entry_item_ids,
+                            "checked": bool(choice.is_default),
+                            "reason": "",
+                        }
+                    )
 
-                tk.Checkbutton(
-                    row,
-                    variable=var,
-                    bg=self.pdo_list_bg,
-                    activebackground=self.pdo_list_bg,
-                    highlightthickness=0,
-                    relief=tk.FLAT,
-                    padx=0,
-                    pady=0,
-                ).grid(row=0, column=0, sticky=tk.W, padx=(0, 6))
-
-                row_type = "DEFAULT" if choice.is_default else "OPTIONAL"
-                tk.Label(row, text=row_type, width=9, anchor=tk.W, bg=self.pdo_list_bg).grid(
-                    row=0, column=1, sticky=tk.W, padx=(0, 6)
-                )
-                tk.Label(row, text=pdo.index, width=12, anchor=tk.W, bg=self.pdo_list_bg).grid(
-                    row=0, column=2, sticky=tk.W, padx=(0, 6)
-                )
-                tk.Label(row, text=pdo.direction.upper(), width=5, anchor=tk.W, bg=self.pdo_list_bg).grid(
-                    row=0, column=3, sticky=tk.W, padx=(0, 6)
-                )
-                tk.Label(row, text=choice.sm_no, width=4, anchor=tk.W, bg=self.pdo_list_bg).grid(
-                    row=0, column=4, sticky=tk.W, padx=(0, 6)
-                )
-                tk.Label(row, text=pdo.name, anchor=tk.W, justify=tk.LEFT, bg=self.pdo_list_bg).grid(
-                    row=0, column=5, sticky=tk.W
-                )
+                    done_rows = row_idx + 1
+                    if done_rows == total_choices or (done_rows % 24) == 0:
+                        self._step_activity(
+                            done_rows,
+                            message=f"Building PDO tree... {done_rows}/{total_choices}",
+                            force=(done_rows == total_choices),
+                        )
+            finally:
+                if total_choices > 0:
+                    self._end_activity(restore_status=True)
 
             if not self.current_pdo_choices:
-                tk.Label(
-                    self.optional_pdo_inner,
-                    text="(No PDOs available for this mapping)",
-                    anchor=tk.W,
-                    justify=tk.LEFT,
-                    bg=self.pdo_list_bg,
-                ).pack(anchor=tk.W, padx=4, pady=2)
+                item_id = self.pdo_tree.insert("", tk.END, text="(No PDOs available for this mapping)")
+                self.pdo_tree.item(item_id, tags=("blocked",))
 
-            self.optional_pdo_canvas.update_idletasks()
-            self.optional_pdo_canvas.configure(
-                scrollregion=self.optional_pdo_canvas.bbox("all"),
-            )
+            self._update_pdo_row_states(slave, mapping)
 
         def _load(self) -> None:
+            if self._is_busy:
+                self.status_var.set("Working" if self.compact_status_labels else "Working... please wait.")
+                return
             p = Path(self.file_var.get()).expanduser()
             if not p.exists():
                 messagebox.showerror("File not found", f"No such file:\n{p}")
@@ -1721,11 +3187,15 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
 
                 self.slave_list.delete(0, tk.END)
                 self.mapping_list.delete(0, tk.END)
+                self.coe_list.delete(0, tk.END)
+                self.current_coe_item_indexes = []
                 self._clear_optional_pdos()
                 self.details.delete("1.0", tk.END)
                 self.current_mappings = []
                 self.generated_snippet = ""
                 self.generated_substitutions = ""
+                self.generated_panel = ""
+                self._mapping_overview_text = ""
 
                 for slave in self.slaves:
                     self.slave_list.insert(tk.END, slave.short_label)
@@ -1742,11 +3212,15 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
             slave = self._selected_slave()
             if slave is None:
                 return
+            self._cancel_pending_pdo_details_update()
             self.current_mappings = slave.mappings
             self.generated_snippet = ""
             self.generated_substitutions = ""
+            self.generated_panel = ""
+            self._mapping_overview_text = ""
 
             self.mapping_list.delete(0, tk.END)
+            self._refresh_coe_list(slave)
             for mapping in self.current_mappings:
                 default_str = " (default)" if mapping.is_default else ""
                 self.mapping_list.insert(tk.END, f"{mapping.name}{default_str}")
@@ -1759,6 +3233,7 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
                 self._clear_optional_pdos()
                 self.details.delete("1.0", tk.END)
                 self.details.insert(tk.END, "No PDO mappings found for this slave.\n")
+                self._mapping_overview_text = ""
                 self._update_hwtype_indicator()
 
         def _on_mapping_select(self, _event) -> None:
@@ -1766,11 +3241,14 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
             mapping, _ = self._selected_mapping()
             if slave is None or mapping is None:
                 return
+            self._cancel_pending_pdo_details_update()
             self.generated_snippet = ""
             self.generated_substitutions = ""
+            self.generated_panel = ""
             self._refresh_optional_pdos(slave, mapping)
+            self._mapping_overview_text = mapping_details_text(slave, mapping)
             self.details.delete("1.0", tk.END)
-            self.details.insert(tk.END, mapping_details_text(slave, mapping))
+            self.details.insert(tk.END, self._mapping_overview_text)
             self._update_hwtype_indicator()
 
         def _show_generated_files_popup(self) -> None:
@@ -1779,6 +3257,8 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
             self.generated_popup = None
             self.generated_hw_text = None
             self.generated_db_text = None
+            self.generated_panel_text = None
+            self.generated_panel_preview_canvas = None
             self.generated_edit_var = None
 
             dialog = tk.Toplevel(self.root)
@@ -1809,6 +3289,25 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
 
             self.generated_hw_text = _add_tab("HW snippet", self.generated_snippet)
             self.generated_db_text = _add_tab("DB file", self.generated_substitutions)
+            self.generated_panel_text = _add_tab("Panel .ui", self.generated_panel)
+            preview_tab = ttk.Frame(notebook)
+            notebook.add(preview_tab, text="Panel preview")
+            preview_outer = ttk.Frame(preview_tab)
+            preview_outer.pack(fill=tk.BOTH, expand=True)
+            self.generated_panel_preview_canvas = tk.Canvas(preview_outer, bg="#f5f5f5", highlightthickness=0)
+            self.generated_panel_preview_canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+            preview_yscroll = ttk.Scrollbar(
+                preview_outer, orient=tk.VERTICAL, command=self.generated_panel_preview_canvas.yview
+            )
+            preview_yscroll.pack(side=tk.RIGHT, fill=tk.Y)
+            preview_xscroll = ttk.Scrollbar(
+                preview_outer, orient=tk.HORIZONTAL, command=self.generated_panel_preview_canvas.xview
+            )
+            preview_xscroll.pack(side=tk.BOTTOM, fill=tk.X)
+            self.generated_panel_preview_canvas.config(
+                yscrollcommand=preview_yscroll.set,
+                xscrollcommand=preview_xscroll.set,
+            )
 
             btns = ttk.Frame(outer)
             btns.pack(fill=tk.X, pady=(8, 0))
@@ -1817,7 +3316,11 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
             def _set_editable_state() -> None:
                 editable = bool(self.generated_edit_var and self.generated_edit_var.get())
                 state = tk.NORMAL if editable else tk.DISABLED
-                for widget in (self.generated_hw_text, self.generated_db_text):
+                for widget in (
+                    self.generated_hw_text,
+                    self.generated_db_text,
+                    self.generated_panel_text,
+                ):
                     if widget is not None and widget.winfo_exists():
                         widget.config(state=state)
 
@@ -1825,6 +3328,8 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
                 self.generated_popup = None
                 self.generated_hw_text = None
                 self.generated_db_text = None
+                self.generated_panel_text = None
+                self.generated_panel_preview_canvas = None
                 self.generated_edit_var = None
                 dialog.destroy()
 
@@ -1836,23 +3341,34 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
             ).pack(side=tk.LEFT)
             ttk.Button(btns, text="Save HW snippet...", command=self._save_snippet).pack(side=tk.LEFT)
             ttk.Button(btns, text="Save DB file...", command=self._save_substitutions).pack(side=tk.LEFT, padx=(6, 0))
+            ttk.Button(btns, text="Save panel .ui...", command=self._save_panel).pack(side=tk.LEFT, padx=(6, 0))
+            ttk.Button(btns, text="Save all...", command=self._save_all_generated).pack(side=tk.LEFT, padx=(6, 0))
+            ttk.Button(btns, text="Refresh preview", command=self._refresh_panel_preview).pack(
+                side=tk.LEFT, padx=(6, 0)
+            )
             ttk.Button(btns, text="Close", command=_close_popup).pack(side=tk.RIGHT)
             dialog.protocol("WM_DELETE_WINDOW", _close_popup)
+            self._refresh_panel_preview()
 
         def _sync_generated_texts_from_popup(self) -> None:
             if self.generated_hw_text is not None and self.generated_hw_text.winfo_exists():
                 self.generated_snippet = self.generated_hw_text.get("1.0", "end-1c")
             if self.generated_db_text is not None and self.generated_db_text.winfo_exists():
                 self.generated_substitutions = self.generated_db_text.get("1.0", "end-1c")
+            if self.generated_panel_text is not None and self.generated_panel_text.winfo_exists():
+                self.generated_panel = self.generated_panel_text.get("1.0", "end-1c")
 
         def _generate_files_popup(self) -> None:
+            if self._is_busy:
+                self.status_var.set("Working" if self.compact_status_labels else "Working... please wait.")
+                return
             slave = self._selected_slave()
             mapping, mapping_idx0 = self._selected_mapping()
             if slave is None or mapping is None:
                 messagebox.showwarning("Selection missing", "Select a slave and PDO mapping first.")
                 return
 
-            self._set_busy(True, "Generating hardware snippet and DB file...")
+            self._set_busy(True, "Generating hardware snippet, DB file, and panel...")
             try:
                 self.generated_snippet = generate_hw_snippet(
                     slave=slave,
@@ -1862,6 +3378,8 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
                     selected_pdo_indexes=self._selected_checked_pdo_indexes(),
                     hwtype_override=self.custom_hwtype_override or None,
                     include_dc=not self.exclude_dc_clock,
+                    include_coe_initcmd=self.include_coe_initcmd,
+                    legacy_naming=self.legacy_naming,
                     esi_file=str(Path(self.file_var.get()).expanduser()),
                 )
                 self.generated_substitutions = generate_substitutions(
@@ -1872,15 +3390,172 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
                     selected_pdo_indexes=self._selected_checked_pdo_indexes(),
                     hwtype_override=self.custom_hwtype_override or None,
                     include_dc=not self.exclude_dc_clock,
+                    include_coe_initcmd=self.include_coe_initcmd,
+                    legacy_naming=self.legacy_naming,
+                    esi_file=str(Path(self.file_var.get()).expanduser()),
+                )
+                self.generated_panel = generate_caqtdm_panel(
+                    slave=slave,
+                    mapping=mapping,
+                    mapping_index=mapping_idx0 + 1,
+                    mapping_count=max(1, len(slave.mappings)),
+                    selected_pdo_indexes=self._selected_checked_pdo_indexes(),
+                    hwtype_override=self.custom_hwtype_override or None,
+                    legacy_naming=self.legacy_naming,
                     esi_file=str(Path(self.file_var.get()).expanduser()),
                 )
                 self.status_var.set(
-                    f"Generated HW + DB for {slave.type_name}, mapping {mapping_idx0 + 1}/{len(slave.mappings)}"
+                    f"Generated HW + DB + panel for {slave.type_name}, mapping {mapping_idx0 + 1}/{len(slave.mappings)}"
                 )
             finally:
                 self._set_busy(False)
 
             self._show_generated_files_popup()
+
+        def _refresh_panel_preview(self) -> None:
+            if self.generated_panel_preview_canvas is None or not self.generated_panel_preview_canvas.winfo_exists():
+                return
+            self._sync_generated_texts_from_popup()
+            canvas = self.generated_panel_preview_canvas
+            canvas.delete("all")
+
+            if not self.generated_panel.strip():
+                canvas.create_text(12, 12, anchor=tk.NW, text="No panel generated.", fill="#444")
+                return
+
+            try:
+                panel_w, panel_h, tab_rect, tab_sets = parse_generated_panel_preview_items(self.generated_panel)
+            except Exception as exc:
+                canvas.create_text(12, 12, anchor=tk.NW, text=f"Preview parse error:\n{exc}", fill="#a00")
+                return
+
+            shown_tabs = tab_sets if tab_sets else [("Panel", [])]
+
+            scale = 1.55
+            ox = 14
+            oy = 26
+            gap_x = 24
+            gap_y = 26
+            panel_px_w = int(panel_w * scale)
+            panel_px_h = int(panel_h * scale)
+            cols = 2 if len(shown_tabs) > 1 else 1
+            rows_n = (len(shown_tabs) + cols - 1) // cols
+            canvas_w = (ox * 2) + (panel_px_w * cols) + (gap_x * max(0, cols - 1))
+            canvas_h = (oy * 2) + (panel_px_h * rows_n) + (gap_y * max(0, rows_n - 1))
+            canvas.config(scrollregion=(0, 0, canvas_w, canvas_h))
+
+            canvas.create_text(
+                ox,
+                4,
+                anchor=tk.NW,
+                fill="#555",
+                text="Rough preview (not exact caQtDM rendering, all tabs)",
+            )
+
+            for tab_idx, (tab_title, items) in enumerate(shown_tabs, start=1):
+                col = (tab_idx - 1) % cols
+                row = (tab_idx - 1) // cols
+                px = ox + col * (panel_px_w + gap_x)
+                py = oy + row * (panel_px_h + gap_y)
+                canvas.create_text(
+                    px,
+                    py - 8,
+                    anchor=tk.NW,
+                    text=f"Tab {tab_idx}: {tab_title}",
+                    fill="#333",
+                    font=("TkDefaultFont", 8),
+                )
+                canvas.create_rectangle(
+                    px - 2,
+                    py - 2,
+                    px + panel_px_w + 2,
+                    py + panel_px_h + 2,
+                    outline="#777",
+                    width=1,
+                    fill="#efefef",
+                )
+
+                if tab_rect is not None:
+                    tx, ty, tw, th = tab_rect
+                    tx1 = px + tx * scale
+                    ty1 = py + ty * scale
+                    tx2 = px + (tx + tw) * scale
+                    ty2 = py + (ty + th) * scale
+                    canvas.create_rectangle(tx1, ty1, tx2, ty2, outline="#6d6d6d", width=1, fill="#f2f2f2")
+                    title_w = min(42, tw - 4)
+                    t1x = px + (tx + 2) * scale
+                    t1y = py + (ty + 2) * scale
+                    t2x = px + (tx + 2 + title_w) * scale
+                    t2y = py + (ty + 20) * scale
+                    canvas.create_rectangle(t1x, t1y, t2x, t2y, outline="#666", width=1, fill="#e5e5e5")
+                    canvas.create_text(
+                        t1x + 3,
+                        t1y + ((t2y - t1y) / 2),
+                        anchor=tk.W,
+                        text=tab_title[:10],
+                        fill="#333",
+                        font=("TkDefaultFont", 8),
+                    )
+
+                for item_type, rect, text in items:
+                    x, y, w, h = rect
+                    x1 = px + x * scale
+                    y1 = py + y * scale
+                    x2 = px + (x + w) * scale
+                    y2 = py + (y + h) * scale
+
+                    if item_type == "label":
+                        canvas.create_text(
+                            x1 + 2,
+                            y1 + (h * scale) / 2,
+                            anchor=tk.W,
+                            text=text,
+                            fill="#222",
+                            font=("TkDefaultFont", 8),
+                        )
+                    elif item_type == "byte":
+                        canvas.create_rectangle(x1, y1, x2, y2, outline="#4d784d", width=1, fill="#e9f5e9")
+                        bit_label = text or "bits"
+                        bit_count = 0
+                        match = re.match(r"B(\d+)\.\.B(\d+)", bit_label)
+                        if match:
+                            start_b = int(match.group(1))
+                            end_b = int(match.group(2))
+                            if end_b >= start_b:
+                                bit_count = (end_b - start_b) + 1
+                        if bit_count > 0:
+                            gap = 1
+                            max_cell_h = 6
+                            total_gaps = (bit_count - 1) * gap
+                            usable_h = max(6, (y2 - y1) - 4)
+                            cell_h = min(max_cell_h, max(1, int((usable_h - total_gaps) / bit_count)))
+                            col_h = bit_count * cell_h + total_gaps
+                            start_y = y2 - 2 - col_h
+                            cell_w = max(4, int((x2 - x1) - 4))
+                            cell_x = x1 + ((x2 - x1) - cell_w) / 2
+                            for i in range(bit_count):
+                                by1 = start_y + i * (cell_h + gap)
+                                by2 = by1 + cell_h
+                                canvas.create_rectangle(
+                                    cell_x,
+                                    by1,
+                                    cell_x + cell_w,
+                                    by2,
+                                    outline="#3f6f3f",
+                                    width=1,
+                                    fill="#d3e9d3",
+                                )
+                    else:
+                        canvas.create_rectangle(x1, y1, x2, y2, outline="#666", width=1, fill="#fff")
+                        tail = text.split("-")[-1] if text else ""
+                        canvas.create_text(
+                            x2 - 2,
+                            y1 + (h * scale) / 2,
+                            anchor=tk.E,
+                            text=tail[:10],
+                            fill="#666",
+                            font=("TkDefaultFont", 7),
+                        )
 
         def _generate_snippet(self) -> None:
             slave = self._selected_slave()
@@ -1899,6 +3574,8 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
                     selected_pdo_indexes=self._selected_checked_pdo_indexes(),
                     hwtype_override=self.custom_hwtype_override or None,
                     include_dc=not self.exclude_dc_clock,
+                    include_coe_initcmd=self.include_coe_initcmd,
+                    legacy_naming=self.legacy_naming,
                     esi_file=str(Path(self.file_var.get()).expanduser()),
                 )
                 self.generated_snippet = snippet
@@ -1927,6 +3604,8 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
                     selected_pdo_indexes=self._selected_checked_pdo_indexes(),
                     hwtype_override=self.custom_hwtype_override or None,
                     include_dc=not self.exclude_dc_clock,
+                    include_coe_initcmd=self.include_coe_initcmd,
+                    legacy_naming=self.legacy_naming,
                     esi_file=str(Path(self.file_var.get()).expanduser()),
                 )
                 self.generated_substitutions = subst
@@ -2008,6 +3687,87 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
             finally:
                 self._set_busy(False)
 
+        def _save_panel(self) -> None:
+            self._sync_generated_texts_from_popup()
+            if not self.generated_panel:
+                self._generate_files_popup()
+                if not self.generated_panel:
+                    return
+
+            slave = self._selected_slave()
+            _, mapping_idx0 = self._selected_mapping()
+            default_name = "ecmcPanel.ui"
+            if slave is not None and mapping_idx0 >= 0:
+                hwtype = _resolve_hwtype(
+                    slave,
+                    mapping_idx0 + 1,
+                    max(1, len(slave.mappings)),
+                    self.custom_hwtype_override or None,
+                )
+                default_name = f"ecmc{hwtype}.ui"
+
+            path = filedialog.asksaveasfilename(
+                title="Save caQtDM panel",
+                defaultextension=".ui",
+                initialfile=default_name,
+                filetypes=(("Qt ui files", "*.ui"), ("All files", "*.*")),
+            )
+            if not path:
+                return
+            self._set_busy(True, "Saving panel...")
+            try:
+                self._sync_generated_texts_from_popup()
+                Path(path).write_text(self.generated_panel)
+                self.status_var.set(f"Saved panel: {path}")
+            finally:
+                self._set_busy(False)
+
+        def _save_all_generated(self) -> None:
+            self._sync_generated_texts_from_popup()
+            if not (self.generated_snippet and self.generated_substitutions and self.generated_panel):
+                self._generate_files_popup()
+                if not (self.generated_snippet and self.generated_substitutions and self.generated_panel):
+                    return
+
+            slave = self._selected_slave()
+            _, mapping_idx0 = self._selected_mapping()
+            base_name = "ecmcGenerated"
+            if slave is not None and mapping_idx0 >= 0:
+                hwtype = _resolve_hwtype(
+                    slave,
+                    mapping_idx0 + 1,
+                    max(1, len(slave.mappings)),
+                    self.custom_hwtype_override or None,
+                )
+                base_name = f"ecmc{hwtype}"
+
+            picked = filedialog.asksaveasfilename(
+                title="Save all generated files (choose base name)",
+                defaultextension=".cmd",
+                initialfile=f"{base_name}.cmd",
+                filetypes=(("Command files", "*.cmd"), ("All files", "*.*")),
+            )
+            if not picked:
+                return
+
+            picked_path = Path(picked)
+            stem = picked_path.stem if picked_path.stem else base_name
+            out_cmd = picked_path.with_name(f"{stem}.cmd")
+            out_subs = picked_path.with_name(f"{stem}.substitutions")
+            out_ui = picked_path.with_name(f"{stem}.ui")
+
+            self._set_busy(True, "Saving all generated files...")
+            try:
+                self._sync_generated_texts_from_popup()
+                out_cmd.write_text(self.generated_snippet)
+                out_subs.write_text(self.generated_substitutions)
+                out_ui.write_text(self.generated_panel)
+                self.status_var.set(
+                    f"Saved all: {out_cmd.name}, {out_subs.name}, {out_ui.name}"
+                )
+            finally:
+                self._set_busy(False)
+
     root = tk.Tk()
     BrowserApp(root)
     root.mainloop()
@@ -2041,6 +3801,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
         help="In --no-gui mode: generate one substitutions file",
     )
     p.add_argument(
+        "--generate-panel",
+        action="store_true",
+        help="In --no-gui mode: generate one caQtDM panel (.ui)",
+    )
+    p.add_argument(
         "--slave-index",
         type=int,
         help="1-based slave index from listing (used with generation options)",
@@ -2060,6 +3825,10 @@ def build_arg_parser() -> argparse.ArgumentParser:
         help="Output .substitutions file (default: print to stdout)",
     )
     p.add_argument(
+        "--panel-out",
+        help="Output .ui file for generated panel (default: print to stdout)",
+    )
+    p.add_argument(
         "--optional-pdos",
         help="Comma-separated PDO indexes to include as optional, e.g. 0x1600,0x1a08",
     )
@@ -2067,6 +3836,16 @@ def build_arg_parser() -> argparse.ArgumentParser:
         "--exclude-dc",
         action="store_true",
         help="Exclude DC clock config lines from generated HW snippet",
+    )
+    p.add_argument(
+        "--include-coe-initcmd",
+        action="store_true",
+        help="Include Mailbox/CoE/InitCmd startup SDOs in generated HW snippet",
+    )
+    p.add_argument(
+        "--modern-naming",
+        action="store_true",
+        help="Use modern naming instead of legacy esi_parser-style record names",
     )
     return p
 
@@ -2082,18 +3861,26 @@ def main() -> int:
             print(f"Failed to parse '{file_path}': {exc}", file=sys.stderr)
             return 1
 
-        generation_count = int(bool(args.generate_snippet)) + int(bool(args.generate_substitutions))
+        generation_count = int(bool(args.generate_snippet)) + int(bool(args.generate_substitutions)) + int(
+            bool(args.generate_panel)
+        )
         if generation_count == 0:
             print_mappings(slaves)
             return 0
         if generation_count > 1:
-            print("Choose only one generation mode: --generate-snippet or --generate-substitutions", file=sys.stderr)
+            print(
+                "Choose only one generation mode: --generate-snippet, --generate-substitutions, or --generate-panel",
+                file=sys.stderr,
+            )
             return 2
-        if args.generate_snippet and args.substitutions_out:
-            print("--substitutions-out cannot be used with --generate-snippet", file=sys.stderr)
+        if args.generate_snippet and (args.substitutions_out or args.panel_out):
+            print("--substitutions-out/--panel-out cannot be used with --generate-snippet", file=sys.stderr)
             return 2
-        if args.generate_substitutions and args.snippet_out:
-            print("--snippet-out cannot be used with --generate-substitutions", file=sys.stderr)
+        if args.generate_substitutions and (args.snippet_out or args.panel_out):
+            print("--snippet-out/--panel-out cannot be used with --generate-substitutions", file=sys.stderr)
+            return 2
+        if args.generate_panel and (args.snippet_out or args.substitutions_out):
+            print("--snippet-out/--substitutions-out cannot be used with --generate-panel", file=sys.stderr)
             return 2
 
         if args.slave_index is None:
@@ -2130,6 +3917,8 @@ def main() -> int:
                 mapping_count=len(slave.mappings),
                 optional_pdo_indexes=optional_pdo_indexes,
                 include_dc=not args.exclude_dc,
+                include_coe_initcmd=args.include_coe_initcmd,
+                legacy_naming=not args.modern_naming,
                 esi_file=str(file_path),
             )
             if args.snippet_out:
@@ -2137,7 +3926,7 @@ def main() -> int:
                 output_file.write_text(output)
                 print(f"Wrote snippet: {output_file}")
                 return 0
-        else:
+        elif args.generate_substitutions:
             output = generate_substitutions(
                 slave=slave,
                 mapping=mapping,
@@ -2145,12 +3934,29 @@ def main() -> int:
                 mapping_count=len(slave.mappings),
                 optional_pdo_indexes=optional_pdo_indexes,
                 include_dc=not args.exclude_dc,
+                include_coe_initcmd=args.include_coe_initcmd,
+                legacy_naming=not args.modern_naming,
                 esi_file=str(file_path),
             )
             if args.substitutions_out:
                 output_file = Path(args.substitutions_out).expanduser()
                 output_file.write_text(output)
                 print(f"Wrote substitutions: {output_file}")
+                return 0
+        else:
+            output = generate_caqtdm_panel(
+                slave=slave,
+                mapping=mapping,
+                mapping_index=args.mapping_index,
+                mapping_count=len(slave.mappings),
+                optional_pdo_indexes=optional_pdo_indexes,
+                legacy_naming=not args.modern_naming,
+                esi_file=str(file_path),
+            )
+            if args.panel_out:
+                output_file = Path(args.panel_out).expanduser()
+                output_file.write_text(output)
+                print(f"Wrote panel: {output_file}")
                 return 0
 
         print(output, end="")

@@ -34,7 +34,7 @@ epicsEnvUnset(ECMC_AXIS_FLAGS)
 
 {% if trajectory.axis.acceleration is defined %}
     {% if trajectory.axis.acceleration > 0 %}
-        {%- set backlashAccTime = trajectory.axis.velocity/trajectory.axis.acceleration %}
+        {%- set backlashAccTime = trajectory.axis.velocity / trajectory.axis.acceleration %}
     {%- else %}
         {%- set backlashAccTime = 0 %}
     {%- endif %}

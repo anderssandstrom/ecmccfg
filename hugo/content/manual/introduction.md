@@ -1,8 +1,8 @@
-+++  
-title = "introduction"   
++++
+title = "introduction"
 weight = 5
-chapter = false  
-+++  
+chapter = false
++++
 
 ## Principle
 EtherCAT requires the field bus components (slaves) to be configured on the master.
@@ -120,7 +120,7 @@ See [best practice](../motion_cfg/best_practice/) and [yaml cfg](../motion_cfg/a
   ```bash
   ${SCRIPTEXEC} ${ecmccfg_DIR}applyAxisSynchronization.cmd, "CONFIG=./cfg/axis_1_sync"
   ${SCRIPTEXEC} ${ecmccfg_DIR}applyAxisSynchronization.cmd, "CONFIG=./cfg/axis_11_sync"
-  ```   
+  ```
 {{% notice tip %}}
 See [best practice](../motion_cfg/best_practice/) and [yaml cfg](../motion_cfg/axisyaml/) for more information.
 {{% /notice %}}

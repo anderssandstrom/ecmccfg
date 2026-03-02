@@ -10,7 +10,7 @@ This doc will try to describe how to setup slaves of types 2 and 3.
 
 Some good reading here https://etherlab-users.etherlab.narkive.com/hh4O3b9Z/dc-sync1-shift-time#post6:
 
-# Type 2: Slave that must havce DC config (EL3702 example) 
+# Type 2: Slave that must have DC config (EL3702 example)
 For this kind of slave the dc configuration will be applied dierctly by the addSlave.cmd/configureSlave.cmd in the hardware snippet by issuing the "Cfg.EcSlaveConfigDC(....)" command:
 ```
 ecmcConfigOrDie "Cfg.EcSlaveConfigDC(SlaveId,AssignActivate,CycleTimeSync0,ShiftTimeSync0,CycleTimeSync1,ShiftTimeSync1)"
@@ -185,7 +185,7 @@ ecmcConfigOrDie "Cfg.EcSlaveConfigDC(12,0x700,1000000,-100000,25000,0)"
 ```
 
 # dc.script test application for 2 EL3702
-The dc.script starup file contains configuration for two el3702 slaves. After each addSlave.cmd the follwoing commad is added allowing for changing params:
+The dc.script starup file contains configuration for two el3702 slaves. After each addSlave.cmd the following commad is added allowing for changing params:
 ```
 ecmcConfigOrDie "Cfg.EcSlaveConfigDC(11,0x730,1000000,-500000,0,0)"
 ```
@@ -211,34 +211,34 @@ ecmcConfigOrDie "Cfg.EcSlaveConfigDC(${ECMC_EC_SLAVE_NUM_3702_2},0x730,1000000,0
 Log latch time to file:
 ```
 camonitor -g10 IOC_TEST:ec0-s11-EL3702-NextTime IOC_TEST:ec0-s12-EL3702-NextTime | tee time.log
-IOC_TEST:ec0-s11-EL3702-NextTime 2021-07-07 08:35:47.205566 1589427095  
-IOC_TEST:ec0-s12-EL3702-NextTime 2021-07-07 08:35:47.205566 1589377095  
-IOC_TEST:ec0-s11-EL3702-NextTime 2021-07-07 08:35:47.206604 1590427095  
-IOC_TEST:ec0-s12-EL3702-NextTime 2021-07-07 08:35:47.206604 1590377095  
-IOC_TEST:ec0-s11-EL3702-NextTime 2021-07-07 08:35:47.207747 1591427095  
-IOC_TEST:ec0-s12-EL3702-NextTime 2021-07-07 08:35:47.207747 1591377095  
-IOC_TEST:ec0-s11-EL3702-NextTime 2021-07-07 08:35:47.208643 1592427095  
-IOC_TEST:ec0-s12-EL3702-NextTime 2021-07-07 08:35:47.208643 1592377095  
-IOC_TEST:ec0-s11-EL3702-NextTime 2021-07-07 08:35:47.209593 1593427095  
-IOC_TEST:ec0-s12-EL3702-NextTime 2021-07-07 08:35:47.209593 1593377095  
-IOC_TEST:ec0-s11-EL3702-NextTime 2021-07-07 08:35:47.210588 1594427095  
-IOC_TEST:ec0-s12-EL3702-NextTime 2021-07-07 08:35:47.210588 1594377095  
-IOC_TEST:ec0-s11-EL3702-NextTime 2021-07-07 08:35:47.211582 1595427095  
-IOC_TEST:ec0-s12-EL3702-NextTime 2021-07-07 08:35:47.211582 1595377095  
+IOC_TEST:ec0-s11-EL3702-NextTime 2021-07-07 08:35:47.205566 1589427095
+IOC_TEST:ec0-s12-EL3702-NextTime 2021-07-07 08:35:47.205566 1589377095
+IOC_TEST:ec0-s11-EL3702-NextTime 2021-07-07 08:35:47.206604 1590427095
+IOC_TEST:ec0-s12-EL3702-NextTime 2021-07-07 08:35:47.206604 1590377095
+IOC_TEST:ec0-s11-EL3702-NextTime 2021-07-07 08:35:47.207747 1591427095
+IOC_TEST:ec0-s12-EL3702-NextTime 2021-07-07 08:35:47.207747 1591377095
+IOC_TEST:ec0-s11-EL3702-NextTime 2021-07-07 08:35:47.208643 1592427095
+IOC_TEST:ec0-s12-EL3702-NextTime 2021-07-07 08:35:47.208643 1592377095
+IOC_TEST:ec0-s11-EL3702-NextTime 2021-07-07 08:35:47.209593 1593427095
+IOC_TEST:ec0-s12-EL3702-NextTime 2021-07-07 08:35:47.209593 1593377095
+IOC_TEST:ec0-s11-EL3702-NextTime 2021-07-07 08:35:47.210588 1594427095
+IOC_TEST:ec0-s12-EL3702-NextTime 2021-07-07 08:35:47.210588 1594377095
+IOC_TEST:ec0-s11-EL3702-NextTime 2021-07-07 08:35:47.211582 1595427095
+IOC_TEST:ec0-s12-EL3702-NextTime 2021-07-07 08:35:47.211582 1595377095
 
 ```
 
 Here it can be concluded that the latching of the first EL3702 slave is 50000ns later than the second EL3702 slave.
 ```
-IOC_TEST:ec0-s11-EL3702-NextTime 2021-07-07 08:35:47.211582 1595427095  
-IOC_TEST:ec0-s12-EL3702-NextTime 2021-07-07 08:35:47.211582 1595377095  
+IOC_TEST:ec0-s11-EL3702-NextTime 2021-07-07 08:35:47.211582 1595427095
+IOC_TEST:ec0-s12-EL3702-NextTime 2021-07-07 08:35:47.211582 1595377095
 ```
 
 ### Log data
-Logging data basically shows that keeping the same sync_1_shift results in best performance without phaseshifts (atleast for EL3702 terminals). 
+Logging data basically shows that keeping the same sync_1_shift results in best performance without phaseshifts (atleast for EL3702 terminals).
 When having to big differnce it seems that sometimes the values will be from previous cycle and not stable.
 ```
-Log values to file with: 
+Log values to file with:
   camonitor IOC_TEST:ec0-s11-EL3702-AI1-Array  IOC_TEST:ec0-s12-EL3702-AI1-Array| tee data.log
 plot data with:
   cat data.log | python ~/sources/ecmccomgui/pyDataManip/plotCaMonitor.py &
@@ -510,7 +510,7 @@ Diff EL3702 1 vs 2 :  -50.00000
 Conclusions:
 1. Diff between the two el3702 next latch times are always 50micor seconds (like set in cfg).
 2. The next "nextSyncTime" always occur in the past. So it has already been processed in the slave when the data from previous scan arrives in ecmc
-3. A bit strange that the "Diff EL3702 1" and "Diff EL3702 2" have such big spread.. 150..200 microseconds related to ec system time. 
+3. A bit strange that the "Diff EL3702 1" and "Diff EL3702 2" have such big spread.. 150..200 microseconds related to ec system time.
 
 NOTE: Teste where performed on not rt patched raspbi 4b (high latency). This could be the explenation for bullt 3 above.
 

@@ -1,6 +1,6 @@
 #
 # Test iocsh function "ecmcEpicsEnvSetCalcTernary()" to evaluate expressions and set 
-# EPCIS environment variables to differnt strings.
+# EPICS environment variables to different strings.
 #
 #        Use "ecmcEpicsEnvSetCalcTernary(<envVarName>,  <expression>, <trueString>, <falseString>)" to evaluate the expression and assign the variable.
 #          <envVarName>  : EPICS environment variable name.

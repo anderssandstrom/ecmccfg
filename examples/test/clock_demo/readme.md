@@ -1,6 +1,6 @@
 # Clock demo
 
-Control motion to a specific position/phase at a certain absolute system time. 
+Control motion to a specific position/phase at a certain absolute system time.
 The intention is that this configuration can be used togheter with ptp or mrf sync of system clock (and use of CLOCK_REALTIME in ecmc).
 
 In total 8 axes are defined (4 physical and 4 virtual).
@@ -47,7 +47,7 @@ The four global variables are used as setpoints for the control.
 
 ## phys axis
 
-The pysical asix is connected to the actual hardware (stepper motor). 
+The physical axis is connected to the actual hardware (stepper motor).
 This axis is configured with external PLC code for setpoint.
 
 ## phase axis
@@ -81,7 +81,7 @@ ax${AX_PHYS}.traj.setpos:=${TIME_SOURCE}-ax${AX_PHASE}.traj.setpos;
 
 A startup sequence is implemented in PLC code for each axis pair (physical and virtual):
 1. Enabling of phys motor
-2. Ref the phystcal axis to 0 
+2. Ref the physical axis to 0
 3. Rampup motor to constant velocity (same as timing axis)
 4. When velocity stabilized (the phase acttpos should be constant):
 - the phase axis is enabled (to fix the phase setpoint).
@@ -105,13 +105,13 @@ if(plc${PLC_ID}.firstscan) {
 }
 
 #State 0: Power physical axis and home to 0
-if(static.state = 0) {  
+if(static.state = 0) {
   mc_power(${AX_PHYS},1);
 }
 
 if(ax${AX_PHYS}.drv.enabled and static.state = 0) {
   println('State 1: Home and then Move vel');
-  mc_home_pos(${AX_PHYS},1,15,1,1,0);  
+  mc_home_pos(${AX_PHYS},1,15,1,1,0);
   static.state:=1;
 }
 

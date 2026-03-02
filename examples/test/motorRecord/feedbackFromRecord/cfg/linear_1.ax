@@ -14,9 +14,9 @@ epicsEnvSet("ECMC_MOD_TYPE",              "0")                         # For pos
 # RTRY : Max retry count
 # RMOD : Retry Mode
 # UEIP : Use encoder if present
-# RDBD : Readtry deadband 
+# RDBD : Retry deadband 
 # URIP : Use RDBL Link If Present
-# RDBL : Readback link (position form EPICS variable)
+# RDBL : Readback link (position from EPICS variable)
 epicsEnvSet("ECMC_AXISFIELDINIT",  "RRES=1.0,RTRY=2,RMOD=1,UEIP=0,RDBD=0.1,URIP=1,RDBL=$(IOC):$(ECMC_MOTOR_NAME)-PosActSim")
 
 #Encoder

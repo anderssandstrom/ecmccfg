@@ -18,6 +18,6 @@ El7037 slightly better:
 ### Test with el7041-0052
 * Phytron ZSH 1.57.200.4
 Without inertia or damper stalls at apporx 1400 deg/s
-With damper can to up to very high speeds (tested 130Hz=36800deg/s) without stall so even higher possible. 
+With damper can to up to very high speeds (tested 130Hz=36800deg/s) without stall so even higher possible.
 
 

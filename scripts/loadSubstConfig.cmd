@@ -5,7 +5,7 @@
 #-d   \details Loads complete ecmc cfg based on subst files and templates
 #-d   \author Anders Sandström
 #-d   \file
-#-d   \param FILE Subsitution file , i.e. ./cfg.subs
+#-d   \param FILE Substitution file, i.e. ./cfg.subs
 #-d   \param MACROS (optional ) macros to msi , "I=7021"
 #-d   \code
 #-d     ${SCRIPTEXEC} ${ecmccfg_DIR}loadSubstConfig.cmd, "FILE=./cfg.subs"
@@ -20,7 +20,7 @@ ${EXE}ecmcEpicsEnvSetCalcTernary(EXE,"'${ecmccomp_DIR=NAN}'=='NAN'","", "#-")
 ${EXE}ecmcExit Error: ecmccomp module not loaded and not found
 epicsEnvUnset(EXE)
 
-#- Parse subst and template with msi. Parse output to separetae axis files
+#- Parse subst and template with msi. Parse output to separate axis files
 ecmcFileExist(${ecmccfg_DIR}loadCompleteCfgSubst.sh,1,1)
 system "${ecmccfg_DIR}loadCompleteCfgSubst.sh ${FILE} ${ECMC_TMP_DIR} tempExe.cmd tempFile.ax ${ecmccfg_DIR} ${MACROS=''}"
 system "ls ${ECMC_TMP_DIR}"

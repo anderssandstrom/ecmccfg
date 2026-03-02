@@ -60,7 +60,7 @@ Alias is set to 65535 for some reason. Set to 0 with ethercat tool:
 ## GUI
 MCS2:
 ```
-caqtdm -macro "SYS=c6025a,IOC=c6025a,SlaveID=001,MasterID=1" ecmcMCS2.ui 
+caqtdm -macro "SYS=c6025a,IOC=c6025a,SlaveID=001,MasterID=1" ecmcMCS2.ui
 ```
 Axis:
 ```
@@ -69,7 +69,7 @@ caqtdm -macro "SYS=c6025a,IOC=c6025a,Axis=Axis1" ecmcAxisExpert_v1.ui
 
 ## GUI
 ```
-caqtdm -macro "IOC=c6025a,MasterID=0,SlaveID=002" ecmcMCS2.ui 
+caqtdm -macro "IOC=c6025a,MasterID=0,SlaveID=002" ecmcMCS2.ui
 ```
 
 ## Issues new firmware (dec2023 release)
@@ -88,7 +88,7 @@ caqtdm -macro "IOC=c6025a,MasterID=0,SlaveID=002" ecmcMCS2.ui
 [ 3459.292219] EtherCAT ERROR 1-main-2: SDO abort message 0x06020000: "This object does not exist in the object directory"
 ```
 * How to read the limits (virtual)?
-* 
+*
 
 # status wd when in limit:
 ```

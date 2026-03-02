@@ -14,7 +14,8 @@ Beckhoff has confirmed the bug and it will be fixed, but earliest sometime in 20
 
 ## Startup script
 A minimal startup script:
-`#- Example config for closed loop CSP with position control
+```cmd
+#- Example config for closed loop CSP with position control
 require ecmccfg "ENG_MODE=1"
 require ecmccomp
 
@@ -25,9 +26,9 @@ epicsEnvSet(BO_SID,${ECMC_EC_SLAVE_NUM})
 #- Stepper drive
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL7062_CSP"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Motor-Generic-2Phase-Stepper, CH_ID=1, MACROS='I_MAX_MA=1000, I_STDBY_MA=100, U_NOM_MV=24000,L_COIL_UH=3050,R_COIL_MOHM=2630'"
-#- Use autotune to get the controller parameter, resistance and inductance (trigger in hw expert panel)
+#- Use autotune to get the controller parameters, resistance, and inductance (trigger in hw expert panel)
 #- Then copy the MACROS field from panel and apply it with "Drive-Generic-Ctrl-Params" like below
-#- Note: "Motor-Generic-2Phase-Stepper" also require to define R and L (put any value).
+#- Note: "Motor-Generic-2Phase-Stepper" also requires defining R and L (put any value).
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Drive-Generic-Ctrl-Params,    CH_ID=1, MACROS='L_COIL_UH=3100,R_COIL_MOHM=2620,I_TI=12,I_KP=59,V_TI=150,V_KP=176,P_KP=10'"
 
 #- Must tell ecmc that channel is not used since otherwise monitoring of SDO settings will prevent IOC from start
@@ -66,7 +67,7 @@ RLS BISS-C:
 * encoder.denominator: Resolution: 4096 counts per = 1mm
 * encoder.absBits: 26 bits
 * encoder.type: Absolute (type 1)
-* ecnoder.absOffset: Offset to 0 position of linear stage (-1408.794 in this example)
+* encoder.absOffset: Offset to 0 position of linear stage (-1408.794 in this example)
 
 ```
 encoder:
@@ -77,7 +78,7 @@ encoder:
   bits: 26                                             # Total bit count of encoder raw data
   absBits: 26                                          # Absolute bit count (for absolute encoders) always least significant part of 'bits'
   absOffset: -1408.794                                 # Encoder offset in eng units (for absolute encoders)
-  position: ec0.s$(ENC_SID).positionActual${ENC_CH=01} # Ethercat entry for actual position input (encoder)
+  position: ec0.s$(ENC_SID).positionActual${ENC_CH=01} # EtherCAT entry for actual position input (encoder)
   status: ec0.s$(ENC_SID).encoderStatus${ENC_CH=01}    # mandatory only if 'warning' or 'error' are used
   ready: 2                                             # Bit in encoder status word for encoder ready
   warning: 0                                           # Warning (optional)
@@ -101,7 +102,7 @@ encoder:
   denominator: 1048576                                 # Scaling denominator example 4096 ticks per 360 degree
   type: 0                                              # Type: 0=Incremental, 1=Absolute
   bits: 32                                             # Total bit count of encoder raw data
-  position: ec0.s$(ENC_SID).positionActual${ENC_CH=01} # Ethercat entry for actual position input (encoder)
+  position: ec0.s$(ENC_SID).positionActual${ENC_CH=01} # EtherCAT entry for actual position input (encoder)
   status: ec0.s$(ENC_SID).encoderStatus${ENC_CH=01}    # mandatory only if 'warning' or 'error' are used
   homing:
     refToEncIDAtStartup: 1                             # Ref encoder at startup (to BISS value)
@@ -119,8 +120,8 @@ The EL7062 must be configured to run in CSP mode, for CSP mode the following set
   denominator: 1048576                                # Scaling denominator example 4096 ticks per 360 degree
   type: 1                                             # Stepper: 0. DS402: 1 (DS402 = servos and advanced stepper drives)
   setpoint: ec0.s$(DRV_SID).positionSetpoint01        # Velocity setpoint if CSV. Position setpoint if CSP
-  control: ec0.s$(DRV_SID).driveControl01             # Control word ethercat entry
-  status: ec0.s$(DRV_SID).driveStatus01               # Status word ethercat entry
+  control: ec0.s$(DRV_SID).driveControl01             # Control word EtherCAT entry
+  status: ec0.s$(DRV_SID).driveStatus01               # Status word EtherCAT entry
 ```
 
 ## Switches
@@ -129,10 +130,9 @@ However, the configuration for feeding switches (axis.feedSwitchesOutput) have b
 ```
 axis:
   id: 1                                               # Axis id
-  feedSwitchesOutput: ec0.s5.binaryOutput01           # Ethercat entry for feed switches
+  feedSwitchesOutput: ec0.s5.binaryOutput01           # EtherCAT entry for feed switches
 
 ```
 
 ## Tuning
 When tuning a CSP system with enabled position loop, CSP_PC mode, normally at least PID-gain and PID-integrator needs to be tuned. For CSV normally PID-gain is enough.
-

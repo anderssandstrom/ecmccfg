@@ -1,9 +1,9 @@
 #==============================================================================
 # addEcDataItem.cmd
 #-d /**
-#-d   \brief Script for adding a ethercat data item.
-#-d   \details The ethercat data item allows for accessing alreday configured ethercat domain data in a flexible
-#-d   way by defining a start entry, byte and bit offset and data type. Basically it's a pointer directlly into the process image.
+#-d   \brief Script for adding an EtherCAT data item.
+#-d   \details The EtherCAT data item allows access to already configured EtherCAT domain data in a flexible
+#-d   way by defining a start entry, byte and bit offset, and data type. Basically, it is a pointer directly into the process image.
 #-d   \author Anders Sandström
 #-d   \file
 #-d   \param STRT_ENTRY_S_ID :  (optional) start entry bus position, defaults to "ECMC_EC_SLAVE_NUM"
@@ -26,9 +26,9 @@
 #-d                                     S64: Signed 64-bit
 #-d                                     F32: Real 32-bit
 #-d                                     F64: Double 64-bit
-#-d   \param NAME            :  Name  of this data item (to be used for adressing and also suffix of PV name)
+#-d   \param NAME            :  Name of this data item (to be used for addressing and as suffix of PV name)
 #-d   \param P_SCRIPT        :  (optional) naming convention prefix script
-#-d   \param REC_FIELDS      :  (optional) Additional fileds for record
+#-d   \param REC_FIELDS      :  (optional) Additional fields for record
 #-d   \param REC_TYPE        :  (optional) AO,AI,BI,BO,LONGIN,LONGOUT,
 #-d                                        MBBI,MBBO,MBBIDIRECT,MBBODIRECT (default AI or AO depending on RW)
 #-d   \param INIT_VAL        :  (optional) Value of data item

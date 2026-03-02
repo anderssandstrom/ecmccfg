@@ -15,7 +15,7 @@ else
 text="$(/opt/etherlab/bin/ethercat slaves -m $MID | tr -d '\0')"
 fi
 
-# Comamnd to read ethercat slaves
+# Command to read EtherCAT slaves
 caput -S ${PREFIX}m${MID}-EcTool-Msg "$text" > /dev/null 2>&1
 
 echo "Read done"

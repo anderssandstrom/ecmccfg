@@ -18,7 +18,7 @@ epicsEnvSet("DEV",      "$(IOC)")
 ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}loadYamlAxis.cmd, "FILE=./cfg/phys_openloop_steps.yaml"
 
 ##############################################################################
-## AXIS 2: Virtaul axis in degrees BISS encoder
+## AXIS 2: Virtual axis in degrees BISS encoder
 #
 epicsEnvSet("DEV",      "$(IOC)")
 ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}loadYamlAxis.cmd, "FILE=./cfg/virt_biss.yaml"

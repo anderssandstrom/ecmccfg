@@ -32,5 +32,5 @@ ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}loadYamlAxis.cmd,     "FILE=cfg/ax11_YAW.yaml"
 #- load the kinematics
 ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}loadPLCFile.cmd, "FILE=cfg/main.plc,PLC_ID=1,INC=.:${ecmc_master_slave_DIR},PLC_MACROS='PLC_ID=1,AX_Y1=1,AX_Y2=2,AX_Y3=3,AX_X1=4,AX_X2=5,AX_TRX=7,AX_TRY=8,AX_PITCH=9,AX_ROLL=10,AX_YAW=11'"
 
-#- Add state machine to sync the virtual and physical axes (teh groups are defined in the yaml axis-cfg files) 
+#- Add state machine to sync the virtual and physical axes (the groups are defined in the yaml axis-cfg files) 
 ${SCRIPTEXEC} ${ecmccfg_DIR}addMasterSlaveSM.cmd "NAME=Slit_SM, MST_GRP_NAME=VFM_VIRT, SLV_GRP_NAME=VFM_REAL"

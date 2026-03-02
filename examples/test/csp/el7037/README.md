@@ -9,9 +9,9 @@ Note 3: Homing still not working.
 Note 4: Next step should be to test with EL7201 series (since "real" CSP)
 
 ## Nice to know (WIP)
-1. Important to use the 32 bit encoder since position setpoint is also 32 bit 
+1. Important to use the 32 bit encoder since position setpoint is also 32 bit
 2. Seems there could be a need to reset the encoder before start (the reset encooder bit and value a re linked in TC), eventhough ecmc is already offsettinng the value
-3. 
+3.
 
 ## Possible solution
 Since the control works fine when enabling at position 0. A workareound would be to zero the encoder for each enable. This is probably how it's solved in TwinCAT since the reset bit and value is lin ked to NC.

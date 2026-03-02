@@ -1,8 +1,8 @@
-+++  
-title = "startup.cmd"   
++++
+title = "startup.cmd"
 weight = 11
-chapter = false  
-+++  
+chapter = false
++++
 
 ## startup.cmd
 startup.cmd takes the following arguments:
@@ -22,8 +22,8 @@ startup.cmd takes the following arguments:
     NO_MR: Init ecmc with support for motion (without motor record) and DAQ
  PVA               = YES / NO
  TMP_DIR           = directory for temporary files
- ENG_MODE          = 1/0. If ENG_MODE is set then PVs used for commissioning will be avaialble
- EC_TOOL_PATH      = Path to ethercat tool defaults to ethercat tool in ECmasterECMC_DIR, 
+ ENG_MODE          = 1/0. If ENG_MODE is set then PVs used for commissioning will be available
+ EC_TOOL_PATH      = Path to ethercat tool defaults to ethercat tool in ECmasterECMC_DIR,
  otherwise            "/opt/etherlab/bin/ethercat"
  MAX_PARAM_COUNT   = Maximum asyn param count, defaults to 1500
 
@@ -49,6 +49,5 @@ require ecmccfg "ENG_MODE=1,MASTER_ID=2"
 ```
 
 ## iocsh startup
-ecmc needs to be started with root priviledges (or with a user in realtime group), without ecmc might segfault.
-
+ecmc needs to be started with root privileges (or with a user in the realtime group), otherwise ecmc might segfault.
 

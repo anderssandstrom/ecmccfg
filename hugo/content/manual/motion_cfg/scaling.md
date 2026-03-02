@@ -1,7 +1,7 @@
-+++  
++++
 title = "scaling"
-weight = 20
-chapter = false  
+weight = 19
+chapter = false
 +++
 
 By popular demand, the topic scaling will be discusses in closer detail.

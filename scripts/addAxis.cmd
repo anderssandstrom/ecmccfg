@@ -4,7 +4,7 @@
 
 #-d /**
 #-d   \brief Script for adding axis EPICS PVs.
-#-d   \details Adds an motion axis.
+#-d   \details Adds a motion axis.
 #-d   \author Niko Kivel
 #-d   \file
 #-d */

@@ -1,7 +1,7 @@
-+++  
++++
 title = "servo motor (Ex72xx)"
 weight = 20
-chapter = false  
+chapter = false
 +++
 
 ## setup
@@ -71,5 +71,5 @@ However, the configuration for feeding switches (axis.feedSwitchesOutput) have b
 ```
 axis:
   id: ${AX_ID=1}
-  feedSwitchesOutput: ec0.s$(BO_ID).binaryOutput01.0 # Ethercat entry for feed switches
+  feedSwitchesOutput: ec0.s$(BO_ID).binaryOutput01.0 # EtherCAT entry for feed switches
 ```

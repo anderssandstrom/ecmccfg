@@ -1,4 +1,4 @@
-# Best practise for ecmc
+# Best practice for ecmc
 
 ## Motion
 
@@ -18,6 +18,5 @@
 ## PLC
 * Macros
 * include, substitute
-
 
 

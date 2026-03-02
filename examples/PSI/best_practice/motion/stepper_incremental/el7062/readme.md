@@ -31,7 +31,7 @@ In order to enable a homing sequence a few bits in the control word needs to be 
 The control word is mapped as:
 ```
 c6025a-08:m0s003-Tp01-Cmd
-c6025a-08:m0s003-Tp02-Cmd 
+c6025a-08:m0s003-Tp02-Cmd
 ```
 Make the settings like below to be able to latch a value on positive edge:
 |bit| ch  | name | desc| value|
@@ -63,7 +63,7 @@ encoder:
   type: 0                                              # Type: 0=Incremental, 1=Absolute
   bits: 32                                             # Total bit count of encoder raw data
   absBits: 0                                           # Absolute bit count (for absolute encoders) always least significant part of 'bits'
-  position: ec0.s$(ENC_SID).positionActual${ENC_CH=01}_2 # Ethercat entry for actual position input (encoder)
+  position: ec0.s$(ENC_SID).positionActual${ENC_CH=01}_2 # EtherCAT entry for actual position input (encoder)
   status: ec0.s$(ENC_SID).touchProbeStatus${ENC_CH=01}         # mandatory only if 'warning' or 'error' are used
   control: ec0.s$(ENC_SID).touchProbeControl${ENC_CH=01}
   primary: True
@@ -85,7 +85,7 @@ encoder:
 ```
 
 # New functionality in ecmc needed
-Need to be able write a value at a certain bit-offset location in teh control word.
+Need to be able to write a value at a certain bit-offset location in the control word.
 
 ```
    encoder:

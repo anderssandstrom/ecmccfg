@@ -11,7 +11,7 @@ var FWD3[5] := {   -2,      0,     2,      0,      0};
 var FWD4[5] := {    2,     -4,     2,      0,      0};
 var FWD5[5] := {    0,      0,     0,     -2,      2};
 
-/* Inverse kinematics to calculate real axes from virtal axes
+/* Inverse kinematics to calculate real axes from virtual axes
    | Y1 |         | Tx    |
    | Y2 |         | Ty    |
    | Y3 | = INV * | Pitch |

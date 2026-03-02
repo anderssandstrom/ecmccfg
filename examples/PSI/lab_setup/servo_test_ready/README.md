@@ -23,10 +23,10 @@ However, when connecting to an Ex72xx drive the single turn count will be 20bits
 * encoder.denominator: Resolution: 1048576 counts (20bits) per = 1mm
 * encoder.absBits: 32 bits (20bits+12bits)
 * encoder.type: Absolute (type 1)
-* ecnoder.absOffset: Offset to 0 position of linear stage (-1000 in this example)
+* encoder.absOffset: Offset to 0 position of linear stage (-1000 in this example)
 
 ```
-# The encoder on most motors are 20bit single turn and 12 bit multiturn (4096 turns)
+# The encoder on most motors is 20-bit single-turn and 12-bit multi-turn (4096 turns)
 encoder:
   type: 1
   position: ec0.s$(DRV_ID).positionActual01
@@ -64,5 +64,5 @@ However, the configuration for feeding switches (axis.feedSwitchesOutput) have b
 ```
 axis:
   id: ${AX_ID=1}
-  feedSwitchesOutput: ec0.s$(BO_ID).binaryOutput01.0 # Ethercat entry for feed switches
+  feedSwitchesOutput: ec0.s$(BO_ID).binaryOutput01.0 # EtherCAT entry for feed switches
 ```

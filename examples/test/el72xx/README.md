@@ -47,7 +47,7 @@ The inputs might also be accessible in the touchProbe entries.
 
 ## trying to enable but nothing happends (eventually goes into error state with DS402 timeout)
 
-### HWE, STO 
+### HWE, STO
 * Make sure the drive STO and/or HWE inputs are wired with 24V signals.
 * Check E-Stop or safty circuits
 
@@ -56,7 +56,7 @@ Make sure the EL72XX have dc power, both for motor and 24v logic (the power cont
 If 24V logic voltage is missing the terminal will look OK (no red leds) and No error seems to be possible to detect over ethercat. However, an enable command will result in a DS402 timeout after some seconds. In order to ensure that the motor have 24V dc, it needs to be placed beside a terminal that feeds it with this voltage (some terminals do not feed power in the side contacts, then a el9410 can be installed).
 
 # Tuning velo and current loop
-Normally teh default settings are fine but sometimes they need some tweaking.
+Normally the default settings are fine but sometimes they need some tweaking.
 
 ## Case  X01DA-CPCL-OPSL1
 Drive: EL7221-9014_ALL

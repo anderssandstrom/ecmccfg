@@ -1,8 +1,8 @@
-+++  
-title = "homing"   
-weight = 25
-chapter = false  
-+++  
++++
+title = "homing"
+weight = 21
+chapter = false
++++
 
 # homing
 
@@ -36,77 +36,77 @@ Not a valid homing sequence, can be used if encoder is absolute.
 1. Axis moves backward until low limit switch and stops
 2. Axis moves forward until edge detected in limit switch signal. Position is latched.
 3. Axis stops
-4. Homing is performed. ECMC_HOME_POS will be the new position at the position latched in step 2. 
+4. Homing is performed. ECMC_HOME_POS will be the new position at the position latched in step 2.
 
 ### ECMC_SEQ_HOME_HIGH_LIM                 = 2,
 1. Axis moves forward until high limit switch and stops
 2. Axis moves backward until edge detected in limit switch signal. Position is latched.
 3. Axis stops
-4. Homing is performed. ECMC_HOME_POS will be the new position at the position latched in step 2. 
+4. Homing is performed. ECMC_HOME_POS will be the new position at the position latched in step 2.
 
 ### ECMC_SEQ_HOME_LOW_LIM_HOME             = 3,
 1. Axis moves backward until low limit switch and stops
 2. Axis moves forward until edge detected in home switch signal. Position is latched.
 3. Axis stops
-4. Homing is performed. ECMC_HOME_POS will be the new position at the position latched in step 2. 
+4. Homing is performed. ECMC_HOME_POS will be the new position at the position latched in step 2.
 
 ### ECMC_SEQ_HOME_HIGH_LIM_HOME            = 4,
 1. Axis moves forward until high limit switch and stops
 2. Axis moves backward until edge detected in home switch signal. Position is latched.
 3. Axis stops
-4. Homing is performed. ECMC_HOME_POS will be the new position at the position latched in step 2. 
+4. Homing is performed. ECMC_HOME_POS will be the new position at the position latched in step 2.
 
 ### ECMC_SEQ_HOME_LOW_LIM_HOME_HOME        = 5,
 1. Axis moves backward until low limit switch and stops
 2. Axis moves forward until edge detected in home switch signal. Position is latched.
 3. Axis continues until second edge of home sensor. Motion is stopped.
 4. Axis moves backward until edge of home sensor. Position is latched.
-5. Homing is performed. ECMC_HOME_POS will be the new position at the center point of the two latched positions in step 2 and 4. 
+5. Homing is performed. ECMC_HOME_POS will be the new position at the center point of the two latched positions in step 2 and 4.
 
 ### ECMC_SEQ_HOME_HIGH_LIM_HOME_HOME       = 6,
 1. Axis moves forward until low limit switch and stops
 2. Axis moves backward until edge detected in home switch signal. Position is latched.
 3. Axis continues until second edge of home sensor. Motion is stopped.
 4. Axis moves forward until edge of home sensor. Position is latched.
-5. Homing is performed. ECMC_HOME_POS will be the new position at the center point of the two latched positions in step 2 and 4. 
+5. Homing is performed. ECMC_HOME_POS will be the new position at the center point of the two latched positions in step 2 and 4.
 
 ### ECMC_SEQ_HOME_BWD_HOME                 = 7,
 1. Axis moves backward until positive edge detected in home switch signal. Position is latched. (polarity of home sensor can be changed)
 2. Axis stops
-3. Homing is performed. ECMC_HOME_POS will be the new position at the position latched in step 1. 
+3. Homing is performed. ECMC_HOME_POS will be the new position at the position latched in step 1.
 
 ### ECMC_SEQ_HOME_FWD_HOME                 = 8,
 1. Axis moves forward until positive edge detected in home switch signal. Position is latched. (polarity of home sensor can be changed)
 2. Axis stops
-3. Homing is performed. ECMC_HOME_POS will be the new position at the position latched in step 1. 
+3. Homing is performed. ECMC_HOME_POS will be the new position at the position latched in step 1.
 
 ### ECMC_SEQ_HOME_BWD_HOME_HOME            = 9,
 1. Axis moves backward until positive edge detected in limit switch signal. Position is latched. (polarity of home sensor can be changed)
 2. Axis continues to move until a negative edge of the home sensor is detected. Axis stops.
 3. Axis moves forward until positive edge detected in limit switch signal. Position is latched. (polarity of home sensor can be changed)
-4. Homing is performed. ECMC_HOME_POS will be the new position at the center point of the two latched positions in step 2 and 4. 
+4. Homing is performed. ECMC_HOME_POS will be the new position at the center point of the two latched positions in step 2 and 4.
 
 ### ECMC_SEQ_HOME_FWD_HOME_HOME            = 10,
 1. Axis moves forward until positive edge detected in limit switch signal. Position is latched. (polarity of home sensor can be changed)
 2. Axis continues to move until a negative edge of the home sensor is detected. Axis stops.
 3. Axis moves backward until positive edge detected in limit switch signal. Position is latched. (polarity of home sensor can be changed)
-4. Homing is performed. ECMC_HOME_POS will be the new position at the center point of the two latched positions in step 2 and 4. 
+4. Homing is performed. ECMC_HOME_POS will be the new position at the center point of the two latched positions in step 2 and 4.
 
 ### ECMC_SEQ_HOME_LOW_LIM_INDEX            = 11,
 1. Axis moves backward until low limit switch and stops
 2. Axis moves forward until the predefined index signals (ECMC_HOME_LATCH_COUNT_OFFSET)from the encoder is encountered. Position is latched at the desired index position.
 3. Axis stops
-4. Homing is performed. ECMC_HOME_POS will be the new position at the position latched in step 2. 
+4. Homing is performed. ECMC_HOME_POS will be the new position at the position latched in step 2.
 
 Some additional parameters need to be defined for this homing sequence should work (Example for el5101 ):
 ```
-epicsEnvSet("ECMC_EC_ENC_LATCHPOS",       "ec0.s3.encoderLatchPostion01")     # Ethercat entry for latch position (only valid for home seq 11,12)
-epicsEnvSet("ECMC_EC_ENC_LATCH_CONTROL",  "ec0.s3.encoderControl01.0")        # Ethercat entry for latch control (only valid for home seq 11,12)
-epicsEnvSet("ECMC_EC_ENC_LATCH_STATUS",   "ec0.s3.encoderStatus01.0")         # Ethercat entry for latch status (only valid for home seq 11,12)
+epicsEnvSet("ECMC_EC_ENC_LATCHPOS",       "ec0.s3.encoderLatchPostion01")     # EtherCAT entry for latch position (only valid for home seq 11,12)
+epicsEnvSet("ECMC_EC_ENC_LATCH_CONTROL",  "ec0.s3.encoderControl01.0")        # EtherCAT entry for latch control (only valid for home seq 11,12)
+epicsEnvSet("ECMC_EC_ENC_LATCH_STATUS",   "ec0.s3.encoderStatus01.0")         # EtherCAT entry for latch status (only valid for home seq 11,12)
 epicsEnvSet("ECMC_HOME_LATCH_COUNT_OFFSET","2")                               # Number of latch/over/under-flow for home (home seq 11,12,21,22)
 ```
 
-yaml-based EL51xx:
+YAML-based EL51xx:
 ```
 encoder:
   position: ec$(MASTER_ID).s$(ENC_SID).positionActual$(ENC_CHAN)
@@ -129,24 +129,24 @@ encoder:
 
 **Background to the cfgs (control and status word for latching)**
 * bit 0 of control word is: 0x7000:01 - Enable latch on index
-* bit 0 of status word is: 0x6000:01 - Latch occurred 
+* bit 0 of status word is: 0x6000:01 - Latch occurred
 
 
 ### ECMC_SEQ_HOME_HIGH_LIM_INDEX            = 12,
 1. Axis moves forward until high limit switch and stops
 2. Axis moves backward until the predefined index signals (ECMC_HOME_LATCH_COUNT_OFFSET) from the encoder is encountered. Position is latched at the desired index position.
 3. Axis stops
-4. Homing is performed. ECMC_HOME_POS will be the new position at the position latched in step 2. 
+4. Homing is performed. ECMC_HOME_POS will be the new position at the position latched in step 2.
 
 Some additional parameters need to be defined for this homing sequence should work (Example for el5101 ):
 ```
-epicsEnvSet("ECMC_EC_ENC_LATCHPOS",       "ec0.s3.encoderLatchPostion01")     # Ethercat entry for latch position (only valid for home seq 11,12)
-epicsEnvSet("ECMC_EC_ENC_LATCH_CONTROL",  "ec0.s3.encoderControl01.0")        # Ethercat entry for latch control (only valid for home seq 11,12)
-epicsEnvSet("ECMC_EC_ENC_LATCH_STATUS",   "ec0.s3.encoderStatus01.0")         # Ethercat entry for latch status (only valid for home seq 11,12)
+epicsEnvSet("ECMC_EC_ENC_LATCHPOS",       "ec0.s3.encoderLatchPostion01")     # EtherCAT entry for latch position (only valid for home seq 11,12)
+epicsEnvSet("ECMC_EC_ENC_LATCH_CONTROL",  "ec0.s3.encoderControl01.0")        # EtherCAT entry for latch control (only valid for home seq 11,12)
+epicsEnvSet("ECMC_EC_ENC_LATCH_STATUS",   "ec0.s3.encoderStatus01.0")         # EtherCAT entry for latch status (only valid for home seq 11,12)
 epicsEnvSet("ECMC_HOME_LATCH_COUNT_OFFSET","2")                               # Number of latch/over/under-flow for home (home seq 11,12,21,22)
 ```
 
-yaml-based EL51xx:
+YAML-based EL51xx:
 ```
 encoder:
   position: ec$(MASTER_ID).s$(ENC_SID).positionActual$(ENC_CHAN)
@@ -169,11 +169,11 @@ encoder:
 
 **Background to the cfgs (control and status word for latching)**
 * bit 0 of control word is: 0x7000:01 - Enable latch on index
-* bit 0 of status word is: 0x6000:01 - Latch occurred 
+* bit 0 of status word is: 0x6000:01 - Latch occurred
 
 
 ### ECMC_SEQ_HOME_SET_POS                  = 15, (setPosition)
-Sequence 15 is reserved for save/restore functionality.  
+Sequence 15 is reserved for save/restore functionality.
 Use ECMC_SEQ_HOME_SET_POS_2 instead (same but not blocked by motor record).
 
 However the sequence 15 can be triggered like the following:
@@ -192,7 +192,7 @@ caput IOC_TEST:Axis1.SET 0
 ### ECMC_SEQ_HOME_LOW_LIM_SINGLE_TURN_ABS  = 21,
 Intended use for resolvers (single turn absolute). Similar to seq 11 and 12.
 1. Axis moves backward until low limit switch and stops
-2. Axis moves forward until limit switch change state 
+2. Axis moves forward until limit switch change state
 3. Axis stops
 4. Homing is performed. The multi-turn bits will be homed to the value of ECMC_HOME_POS also considering an offset of turns defined in ECMC_HOME_LATCH_COUNT_OFFSET.
 
@@ -205,7 +205,7 @@ epicsEnvSet("ECMC_HOME_LATCH_COUNT_OFFSET","2")                       # Number o
 
 ### ECMC_SEQ_HOME_HIGH_LIM_SINGLE_TURN_ABS = 22,
 1. Axis moves forward until high limit switch and stops
-2. Axis moves backward until limit switch change state 
+2. Axis moves backward until limit switch change state
 3. Axis stops
 4. Homing is performed. The multi turn bits will be homed to the value of ECMC_HOME_POS also considering an offset of turns defined in ECMC_HOME_LATCH_COUNT_OFFSET.
 
@@ -222,7 +222,7 @@ epicsEnvSet("ECMC_HOME_LATCH_COUNT_OFFSET","2")                       # Number o
 Sequence 25 is the same as 15 but not blocked by motor record. The sequence will just set a new position of the encoder without any movement.
 
 ### ECMC_SEQ_HOME_TRIGG_EXTERN               = 26
-Trigger external homing sequence in drive. 
+Trigger external homing sequence in drive.
 1. Optional: set drive mode to homing (and wait for mode read-back)
 3. Set trigger of homing (bit)
 4. Wait for homing ready (bit). Reference the ecmc encoder object on rising edge of the homing ready bit
@@ -247,7 +247,7 @@ For some of the sequences it could be useful to change the polarity of the home 
 **ALWAYS** adjust the absolute encoder so that no overflows occur within the motion range if possible.
 However, for some situations it might be hard to adjust the encoder and then a special homing needs to be performed. No dedicated homing seq exists for this in ecmc but it can be handled in plc code (needs ecmc 9.6.2).
 
-Example: 
+Example:
 ```
 /*
   PLC code to home an axis with an absolute encoder which has ONE overflow in the range
@@ -263,7 +263,7 @@ Example:
     DBG       : Printout debug messages set to empty (DBG='')
 */
 
-if(${SELF}.firstscan) {  
+if(${SELF}.firstscan) {
   var plc:=${SELF_ID};
   ${DBG=#}println('PLC ',plc,' Initiating homing seq for abs. encoder with overflow');
 };

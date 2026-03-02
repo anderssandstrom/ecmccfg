@@ -9,7 +9,7 @@
 #-d   \file
 #-d   \param FILE PLC definition file, i.e. ./plc/homeSlit.plc
 #-d   \param PLC_ID (optional) PLC number, default 0, or to next free PLC, the actual PLC Id is stored in ECMC_PLC_ID and can be used after this command
-#-d   \param SAMPLE_RATE_MS (optional) excecution rate, default 1000/EC_RATE
+#-d   \param SAMPLE_RATE_MS (optional) execution rate, default 1000/EC_RATE
 #-d   \param PLC_MACROS (optional) Substitution macros for PLC code. The macros "SELF_ID","SELF",M_ID, and M are reserved:
 #-d          * "SELF_ID" = PLC Id of this plc
 #-d          * "SELF"    = "plc${SELF_ID}"
@@ -18,7 +18,7 @@
 #-d   \param TMP_PATH (optional) directory to dump the temporary plc file after macro substitution
 #-d   \param PRINT_PLC_FILE (optional) 1/0, printout msi parsed plc file (default enable(1)).
 #-d   \param SUBST_FILE (optional) custom substitution file otherwise ecmccfg default will be loaded
-#-d   \param INC (optional) List of directories for include files to pass to MSI (if several paths thendivide with ':').
+#-d   \param INC (optional) List of directories for include files to pass to MSI (if several paths then divide with ':').
 #-d   \param DESC (optional) Description of PLC
 #-d   \note Example call:
 #-d   \code

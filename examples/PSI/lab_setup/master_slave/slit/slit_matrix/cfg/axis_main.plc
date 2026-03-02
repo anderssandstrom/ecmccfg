@@ -10,7 +10,7 @@
 var FWD1[2] := {0.5, 0.5};
 var FWD2[2] := { -1,  1 };
 
-/* Inverse kinematics to calculate real axes from virtal axes
+/* Inverse kinematics to calculate real axes from virtual axes
    | S1_LO    |  = INV *   | CEN |
    | S2_HI    |            | GAP |
 

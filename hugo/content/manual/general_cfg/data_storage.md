@@ -1,8 +1,8 @@
-+++  
-title = "data storage buffer"   
-weight = 16
-chapter = false  
-+++  
++++
+title = "data storage buffer"
+weight = 13
+chapter = false
++++
 
 ## data storage examples
 This dir contains two examples: [here](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/test/dataStorage).
@@ -17,7 +17,7 @@ Custom scale and offset can be applied to the stored values by MACROS (to the pl
 
 In this example the data stored in dataStorage 0 is pushed to epics at a falling edge of the axis 1 high limit.
 
-Example 1 is started with the following startup file: "add_data_to_buffer_trigg_push_hw.script" 
+Example 1 is started with the following startup file: "add_data_to_buffer_trigg_push_hw.script"
 
 ```
 iocsh.bash add_data_to_buffer_trigg_push_hw.script
@@ -43,7 +43,7 @@ ds_append_data(${DS_ID},ec0.s${ENC_S_ID}.positionActual01*${SCALE=1}+${OFFSET=0}
 
 # Trigger push of data on falling edge of limit switch
 if(static.highlimOld and not(ax1.mon.highlim)) {
-  ${DBG=#}println('Pushing data to EPICS....'); 
+  ${DBG=#}println('Pushing data to EPICS....');
   ds_push_asyn(${DS_ID});
 };
 
@@ -55,7 +55,7 @@ static.highlimOld:=ax1.mon.highlim;
 
 In this example the data stored in dataStorage 0 is pushed to epics at a rising edge of the "IOC_TEST:Set-PushDataTrigger-RB" pv.
 
-Example 2 is started with the following startup file: "add_data_to_buffer_trigg_push_hw.script" 
+Example 2 is started with the following startup file: "add_data_to_buffer_trigg_push_hw.script"
 ```
 iocsh.bash add_data_to_buffer_trigg_push_epics.script
 ```
@@ -63,12 +63,12 @@ iocsh.bash add_data_to_buffer_trigg_push_epics.script
 Trigger writes to epics by:
 ```
 raspberrypi-16970 > dbpf IOC_TEST:Set-PushDataTrigger-RB 1
-DBF_STRING:         "One"     
+DBF_STRING:         "One"
 raspberrypi-16970 > Pushing data to EPICS....
 dbpf IOC_TEST:Set-PushDataTrigger-RB 0
-DBF_STRING:         "Zero"    
+DBF_STRING:         "Zero"
 raspberrypi-16970 > dbpf IOC_TEST:Set-PushDataTrigger-RB 1
-DBF_STRING:         "One"     
+DBF_STRING:         "One"
 raspberrypi-16970 > Pushing data to EPICS....
 ```
 
@@ -91,7 +91,7 @@ ds_append_data(${DS_ID},ec0.s${ENC_S_ID}.positionActual01*${SCALE=1}+${OFFSET=0}
 
 # Trigger push of data on rising edge of trigger
 if(static.trigg and not(static.triggOld)) {
-  ${DBG=#}println('Pushing data to EPICS....'); 
+  ${DBG=#}println('Pushing data to EPICS....');
   ds_push_asyn(${DS_ID});
 };
 

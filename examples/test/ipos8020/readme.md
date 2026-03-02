@@ -28,7 +28,7 @@ Example of scaling of encoder for unit motor deg:
 
 ```
 epicsEnvSet("ECMC_ENC_SCALE_NUM"          "360")    # One rev is 360deg
-epicsEnvSet("ECMC_ENC_SCALE_DENOM"        "51200")  # Open loop counter scaled in micro steps (256levels per fullstep, 256*200=51200 counts/rev)  
+epicsEnvSet("ECMC_ENC_SCALE_DENOM"        "51200")  # Open loop counter scaled in micro steps (256levels per fullstep, 256*200=51200 counts/rev)
 ```
 
 Example of scaling of drive for unit motor deg:
@@ -51,7 +51,7 @@ Example of scaling of drive for unit mm (10mm/rev):
 
 ```
 epicsEnvSet("ECMC_DRV_SCALE_NUM"          "1")
-epicsEnvSet("ECMC_DRV_SCALE_DENOM"        "335544.3")   # 9320.7*360/10=335544.3 (335544.3 raw velocity setpoint to the drive corresponds to 1mm/s)  
+epicsEnvSet("ECMC_DRV_SCALE_DENOM"        "335544.3")   # 9320.7*360/10=335544.3 (335544.3 raw velocity setpoint to the drive corresponds to 1mm/s)
 ```
 
 ## Closed loop
@@ -64,7 +64,7 @@ Example of scaling of encoder for unit motor deg:
 
 ```
 epicsEnvSet("ECMC_ENC_SCALE_NUM"          "-360")     # 360deg/rev (- sign just because the combination of resolver and EL7201 have different positive direction than IPOS8020)
-epicsEnvSet("ECMC_ENC_SCALE_DENOM"        "1048576")  # Single turn resolution of EL7201 (2^20) 
+epicsEnvSet("ECMC_ENC_SCALE_DENOM"        "1048576")  # Single turn resolution of EL7201 (2^20)
 ```
 
 Example of scaling of drive for unit motor deg:
@@ -80,14 +80,14 @@ Example of scaling of encoder for unit mm (10mm/rev):
 
 ```
 epicsEnvSet("ECMC_ENC_SCALE_NUM"          "-10")     # 10mm/rev (- sign just because the combination of resolver and EL7201 have different positive direction than IPOS8020)
-epicsEnvSet("ECMC_ENC_SCALE_DENOM"        "1048576")  # Single turn resolution of EL7201 (2^20) 
+epicsEnvSet("ECMC_ENC_SCALE_DENOM"        "1048576")  # Single turn resolution of EL7201 (2^20)
 ```
 
 Example of scaling of drive for unit mm (10mm/rev):
 
 ```
 epicsEnvSet("ECMC_DRV_SCALE_NUM"          "1")
-epicsEnvSet("ECMC_DRV_SCALE_DENOM"        "335544.3")   # 9320.7*360/10=335544.3 (335544.3 raw velocity setpoint to the drive corresponds to 1mm/s)  
+epicsEnvSet("ECMC_DRV_SCALE_DENOM"        "335544.3")   # 9320.7*360/10=335544.3 (335544.3 raw velocity setpoint to the drive corresponds to 1mm/s)
 
 ```
 
@@ -100,7 +100,7 @@ Same encoder scaling as in ecmc in can be used
 
 The iPOS8020 is a ds402 drive which means that the velocity scaling factor should be used (and not reference velocity).
 
-The TwinCAT NC is setup for the AX2000 as a reference. Even if you know the scalings of the drive velocity setpoint it's hard to deduce the twicat NC velocity scaling factor since this drive needs to be compared to AX2000. This makes it hard to find the correct velocity scaling factor. 
+The TwinCAT NC is setup for the AX2000 as a reference. Even if you know the scalings of the drive velocity setpoint it's hard to deduce the TwinCAT NC velocity scaling factor since this drive needs to be compared to AX2000. This makes it hard to find the correct velocity scaling factor.
 Also the velocity scaling is wheighted with the encoder scaling denominator (or encoder mask).  The ecmc velocity scaling factor can NOT be used.
 
 By trail and error some settings that works for open and closed loop have been identified.

@@ -4,7 +4,7 @@ Ioc:s can be executed without configured EtherCAT hardware. The example in this 
 Since the realtime loop is started, ecmc PLC:s can be used to generate data or trigger records in EPICS.
 
 ## Configuration
-Assigning the ethercat MASTER_ID to a value less than 0 will result in that the ethercat master will not be claimed. 
+Assigning the ethercat MASTER_ID to a value less than 0 will result in that the ethercat master will not be claimed.
 Since "require" differs slightly between ESS and PSI the syntax is slightly different:
 
 ```

@@ -10,10 +10,10 @@ For test purpose the HW-enable can be wired to the Fan out terminal on the EL741
 ## Maxon motor Encoder combo 312315 used for test
 MAXON EC-40 MAX 311733 2239929 312315 2307522
 BLDC motor with incremental encoder and hall sensors.
-Hard to know what components based on those numbers. 
+Hard to know what components based on those numbers.
 Some searching resulted in that 312315 is a combination numer for these components:
 
-## Motor 
+## Motor
 * EC-Max 40 brushless 120W with hallsensors
 * Motor Partnumber 283870
 * Nominal torque: 170mNm

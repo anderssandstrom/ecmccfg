@@ -1,7 +1,7 @@
-+++  
++++
 title = "Drive modes CSV, CSP, CSP-PC"
-weight = 21
-chapter = false  
+weight = 18
+chapter = false
 +++
 
 There's three different modes that can can be used in ecmc toghether with most drives:
@@ -15,8 +15,8 @@ Other modes also exist, like Cyclic Sync Torque (torque/current setpoint to driv
 
 The control loops are executed at different locations depending on which mode:
 
-|          | Current loop | Velocity loop | Position loop  |Comment| 
-| -------- | ------------ | ------------- |--------------- |-------| 
+|          | Current loop | Velocity loop | Position loop  |Comment|
+| -------- | ------------ | ------------- |--------------- |-------|
 | CSV      | drive        | drive         | ecmc           |       |
 | CSP      | drive        | drive         | drive          | ecmc generates trajectory |
 | CSP-PC   | drive        | drive         | drive and ecmc | dual position loop |
@@ -61,7 +61,7 @@ axis:
 Additionally the system must know which encoder is connected to the drive, which is configured with the "useAsCSPDrvEnc" setting. This encoder is used for the position loop in the drive.
 This could be an any encoder that is available in the drive, example:
 * open loop counter
-* absolute rotary encoder from an EL72xx/AM81xx encoder 
+* absolute rotary encoder from an EL72xx/AM81xx encoder
 * incremental encoder connected to EL7062
 ```
 encoder:
@@ -86,8 +86,8 @@ Tuning of the control loops in the drive is sometimes also needed (depending on 
 #### Hardware support
 
 This is the current supported modes for some common drives used with ecmc:
-|          | CSV        | CSP         | CSP-PC      |Comment| 
-| -------- | ---------- | ------------|------------ |-------| 
+|          | CSV        | CSP         | CSP-PC      |Comment|
+| -------- | ---------- | ------------|------------ |-------|
 | Ex704x   | yes        | no          | no          |       |
 | Ex703x   | yes        | no          | no          ||
 | EL7062   | yes        | yes         | yes         |Firmware bug fix needed for CSV.. |

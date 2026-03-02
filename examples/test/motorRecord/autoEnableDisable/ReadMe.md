@@ -1,17 +1,17 @@
 # Example: Auto enable disable of axis
-# 
+#
 
 In the axis configuration files the parameter "ECMC_AXISCONFIG" string can be used to feed settings separted with ";" to the motor axis:
 
 1. "powerAutoOnOff" : Enable/Disable auto power on/off.
 
-   powerAutoOnOff = 0 : Disable auto power on/off 
+   powerAutoOnOff = 0 : Disable auto power on/off
 
-   powerAutoOnOff = 1 : Enable auto power on/off 
+   powerAutoOnOff = 1 : Enable auto power on/off
 
    powerAutoOnOff = 2 : Enable auto power on/off. Allow to stay enabled if  powerOffDelay < 0.
- 
-2. powerOnDelay : Time in seconds to wait untill driver is enabled (max time between enable cmd and drive actually enabled, can take a several seconds for certain drives)
+
+2. powerOnDelay : Time in seconds to wait until driver is enabled (max time between enable cmd and drive actually enabled, can take a several seconds for certain drives)
 
 3. powerOffDelay : Time in seconds to wait before driver is disabled after completed motion command
 
@@ -37,7 +37,7 @@ ecmcMotorRecordCreateAxis(
                              -bit 0 : AMPLIFIER_ON_FLAG_CREATE_AXIS
                              -bit 1 : AMPLIFIER_ON_FLAG_AUTO_ON
                              -bit 2 : AMPLIFIER_ON_FLAG_USING_CNEN
-    axisOptionsStr     : Optional options strings:                                         : "" 
+    axisOptionsStr     : Optional options strings:                                         : ""
                              -HomProc=        : Set homing sequence type (over-rides/writes def in record/param)
                              -HomPos=         : Set homing position (over-rides/writes def in record/param)
                              -axisFlags=      : Set axisFlags (over-rides/writes axisFlags in this call)

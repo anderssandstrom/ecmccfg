@@ -10,7 +10,9 @@ Bring up an IOC with a single axis using the YAML-based configuration.
 ## Prerequisites
 - `hugo/Readme.md` steps completed (repo cloned, prerequisites installed)
 - Working EtherCAT master and reachable slaves
-- Python 3 with `jinja2` (auto-installed by the axis loader)
+- One YAML parser backend:
+  - `jinja` (default): Python 3 with `jinja2` (auto-installed by the axis loader)
+  - `ecb`: C++ backend (`ECMC_CFG_TOOL=ecb`, see [ecb](../motion_cfg/ecb/))
 
 ## Steps
 1. Load the module version you want:
@@ -38,4 +40,4 @@ Bring up an IOC with a single axis using the YAML-based configuration.
 ## Next steps
 - See [motion cfg](../motion_cfg/) for scaling, direction, and homing
 - See [PLC cfg](../PLC_cfg/) for PLC hooks and synchronization
-- See [troubleshooting](../troubleshooting/) for common startup issues
+- See [troubleshooting](../knowledgebase/troubleshooting/) for common startup issues

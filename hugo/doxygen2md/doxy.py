@@ -107,7 +107,7 @@ class doxyFile:
   def addParam(self, param):
     self.paramsWritten = False
     # parameters are in the form: PARAMETER <DESCRIPTION>
-    p = param.split(" ", 1) # spilt parameter from description
+    p = param.split(" ", 1) # split parameter from description
     if len(p) > 1:
       self.params[p[0]]=p[1]
     else:
@@ -125,8 +125,8 @@ class doxyFile:
   def mdParams(self):
     if len(self.params) == 0:
       return
-    # self.mdFile.new_header(level=3, title='paramters')
-    self.mdFile.new_line("### paramters")
+    # self.mdFile.new_header(level=3, title='parameters')
+    self.mdFile.new_line("### parameters")
     for p,d in self.params.items():
       self.mdFile.new_line("**{}** {}".format(p,d))
     self.mdFile.new_line("***")

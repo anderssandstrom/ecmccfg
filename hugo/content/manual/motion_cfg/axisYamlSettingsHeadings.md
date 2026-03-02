@@ -5,6 +5,11 @@ weight = 17
 chapter = false
 +++
 
+Reference companion to [yaml configuration](../axisyaml/).
+Use this page for grouped headings; use the table view for full flat-key lookup.
+
+See also: [Axis YAML settings table](../axisyaml-table/).
+
 ## axis
 - `id` (required) — Axis id.
 - `type` (optional) — Future selection of axis type; see type mapping in the axis section.

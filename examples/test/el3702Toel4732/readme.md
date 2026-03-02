@@ -1,4 +1,4 @@
-# Example usefull to see ECMC performance
+# Example useful to see ECMC performance
 ## Electrical Connections:
 
 1. Connect signal generator to EL3702
@@ -6,7 +6,7 @@
 
 ## Epics Configs:
 
-1. Read data form EL3702 in 100kHz (oversample factor 100). 
+1. Read data form EL3702 in 100kHz (oversample factor 100).
 2. Push data to EPICS waveform record (input)
 3. Forward data to waveform output record linked to EL4732 analog output terminal
 

@@ -10,7 +10,7 @@ caput "${PREFIX}m${MID}-EcTool-Prgs" 0 > /dev/null 2>&1
 
 text="$(/opt/etherlab/bin/ethercat master | tr -d '\0')"
 
-# Comamnd to read ethercat slaves
+# Command to read EtherCAT master
 caput -S ${PREFIX}m${MID}-EcTool-Msg "$text" > /dev/null 2>&1
 
 echo "Read done"

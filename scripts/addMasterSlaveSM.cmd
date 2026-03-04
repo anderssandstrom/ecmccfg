@@ -10,8 +10,7 @@
 #-d   \param SLV_GRP_NAME : name of slave group (normally physical axes)
 #-d   \param MST_DISABLE (optional) Disable all master axes when they are not busy (will override auto-disable in yaml), default 0 (axis will not disable)
 #-d          when running scans it can be good to allow the master axes to be enabled.   
-#-d   \param SLV_DISABLE (optional) Disable all slave axes when they are not busy (will override auto-disable in yaml), default 1 (axes will disable)
-#-d          Slaves are by default disabled when not busy in order to give control to master axes as soon as possible.
+#-d   \param SLV_DISABLE (optional) Disable all slave axes when they are not busy (will override auto-disable in yaml), default 0 (axes will not disable)
 #-d    To have full control, both SLV_DISABLE and MST_DISABLE can be set to 0, and then the required timeouts can be configured in axis.autoEnable.
 #-d */
 
@@ -19,7 +18,7 @@ epicsEnvSet("ECMC_SM_ID",              "${SM_ID=0}")
 
 ecmcEpicsEnvSetCalc("ECMC_SM_ID_2_CHAR", "${ECMC_SM_ID}","%02d")
 
-ecmcConfigOrDie "Cfg.CreateMasterSlaveSM(${ECMC_SM_ID},${NAME=empty},${MST_GRP_NAME},${SLV_GRP_NAME},${MST_DISABLE=0},${SLV_DISABLE=1})"
+ecmcConfigOrDie "Cfg.CreateMasterSlaveSM(${ECMC_SM_ID},${NAME=empty},${MST_GRP_NAME},${SLV_GRP_NAME},${MST_DISABLE=0},${SLV_DISABLE=0})"
 ecmcFileExist("ecmcSM.db",1,1)
 dbLoadRecords("ecmcSM.db", "P=$(ECMC_PREFIX),ID_2CH=${ECMC_SM_ID_2_CHAR},Index=${ECMC_SM_ID},PORT=${ECMC_ASYN_PORT},T_SMP_MS=${ECMC_EC_SAMPLE_RATE_MS},NAME=${NAME=empty},SLV_NAME=${SLV_GRP_NAME},MST_NAME=${MST_GRP_NAME},PREV_OBJ_ID=${ECMC_PREV_SM_OBJ_ID=-1}")
 

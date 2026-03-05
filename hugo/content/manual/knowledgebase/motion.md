@@ -86,6 +86,7 @@ Possible reasons:
 5. Motion axis in error state. Some errors prevent the axis from being enabled. Check axis error state.
 6. Drive hardware enable input not set high (valid for EL70xx if special cfgs).
 7. Axis object configured with external interlock (`yaml->input.interlock`).
+8. Encoder or drive in error state or not ready. If axis is in startup state (see expert panel). Then these errors blocks axis from going into runtime. If, for instance, one encoder is not ready (could be issue with BISS-C), then motion could be possible with other encoder selected as primary (open loop).
 
 ## force manual motion
 {{% notice warning %}}

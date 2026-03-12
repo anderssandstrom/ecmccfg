@@ -1,7 +1,7 @@
-# Panel 
+# Panel
 ```
-caqtdm -macro "MasterID=0,SlaveID=022,IOC=c6025a-04" ecmcEP1918_0002.ui 
-caqtdm -macro "MasterID=0,SlaveID=023,IOC=c6025a-04" ecmcEP1957_0022.ui 
+caqtdm -macro "MasterID=0,SlaveID=022,IOC=c6025a-04" ecmcEP1918_0002.ui
+caqtdm -macro "MasterID=0,SlaveID=023,IOC=c6025a-04" ecmcEP1957_0022.ui
 ```
 
 # Twinsafe project
@@ -31,7 +31,7 @@ Cycle counter is not working...
 
 ## Log
 ```
-sandst_a@c6025a-04:/ioc/MTEST04-MTN-C6025A/ecmc_twinsafe/iocsh$ sudo iocsh startup.cmd 
+sandst_a@c6025a-04:/ioc/MTEST04-MTN-C6025A/ecmc_twinsafe/iocsh$ sudo iocsh startup.cmd
 /usr/local/epics/base-7.0.8/bin/deb10-x86_64/softIocPVA -D /usr/local/epics/base-7.0.8/dbd/softIocPVA.dbd /tmp/iocsh.startup.4484
 # date="Tue Nov 12 16:42:58 CET 2024"
 # user="root"
@@ -294,9 +294,9 @@ ecmcMotorRecordCreateController(MCU1, MC_CPU1, "64", 200, 1000, "")
 ############# Misc settings:
 # Disable function call trace printouts
 ecmcConfigOrDie "Cfg.SetEnableFuncCallDiag(0)"
-2024/11/12 16:42:58.374 
+2024/11/12 16:42:58.374
 ECMC Initializes.............
-2024/11/12 16:42:58.374 ESS Open Source EtherCAT Motion Control Epics Module2024/11/12 16:42:58.374 
+2024/11/12 16:42:58.374 ESS Open Source EtherCAT Motion Control Epics Module2024/11/12 16:42:58.374
 Mode: Configuration
 SEM object created: 0x7f0ee2c65000.
 OK
@@ -438,7 +438,7 @@ OK
 # FSoE ConnectionID
 ecmcConfigOrDie "Cfg.EcAddEntryDT(22,0x00000002,0x077e4052,1,2,0x1600,0x7040,0x02,U16,fsoe_conn_id_out_01)"
 OK
-# Standard in var 1 and 4 
+# Standard in var 1 and 4
 #ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x17f0,0xf788,0x00,U8,std_vars_out_01)"
 ecmcConfigOrDie "Cfg.EcAddEntryDT(22,0x00000002,0x077e4052,1,2,0x17f0,0x6000,0x01,U8,std_vars_out_01)"
 OK
@@ -537,7 +537,7 @@ OK
 # FSoE ConnectionID
 ecmcConfigOrDie "Cfg.EcAddEntryDT(23,0x00000002,0x07a54052,1,2,0x1600,0x7080,0x02,U16,fsoe_conn_id_out_01)"
 OK
-# Standard in var 1 and 4 
+# Standard in var 1 and 4
 #ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x17f0,0xf788,0x00,U8,std_vars_out_01)"
 ecmcConfigOrDie "Cfg.EcAddEntryDT(23,0x00000002,0x07a54052,1,2,0x17f0,0x6000,0x01,U8,std_vars_out_01)"
 OK
@@ -616,7 +616,7 @@ ecmcEpicsEnvSetCalcTernary(ECMC_EXE_CMD, 1=1,"", "#-"  )
 ########### Parsed PLC file:
 system "cat /tmp/PLC0.plc"
 #
-# Macros:  
+# Macros:
 #  SAF_M : Safety master index (EL1918)
 #  SAF_S : Safety slave index  (EP1957)
 #
@@ -716,9 +716,9 @@ epicsEnvUnset(ECMC_SET_APP_MODE_DONE)
 ## Rev. Date Git: 2024-09-06 16:55:30 +0200
 ############################################################################
 2024/11/12 16:43:02.197 ecmcAsynPortDriver:drvUserCreate: Parameter ec0.s22.fsoe_cycle_counter_01 not found (drvInfo=T_SMP_MS=10/TYPE=asynUInt32Digital/ec0.s22.fsoe_cycle_counter_01?).
-c6025a-04:m0s022-FSoE-CycCntIn01 devAsynUInt32Digital::initCommon drvUserCreate 
+c6025a-04:m0s022-FSoE-CycCntIn01 devAsynUInt32Digital::initCommon drvUserCreate
 2024/11/12 16:43:02.201 ecmcAsynPortDriver:drvUserCreate: Parameter ec0.s23.fsoe_cycle_counter_01 not found (drvInfo=T_SMP_MS=10/TYPE=asynUInt32Digital/ec0.s23.fsoe_cycle_counter_01?).
-c6025a-04:m0s023-FSoE-CycCntIn01 devAsynUInt32Digital::initCommon drvUserCreate 
+c6025a-04:m0s023-FSoE-CycCntIn01 devAsynUInt32Digital::initCommon drvUserCreate
 iocRun: All initialization complete
 epicsEnvSet IOCSH_PS1,"c6025a-04> "
 c6025a-04> pwd

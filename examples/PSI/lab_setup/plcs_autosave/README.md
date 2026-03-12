@@ -61,13 +61,13 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd,    "FILE=./cfg/main.plc, INC=.:./cf
 ```
 The "INC" parameter can contain several directories separated with a ":", making it possible to include PLC files from several locations/modules.
 
-### Example: Toggle a few outputs 
+### Example: Toggle a few outputs
 As a demo usecase let's consider that a few outputs needs to be toggled.
-NOTE: There are simpler ways to write this specifc code but it's used to demo how code can be divided.
+NOTE: There are simpler ways to write this specific code but it's used to demo how code can be divided.
 
 Lets first define some code that toggles a bit (toggle\_output.plc\_inc):
 ```
-# Example of simple include file that toggles an binary output
+# Example of simple include file that toggles a binary output
 ${M}.s${BO_S_ID}.binaryOutput${BO_CH}:=not(${M}.s${BO_S_ID}.binaryOutput${BO_CH});
 ${DBG=#}println('State: ', ${M}.s${BO_S_ID}.binaryOutput${BO_CH});
 
@@ -94,7 +94,7 @@ The resulting code will toggle two different outputs, the state of the last outp
 NOTE: Macros cannot be used in the filename when including a file. Instead the dir should be defined in the INC param when loading the PLC, see above.
 
 ## Printouts
-Adding a DBG macro can be usefull to be able to turn on/off printouts. Typically during commsioning it can be usefull to have many printouts but later when system goes into production, it could be a good idea to turn (some) printouts off.
+Adding a DBG macro can be useful to be able to turn on/off printouts. Typically during commissioning it can be useful to have many printouts but later when system goes into production, it could be a good idea to turn (some) printouts off.
 
 Example of a printout that can be turned on/off (default off)
 ```

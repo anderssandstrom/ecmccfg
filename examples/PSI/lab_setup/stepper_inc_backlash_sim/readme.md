@@ -9,7 +9,7 @@ It's good to have:
 
 If system is not possible to tune then it could be needed to run the system in open loop.
 
-## Motor record backlash compensation 
+## Motor record backlash compensation
 The motor record backlash compensation fields can be used if needed. Basically they ensure that the system approaches always from the same direction by issueing two move commands:
 1. A first move that is longer `target + BDST` or shorter `target - BDST` (depending on which dir to approach from)
 2. An approach command to go to the final taeget position
@@ -18,5 +18,5 @@ The motor record backlash compensation fields can be used if needed. Basically t
 * BVEL: Velocity for approach move
 * BACC: Acceleration for approach move
 
-If the motion axis in an syncronized system then using the motor record backlash field is not a good approach.
+If the motion axis in a synchronized system then using the motor record backlash field is not a good approach.
 

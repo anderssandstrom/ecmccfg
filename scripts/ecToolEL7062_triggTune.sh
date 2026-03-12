@@ -64,7 +64,7 @@ if [[ $ok -eq "0" ]]; then
   exit -1
 fi
  
-# Excute readback
+# Execute readback
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 $DIR/el7062_readBackParams.sh $MID $SID $CID $PREFIX
 

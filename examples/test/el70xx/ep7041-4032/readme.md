@@ -1,5 +1,5 @@
 # Test scripts for EP7041-4032 (stepper with BISS)
-This EP module appears like 2 slaves on the bus, first one drive and second BISS-C: 
+This EP module appears like 2 slaves on the bus, first one drive and second BISS-C:
 ```
 1  0:1  PREOP  +  EP7041-4032 1K. Schrittmotor-Endstufe (50V, 5A)
 2  0:2  PREOP  +  EP7041-0000 1K. BiSS-C Encoder

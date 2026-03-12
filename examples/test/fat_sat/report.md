@@ -181,5 +181,5 @@ A_bwd = 8.881e-05 [mm]
 
 **A = Bi-directional accuracy of an axis [mm]**
 
-**A = 8.881e-05 [mm]** 
+**A = 8.881e-05 [mm]**
 

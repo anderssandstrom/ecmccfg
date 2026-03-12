@@ -7,13 +7,13 @@
 
 # Equipment
 
-## Drive 
+## Drive
 Nanomotion AB5
 
-## Motor 
+## Motor
 P/N = HR2-1-S-3
 
-## Encoder 
+## Encoder
 Jena LIK22-N12-P2
 LIK = Linear incremental
 22 = housing size

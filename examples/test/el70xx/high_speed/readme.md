@@ -14,11 +14,11 @@ El7037 slightly better:
 ### Test with el7041-0052
 * Phytron ZSH 1.57.200.4
 Without inertia or damper stalls at apporx 1400 deg/s
-With damper can to up to very high speeds (tested 130Hz=36800deg/s) without stall so even higher possible. 
+With damper can to up to very high speeds (tested 130Hz=36800deg/s) without stall so even higher possible.
 
 # Test owis stage (with damper?!) EP7047 vs EL7031
 
-EP7047 has better perfromance than EL7031. But EL7047 also has 48V supply.
+EP7047 has better performance than EL7031. But EL7047 also has 48V supply.
 
 Setting the current boosts to 0 improved the perf with el7031
 ```
@@ -28,7 +28,7 @@ ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8011,0x8,0,2)"
 # suggested tuning workflow for EL7041 (from beckhoff)
 
 Note: that some of the default values mentioned in the below text is not correct:
-* nominal voltage should be 48000 
+* nominal voltage should be 48000
 * current integartor 4 (this leads to a default ratio of 1/100 instead of the mentioned 1/40)
 
 ```
@@ -51,17 +51,17 @@ Note: that some of the default values mentioned in the below text is not correct
     This is the inductance of the motor
     Get the value from the motor datasheet, if you don’t know then leave the default value.
 
- 
+
 
     If you are using TwinCAT NC, then set the module to use operating mode Velocity Control.
     If you are not using TwinCAT NC, then set the module to use Position Interface.
     NEVER use Position Control in the drive, the simulated internal position loop of the EL70x1 is…. not good.
 
- 
+
 
     If you are using TwinCAT NC and don’t have any feedback for the stepper from another module, then don’t forget to set Kv=0 to disable the position loop.
 
- 
+
 
     Tuning
     Tuning for a stepper motor is always performed with the motor connected to a load.
@@ -83,6 +83,6 @@ Note: that some of the default values mentioned in the below text is not correct
     But as always, as soon as the motor runs fine with then there’s no need to super duper fine tune and adjust the current loop. You will only end up with a system that works now but stalls in the future as the mechanical parts get worn.
 ```
 ```
-IOC_TEST:m0s010-Drv01-Stat     2023-02-09 09:03:53.342976 100001000101  
+IOC_TEST:m0s010-Drv01-Stat     2023-02-09 09:03:53.342976 100001000101
 ec0.s10.driveStatus01
 ```

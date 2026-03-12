@@ -2,7 +2,7 @@
 
 Two poll-rates (update rates) of motor record can be changed:
 * when idle (not moving)
-* when moving 
+* when moving
 
 ## Poll rate setting when idle
 ```

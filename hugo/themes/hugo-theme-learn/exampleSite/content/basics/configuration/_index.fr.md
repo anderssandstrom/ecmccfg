@@ -16,7 +16,7 @@ Notez que certains de ces paramètres sont expliqués en détails dans d'autres 
   # Pratique pour donner les possibilité à vos utilisateurs de créer une merge request pour votre doc.
   # Allez voir le fichier config.toml de cette documentation pour avoir un exemple.
   editURL = ""
-  # Autheur du site, est utilisé dans les informations meta
+  # Auteur du site, est utilisé dans les informations meta
   author = ""
   # Description du site, est utilisé dans les informations meta
   description = ""
@@ -72,7 +72,6 @@ Les paramètres de configuration du mermaid peuvent également être définis su
 > À la page "Architecture", vous avez besoin d'un diagramme de classe. Vous pouvez régler les paramètres de mermaid localement pour ne charger que la sirène sur cette page (pas sur les autres).
 
 Vous pouvez également désactiver mermaid pour des pages spécifiques tout en l'activant globalement.
-<<<<<<< HEAD
 
 ## Configuration du bouton Accueil
 
@@ -82,13 +81,13 @@ sur le logo. Pour modifier le vous devrez configurer deux paramètres pour les
 langues définies :
 
 ```toml
-[Lanugages]
-[Lanugages.en]
+[Languages]
+[Languages.en]
 ...
 landingPageURL = "/en"
 landingPageName = "<i class='fas fa-home'></i> Redirect to Home"
 ...
-[Lanugages.fr]
+[Languages.fr]
 ...
 landingPageURL = "/fr"
 landingPageName = "<i class='fas fa-home'></i> Accueil"
@@ -96,7 +95,7 @@ landingPageName = "<i class='fas fa-home'></i> Accueil"
 ```
 
 Si ces paramètres ne sont pas configurés pour une langue spécifique, ils
-obtiendront leur valeurs par défaut:
+obtiendront leurs valeurs par défaut:
 
 ```toml
 landingPageURL = "/"
@@ -106,5 +105,3 @@ landingPageName = "<i class='fas fa-home'></i> Home"
 Le bouton d'accueil va ressembler à ceci:
 
 ![Default Home Button](/en/basics/configuration/images/home_button_defaults.jpg?width=100%)
-=======
->>>>>>> 023fe7ef2b4c45fe66ac932d9e25d09f30b74a4e

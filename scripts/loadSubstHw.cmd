@@ -7,7 +7,7 @@
 #-d   \details Loads hw cfg based on subst files and templates
 #-d   \author Anders Sandström
 #-d   \file
-#-d   \param FILE Subsitution file , i.e. ./hw.subs
+#-d   \param FILE Substitution file, i.e. ./hw.subs
 #-d   \code
 #-d     ${SCRIPTEXEC} ${ecmccfg_DIR}loadSubstHw.cmd, "FILE=./hw.subs"
 #-d   \endcode
@@ -21,7 +21,7 @@ ${EXE}ecmcEpicsEnvSetCalcTernary(EXE,"'${ecmccomp_DIR=NAN}'=='NAN'","", "#-")
 ${EXE}ecmcExit Error: ecmccomp module not loaded and not found
 epicsEnvUnset(EXE)
 
-#- Parse subst and template with msi. Parse output to separetae axis files 
+#- Parse subst and template with msi. Parse output to separate axis files
 ecmcFileExist(${ecmccfg_DIR}multiHw.sh,1,1)
 system "${ecmccfg_DIR}multiHw.sh ${FILE} ${ECMC_TMP_DIR} tempHw.cmd"
 system "ls ${ECMC_TMP_DIR}"

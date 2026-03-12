@@ -7,7 +7,7 @@ encoder:
   bits: 26                                    # Total bit count of encoder raw data
   absBits: 26                                 # Absolute bit count (for absolute encoders)
   absOffset: -15615                           # Encoder offset in eng units (for absolute encoders)
-  position: ec0.s$(ENC_SID).positionActual${ENC_CH=01}  # Ethercat entry for actual position input (encoder)
+  position: ec0.s$(ENC_SID).positionActual${ENC_CH=01}  # EtherCAT entry for actual position input (encoder)
   lookuptable:
     filename: ./cfg/enc.corr
     enable: True

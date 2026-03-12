@@ -39,7 +39,7 @@ dbpf IOC_TEST:Axis1-MtnCmdData 3
 ### IOC_TEST:Axis1-TgtPosCmd (Target Position)
 Pv that defines the target position of the next "MOVE_ABS" or "MOVE_REL" command.
 
-Example: Set Target position to 50 
+Example: Set Target position to 50
 ```
 dbpf IOC_TEST:Axis1-TgtPosCmd 50
 ```
@@ -48,7 +48,7 @@ dbpf IOC_TEST:Axis1-TgtPosCmd 50
 Pv that defines the target velocity of the next "MOVE_ABS", "MOVE_REL" or "MOVE_VEL" command.
 The value can be changed while axis is in motion.
 
-Example: Set Target velocity to 10 
+Example: Set Target velocity to 10
 ```
 dbpf IOC_TEST:Axis1-TgtVelCmd 10
 ```
@@ -57,7 +57,7 @@ Note: This velocity is not used for homing sequences.
 ### IOC_TEST:Axis1-EnaCmd (Enable Command)
 Command that will enable/disable the axis (amplifier).
 
-Example: Enable axis 
+Example: Enable axis
 ```
 dbpf IOC_TEST:Axis1-EnaCmd 1
 ```
@@ -69,7 +69,7 @@ A positive edge of exeute bit will start a new motion command based on:
 * MtnCmd  (Motion command)
 * MtnCmdData (Motion command param)
 
-If the axis is busy then a positive edge of execute bit will update target position and 
+If the axis is busy then a positive edge of execute bit will update target position and
 target velocity ("on the fly change"):
 * TgtVelCmd (target velocity)
 * TgtPosCmd (target position)

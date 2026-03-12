@@ -34,8 +34,8 @@ encoder:
   homing:
     type: 26                                          # Homing sequence type (trigger homing seq in drive)
     position: -1000                                   # Position to reference encoder to
-    postMoveEnable: yes                               # Enable move after successfull homing
-    postMovePosition: 1000                            # Position to move to after successfull homing
+    postMoveEnable: yes                               # Enable move after successful homing
+    postMovePosition: 1000                            # Position to move to after successful homing
     trigg: ec0.s${MCS2_SLAVE_NUM}.driveCmdExe0${MCS2_CHID}.0  # Ethercat entry for triggering drive internal homing seq (seq id 26)
     ready: ec0.s${MCS2_SLAVE_NUM}.driveStatus0${MCS2_CHID}.10 # Ethercat entry for reading drive internal homing seq ready (seq id 26)
     refAtHome: 1

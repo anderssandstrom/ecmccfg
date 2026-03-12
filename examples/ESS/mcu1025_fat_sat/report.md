@@ -182,7 +182,7 @@ A_bwd = 0.20476 [mm]
 
 **A = Bi-directional accuracy of an axis [mm]**
 
-**A = 0.20476 [mm]** 
+**A = 0.20476 [mm]**
 
 # Limit Switch Performance
 

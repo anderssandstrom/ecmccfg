@@ -9,7 +9,7 @@ axis:
   id: ${AX_ID=1}
   mode: CSP
 
-  #feedSwitchesOutput: ec0.s$(BO_ID).binaryOutput01.0 # Ethercat entry for feed switches  
+  #feedSwitchesOutput: ec0.s$(BO_ID).binaryOutput01.0 # EtherCAT entry for feed switches  
 
 epics:
   name: ${AX_NAME=Axis1}
@@ -29,7 +29,7 @@ drive:
   setpoint: ec0.s$(DRV_ID).positionSetpoint01
   reset: 7
 
-# The encoder on most motors are 20bit single turn and 12 bit multiturn (4096 turns)
+# The encoder on most motors is 20-bit single-turn and 12-bit multi-turn (4096 turns)
 encoder:
   desc: CSP drive encoder
   type: 1

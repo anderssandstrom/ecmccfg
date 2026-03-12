@@ -1,11 +1,11 @@
 #===============================================================================
-# applyComponent.cmd (ecmccfg, warpper to ecmccomp/applyComponent.cmd)
+# applyComponent.cmd (ecmccfg, wrapper to ecmccomp/applyComponent.cmd)
 #- Arguments: n/a
 #-d /**
-#-d   \brief Warpper for ecmccomp/applyComponent.cmd. 
-#-d   \details Checks if ecmccomp is loaded, if not loads, then calls ecmccomp/applyComponent.cmd. 
+#-d   \brief Wrapper for ecmccomp/applyComponent.cmd.
+#-d   \details Checks if ecmccomp is loaded, and if not loads it, then calls ecmccomp/applyComponent.cmd.
 #-d            Using this wrapper will ensure that ecmccomp is loaded and therefore minimizes the risks of missing hw config.
-#-d            NOTE: Only for use if the ecmccomp modeule is accessible (at PSI)
+#-d            NOTE: Only for use if the ecmccomp module is accessible (at PSI)
 #-d   \author Anders Sandström
 #-d   \file
 #-d   \param COMP Component name

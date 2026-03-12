@@ -57,7 +57,7 @@ python ecmcForwbackwSeqAxis.py IOC_TEST:Axis2 -10 10 10
 
 ecmc running 2 axis in forward back seq with one extra encoder on axis 1
 top -H:
-```  
+```
 PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND
 13633 anderss+ -72   0 2194928 215988 125176 S  2.3  1.3   1:30.44 ecmc_rt
 ```
@@ -68,7 +68,7 @@ ecmc running 2 axis in forward back seq with one extra encoder on axis 1
 top -H:
 ```
 PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND
-18657 anderss+ -72   0 2192384 212636 124968 S  2.3  1.3   0:01.59 ecmc_rt      
+18657 anderss+ -72   0 2192384 212636 124968 S  2.3  1.3   0:01.59 ecmc_rt
 
 ```
 
@@ -77,5 +77,5 @@ PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND
 top -H:
 ```
 PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND
-19455 anderss+ -72   0 2124156 212148 124736 S  2.3  1.3   0:01.75 ecmc_rt      
+19455 anderss+ -72   0 2124156 212148 124736 S  2.3  1.3   0:01.75 ecmc_rt
 ```

@@ -6,13 +6,13 @@
 #-d   \details Configure multiple axes by using subst file
 #-d   \author Anders Sandström
 #-d   \file
-#-d   \param FILE Subsitution file , i.e. ./plc/ax.subs
+#-d   \param FILE Substitution file, i.e. ./plc/ax.subs
 #-d   \code
 #-d     ${SCRIPTEXEC} ${ecmccfg_DIR}loadSubstAxes.cmd, "FILE=./ax.subs"
 #-d   \endcode
 #-d */
 
-#- Parse subst and template with msi. Parse output to separetae axis files
+#- Parse subst and template with msi. Parse output to separate axis files
 ecmcFileExist(${ecmccfg_DIR}multiAxis.sh,1,1)
 system "${ecmccfg_DIR}multiAxis.sh ${FILE} ${ECMC_TMP_DIR} tempFile.ax ${ecmccfg_DIR}"
 system "ls ${ECMC_TMP_DIR}"
@@ -23,4 +23,3 @@ $(SCRIPTEXEC) ${ECMC_TMP_DIR}tempFile.ax.exe.cmd
 
 #- Cleanup
 system "rm ${ECMC_TMP_DIR}tempFile.ax.exe.cmd"
-

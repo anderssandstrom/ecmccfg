@@ -1,8 +1,8 @@
-+++  
-title = "best practice"   
-weight = 20
-chapter = false  
-+++  
++++
+title = "PLC best practice"
+weight = 14
+chapter = false
++++
 
 ## best practice
 Here you can find some best practice configurations for common use cases.
@@ -73,7 +73,7 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd,    "FILE=./cfg/main.plc, INC=.:./cf
 ```
 The "INC" parameter can contain several directories separated with a ":", making it possible to include PLC files from several locations/modules.
 
-#### example: Toggle a few outputs 
+#### example: Toggle a few outputs
 As a demo use case let's consider that a few outputs needs to be toggled.
 NOTE: There are simpler ways to write this specific code but it's used to demo how code can be divided.
 
@@ -121,14 +121,14 @@ if(${SELF}.dbg) {
   println('Time REAL:       ',ec_get_time_frm_src(0));
 };
 ```
-This allows turning on/off printouts in runtime by writing to the `<prefix>PLC<id>-DbgCmd` PV which is accessinle in the generic plc panel (can be started from ecmcMain.ui).
+This allows turning on/off printouts in runtime by writing to the `<prefix>PLC<id>-DbgCmd` PV which is accessible in the generic plc panel (can be started from ecmcMain.ui).
 
 {{% notice warning %}}
 Only use the `plc<id>.dbg` variable for dbg purpose. It should always be safe to write to this variable.
 {{% /notice %}}
 
 #### MACROS
-Adding a DBG macro can be usefull to be able to turn on/off printouts. Typically during commissioning it can be use full to have many printouts but later when system goes into production, it could be a good idea to turn (some) printouts off.
+Adding a DBG macro can be useful to be able to turn on/off printouts. Typically during commissioning it can be useful to have many printouts, but later when system goes into production, it could be a good idea to turn (some) printouts off.
 
 Example of a printout that can be turned on/off (default off)
 ```C
@@ -209,23 +209,23 @@ Example of plc file with declaration section and code section:
 VAR
   // Globals
   gTest          : global.test;
-  
+
   // Statics
   sTest          : static.test;
-  
+
   // EtherCAT I/0
   actPos         : ${M}.s${DRV_SID}.positionActual01;
   mySlave        : ${M}.s${DRV_SID};
   coolingValveBO : ${M}.s${BO_SID=2}.binaryOutput02;
-  
+
   // Axis data
   targetPos      : ax${AX_ID=1}.traj.targetpos;
   myAxis         : ax1;
   myTraj         : ax${AX_ID=1}.traj;
-  
+
   // Data storage
   buffer         : ds${DS_ID=0};
-  
+
   // Constants
   pi             : 3.1415;
 

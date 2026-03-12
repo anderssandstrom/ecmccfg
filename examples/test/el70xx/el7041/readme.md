@@ -10,6 +10,6 @@ The status word is exposed in the "Drv01-Stat" PV of the drive and the "driveSta
 
 Examples:
 ```
-IOC_TEST:m0s010-Drv01-Stat     2023-02-09 09:03:53.342976 100001000101  
+IOC_TEST:m0s010-Drv01-Stat     2023-02-09 09:03:53.342976 100001000101
 ec0.s10.driveStatus01
 ```

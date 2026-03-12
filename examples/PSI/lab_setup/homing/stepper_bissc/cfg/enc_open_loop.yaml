@@ -7,7 +7,7 @@ encoder:
   bits: 16                                    # Total bit count of encoder raw data
   absBits: 0                                  # Absolute bit count (for absolute encoders)
   absOffset: 0                                # Encoder offset in eng units (for absolute encoders)
-  position: ec0.s$(ENC_SID).positionActual01  # Ethercat entry for actual position input (encoder)
+  position: ec0.s$(ENC_SID).positionActual01  # EtherCAT entry for actual position input (encoder)
   homing:
     refToEncIDAtStartup: 1                    # Ref encoder at startup (to BISS value)
     type: 1                                   # Homing sequence type
@@ -18,5 +18,5 @@ encoder:
     acceleration: 10                          # Acceleration during homing
     deceleration: 10                          # Deceleration during homing
     refAtHome: 1                              # If homing is executed then set position of this encoder
-    postMoveEnable: yes                       # Enable move after successfull homing
-    postMovePosition: 10                      # Position to move to after successfull homing
+    postMoveEnable: yes                       # Enable move after successful homing
+    postMovePosition: 10                      # Position to move to after successful homing

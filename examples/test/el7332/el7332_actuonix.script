@@ -11,7 +11,7 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}applySlaveConfig.cmd, "SLAVE_ID=$(ECMC_EC_SLAVE_NUM)
 
 ##############################################################################
 ## PLC 0:  Generic code for one actuonix PQ12-S actuator
-##         If more then teh same plc code can be used but you need to update these three env vars:
+##         If more then the same plc code can be used but you need to update these three env vars:
 ##          1. ECMC_PLC_ID     : ID of plc
 ##          2. ECMC_SLAVE_ID   : Slave position of el7332
 ##          3. ECMC_CH_ID      : Channel id of el7332 (el7332 has two channels)

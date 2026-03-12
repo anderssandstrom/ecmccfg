@@ -39,7 +39,7 @@ Seems for certain slaves, maybe firmware related, that it's not allowed to write
 If these SDO writes are excluded from the hardware configuration snippet the slave will normally go to OP..
 
 ´´´
-# NOTE: Sometimes the EL7211-0010 will not go to op with the following error in /var/log/messages: 
+# NOTE: Sometimes the EL7211-0010 will not go to op with the following error in /var/log/messages:
 # Sep  8 09:54:21 mcag-epics4 kernel: EtherCAT ERROR 0-40: SDO download 0x1C32:01 (2 bytes) aborted.
 # Then if the below command is not executed the slave will go online abnd work. Could be related to firmware versions.. Also see below 0x1c33
 #- Sync mode
@@ -50,7 +50,7 @@ If these SDO writes are excluded from the hardware configuration snippet the sla
 and:
 
 ´´´
-# NOTE: Sometimes the EL7211-0010 will not go to op with the following error in /var/log/messages: 
+# NOTE: Sometimes the EL7211-0010 will not go to op with the following error in /var/log/messages:
 # Sep  8 09:54:21 mcag-epics4 kernel: EtherCAT ERROR 0-40: SDO download 0x1C33:01 (2 bytes) aborted.
 # Then if the below command is not executed the slave will go online abnd work. Could be related to firmware versions.. Also see above 0x1c32
 #- Sync mode
@@ -58,14 +58,14 @@ and:
 ´´´
 
 ## Permanant solution
-1. Need to figure out when the sync mode settings are needed or can be excluded. 
+1. Need to figure out when the sync mode settings are needed or can be excluded.
 
 2. In the manuals it states that these objects are RW (read/Write) so it should be correct to have them in the snippet.
 
 3. Maybe a firmware upgrade is needed for slaves with this issue?!
 
 4. Work in progress..
- 
+
 
 
 

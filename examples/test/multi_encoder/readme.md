@@ -54,8 +54,8 @@ epicsEnvSet("ECMC_HOME_LATCH_COUNT_OFFSET","0")                            # Num
 The primary encoder is the encoder that is used in the ecmc-control loop.
 Any of the configured encoders can be used as primary encoder (but as default encoder 1 is used).
 
-Change of primary encoder can be done by setting the ECMC_ENC_PRIMARY_ID in the encoder configuration file 
-specified for addEncoder.cmd or by executing the follwoing ecmc command:
+Change of primary encoder can be done by setting the ECMC_ENC_PRIMARY_ID in the encoder configuration file
+specified for addEncoder.cmd or by executing the following ecmc command:
 ```
 ecmcConfigOrDie "Cfg.SelectAxisEncPrimary($(ECMC_AXIS_NO),${ECMC_ENC_PRIMARY_ID=-1})"
 
@@ -64,8 +64,8 @@ NOTE: if a ECMC_ENC_PRIMARY_ID=-1 the current value in ecmc will not be overwrit
 
 ## Config encoder
 
-The newest encoder created is autonatically set to be the one that recives configuration commands. 
-If configuration of a different encoder is needed then teh follwing command can be used:
+The newest encoder created is automatically set to be the one that receives configuration commands.
+If configuration of a different encoder is needed then the following command can be used:
 ```
 ecmcConfigOrDie "Cfg.SelectAxisEncConfig($(ECMC_AXIS_NO),${ECMC_ENC_CFG_ID=-1})"
 ```
@@ -73,7 +73,7 @@ NOTE: if a ECMC_ENC_CFG_ID=-1 the current value in ecmc will not be overwritten.
 
 ## Ref/sync encoders to other encoder at startup
 
-At startup encoders can be syncronized (set to same value as another encoder). This could be usefull in order 
+At startup encoders can be synchronized (set to same value as another encoder). This could be useful in order
 to have same reading on all or some of your encoders at startup (for instance if one encoder is absolute).
 
 This can be configured by setting the ECMC_ENC_REF_TO_ENC_AT_STARTUP_ID variable or by executing the following command:
@@ -105,7 +105,7 @@ The following plc functions can be used to set and get information related to mu
 ```
    retvalue = mc_get_act_pos(
                         <axIndex>,         : Axis index
-                        <encIndex>         : Encoder index                        
+                        <encIndex>         : Encoder index
                         );
 
    Returns encoder position for any of the configured encoders of an axis.
@@ -114,10 +114,10 @@ The following plc functions can be used to set and get information related to mu
 ```
    retvalue = mc_set_prim_enc(
                         <axIndex>,         : Axis index
-                        <encIndex>         : Encoder index                        
+                        <encIndex>         : Encoder index
                         );
 
-   Sets primary encoder index of the axis (the encoder used for control). 
+   Sets primary encoder index of the axis (the encoder used for control).
    The primary encoder can only be changed when the axis is not busy.
 
    Returns motion axis error code.
@@ -125,7 +125,7 @@ The following plc functions can be used to set and get information related to mu
 
 ```
   retvalue = mc_get_prim_enc(
-                        <axIndex>,         : Axis index        
+                        <axIndex>,         : Axis index
                         );
 
    Returns primary encoder index of the axis (the encoder used for control).

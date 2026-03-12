@@ -4,7 +4,7 @@
 
 For detailed Syntax help please visit the exprtk website.
 
-Common sources of error and some usefull info:
+Common sources of error and some useful info:
 
 1. Assignment is ':='  equal is '=' or '=='
 
@@ -14,7 +14,7 @@ Common sources of error and some usefull info:
 
 4. "#" is reserved for comments. Everything after this char will be removed before compile.
     So, "println('########')" is not a good idea (will look like "println('" for the compiler).
-    
+
 5. Use macros to make your code more generic (same syntac as in iocsh):
 ```
 ${DBG=#}println('Starting up');
@@ -28,7 +28,7 @@ See "plcMCU1012TestMacro.script" for example
 
 1. Assignment:
 ```
-   ec0.s1.VALUE:=100; 
+   ec0.s1.VALUE:=100;
 ```
 2. if-else (note the equl sign):
 ```
@@ -48,7 +48,7 @@ See "plcMCU1012TestMacro.script" for example
 4. printouts (minimize printouts or use only for debug, not good for rt performance):
 ```
    print("The value of ec0.s1.VALUE is: ",ec0.s1.VALUE);  # Without line feed
-   println("The value of ec0.s1.VALUE is: ",ec0.s1.VALUE);  # With line feed   
+   println("The value of ec0.s1.VALUE is: ",ec0.s1.VALUE);  # With line feed
 ```
 Also see the "ec_print_bin()" and "ec_print_hex()" below.
 
@@ -57,7 +57,7 @@ Below the ECMC specific accessible variables and functions are listed:
 
 ### General variables
 ```
-1.  static.<varname>             Static variable. Initiated to 0. (rw)                                    
+1.  static.<varname>             Static variable. Initiated to 0. (rw)
                                  Access only in the PLC where defined.
                                  Will keep value between execution
                                  loops.
@@ -99,14 +99,14 @@ Below the ECMC specific accessible variables and functions are listed:
 13. ax<id>.traj.setpos           curent trajectory setpoint       (rw)
 14. ax<id>.traj.targetpos        target position                  (rw)
 15. ax<id>.traj.extsetpos        current trajecrory setpoint from
-                                 plc sync. expression             (rw) 
+                                 plc sync. expression             (rw)
 16. ax<id>.traj.targetvel        target velocity setpoint         (rw)
 17. ax<id>.traj.targetacc        target acceleration setpoint     (rw)
 18. ax<id>.traj.targetdec        target deceleration setpoint     (rw)
 19. ax<id>.traj.setvel           current velocity setpoint        (ro)
 20. ax<id>.traj.setvelffraw      feed forward raw velocity        (ro)
 21. ax<id>.traj.command          command                          (rw)
-                                 command=1: move velocity  
+                                 command=1: move velocity
                                  command=2: move rel. pos
                                  command=3: move abs. pos
                                  command=10: homing
@@ -149,13 +149,13 @@ Below the ECMC specific accessible variables and functions are listed:
 33. ax<id>.seq.state             sequence state (homing)          (ro)
 34. ax<id>.mon.ilock             motion interlock (both dir)      (rw)
                                  ax<id>.mon.ilock=1: motion allowed
-                                 ax<id>.mon.ilock=0: motion not allowed        
+                                 ax<id>.mon.ilock=0: motion not allowed
 35. ax<id>.mon.ilockbwd          motion interlock bwd dir         (rw)
                                  ax<id>.mon.ilockbwd=1: motion allowed
-                                 ax<id>.mon.ilockbwd=0: motion not allowed        
+                                 ax<id>.mon.ilockbwd=0: motion not allowed
 36. ax<id>.mon.ilockfwd          motion interlock fwd dir         (rw)
                                  ax<id>.mon.ilockfwd=1: motion allowed
-                                 ax<id>.mon.ilockfwd=0: motion not allowed        
+                                 ax<id>.mon.ilockfwd=0: motion not allowed
 37. ax<id>.mon.attarget          axis at taget                    (ro)
 38. ax<id>.mon.lowlim            low limit switch                 (ro)
 39. ax<id>.mon.highlim           high limit switch                (ro)
@@ -167,8 +167,8 @@ Below the ECMC specific accessible variables and functions are listed:
 45. ax<id>.blockcom              Enables/disables "set" commands  (rw)
                                  via command parser (ascii commands)
                                  Statuses can still be read.
-                                 Exceptions ("set"-commands) that 
-                                 will work: 
+                                 Exceptions ("set"-commands) that
+                                 will work:
                                  - "StopMotion(axid)"
                                  - "Cfg.SetAxisBlockCom(axid,block)"
 46. ax<id>.ctrl.kp               Set PID-controller kp            (rw)
@@ -176,22 +176,22 @@ Below the ECMC specific accessible variables and functions are listed:
 48. ax<id>.ctrl.kd               Set PID-controller kd            (rw)
 49. ax<id>.ctrl.kff              Set PID-controller kff           (rw)
 ```
-### PLC variables: 
+### PLC variables:
 ```
 1.  plc<id>.enable               plc enable                       (rw)
                                  (end exe with "plc<id>.enable:=0#"
-                                 Could be usefull for startup
+                                 Could be useful for startup
                                  sequences)
 2.  plc<id>.error                plc error                        (rw)
                                  Will be forwarded to user as
                                  controller error.
 3.  plc<id>.scantime             plc sample time in seconds       (ro)
 4.  plc<id>.firstscan            true during first plc scan only  (ro)
-                                 usefull for initiations of variables
+                                 useful for initiations of variables
 5.  ax<id>.plc.enable            Same as plc<id>.enable but for
                                  axis <id> sync plc.
 6.  ax<id>.plc.error             Same as plc<id>.error but for
-                                 axis <id> sync plc. 
+                                 axis <id> sync plc.
 7.  ax<id>.plc.scantime          Same as plc<id>.scantime but for
                                  axis<id> sync plc.
 8.  ax<id>.plc.firstscan         Same as plc<id>.firstscan but for
@@ -200,9 +200,9 @@ Below the ECMC specific accessible variables and functions are listed:
 ### Data Storage variables:
 ```
 1.  ds<id>.size                  Set/get size of data storage     (rw)
-                                 Set will clear the data storage 
+                                 Set will clear the data storage
 2.  ds<id>.append                Add new data at end              (rw)
-                                 Current position index will be 
+                                 Current position index will be
                                  increased
 3.  ds<id>.data                  Set/get data ar current position (rw)
 4.  ds<id>.index                 Set/get current position index   (rw)
@@ -216,14 +216,14 @@ Below the ECMC specific accessible variables and functions are listed:
 ```
 1. retvalue = ec_set_bit(
                         <value>,         : Value to change
-                        <bitindex>       : Bit index 
+                        <bitindex>       : Bit index
                         );
    Sets bit at bitindex position of value. Returns the new value.
 
 2. retvalue = ec_wrt_bit(
                         <value>,         : Value to change
                         <wrtValue>,      : Value of bit to write
-                        <bitindex>       : Bit index 
+                        <bitindex>       : Bit index
                         );
    Write wrtValue to a bit at bitindex position of value. Returns the new value.
 
@@ -231,56 +231,56 @@ Below the ECMC specific accessible variables and functions are listed:
                         <value>,         : Value to change
                         <wrtValue>,      : Value of bit to write
                         <startBit>       : Start bit index (lsb is bit 0)
-                        <stopBit>        : Stop bit index 
+                        <stopBit>        : Stop bit index
                         );
    Write wrtValue to a range of bits (statBit..stopBit) of value. Returns the new value.
 
 4. retvalue = ec_clr_bit(
                         <value>,         : Value to change
-                        <bitindex>       : Bit index 
+                        <bitindex>       : Bit index
                         );
    Clears bit at bitindex position of value. Returns the new value.
 
 5. retvalue = ec_flp_bit(
                         <value>,         : Value to change
-                        <bitindex>       : Bit index 
+                        <bitindex>       : Bit index
                         );
    Flips bit at bitindex position of value. Returns the new value.
 
 6. retvalue = ec_chk_bit(
                         <value>,         : Value to change
-                        <bitindex>       : Bit index 
+                        <bitindex>       : Bit index
                         );
    Checks bit at bitindex position of value. Returns the value of bit.
 
 7. retvalue = ec_chk_bits(
                         <value>,         : Value to change
                         <startBit>       : Start bit index (lsb is bit 0)
-                        <stopBit>        : Stop bit index 
+                        <stopBit>        : Stop bit index
                         );
    Checks range of bits (startBit..stopBit) of value. Returns the value of bits.
 
 8. retvalue = ec_print_hex(
                         <value>,         : Value to print
-                        <startBit>       : Start bit index 
-                        <stopBit>        : Stop bit index 
+                        <startBit>       : Start bit index
+                        <stopBit>        : Stop bit index
                         );
-   Prints <startBit> to <stopBit> of <value> in hex format 
+   Prints <startBit> to <stopBit> of <value> in hex format
    Returns error code or 0 if success.
 
 9. retvalue = ec_print_bin(
                         <value>,         : Value to print
-                        <startBit>       : Start bit index 
-                        <stopBit>        : Stop bit index 
+                        <startBit>       : Start bit index
+                        <stopBit>        : Stop bit index
                         );
-   Prints <startBit> to <stopBit> of <value> in bin format 
+   Prints <startBit> to <stopBit> of <value> in bin format
    Returns error code or 0 if success.
 
 10. retvalue = ec_mm_cp(
                         <srcId>,         : Source memmap index
                         <sdestId>        : Dest memmap index
                         );
-   Copies data from source memmap to dest memmap. The memmap ids are defined by the 
+   Copies data from source memmap to dest memmap. The memmap ids are defined by the
    order they are created (starting at 0). The smallest memmap size will define the
    amout of data copied. Returns 0 for success or an error code.
 
@@ -316,7 +316,7 @@ Below the ECMC specific accessible variables and functions are listed:
 
 12. retvalue = ec_get_mm_data(
                         <srcId>,       : Source memmap index
-                        <index>        : Index of data element 
+                        <index>        : Index of data element
                         );
    Reads data element at index from memmap with srcId and returns value.
 
@@ -326,7 +326,7 @@ Below the ECMC specific accessible variables and functions are listed:
 
 13. retvalue = ec_set_mm_data(
                         <srcId>,       : Source memmap index
-                        <index>        : Index of data element 
+                        <index>        : Index of data element
                         <data>         : Data to write
                         );
    Writes data element at index from memmap with srcId. Returns 0 for success or an error code.
@@ -338,7 +338,7 @@ Below the ECMC specific accessible variables and functions are listed:
 14. retvalue = ec_get_mm_size(
                         <srcId>,       : Source memmap index
                         );
-   Returns number of elements (of type "ec_get_mm_type()")in memmap with srcId. 
+   Returns number of elements (of type "ec_get_mm_type()")in memmap with srcId.
    If return value is less than zero it should be considered to be an error code.
 
    Note: The mmId can be retrived by the bellow ecmc command (and feed into plc via macro):
@@ -357,8 +357,8 @@ Below the ECMC specific accessible variables and functions are listed:
 15. retvalue = ec_mm_append_to_ds_scale_offset(
                         <mmId>,       : Source memmap index
                         <dsId>        : Destination data storage index
-                        <scale>       : Scale 
-                        <offset>);    : Offset  
+                        <scale>       : Scale
+                        <offset>);    : Offset
 
    Returns Error code or zero if success
 
@@ -405,24 +405,24 @@ A shared memory buffer of 120 doubles can be accessed for read and write operati
    Write a value to an index of a common memory buffer accessible by all masters running on same host
 
 2. retvalue = m2m_read(<index>);     : Mem buffer index (index must be 0..119)
-                      
+
    returns the value stored at index in the shared mem buffer.
 
 3. retvalue = m2m_stat();
-                      
+
    returns 1 if connection to shared memory is OK, else 0 or a negative value with an errro code.
 
 4. m2m_err_rst();
-                      
+
    reset any m2m error codes.
 
 5. retvalue = m2m_err_rst();
-                      
+
    returns current m2m error code.
 
 6. retvalue = m2m_ioc_ec_ok(<master_index>);
 
-   returns status etehrcat status of another ecmc ioc (1==op, 0==not op, -1==error).
+   returns status EtherCAT status of another ecmc ioc (1==op, 0==not op, -1==error).
 
 7. retvalue = m2m_ioc_run(<master_index>);
 
@@ -442,7 +442,7 @@ A shared memory buffer of 120 doubles can be accessed for read and write operati
    Absolute motion of axis.
    Motion is triggerd with a positive edge on <execute> input.
    returns 0 if success or error code.
-   
+
 2. retvalue = mc_move_rel(
                         <axIndex>,       : Axis index
                         <execute>,       : Trigger
@@ -462,8 +462,8 @@ A shared memory buffer of 120 doubles can be accessed for read and write operati
                         <acc>,           : Acceleration
                         <dec>            : Deceleration
                         );
-   Move to current external plc position. Functions intended use is to 
-   move to the start position for syncronized axes. This command is exactly 
+   Move to current external plc position. Functions intended use is to
+   move to the start position for synchronized axes. This command is exactly
    the same as issueing "mc_move_pos()" with the target postion ax<id>.traj.extsetpos.
    Motion is triggerd with a positive edge on <execute> input.
    returns 0 if success or error code.
@@ -520,13 +520,13 @@ returns 0 if success or error code.
    returns 0 if success or error code.
 
 9. retvalue = mc_get_busy(
-                        <axIndex>,       : Axis index#                           
+                        <axIndex>,       : Axis index#
                         );
    Check if axis is busy.
    returns busy state of axis (1 if busy and 0 if not busy).
 
 10. retvalue = mc_get_homed(
-                        <axIndex>,       : Axis index#                           
+                        <axIndex>,       : Axis index#
                         );
    Check if axis is homed.
    returns state of homed flag of axis (1 if homed and 0 if not homed).
@@ -551,23 +551,23 @@ returns 0 if success or error code.
 
 15. retvalue = mc_get_act_pos(
                         <axIndex>,         : Axis index
-                        <encIndex>         : Encoder index                        
+                        <encIndex>         : Encoder index
                         );
 
    Returns encoder position for any of the configured encoders of an axis.
 
 16. retvalue = mc_set_prim_enc(
                         <axIndex>,         : Axis index
-                        <encIndex>         : Encoder index                        
+                        <encIndex>         : Encoder index
                         );
 
-   Sets primary and homing encoder index of the axis (the encoder used for control). 
+   Sets primary and homing encoder index of the axis (the encoder used for control).
    The primary encoder can only be changed when the axis is not busy.
 
    Returns motion axis error code.
 
 17. retvalue = mc_get_prim_enc(
-                        <axIndex>,         : Axis index        
+                        <axIndex>,         : Axis index
                         );
 
    Returns primary encoder index of the axis (the encoder used for control).
@@ -576,13 +576,13 @@ returns 0 if success or error code.
                         <axis_id>,         : Axis index
                         <error_code>       : Error code to set
                         );
-   
+
    Sets an arbitrary error code to an axis object.
 
 19. mc_set_slaved_axis_in_error(
                         <axis_id>,         : Axis index
                         );
-   
+
    Set axis error that indicates that a slaved axis is in error state (ERROR_AXIS_SLAVED_AXIS_IN_ERROR 0x1432B).
 ```
 ### Function Lib: Motion Group
@@ -591,51 +591,51 @@ returns 0 if success or error code.
 1.  mc_grp_get_enable(
                      <grp_id>,         : Group index
                      );
-   
+
    Returns true if all axes in the group have the enable bit set, else false.
    Note: The axes do not need to be enabled if this function returns true, see mc_grp_get_enabled().
 
 2.  mc_grp_get_any_enable(
                      <grp_id>,         : Group index
                      );
-   
+
    Returns true if atleast one axis in the group has the enable bit set, else false.
 
 3.  mc_grp_get_enabled(
                      <grp_id>,         : Group index
                      );
-   
+
    Returns true if all axes in the group are in enabled state, else false.
 
 4.  mc_grp_get_any_enabled(
                      <grp_id>,         : Group index
                      );
-   
+
    Returns true if atleast one axis in the group is in enabled state, else false.
 
 5.  mc_grp_get_busy(
                      <grp_id>,         : Group index
                      );
-   
+
    Returns true if all axes in the group are in busy state, else false.
 
 6.  mc_grp_get_any_busy(
                      <grp_id>,         : Group index
                      );
-   
+
    Returns true if atleast one axis in the group is in busy state, else false.
 
 7.  mc_grp_get_any_error_id(
                      <grp_id>,         : Group index
                      );
-   
+
    Returns error id if atleast one axis in the group is in error state, else zero.
 
 8.  mc_grp_set_enable(
                      <grp_id>,         : Group index
                      <enable>          : Enable state
                      );
-   
+
    Sets enable for all axes in group.
    Returns 0 or error id.
 
@@ -643,7 +643,7 @@ returns 0 if success or error code.
                      <grp_id>,         : Group index
                      <source>          : Trajectory source (0 = internal, 1 = external/PLC )
                      );
-   
+
    Sets trajectory source for all axes in group.
    Returns 0 or error id.
 
@@ -651,53 +651,53 @@ returns 0 if success or error code.
                      <grp_id>,         : Group index
                      <source>          : Encoder source (0 = internal, 1 = external/PLC )
                      );
-   
+
    Sets encoder source for all axes in group.
    Returns 0 or error id.
 
 11.  mc_grp_reset_error(
                      <grp_id>,         : Group index
                      );
-   
-   Resets error of all axes in group.   
+
+   Resets error of all axes in group.
 
 12.  mc_grp_set_error(
                      <grp_id>,         : Group index
                      <error_id>        : Error Id
                      );
-   
+
    Set error id of all axes in group.
 
 13.  mc_grp_set_slaved_axis_in_error(
                      <grp_id>,         : Group index
                      );
-   
+
    Set error id of all axes in group to ERROR_AXIS_SLAVED_AXIS_IN_ERROR (0x1432B)
 
 14.  mc_grp_halt(
                      <grp_id>,         : Group index
                      );
-   
+
    Halt all axes in group (only works if traj source = internal/0)
 
 15.  mc_grp_axis_in_grp(
                      <grp_id>,         : Group index
                      <axis_id>,        : Axis index
                      );
-   
+
    Returns true if axis is in group, else false.
 
 16.  mc_grp_size(
                      <grp_id>,         : Group index
                      );
-   
+
    Returns the number of axes in group.
 
 
 17.  mc_grp_get_traj_src_ext(
                       <grp_id>, : Group index
                       );
-   
+
    Returns true if all axes in the group have trajectory source set to external.
 
 18.  mc_grp_get_any_traj_src_ext(
@@ -769,7 +769,7 @@ returns 0 if success or error code.
 10. retvalue = ds_push_asyn(
                         <dsIndex>,       : Data storage index
                         );
-   Triggers push of all asyn parameters in ds to EPICS (including data). 
+   Triggers push of all asyn parameters in ds to EPICS (including data).
 
 11. retvalue = ds_get_avg(
                         <dsIndex>,       : Data storage index
@@ -789,7 +789,7 @@ returns 0 if success or error code.
 14. retvalue=ds_append_to_ds(
                         <dsFromId>,       : Source data storage index
                         <dsFromDataId>,   : Source data element index
-                        <elements>,       : Number of elements to copy 
+                        <elements>,       : Number of elements to copy
                         <dsToId>          : Destination data storage index
                         );
    Appends data at the current position of the destination data storage (dsToId). The data source is defined by (dsFromId) and the selected tion (dsFromDataId) and element count (elements).

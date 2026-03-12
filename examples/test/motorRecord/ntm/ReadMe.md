@@ -37,6 +37,6 @@ The motion will be completed to the "target position" and then a new motion comm
 Works!
 
 ## Case 1 NTM = UPDATE
-Direct update of target position (on the fly). 
+Direct update of target position (on the fly).
 
 Works!

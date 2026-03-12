@@ -1,57 +1,56 @@
-+++  
-title = "PLC"   
++++
+title = "PLC"
 weight = 12
-chapter = false  
+chapter = false
 +++
 
-***
 ## Topics
 {{% children %}}
 ---
 
-## PLCs
+## Scope
+ECMC PLCs provide deterministic real-time logic in the ecmc cycle for:
+- EtherCAT I/O conditioning and interlocks
+- axis synchronization and supervisory logic
+- motion limit/home override logic
+- derived signals and buffering workflows
 
-In `ECMC`, PLCs are a very powerful tool to handle EtherCAT data in real-time.
-
-Since `ecmccfg` v7, the PLCs can be instantiated in 3 different ways:
-- [pure text files](#pure-text-files), classic ecmc PLC
-- [pure yaml](#pure-yaml) files or
-- text files, with [yaml header](#yaml-header).
-
-## pure text files
-The simplest and most generic way to load plc file is by the loadPLCFile.cmd command:
+## By Task
+### Load and run PLC code
+- Use classic text PLC loading:
+```iocsh
+${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd, "FILE=<filename>, INC=<include_dirs>, SAMPLE_RATE_MS=<rate_ms>, PLC_MACROS='<custom_macros>'"
 ```
-${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd,    "FILE=<filename>, INC=<include_dirs>, SAMPLE_RATE_MS=<rate_ms>, PLC_MACROS='<custom_macros>'"
+- Use YAML wrapper loading:
+```iocsh
+${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}loadYamlPlc.cmd, "FILE=./plc.yaml, ECMC_TMPDIR=/tmp/"
 ```
 
-## pure yaml
+YAML PLC loading supports both parser backends:
+- `jinja` (default, Python-based)
+- `ecb` (C++ backend via `ECMC_CFG_TOOL=ecb`, see [ecb]({{< relref "/manual/motion_cfg/ecb.md" >}}))
 
-{{% notice info %}}
-Backwards compatibility for classic, text based PLCs is assured for yaml based.
-{{% /notice %}}
+### Understand language/syntax and available variables
+- [syntax]({{< relref "/manual/PLC_cfg/syntax.md" >}}) for operators, declarations, comments, examples, and axis/ec/ds/plc variable namespaces.
 
-{{% notice warning %}}
-`yaml` is - like `python` - indentation sensitive!
-{{% /notice %}}
+### Reuse PLC functions and shared code
+- [function libs]({{< relref "/manual/PLC_cfg/function_libs.md" >}}) for `loadPLCLib.cmd`, function signatures, and constraints.
 
-{{% notice tip %}}
-Indent with 2 spaces.
-{{% /notice %}}
+### Apply robust coding patterns
+- [best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}}) for macros, include/substitute usage, printout strategy, and declaration patterns.
 
-All keys are mandatory.
+## PLC Definition Styles
+`ecmccfg` supports three styles:
+1. Pure text PLC files (classic)
+2. Pure YAML PLC definitions
+3. YAML header + external text PLC file (recommended for complex PLCs)
 
-- `id`: PLC id, unique **uint**
-- `enable`: PLC enabled at start
-- `rateMilliseconds`: execution rate in ms. To execute every cycle, independent of cycle rate, use `-1`.
-- `code`: dictionary of code lines.
-
-{{% notice note %}}
-Line terminator is still a pipe `|`, this is subject to change!
-{{% /notice %}}
-
-{{% notice tip %}}
-For more complex PLCs, it is highly advisable to use text based PLC definitions with a [yaml header](#yaml-header).
-{{% /notice %}}
+### Pure YAML (minimal)
+All keys are mandatory:
+- `id`: unique PLC id (`uint`)
+- `enable`: start enabled/disabled
+- `rateMilliseconds`: execution rate in ms (`-1` means every cycle)
+- `code`: list of PLC code lines
 
 ```yaml
 plc:
@@ -62,25 +61,10 @@ plc:
     - 'ec0.s2.binaryOutput07:=global.test|'
     - '${PLC_ID}.enable:=plc0.enable|'
     - 'ec0.s2.binaryOutput05:=not(ec0.s2.binaryOutput05)|'
-    - 'plc1.error:=12345|'
 ```
 
-## yaml header
-Instead of the code dictionary, the `file` key can be used to load the PLC from a text file.
-The syntax of the text PLCs is kept from earlier versions.
-
-All keys are mandatory.
-
-- `id`: PLC id, unique **uint**
-- `enable`: PLC enabled at start
-- `rateMilliseconds`: execution rate in ms. To execute every cycle, independent of cycle rate, use `-1`.
-- `file`: PLC text file to load.
-
-{{% notice warning %}}
-If the `file` key is set, all definitions in the `code` dictionary are overwritten.
-{{% /notice %}}
-
-> yaml header
+### YAML Header + Text File
+Use `file:` to keep large PLC logic in text files:
 ```yaml
 plc:
   id: 1
@@ -89,16 +73,24 @@ plc:
   file: plc1.plc
 ```
 
-> PLC file
-```shell
-# this is a comment
-println('plc1 from file');
-println('plc1 from file # hash with inline comment'); # inline test
-static.i:=static.i+1; # counter
-println('i = # + - * / ', static.i); # println
-```
+{{% notice warning %}}
+If `file` is set, entries in `code` are overwritten.
+{{% /notice %}}
 
-> `iocsh` call
-```shell
-${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}loadYamlPlc.cmd" "FILE=./plc1File.yaml, ECMC_TMPDIR=/tmp/"
-```
+### Formatting Notes
+{{% notice warning %}}
+YAML is indentation-sensitive.
+{{% /notice %}}
+
+{{% notice tip %}}
+Use 2-space indentation.
+{{% /notice %}}
+
+{{% notice note %}}
+PLC statement line terminator remains `|` in YAML-based code lines.
+{{% /notice %}}
+
+## Recommended Reading Order
+1. [syntax]({{< relref "/manual/PLC_cfg/syntax.md" >}})
+2. [best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}})
+3. [function libs]({{< relref "/manual/PLC_cfg/function_libs.md" >}})

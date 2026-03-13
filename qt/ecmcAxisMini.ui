@@ -311,7 +311,7 @@
      <enum>caFrame::Filled</enum>
     </property>
     <property name="visibility">
-     <enum>caFrame::IfNotZero</enum>
+     <enum>caFrame::IfZero</enum>
     </property>
     <property name="channel" stdset="0">
      <string notr="true">$(DEV):$(Axis).DMOV</string>

@@ -97,6 +97,23 @@ cd utils
 python3 ecmc_engineering_tool.py
 ```
 
+## ecmc validator
+
+GUI tool for validating an ecmc startup project:
+- open a `startup.cmd` or other startup script
+- show the currently selected project file in an editor
+- validate `scripts/` command calls, their macro payloads, `hardware/` references, and local project files
+- check `loadYaml*` macros against the loaded YAML file, validate YAML structure against `scripts/jinja2/ecbSchema.json`, and verify resolved `ecM.sS.entry` links against the configured slaves and `hardware/` entry definitions
+- check `loadPLCFile.cmd` `PLC_MACROS` against the loaded PLC file, including recursive `include` files and resolved `ecM.sS.entry` links
+- warn when a startup command is not recognized from the repository command inventory
+
+Run:
+
+```bash
+cd utils
+python3 ecmc_validator.py --startup ../examples/PSI/best_practice/plcs/basic/startup.cmd
+```
+
 ## Read EL70xx diagnostic, read_el70xx_diag.sh
 
 A tool that reads error and warning state of a EL70xx stepper drive. The error and warning diagnostics are read from the 0xA010 register.

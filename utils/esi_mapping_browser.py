@@ -12,7 +12,7 @@ For simpler slaves without alternatives (for example many EL1xxx terminals),
 an implicit default mapping is built from RxPdo/TxPdo entries with @Sm.
 """
 
-from __future__ import annotations
+from typing import Dict, List, Optional, Set, Tuple
 
 import argparse
 import fnmatch
@@ -20,7 +20,7 @@ import re
 import sys
 import xml.etree.ElementTree as ET
 from collections import OrderedDict
-from dataclasses import dataclass, field
+from compat_dataclasses import dataclass, field
 from pathlib import Path
 
 
@@ -143,11 +143,11 @@ SINGLE_CH_NEEDS_INDEX = {"AI", "AO", "BI", "BO"}
 REMOVE_LAST_MAP = {"Outp-Outp": "", "Inp-Inp": ""}
 
 
-def _text(node: ET.Element | None) -> str:
+def _text(node: Optional[ET.Element]) -> str:
     return (node.text or "").strip() if node is not None else ""
 
 
-def _parse_int(value: str | None) -> int | None:
+def _parse_int(value: Optional[str]) -> Optional[int]:
     if value is None:
         return None
     value = value.strip()
@@ -159,7 +159,7 @@ def _parse_int(value: str | None) -> int | None:
         return None
 
 
-def _parse_hexish(value: str | None) -> int | None:
+def _parse_hexish(value: Optional[str]) -> Optional[int]:
     if not value:
         return None
     value = value.strip()
@@ -179,14 +179,14 @@ def _parse_hexish(value: str | None) -> int | None:
         return None
 
 
-def _norm_hex(value: str | None) -> str:
+def _norm_hex(value: Optional[str]) -> str:
     parsed = _parse_hexish(value)
     if parsed is None:
         return ""
     return f"0x{parsed:x}"
 
 
-def _norm_subindex(value: str | None) -> str:
+def _norm_subindex(value: Optional[str]) -> str:
     norm = _norm_hex(value)
     if norm:
         return norm
@@ -204,7 +204,7 @@ def _is_generic_subindex_name(name: str) -> bool:
     return bool(re.fullmatch(r"SubIndex\s+\d+", name.strip(), re.IGNORECASE))
 
 
-def _normalize_pattern_items(pattern_expr: str | None) -> list[str]:
+def _normalize_pattern_items(pattern_expr: Optional[str]) -> List[str]:
     if pattern_expr is None:
         return ["*"]
 
@@ -213,7 +213,7 @@ def _normalize_pattern_items(pattern_expr: str | None) -> list[str]:
     if not patterns:
         return ["*"]
 
-    normalized: list[str] = []
+    normalized: List[str] = []
     for pattern in patterns:
         pat = pattern
         if pat.lower().startswith("#x"):
@@ -234,7 +234,7 @@ def _normalize_pattern_items(pattern_expr: str | None) -> list[str]:
     return normalized or ["*"]
 
 
-def _match_pattern(value: str, pattern_expr: str | None) -> bool:
+def _match_pattern(value: str, pattern_expr: Optional[str]) -> bool:
     value_l = value.lower()
     for pat in _normalize_pattern_items(pattern_expr):
         if fnmatch.fnmatch(value_l, pat.lower()):
@@ -245,7 +245,7 @@ def _match_pattern(value: str, pattern_expr: str | None) -> bool:
 @dataclass
 class SmPdoGroup:
     sm_no: str
-    pdos: list[str] = field(default_factory=list)
+    pdos: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -253,7 +253,7 @@ class PdoMapping:
     name: str
     is_default: bool
     source: str
-    sm_groups: list[SmPdoGroup] = field(default_factory=list)
+    sm_groups: List[SmPdoGroup] = field(default_factory=list)
 
 
 @dataclass
@@ -262,7 +262,7 @@ class SdoField:
     subindex: str
     name: str
     data_type: str
-    bit_size: int | None
+    bit_size: Optional[int]
     object_name: str = ""
 
 
@@ -282,8 +282,8 @@ class PdoInfo:
     sm: str
     index: str
     name: str
-    excludes: set[str] = field(default_factory=set)
-    entries: list[PdoEntry] = field(default_factory=list)
+    excludes: Set[str] = field(default_factory=set)
+    entries: List[PdoEntry] = field(default_factory=list)
 
 
 @dataclass
@@ -338,11 +338,11 @@ class SlaveInfo:
     display_name: str
     product_code: str
     revision: str
-    mappings: list[PdoMapping] = field(default_factory=list)
-    pdo_by_index: dict[str, PdoInfo] = field(default_factory=dict)
-    sdo_fields: dict[tuple[str, str], SdoField] = field(default_factory=dict)
-    dc_modes: list[DcModeInfo] = field(default_factory=list)
-    coe_init_cmds: list[CoeInitCmdInfo] = field(default_factory=list)
+    mappings: List[PdoMapping] = field(default_factory=list)
+    pdo_by_index: Dict[str, PdoInfo] = field(default_factory=dict)
+    sdo_fields: Dict[Tuple[str, str], SdoField] = field(default_factory=dict)
+    dc_modes: List[DcModeInfo] = field(default_factory=list)
+    coe_init_cmds: List[CoeInitCmdInfo] = field(default_factory=list)
 
     @property
     def short_label(self) -> str:
@@ -352,12 +352,12 @@ class SlaveInfo:
         return f"{shown_type} {shown_rev} - {shown_name}"
 
 
-def _extract_alternative_mappings(device: ET.Element) -> list[PdoMapping]:
-    mappings: list[PdoMapping] = []
+def _extract_alternative_mappings(device: ET.Element) -> List[PdoMapping]:
+    mappings: List[PdoMapping] = []
     for idx, alt in enumerate(device.findall(".//AlternativeSmMapping"), start=1):
         name = _text(alt.find("Name")) or f"Alternative mapping {idx}"
         is_default = (alt.get("Default") or "").strip() == "1"
-        groups: list[SmPdoGroup] = []
+        groups: List[SmPdoGroup] = []
         for sm in alt.findall("Sm"):
             sm_no = (sm.get("No") or "").strip()
             pdos = [_norm_hex(_text(pdo)) for pdo in sm.findall("Pdo")]
@@ -374,8 +374,8 @@ def _extract_alternative_mappings(device: ET.Element) -> list[PdoMapping]:
     return mappings
 
 
-def _extract_implicit_mapping(device: ET.Element) -> PdoMapping | None:
-    sm_map: OrderedDict[str, list[str]] = OrderedDict()
+def _extract_implicit_mapping(device: ET.Element) -> Optional[PdoMapping]:
+    sm_map: OrderedDict[str, List[str]] = OrderedDict()
 
     for pdo in list(device.findall("RxPdo")) + list(device.findall("TxPdo")):
         sm_no = (pdo.get("Sm") or "").strip()
@@ -392,7 +392,7 @@ def _extract_implicit_mapping(device: ET.Element) -> PdoMapping | None:
     if not sm_map:
         return None
 
-    groups: list[SmPdoGroup] = []
+    groups: List[SmPdoGroup] = []
     for sm_no, pdos in sm_map.items():
         pdos_sorted = sorted(pdos, key=lambda idx: (_parse_hexish(idx) is None, _parse_hexish(idx) or 0, idx))
         groups.append(SmPdoGroup(sm_no=sm_no, pdos=pdos_sorted))
@@ -404,15 +404,15 @@ def _extract_implicit_mapping(device: ET.Element) -> PdoMapping | None:
     )
 
 
-def _extract_sdo_lookup(device: ET.Element) -> dict[tuple[str, str], SdoField]:
-    data_types: dict[str, dict[str, SdoField]] = {}
+def _extract_sdo_lookup(device: ET.Element) -> Dict[Tuple[str, str], SdoField]:
+    data_types: Dict[str, Dict[str, SdoField]] = {}
 
     for dt in device.findall("./Profile/Dictionary/DataTypes/DataType"):
         dt_name = _text(dt.find("Name"))
         if not dt_name:
             continue
 
-        sub_lookup: dict[str, SdoField] = {}
+        sub_lookup: Dict[str, SdoField] = {}
         for sub in dt.findall("SubItem"):
             subidx = _norm_subindex(_text(sub.find("SubIdx")))
             sub_lookup[subidx] = SdoField(
@@ -424,7 +424,7 @@ def _extract_sdo_lookup(device: ET.Element) -> dict[tuple[str, str], SdoField]:
             )
         data_types[dt_name] = sub_lookup
 
-    lookup: dict[tuple[str, str], SdoField] = {}
+    lookup: Dict[Tuple[str, str], SdoField] = {}
     for obj in device.findall("./Profile/Dictionary/Objects/Object"):
         obj_index = _norm_hex(_text(obj.find("Index")))
         if not obj_index:
@@ -468,7 +468,7 @@ def _extract_sdo_lookup(device: ET.Element) -> dict[tuple[str, str], SdoField]:
     return lookup
 
 
-def _resolve_entry_name(entry_name: str, sdo_field: SdoField | None) -> str:
+def _resolve_entry_name(entry_name: str, sdo_field: Optional[SdoField]) -> str:
     if sdo_field is not None:
         if sdo_field.name and not _is_generic_subindex_name(sdo_field.name):
             return sdo_field.name
@@ -477,9 +477,9 @@ def _resolve_entry_name(entry_name: str, sdo_field: SdoField | None) -> str:
 
 def _parse_pdo_definitions(
     device: ET.Element,
-    sdo_lookup: dict[tuple[str, str], SdoField],
-) -> dict[str, PdoInfo]:
-    pdo_by_index: dict[str, PdoInfo] = {}
+    sdo_lookup: Dict[Tuple[str, str], SdoField],
+) -> Dict[str, PdoInfo]:
+    pdo_by_index: Dict[str, PdoInfo] = {}
 
     for tag, direction in (("TxPdo", "tx"), ("RxPdo", "rx")):
         for pdo in device.findall(tag):
@@ -491,7 +491,7 @@ def _parse_pdo_definitions(
             pdo_name = _text(pdo.find("Name"))
             excludes = {_norm_hex(_text(ex_node)) for ex_node in pdo.findall("Exclude")}
             excludes = {idx for idx in excludes if idx}
-            entries: list[PdoEntry] = []
+            entries: List[PdoEntry] = []
             for entry in pdo.findall("Entry"):
                 entry_index = _norm_hex(_text(entry.find("Index")))
                 if not entry_index:
@@ -533,8 +533,8 @@ def _parse_pdo_definitions(
     return pdo_by_index
 
 
-def _extract_dc_modes(device: ET.Element) -> list[DcModeInfo]:
-    modes: list[DcModeInfo] = []
+def _extract_dc_modes(device: ET.Element) -> List[DcModeInfo]:
+    modes: List[DcModeInfo] = []
     for dc in device.findall("Dc"):
         for opmode in dc.findall("OpMode"):
             modes.append(
@@ -550,7 +550,7 @@ def _extract_dc_modes(device: ET.Element) -> list[DcModeInfo]:
     return modes
 
 
-def _bool_attr(value: str | None) -> bool:
+def _bool_attr(value: Optional[str]) -> bool:
     if value is None:
         return False
     return value.strip() in ("1", "true", "True", "yes", "on")
@@ -577,8 +577,8 @@ def _le_hex_to_int(data_hex: str) -> int:
     return int.from_bytes(bytes.fromhex(data_hex), byteorder="little", signed=False)
 
 
-def _extract_coe_initcmds(device: ET.Element) -> list[CoeInitCmdInfo]:
-    init_cmds: list[CoeInitCmdInfo] = []
+def _extract_coe_initcmds(device: ET.Element) -> List[CoeInitCmdInfo]:
+    init_cmds: List[CoeInitCmdInfo] = []
     for init in device.findall("./Mailbox/CoE/InitCmd"):
         transition = _text(init.find("Transition"))
         index = _norm_hex(_text(init.find("Index")))
@@ -609,7 +609,7 @@ def _extract_coe_initcmds(device: ET.Element) -> list[CoeInitCmdInfo]:
     return init_cmds
 
 
-def _device_names_for_match(device: ET.Element, type_name: str, display_name: str) -> list[str]:
+def _device_names_for_match(device: ET.Element, type_name: str, display_name: str) -> List[str]:
     names = [type_name, display_name]
     for n in device.findall("Name"):
         n_text = _text(n)
@@ -620,11 +620,11 @@ def _device_names_for_match(device: ET.Element, type_name: str, display_name: st
 
 def parse_esi_file(
     file_path: Path, name_pattern: str = "*", rev_pattern: str = "*"
-) -> list[SlaveInfo]:
+) -> List[SlaveInfo]:
     root = ET.parse(file_path).getroot()
     devices = root.findall(".//Descriptions/Devices/Device")
 
-    slaves: list[SlaveInfo] = []
+    slaves: List[SlaveInfo] = []
     for device in devices:
         type_elem = device.find("Type")
         type_name = _text(type_elem)
@@ -675,11 +675,11 @@ def parse_esi_file(
     return slaves
 
 
-_SUPPORTED_HW_CACHE: dict[str, tuple[list[str], dict[str, list[str]], list[str]]] = {}
+_SUPPORTED_HW_CACHE: Dict[str, Tuple[List[str], Dict[str, List[str]], List[str]]] = {}
 
 
-def _find_ecmccfg_root(anchor: Path | None = None) -> Path | None:
-    candidates: list[Path] = []
+def _find_ecmccfg_root(anchor: Optional[Path] = None) -> Optional[Path]:
+    candidates: List[Path] = []
     if anchor is not None:
         anchor_resolved = anchor.resolve()
         candidates.extend([anchor_resolved, *anchor_resolved.parents])
@@ -690,7 +690,7 @@ def _find_ecmccfg_root(anchor: Path | None = None) -> Path | None:
     cwd = Path.cwd().resolve()
     candidates.extend([cwd, *cwd.parents])
 
-    seen: set[Path] = set()
+    seen: Set[Path] = set()
     for candidate in candidates:
         if candidate in seen:
             continue
@@ -711,8 +711,8 @@ def _extract_hw_desc_from_stem(stem: str) -> str:
 
 
 def _scan_supported_hardware(
-    ecmccfg_root: Path | None = None,
-) -> tuple[Path | None, list[str], dict[str, list[str]], list[str]]:
+    ecmccfg_root: Optional[Path] = None,
+) -> Tuple[Optional[Path], List[str], Dict[str, List[str]], List[str]]:
     root = ecmccfg_root if ecmccfg_root is not None else _find_ecmccfg_root()
     if root is None:
         return None, [], {}, []
@@ -723,8 +723,8 @@ def _scan_supported_hardware(
         descs, by_desc, rel_files = cached
         return root, list(descs), {k: list(v) for k, v in by_desc.items()}, list(rel_files)
 
-    by_desc: dict[str, list[str]] = {}
-    rel_files: list[str] = []
+    by_desc: Dict[str, List[str]] = {}
+    rel_files: List[str] = []
     hw_dir = root / "hardware"
     for cmd_file in sorted(hw_dir.rglob("*.cmd")):
         rel = cmd_file.relative_to(root).as_posix()
@@ -742,9 +742,9 @@ def _scan_supported_hardware(
 def _match_supported_hardware(
     slave: SlaveInfo,
     selected_hw_desc: str = "",
-    ecmccfg_root: Path | None = None,
+    ecmccfg_root: Optional[Path] = None,
     limit: int = 24,
-) -> tuple[Path | None, str, list[str], list[str], dict[str, list[str]], int]:
+) -> Tuple[Optional[Path], str, List[str], List[str], Dict[str, List[str]], int]:
     root, descs, by_desc, _rel_files = _scan_supported_hardware(ecmccfg_root=ecmccfg_root)
     total_count = len(descs)
     preferred = selected_hw_desc.strip() or (slave.type_name or "").strip()
@@ -753,7 +753,7 @@ def _match_supported_hardware(
         return root, preferred, [], [], by_desc, total_count
 
     preferred_norm = _normalize_hw_token(preferred)
-    ranked: list[tuple[int, int, str]] = []
+    ranked: List[Tuple[int, int, str]] = []
     for desc in descs:
         desc_norm = _normalize_hw_token(desc)
         if not preferred_norm:
@@ -767,7 +767,7 @@ def _match_supported_hardware(
     ranked.sort(key=lambda row: (row[0], row[1], row[2]))
     matches = [row[2] for row in ranked[:limit]]
 
-    suggestions: list[str] = []
+    suggestions: List[str] = []
     if not matches and preferred_norm:
         family_match = re.match(r"([A-Z]+[0-9]{2})", preferred_norm)
         family = family_match.group(1) if family_match else preferred_norm[:4]
@@ -782,9 +782,9 @@ def _match_supported_hardware(
 
 def _effective_pdo_indexes(
     mapping: PdoMapping,
-    optional_pdo_indexes: list[str] | None = None,
-    selected_pdo_indexes: list[str] | None = None,
-) -> list[str]:
+    optional_pdo_indexes: Optional[List[str]] = None,
+    selected_pdo_indexes: Optional[List[str]] = None,
+) -> List[str]:
     if selected_pdo_indexes is not None:
         ordered = OrderedDict()
         for pdo_index in selected_pdo_indexes:
@@ -804,8 +804,8 @@ def _effective_pdo_indexes(
     return list(ordered.keys())
 
 
-def _detect_selected_channel_groups(slave: SlaveInfo, selected_indexes: list[str]) -> dict[str, list[str]]:
-    groups: dict[str, list[str]] = {}
+def _detect_selected_channel_groups(slave: SlaveInfo, selected_indexes: List[str]) -> Dict[str, List[str]]:
+    groups: Dict[str, List[str]] = {}
     for pdo_index in selected_indexes:
         pdo = slave.pdo_by_index.get(pdo_index)
         if pdo is None:
@@ -832,12 +832,12 @@ def generate_engineering_cfg(
     mapping: PdoMapping,
     mapping_index: int,
     mapping_count: int,
-    optional_pdo_indexes: list[str] | None = None,
-    selected_pdo_indexes: list[str] | None = None,
-    hwtype_override: str | None = None,
+    optional_pdo_indexes: Optional[List[str]] = None,
+    selected_pdo_indexes: Optional[List[str]] = None,
+    hwtype_override: Optional[str] = None,
     selected_hw_desc: str = "",
-    ecmccfg_root: Path | None = None,
-    esi_file: str | None = None,
+    ecmccfg_root: Optional[Path] = None,
+    esi_file: Optional[str] = None,
 ) -> str:
     selected_indexes = _effective_pdo_indexes(
         mapping,
@@ -873,7 +873,7 @@ def generate_engineering_cfg(
     else:
         enc_ch = "01"
 
-    rows: list[str] = []
+    rows: List[str] = []
     rows.append("#- ecmc engineering starter cfg")
     rows.append(
         f"#- selected slave: type={slave.type_name or 'unknown'}, product={slave.product_code or 'unknown'}, revision={slave.revision or 'unknown'}"
@@ -989,7 +989,7 @@ def generate_engineering_cfg(
     return "\n".join(rows) + "\n"
 
 
-def print_mappings(slaves: list[SlaveInfo]) -> None:
+def print_mappings(slaves: List[SlaveInfo]) -> None:
     if not slaves:
         print("No slaves matched.")
         return
@@ -1057,7 +1057,7 @@ def _snake(text: str) -> str:
     return text
 
 
-def _replace_tokens(text: str, replacements: dict[str, str]) -> str:
+def _replace_tokens(text: str, replacements: Dict[str, str]) -> str:
     result = text
     for key, value in replacements.items():
         result = result.replace(key, value)
@@ -1090,7 +1090,7 @@ def _remove_trailing_hyphen(text: str) -> str:
     return text[:-1] if text.endswith("-") else text
 
 
-def _is_single_channel_slave(slave: SlaveInfo | None) -> bool:
+def _is_single_channel_slave(slave: Optional[SlaveInfo]) -> bool:
     if slave is None:
         return False
     text = f"{slave.display_name} {slave.type_name}".lower()
@@ -1098,8 +1098,8 @@ def _is_single_channel_slave(slave: SlaveInfo | None) -> bool:
 
 
 def _pdo_type_and_prefix(
-    pdo: PdoInfo, slave: SlaveInfo | None = None, legacy_naming: bool = False
-) -> tuple[str, str]:
+    pdo: PdoInfo, slave: Optional[SlaveInfo] = None, legacy_naming: bool = False
+) -> Tuple[str, str]:
     words = pdo.name.split()
     if not words:
         return ("Dev", "Dev")
@@ -1111,7 +1111,7 @@ def _pdo_type_and_prefix(
         pdo_map = PDO_IN_MAP if pdo.direction == "rx" else PDO_OUT_MAP
     mapped = _replace_tokens(raw, pdo_map)
 
-    channel_no: int | None = None
+    channel_no: Optional[int] = None
     for idx in range(len(words) - 1):
         if words[idx].lower() == "channel" and words[idx + 1].isdigit():
             channel_no = int(words[idx + 1])
@@ -1135,7 +1135,7 @@ def _pdo_type_and_prefix(
 
 
 def _entry_record_name(
-    pdo: PdoInfo, entry_name: str, slave: SlaveInfo | None = None, legacy_naming: bool = False
+    pdo: PdoInfo, entry_name: str, slave: Optional[SlaveInfo] = None, legacy_naming: bool = False
 ) -> str:
     dev, prefix = _pdo_type_and_prefix(pdo, slave=slave, legacy_naming=legacy_naming)
     text = _chars_after_space_to_upper(entry_name)
@@ -1156,7 +1156,7 @@ def _record_to_source_name(record_name: str) -> str:
     return record_name.replace("-", "_")
 
 
-def _channel_from_pdo_name(pdo_name: str) -> int | None:
+def _channel_from_pdo_name(pdo_name: str) -> Optional[int]:
     match = re.search(r"(?:channel|ch\.?)[^0-9]*([0-9]+)", pdo_name, re.IGNORECASE)
     if not match:
         return None
@@ -1174,14 +1174,14 @@ def _build_hwtype(slave: SlaveInfo, mapping_index: int, mapping_count: int) -> s
 
 
 def _resolve_hwtype(
-    slave: SlaveInfo, mapping_index: int, mapping_count: int, hwtype_override: str | None = None
+    slave: SlaveInfo, mapping_index: int, mapping_count: int, hwtype_override: Optional[str] = None
 ) -> str:
     if hwtype_override and hwtype_override.strip():
         return _snake(hwtype_override)
     return _build_hwtype(slave, mapping_index, mapping_count)
 
 
-def _unique_symbol(candidate: str, used: dict[str, int]) -> str:
+def _unique_symbol(candidate: str, used: Dict[str, int]) -> str:
     count = used.get(candidate, 0) + 1
     used[candidate] = count
     if count == 1:
@@ -1189,7 +1189,7 @@ def _unique_symbol(candidate: str, used: dict[str, int]) -> str:
     return f"{candidate}_{count:02d}"
 
 
-def _symbol_with_direction(base_name: str, direction: str, used: dict[str, int]) -> str:
+def _symbol_with_direction(base_name: str, direction: str, used: Dict[str, int]) -> str:
     del direction
     return _unique_symbol(_snake(base_name), used)
 
@@ -1197,8 +1197,8 @@ def _symbol_with_direction(base_name: str, direction: str, used: dict[str, int])
 def _entry_symbol(
     pdo: PdoInfo,
     entry: PdoEntry,
-    used: dict[str, int],
-    slave: SlaveInfo | None = None,
+    used: Dict[str, int],
+    slave: Optional[SlaveInfo] = None,
     legacy_naming: bool = False,
 ) -> str:
     if legacy_naming:
@@ -1227,8 +1227,8 @@ def _packed_root_name(pdo: PdoInfo) -> str:
 def _packed_symbol_name(
     pdo: PdoInfo,
     chunk_idx: int,
-    used: dict[str, int],
-    slave: SlaveInfo | None = None,
+    used: Dict[str, int],
+    slave: Optional[SlaveInfo] = None,
     legacy_naming: bool = False,
 ) -> str:
     root = _packed_root_name(pdo)
@@ -1253,9 +1253,9 @@ def _bit_range_label(bit_offset: int, bit_width: int) -> str:
     return f"B{bit_offset}..B{bit_offset + bit_width - 1}"
 
 
-def _build_packed_bit_comment(chunk: list[PdoEntry]) -> str:
+def _build_packed_bit_comment(chunk: List[PdoEntry]) -> str:
     # Keep placeholders ("gap") so merged bit layout is explicit and reviewable.
-    segments: list[tuple[int, int, str]] = []
+    segments: List[Tuple[int, int, str]] = []
     bit_offset = 0
     for entry in chunk:
         bit_width = entry.bitlen if entry.bitlen > 0 else 0
@@ -1283,22 +1283,22 @@ def _build_packed_bit_comment(chunk: list[PdoEntry]) -> str:
     return ", ".join(f"{_bit_range_label(offset, width)}={label}" for offset, width, label in segments)
 
 
-def _mapping_pdo_set(mapping: PdoMapping) -> set[str]:
-    selected: set[str] = set()
+def _mapping_pdo_set(mapping: PdoMapping) -> Set[str]:
+    selected: Set[str] = set()
     for group in mapping.sm_groups:
         for pdo_index in group.pdos:
             selected.add(pdo_index)
     return selected
 
 
-def optional_pdos_for_mapping(slave: SlaveInfo, mapping: PdoMapping) -> list[PdoInfo]:
+def optional_pdos_for_mapping(slave: SlaveInfo, mapping: PdoMapping) -> List[PdoInfo]:
     selected = _mapping_pdo_set(mapping)
     optional = [pdo for idx, pdo in slave.pdo_by_index.items() if idx not in selected]
     optional.sort(key=lambda p: (_parse_hexish(p.index) is None, _parse_hexish(p.index) or 0, p.direction, p.name))
     return optional
 
 
-def _pdo_choice_sort_key(choice: PdoChoice) -> tuple[int, int, str, str]:
+def _pdo_choice_sort_key(choice: PdoChoice) -> Tuple[int, int, str, str]:
     idx_num = _parse_hexish(choice.pdo.index)
     return (
         1 if idx_num is None else 0,
@@ -1308,8 +1308,8 @@ def _pdo_choice_sort_key(choice: PdoChoice) -> tuple[int, int, str, str]:
     )
 
 
-def _is_non_decreasing_pdo_order(indexes: list[str]) -> bool:
-    parsed: list[int] = []
+def _is_non_decreasing_pdo_order(indexes: List[str]) -> bool:
+    parsed: List[int] = []
     for idx in indexes:
         idx_num = _parse_hexish(idx)
         if idx_num is None:
@@ -1318,9 +1318,9 @@ def _is_non_decreasing_pdo_order(indexes: list[str]) -> bool:
     return all(parsed[i] <= parsed[i + 1] for i in range(len(parsed) - 1))
 
 
-def pdo_choices_for_mapping(slave: SlaveInfo, mapping: PdoMapping) -> list[PdoChoice]:
-    default_choices: list[PdoChoice] = []
-    seen: set[str] = set()
+def pdo_choices_for_mapping(slave: SlaveInfo, mapping: PdoMapping) -> List[PdoChoice]:
+    default_choices: List[PdoChoice] = []
+    seen: Set[str] = set()
 
     for group in mapping.sm_groups:
         sm_no = group.sm_no
@@ -1333,7 +1333,7 @@ def pdo_choices_for_mapping(slave: SlaveInfo, mapping: PdoMapping) -> list[PdoCh
             default_choices.append(PdoChoice(pdo=pdo, sm_no=sm_no, is_default=True))
             seen.add(pdo_index)
 
-    optional_choices: list[PdoChoice] = []
+    optional_choices: List[PdoChoice] = []
     optional = optional_pdos_for_mapping(slave, mapping)
     for pdo in optional:
         if pdo.index in seen:
@@ -1350,7 +1350,7 @@ def pdo_choices_for_mapping(slave: SlaveInfo, mapping: PdoMapping) -> list[PdoCh
     return sorted(default_choices + optional_choices, key=_pdo_choice_sort_key)
 
 
-def _pdo_conflict_reason(slave: SlaveInfo, candidate_index: str, selected_indexes: set[str]) -> str:
+def _pdo_conflict_reason(slave: SlaveInfo, candidate_index: str, selected_indexes: Set[str]) -> str:
     candidate = slave.pdo_by_index.get(candidate_index)
     if candidate is None:
         return "missing in ESI PDO list"
@@ -1374,10 +1374,10 @@ def _pdo_conflict_reason(slave: SlaveInfo, candidate_index: str, selected_indexe
 
 
 def _build_pdo_conflict_context(
-    slave: SlaveInfo, selected_indexes: set[str]
-) -> tuple[dict[str, set[str]], dict[str, dict[str, str]]]:
-    selected_by_direction: dict[str, set[str]] = {}
-    excluded_by_direction: dict[str, dict[str, str]] = {}
+    slave: SlaveInfo, selected_indexes: Set[str]
+) -> Tuple[Dict[str, Set[str]], Dict[str, Dict[str, str]]]:
+    selected_by_direction: Dict[str, Set[str]] = {}
+    excluded_by_direction: Dict[str, Dict[str, str]] = {}
     for selected_index in selected_indexes:
         selected = slave.pdo_by_index.get(selected_index)
         if selected is None:
@@ -1394,9 +1394,9 @@ def _build_pdo_conflict_context(
 def _pdo_conflict_reason_with_context(
     slave: SlaveInfo,
     candidate_index: str,
-    selected_indexes: set[str],
-    selected_by_direction: dict[str, set[str]],
-    excluded_by_direction: dict[str, dict[str, str]],
+    selected_indexes: Set[str],
+    selected_by_direction: Dict[str, Set[str]],
+    excluded_by_direction: Dict[str, Dict[str, str]],
 ) -> str:
     candidate = slave.pdo_by_index.get(candidate_index)
     if candidate is None:
@@ -1425,9 +1425,9 @@ def pdo_selectable_for_mapping(
     slave: SlaveInfo,
     mapping: PdoMapping,
     candidate_index: str,
-    checked_selected_indexes: set[str] | None = None,
-    conflict_context: tuple[dict[str, set[str]], dict[str, dict[str, str]]] | None = None,
-) -> tuple[bool, str]:
+    checked_selected_indexes: Optional[Set[str]] = None,
+    conflict_context: Optional[Tuple[Dict[str, Set[str]], Dict[str, Dict[str, str]]]] = None,
+) -> Tuple[bool, str]:
     if checked_selected_indexes is None:
         selected = _mapping_pdo_set(mapping)
     else:
@@ -1465,7 +1465,7 @@ def _normalize_dc_time(value: str) -> str:
     return str(parsed)
 
 
-def _select_dc_mode(slave: SlaveInfo) -> DcModeInfo | None:
+def _select_dc_mode(slave: SlaveInfo) -> Optional[DcModeInfo]:
     if not slave.dc_modes:
         return None
 
@@ -1483,16 +1483,16 @@ def generate_hw_snippet(
     mapping: PdoMapping,
     mapping_index: int,
     mapping_count: int,
-    optional_pdo_indexes: list[str] | None = None,
-    selected_pdo_indexes: list[str] | None = None,
-    hwtype_override: str | None = None,
-    generated_entries: list[GeneratedEntry] | None = None,
+    optional_pdo_indexes: Optional[List[str]] = None,
+    selected_pdo_indexes: Optional[List[str]] = None,
+    hwtype_override: Optional[str] = None,
+    generated_entries: Optional[List[GeneratedEntry]] = None,
     include_dc: bool = True,
     include_coe_initcmd: bool = False,
     legacy_naming: bool = True,
-    esi_file: str | None = None,
+    esi_file: Optional[str] = None,
 ) -> str:
-    rows: list[str] = []
+    rows: List[str] = []
     rows.append(f"#-  ecmc hardware config for: {slave.display_name}")
     rows.append(f"#- {mapping.name}")
     if esi_file:
@@ -1549,14 +1549,14 @@ def generate_hw_snippet(
         rows.append("")
 
     mapping_pdos = _mapping_pdo_set(mapping)
-    mapping_sm_by_pdo: dict[str, str] = {}
+    mapping_sm_by_pdo: Dict[str, str] = {}
     for group in mapping.sm_groups:
         for pdo_index in group.pdos:
             if pdo_index not in mapping_sm_by_pdo:
                 mapping_sm_by_pdo[pdo_index] = group.sm_no
 
-    used_symbols: dict[str, int] = {}
-    already_added: set[str] = set()
+    used_symbols: Dict[str, int] = {}
+    already_added: Set[str] = set()
 
     def _emit_pdo(pdo_index: str, sm_no: str, is_optional: bool) -> None:
         pdo = slave.pdo_by_index.get(pdo_index)
@@ -1614,7 +1614,7 @@ def generate_hw_snippet(
 
             # Merge contiguous bit-level fields (including padding gaps) within the PDO run.
             if _is_packable_bit_entry(entry):
-                run_entries: list[PdoEntry] = []
+                run_entries: List[PdoEntry] = []
                 run_j = entry_i
                 while run_j < len(entries):
                     curr = entries[run_j]
@@ -1635,7 +1635,7 @@ def generate_hw_snippet(
                     cursor = 0
                     while cursor < len(run_entries):
                         bits = 0
-                        chunk: list[PdoEntry] = []
+                        chunk: List[PdoEntry] = []
                         while cursor < len(run_entries):
                             curr = run_entries[cursor]
                             if curr.bitlen <= 0:
@@ -1720,8 +1720,8 @@ def generate_hw_snippet(
                 sm_no = pdo.sm if pdo.sm else _default_sm_for_direction(slave, mapping, pdo.direction)
                 _emit_pdo(pdo_index, sm_no, is_optional=True)
     else:
-        ordered_selected: list[str] = []
-        seen_selected: set[str] = set()
+        ordered_selected: List[str] = []
+        seen_selected: Set[str] = set()
         for idx in selected_pdo_indexes:
             if idx and idx not in seen_selected:
                 ordered_selected.append(idx)
@@ -1786,7 +1786,7 @@ def _esc_subst(value: str) -> str:
     return value.replace('"', "'")
 
 
-def _bit_comment_lines(bit_comment: str) -> list[str]:
+def _bit_comment_lines(bit_comment: str) -> List[str]:
     if not bit_comment.strip():
         return []
     return [part.strip() for part in bit_comment.split(",") if part.strip()]
@@ -1807,15 +1807,15 @@ def generate_substitutions(
     mapping: PdoMapping,
     mapping_index: int,
     mapping_count: int,
-    optional_pdo_indexes: list[str] | None = None,
-    selected_pdo_indexes: list[str] | None = None,
-    hwtype_override: str | None = None,
+    optional_pdo_indexes: Optional[List[str]] = None,
+    selected_pdo_indexes: Optional[List[str]] = None,
+    hwtype_override: Optional[str] = None,
     include_dc: bool = True,
     include_coe_initcmd: bool = False,
     legacy_naming: bool = True,
-    esi_file: str | None = None,
+    esi_file: Optional[str] = None,
 ) -> str:
-    collected: list[GeneratedEntry] = []
+    collected: List[GeneratedEntry] = []
     _ = generate_hw_snippet(
         slave=slave,
         mapping=mapping,
@@ -1831,11 +1831,11 @@ def generate_substitutions(
         esi_file=esi_file,
     )
 
-    groups: dict[str, list[GeneratedEntry]] = {"ai": [], "ao": [], "bi": [], "bo": [], "mbbi": [], "mbbo": []}
+    groups: Dict[str, List[GeneratedEntry]] = {"ai": [], "ao": [], "bi": [], "bo": [], "mbbi": [], "mbbo": []}
     for entry in collected:
         groups[_entry_to_subst_group(entry)].append(entry)
 
-    rows: list[str] = []
+    rows: List[str] = []
     hwtype = _resolve_hwtype(slave, mapping_index, mapping_count, hwtype_override)
     rows.append(f"#-  ecmc database for: {slave.display_name}")
     rows.append(f"#- {mapping.name}")
@@ -1852,7 +1852,7 @@ def generate_substitutions(
     rows.append("#-      templates:          db/generic/ecmc_ESI_*.template")
     rows.append("")
 
-    def _add_file_block_ai_ao(template: str, entries: list[GeneratedEntry]) -> None:
+    def _add_file_block_ai_ao(template: str, entries: List[GeneratedEntry]) -> None:
         if not entries:
             return
         rows.append(f'file "{template}" {{')
@@ -1863,7 +1863,7 @@ def generate_substitutions(
         rows.append("}")
         rows.append("")
 
-    def _add_file_block_bi_bo(template: str, entries: list[GeneratedEntry]) -> None:
+    def _add_file_block_bi_bo(template: str, entries: List[GeneratedEntry]) -> None:
         if not entries:
             return
         rows.append(f'file "{template}" {{')
@@ -1874,7 +1874,7 @@ def generate_substitutions(
         rows.append("}")
         rows.append("")
 
-    def _add_file_block_mbbi(entries: list[GeneratedEntry]) -> None:
+    def _add_file_block_mbbi(entries: List[GeneratedEntry]) -> None:
         if not entries:
             return
         rows.append('file "ecmc_ESI_mbbiDirect.template" {')
@@ -1888,7 +1888,7 @@ def generate_substitutions(
         rows.append("}")
         rows.append("")
 
-    def _add_file_block_mbbo(entries: list[GeneratedEntry]) -> None:
+    def _add_file_block_mbbo(entries: List[GeneratedEntry]) -> None:
         if not entries:
             return
         rows.append('file "ecmc_ESI_mbboDirect.template" {')
@@ -1965,7 +1965,7 @@ def _panel_group_title(group_id: str) -> str:
     return group_id
 
 
-def _panel_group_sort_key(group_id: str, original_order: int) -> tuple[int, int, int, str]:
+def _panel_group_sort_key(group_id: str, original_order: int) -> Tuple[int, int, int, str]:
     match = re.match(r"CH([0-9]{1,2})$", group_id)
     if not match:
         return (1, 999, original_order, group_id)
@@ -1982,7 +1982,7 @@ def _panel_entry_uses_byte(entry: GeneratedEntry) -> bool:
     return entry.dt.startswith("B")
 
 
-def _panel_byte_range(entry: GeneratedEntry) -> tuple[int, int]:
+def _panel_byte_range(entry: GeneratedEntry) -> Tuple[int, int]:
     if entry.packed:
         if entry.dt == "U16":
             return (0, 15)
@@ -2002,13 +2002,13 @@ def generate_caqtdm_panel(
     mapping: PdoMapping,
     mapping_index: int,
     mapping_count: int,
-    optional_pdo_indexes: list[str] | None = None,
-    selected_pdo_indexes: list[str] | None = None,
-    hwtype_override: str | None = None,
+    optional_pdo_indexes: Optional[List[str]] = None,
+    selected_pdo_indexes: Optional[List[str]] = None,
+    hwtype_override: Optional[str] = None,
     legacy_naming: bool = True,
-    esi_file: str | None = None,
+    esi_file: Optional[str] = None,
 ) -> str:
-    collected: list[GeneratedEntry] = []
+    collected: List[GeneratedEntry] = []
     _ = generate_hw_snippet(
         slave=slave,
         mapping=mapping,
@@ -2024,7 +2024,7 @@ def generate_caqtdm_panel(
         esi_file=esi_file,
     )
 
-    grouped: OrderedDict[str, list[GeneratedEntry]] = OrderedDict()
+    grouped: OrderedDict[str, List[GeneratedEntry]] = OrderedDict()
     for entry in collected:
         group_id = _panel_group_id(entry)
         grouped.setdefault(group_id, []).append(entry)
@@ -2055,7 +2055,7 @@ def generate_caqtdm_panel(
         for entry in entries[:max_rows_per_tab]
     )
 
-    rows: list[str] = []
+    rows: List[str] = []
     rows.append('<?xml version="1.0" encoding="UTF-8"?>')
     rows.append("<ui version=\"4.0\">")
     rows.append(" <class>Form</class>")
@@ -2268,7 +2268,7 @@ def generate_caqtdm_panel(
     return "\n".join(rows).rstrip() + "\n"
 
 
-def _ui_widget_rect(widget: ET.Element) -> tuple[int, int, int, int] | None:
+def _ui_widget_rect(widget: ET.Element) -> Optional[Tuple[int, int, int, int]]:
     rect = widget.find("./property[@name='geometry']/rect")
     if rect is None:
         return None
@@ -2290,11 +2290,11 @@ def _ui_widget_string_property(widget: ET.Element, prop_name: str) -> str:
 
 def parse_generated_panel_preview_items(
     panel_ui: str,
-) -> tuple[
+) -> Tuple[
     int,
     int,
-    tuple[int, int, int, int] | None,
-    list[tuple[str, list[tuple[str, tuple[int, int, int, int], str]]]],
+    Optional[Tuple[int, int, int, int]],
+    List[Tuple[str, List[Tuple[str, Tuple[int, int, int, int], str]]]],
 ]:
     root = ET.fromstring(panel_ui)
     form_widget = root.find("./widget[@name='Form']")
@@ -2309,8 +2309,8 @@ def parse_generated_panel_preview_items(
         widget_iter,
         x_off: int = 0,
         y_off: int = 0,
-    ) -> list[tuple[str, tuple[int, int, int, int], str]]:
-        out: list[tuple[str, tuple[int, int, int, int], str]] = []
+    ) -> List[Tuple[str, Tuple[int, int, int, int], str]]:
+        out: List[Tuple[str, Tuple[int, int, int, int], str]] = []
         for widget in widget_iter:
             cls = widget.get("class", "")
             name = widget.get("name", "")
@@ -2340,8 +2340,8 @@ def parse_generated_panel_preview_items(
                 out.append(("byte", abs_rect, bit_text))
         return out
 
-    tabs: list[tuple[str, list[tuple[str, tuple[int, int, int, int], str]]]] = []
-    tab_rect_out: tuple[int, int, int, int] | None = None
+    tabs: List[Tuple[str, List[Tuple[str, Tuple[int, int, int, int], str]]]] = []
+    tab_rect_out: Optional[Tuple[int, int, int, int]] = None
     tab_widget = root.find(".//widget[@name='tabwidget_auto']")
     if tab_widget is not None:
         tab_rect = _ui_widget_rect(tab_widget)
@@ -2365,7 +2365,7 @@ def parse_generated_panel_preview_items(
 
 
 def mapping_details_text(slave: SlaveInfo, mapping: PdoMapping) -> str:
-    lines: list[str] = []
+    lines: List[str] = []
     lines.append(f"Name: {mapping.name}")
     lines.append(f"Source: {mapping.source}")
     lines.append(f"Default: {'yes' if mapping.is_default else 'no'}")
@@ -2432,7 +2432,7 @@ def mapping_details_text(slave: SlaveInfo, mapping: PdoMapping) -> str:
 
 def pdo_choice_details_text(choice: PdoChoice) -> str:
     pdo = choice.pdo
-    lines: list[str] = []
+    lines: List[str] = []
     lines.append(f"PDO: {pdo.index}")
     lines.append(f"Name: {pdo.name or '(unnamed)'}")
     lines.append(f"Type: {'default' if choice.is_default else 'optional'}")
@@ -2456,7 +2456,7 @@ def coe_initcmd_summary_text(init_cmd: CoeInitCmdInfo) -> str:
 
 
 def coe_initcmd_details_text(init_cmd: CoeInitCmdInfo) -> str:
-    lines: list[str] = []
+    lines: List[str] = []
     lines.append("CoE InitCmd")
     lines.append(f"Transition: {init_cmd.transition or '(none)'}")
     lines.append(f"Index/Sub: {init_cmd.index}:{init_cmd.subindex}")
@@ -2500,26 +2500,26 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
             self.root.geometry("1280x760")
             self._setup_tree_style()
 
-            self.slaves: list[SlaveInfo] = []
-            self.current_mappings: list[PdoMapping] = []
-            self.current_pdo_choices: list[PdoChoice] = []
-            self.optional_pdo_vars: list[tk.BooleanVar] = []
-            self.pdo_row_items: list[dict[str, object]] = []
-            self.pdo_item_to_row: dict[str, int] = {}
-            self.current_coe_item_indexes: list[int] = []
+            self.slaves: List[SlaveInfo] = []
+            self.current_mappings: List[PdoMapping] = []
+            self.current_pdo_choices: List[PdoChoice] = []
+            self.optional_pdo_vars: List[tk.BooleanVar] = []
+            self.pdo_row_items: List[Dict[str, object]] = []
+            self.pdo_item_to_row: Dict[str, int] = {}
+            self.current_coe_item_indexes: List[int] = []
             self.generated_snippet = ""
             self.generated_substitutions = ""
             self.generated_panel = ""
-            self.generated_popup: tk.Toplevel | None = None
-            self.generated_hw_text: tk.Text | None = None
-            self.generated_db_text: tk.Text | None = None
-            self.generated_panel_text: tk.Text | None = None
-            self.generated_panel_preview_canvas: tk.Canvas | None = None
-            self.generated_edit_var: tk.BooleanVar | None = None
+            self.generated_popup: Optional[tk.Toplevel] = None
+            self.generated_hw_text: Optional[tk.Text] = None
+            self.generated_db_text: Optional[tk.Text] = None
+            self.generated_panel_text: Optional[tk.Text] = None
+            self.generated_panel_preview_canvas: Optional[tk.Canvas] = None
+            self.generated_edit_var: Optional[tk.BooleanVar] = None
             self._is_busy = False
             self._activity_active = False
             self._activity_status_before = ""
-            self._pending_pdo_select_after_id: str | None = None
+            self._pending_pdo_select_after_id: Optional[str] = None
             self.compact_status_labels = True
             self.custom_hwtype_override = ""
             self.exclude_dc_clock = False
@@ -2677,7 +2677,7 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
                 ],
             )
 
-        def _set_busy(self, busy: bool, message: str | None = None) -> None:
+        def _set_busy(self, busy: bool, message: Optional[str] = None) -> None:
             if busy and self._activity_active:
                 self._end_activity(restore_status=False)
             self._is_busy = bool(busy)
@@ -2724,7 +2724,7 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
             except Exception:
                 pass
 
-        def _step_activity(self, value: int, message: str | None = None, force: bool = False) -> None:
+        def _step_activity(self, value: int, message: Optional[str] = None, force: bool = False) -> None:
             if self._is_busy or not self._activity_active:
                 return
             if message is not None:
@@ -2915,16 +2915,16 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
             self.details.delete("1.0", tk.END)
             self.details.insert(tk.END, coe_initcmd_details_text(slave.coe_init_cmds[idx]))
 
-        def _selected_checked_pdo_indexes(self) -> list[str]:
-            indexes: list[str] = []
+        def _selected_checked_pdo_indexes(self) -> List[str]:
+            indexes: List[str] = []
             for row_item in self.pdo_row_items:
                 if row_item.get("checked", False):
                     choice = row_item["choice"]
                     indexes.append(choice.pdo.index)
             return indexes
 
-        def _current_checked_pdo_indexes(self, exclude_pdo_index: str | None = None) -> set[str]:
-            checked: set[str] = set()
+        def _current_checked_pdo_indexes(self, exclude_pdo_index: Optional[str] = None) -> Set[str]:
+            checked: Set[str] = set()
             for row_item in self.pdo_row_items:
                 if not row_item.get("checked", False):
                     continue
@@ -3086,7 +3086,7 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
         def _on_pdo_tree_select(self, _event) -> None:
             self._schedule_pdo_details_update(delay_ms=40)
 
-        def _on_pdo_tree_click(self, event) -> str | None:
+        def _on_pdo_tree_click(self, event) -> Optional[str]:
             item_id = self.pdo_tree.identify_row(event.y)
             if not item_id:
                 return None
@@ -3106,7 +3106,7 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
                 return "break"
             return None
 
-        def _on_pdo_tree_space(self, _event) -> str | None:
+        def _on_pdo_tree_space(self, _event) -> Optional[str]:
             row_idx = self._selected_pdo_row_index()
             if row_idx >= 0:
                 self._toggle_pdo_row(row_idx)
@@ -3131,7 +3131,7 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
                     )
                     self.pdo_item_to_row[item_id] = row_idx
 
-                    entry_item_ids: list[str] = []
+                    entry_item_ids: List[str] = []
                     for entry in pdo.entries:
                         entry_label = entry.resolved_name or entry.raw_name or "(unnamed)"
                         entry_item = self.pdo_tree.insert(
@@ -3903,7 +3903,7 @@ def main() -> int:
             return 2
 
         mapping = slave.mappings[args.mapping_index - 1]
-        optional_pdo_indexes: list[str] = []
+        optional_pdo_indexes: List[str] = []
         if args.optional_pdos:
             for item in args.optional_pdos.split(","):
                 pdo_index = _norm_hex(item.strip())

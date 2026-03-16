@@ -64,10 +64,10 @@
   <widget class="QFrame" name="frame_inner">
    <property name="geometry">
     <rect>
-     <x>2</x>
-     <y>2</y>
-     <width>22</width>
-     <height>14</height>
+     <x>1</x>
+     <y>1</y>
+     <width>24</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -80,9 +80,9 @@
   <widget class="caRelatedDisplay" name="open_ilock">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>1</x>
      <y>1</y>
-     <width>22</width>
+     <width>24</width>
      <height>16</height>
     </rect>
    </property>

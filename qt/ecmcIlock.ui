@@ -16,9 +16,9 @@
   <widget class="QFrame" name="frame_text_bg">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -32,9 +32,9 @@
   <widget class="caFrame" name="ilock_none">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -62,7 +62,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -74,9 +74,9 @@
   <widget class="caFrame" name="ilock_soft_bwd">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -104,7 +104,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -116,9 +116,9 @@
   <widget class="caFrame" name="ilock_soft_fwd">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -146,7 +146,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -158,9 +158,9 @@
   <widget class="caFrame" name="ilock_hard_bwd">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -188,7 +188,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -200,9 +200,9 @@
   <widget class="caFrame" name="ilock_hard_fwd">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -230,7 +230,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -242,9 +242,9 @@
   <widget class="caFrame" name="ilock_no_execute">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -272,7 +272,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -284,9 +284,9 @@
   <widget class="caFrame" name="ilock_position_lag">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -314,7 +314,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -326,9 +326,9 @@
   <widget class="caFrame" name="ilock_both_limits">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -356,7 +356,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -368,9 +368,9 @@
   <widget class="caFrame" name="ilock_external">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -398,7 +398,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -410,9 +410,9 @@
   <widget class="caFrame" name="ilock_transform">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -440,7 +440,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -452,9 +452,9 @@
   <widget class="caFrame" name="ilock_max_speed">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -482,7 +482,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -494,9 +494,9 @@
   <widget class="caFrame" name="ilock_cont_high_limit">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -524,7 +524,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -536,9 +536,9 @@
   <widget class="caFrame" name="ilock_cont_out_increase">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -566,7 +566,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -578,9 +578,9 @@
   <widget class="caFrame" name="ilock_axis_error_state">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -608,7 +608,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -620,9 +620,9 @@
   <widget class="caFrame" name="ilock_unexpected_limit_switch_behaviour">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -650,7 +650,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -662,9 +662,9 @@
   <widget class="caFrame" name="ilock_velocity_diff">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -692,7 +692,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -704,9 +704,9 @@
   <widget class="caFrame" name="ilock_ethercat_master_not_ok">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -734,7 +734,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -746,9 +746,9 @@
   <widget class="caFrame" name="ilock_plc_normal">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -776,7 +776,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -788,9 +788,9 @@
   <widget class="caFrame" name="ilock_plc_bwd">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -818,7 +818,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -830,9 +830,9 @@
   <widget class="caFrame" name="ilock_plc_fwd">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -860,7 +860,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -872,9 +872,9 @@
   <widget class="caFrame" name="ilock_enc_diff">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -902,7 +902,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -914,9 +914,9 @@
   <widget class="caFrame" name="ilock_analog">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -944,7 +944,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -956,9 +956,9 @@
   <widget class="caFrame" name="ilock_safety">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -986,7 +986,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -998,9 +998,9 @@
   <widget class="caFrame" name="ilock_stall">
    <property name="geometry">
     <rect>
-     <x>2</x>
+     <x>0</x>
      <y>2</y>
-     <width>156</width>
+     <width>158</width>
      <height>18</height>
     </rect>
    </property>
@@ -1028,7 +1028,7 @@
      <rect>
       <x>4</x>
       <y>1</y>
-      <width>148</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>

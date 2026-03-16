@@ -1233,6 +1233,38 @@
      <string notr="true">$(DEV):$(Axis)-Blocked</string>
     </property>
    </widget>
+   <widget class="caInclude" name="cainclude">
+    <property name="geometry">
+     <rect>
+      <x>345</x>
+      <y>105</y>
+      <width>158</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="filename" stdset="0">
+     <string notr="true">ecmcIlock.ui</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="calabel_125">
+    <property name="geometry">
+     <rect>
+      <x>245</x>
+      <y>110</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="text">
+     <string>Last Ilock.:</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox_4">
    <property name="geometry">
@@ -2174,25 +2206,6 @@
      </color>
     </property>
    </widget>
-   <widget class="caLabel" name="calabel_67">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>390</y>
-      <width>80</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>16</height>
-     </size>
-    </property>
-    <property name="text">
-     <string>Last Move Ilock:</string>
-    </property>
-   </widget>
    <widget class="caLabel" name="calabel_94">
     <property name="geometry">
      <rect>
@@ -2431,7 +2444,7 @@
     <property name="geometry">
      <rect>
       <x>15</x>
-      <y>430</y>
+      <y>420</y>
       <width>151</width>
       <height>21</height>
      </rect>
@@ -2618,19 +2631,6 @@
       <green>0</green>
       <blue>0</blue>
      </color>
-    </property>
-   </widget>
-   <widget class="caInclude" name="cainclude">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>405</y>
-      <width>158</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="filename" stdset="0">
-     <string notr="true">ecmcIlock.ui</string>
     </property>
    </widget>
   </widget>

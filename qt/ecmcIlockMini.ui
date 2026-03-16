@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>42</width>
+    <height>20</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Interlock Mini</string>
+  </property>
+  <widget class="QFrame" name="frame_bg">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>42</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Sunken</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(150,150,150);</string>
+   </property>
+  </widget>
+  <widget class="caFrame" name="frame_alarm">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>42</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>220</red>
+     <green>0</green>
+     <blue>0</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::IfNotZero</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true"/>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+  </widget>
+  <widget class="QFrame" name="frame_inner">
+   <property name="geometry">
+    <rect>
+     <x>7</x>
+     <y>1</y>
+     <width>26</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(239,239,239);</string>
+   </property>
+  </widget>
+  <widget class="caRelatedDisplay" name="open_ilock">
+   <property name="geometry">
+    <rect>
+     <x>7</x>
+     <y>1</y>
+     <width>26</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="label">
+    <string notr="true"/>
+   </property>
+   <property name="labels">
+    <string>ILK</string>
+   </property>
+   <property name="files">
+    <string>ecmcIlock.ui</string>
+   </property>
+   <property name="args">
+    <string>DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC)</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

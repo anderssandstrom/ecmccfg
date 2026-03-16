@@ -1,0 +1,1043 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>158</width>
+    <height>24</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Interlock</string>
+  </property>
+  <widget class="QFrame" name="frame_text_bg">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Plain</enum>
+   </property>
+  </widget>
+  <widget class="caFrame" name="ilock_none">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>198</red>
+     <green>239</green>
+     <blue>206</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==0</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_none">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>NONE</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_soft_bwd">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>255</red>
+     <green>242</green>
+     <blue>204</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==1</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_soft_bwd">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SOFT BWD</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_soft_fwd">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>255</red>
+     <green>242</green>
+     <blue>204</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==2</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_soft_fwd">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SOFT FWD</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_hard_bwd">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>244</red>
+     <green>204</green>
+     <blue>204</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==3</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_hard_bwd">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>HARD BWD</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_hard_fwd">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>244</red>
+     <green>204</green>
+     <blue>204</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==4</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_hard_fwd">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>HARD FWD</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_no_execute">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>244</red>
+     <green>204</green>
+     <blue>204</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==5</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_no_execute">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>STOP</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_position_lag">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>252</red>
+     <green>229</green>
+     <blue>205</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==6</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_position_lag">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>POS LAG</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_both_limits">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>244</red>
+     <green>204</green>
+     <blue>204</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==7</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_both_limits">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>BOTH LIMS</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_external">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>217</red>
+     <green>210</green>
+     <blue>233</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==8</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_external">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>EXTERNAL</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_transform">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>217</red>
+     <green>210</green>
+     <blue>233</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==9</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_transform">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TRANSFORM</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_max_speed">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>252</red>
+     <green>229</green>
+     <blue>205</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==10</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_max_speed">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>MAX SPD</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_cont_high_limit">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>252</red>
+     <green>229</green>
+     <blue>205</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==11</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_cont_high_limit">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>CONT HI LIM</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_cont_out_increase">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>252</red>
+     <green>229</green>
+     <blue>205</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==12</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_cont_out_increase">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>OUT+ @ LIM SW</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_axis_error_state">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>244</red>
+     <green>204</green>
+     <blue>204</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==13</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_axis_error_state">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>AXIS ERR</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_unexpected_limit_switch_behaviour">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>244</red>
+     <green>204</green>
+     <blue>204</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==14</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_unexpected_limit_switch_behaviour">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>UNEXP LIM SW</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_velocity_diff">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>252</red>
+     <green>229</green>
+     <blue>205</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==15</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_velocity_diff">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>VEL DIFF</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_ethercat_master_not_ok">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>244</red>
+     <green>204</green>
+     <blue>204</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==16</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_ethercat_master_not_ok">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ETHERCAT</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_plc_normal">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>217</red>
+     <green>234</green>
+     <blue>211</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==17</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_plc_normal">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PLC NORM</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_plc_bwd">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>255</red>
+     <green>242</green>
+     <blue>204</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==18</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_plc_bwd">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PLC BWD</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_plc_fwd">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>255</red>
+     <green>242</green>
+     <blue>204</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==19</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_plc_fwd">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PLC FWD</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_enc_diff">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>252</red>
+     <green>229</green>
+     <blue>205</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==20</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_enc_diff">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ENCODER DIFF</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_analog">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>217</red>
+     <green>210</green>
+     <blue>233</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==21</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_analog">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ANALOG</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_safety">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>234</red>
+     <green>153</green>
+     <blue>153</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==22</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_safety">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SAFETY</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="ilock_stall">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>2</y>
+     <width>158</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="background">
+    <color>
+     <red>252</red>
+     <green>229</green>
+     <blue>205</blue>
+    </color>
+   </property>
+   <property name="backgroundMode">
+    <enum>caFrame::Filled</enum>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string notr="true">A==23</string>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+   </property>
+   <widget class="QLabel" name="label_stall">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>1</y>
+      <width>150</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>STALL</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

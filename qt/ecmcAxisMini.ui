@@ -291,6 +291,32 @@
      <string notr="true">1</string>
     </property>
    </widget>
+   <widget class="caFrame" name="caframe_ilock_dmov">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>115</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="background">
+     <color>
+      <red>255</red>
+      <green>0</green>
+      <blue>0</blue>
+     </color>
+    </property>
+    <property name="backgroundMode">
+     <enum>caFrame::Filled</enum>
+    </property>
+    <property name="visibility">
+     <enum>caFrame::IfNotZero</enum>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+    </property>
+   </widget>
    <widget class="caFrame" name="caframe_3">
     <property name="geometry">
      <rect>
@@ -317,33 +343,12 @@
      <string notr="true">$(DEV):$(Axis).DMOV</string>
     </property>
    </widget>
+   <zorder>caframe_ilock_dmov</zorder>
    <zorder>caframe_3</zorder>
    <zorder>catextentry_21</zorder>
    <zorder>camessagebutton_64</zorder>
    <zorder>camessagebutton_70</zorder>
    <zorder>catextentry_20</zorder>
-  </widget>
-  <widget class="caRelatedDisplay" name="carelateddisplay">
-   <property name="geometry">
-    <rect>
-     <x>89</x>
-     <y>80</y>
-     <width>26</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="labels">
-    <string>Expert;Compact;Motor;Main</string>
-   </property>
-   <property name="files">
-    <string>ecmcAxisExpert.ui;ecmcAxis.ui;motorx_all.ui;ecmcMain.ui</string>
-   </property>
-   <property name="args">
-    <string>DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC);DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC);P=$(DEV):,M=$(Axis);DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC)</string>
-   </property>
-   <property name="stackingMode" stdset="0">
-    <enum>caRowColMenu::Menu</enum>
-   </property>
   </widget>
   <widget class="caFrame" name="caframe_9">
    <property name="geometry">
@@ -373,7 +378,7 @@
    <property name="channel" stdset="0">
     <string notr="true">$(DEV):$(Axis)-SumIlockBwd</string>
    </property>
-   <widget class="caLed" name="caled_54">
+   <widget class="QFrame" name="frame_lvio_bwd">
     <property name="geometry">
      <rect>
       <x>5</x>
@@ -382,15 +387,11 @@
       <height>18</height>
      </rect>
     </property>
-    <property name="channel" stdset="0">
-     <string notr="true">$(DEV):$(Axis).LVIO</string>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255,0,0);</string>
     </property>
-    <property name="trueColor">
-     <color>
-      <red>255</red>
-      <green>255</green>
-      <blue>75</blue>
-     </color>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
     </property>
    </widget>
   </widget>
@@ -422,7 +423,7 @@
    <property name="channel" stdset="0">
     <string notr="true">$(DEV):$(Axis)-SumIlockFwd</string>
    </property>
-   <widget class="caLed" name="caled_55">
+   <widget class="QFrame" name="frame_lvio_fwd">
     <property name="geometry">
      <rect>
       <x>5</x>
@@ -431,15 +432,11 @@
       <height>18</height>
      </rect>
     </property>
-    <property name="channel" stdset="0">
-     <string notr="true">$(DEV):$(Axis).LVIO</string>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255,0,0);</string>
     </property>
-    <property name="trueColor">
-     <color>
-      <red>255</red>
-      <green>255</green>
-      <blue>75</blue>
-     </color>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
     </property>
    </widget>
   </widget>
@@ -677,16 +674,38 @@
     </property>
    </widget>
   </widget>
+  <widget class="caRelatedDisplay" name="carelateddisplay">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>80</y>
+     <width>26</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="labels">
+    <string>Expert;Compact;Motor;Ilock;Main</string>
+   </property>
+   <property name="files">
+    <string>ecmcAxisExpert.ui;ecmcAxis.ui;motorx_all.ui;ecmcIlock.ui;ecmcMain.ui</string>
+   </property>
+   <property name="args">
+    <string>DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC);DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC);P=$(DEV):,M=$(Axis);DEV=$(DEV),Axis=$(Axis);DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC)</string>
+   </property>
+   <property name="stackingMode" stdset="0">
+    <enum>caRowColMenu::Menu</enum>
+   </property>
+  </widget>
   <zorder>calabel_3</zorder>
   <zorder>caLineEdit_15</zorder>
   <zorder>caframe_2</zorder>
   <zorder>caframe_5</zorder>
-  <zorder>carelateddisplay</zorder>
   <zorder>caframe_9</zorder>
   <zorder>caframe_10</zorder>
   <zorder>caframe_11</zorder>
   <zorder>caframe_8</zorder>
   <zorder>caframe_4</zorder>
+  <zorder>carelateddisplay</zorder>
  </widget>
  <customwidgets>
   <customwidget>

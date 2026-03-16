@@ -291,6 +291,32 @@
      <string notr="true">1</string>
     </property>
    </widget>
+   <widget class="caFrame" name="caframe_ilock_dmov">
+   <property name="geometry">
+    <rect>
+      <x>9</x>
+      <y>0</y>
+      <width>94</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="background">
+     <color>
+      <red>255</red>
+      <green>0</green>
+      <blue>0</blue>
+     </color>
+    </property>
+    <property name="backgroundMode">
+     <enum>caFrame::Filled</enum>
+    </property>
+    <property name="visibility">
+     <enum>caFrame::IfNotZero</enum>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+    </property>
+   </widget>
    <widget class="caFrame" name="caframe_3">
     <property name="geometry">
      <rect>
@@ -317,6 +343,7 @@
      <string notr="true">$(DEV):$(Axis).DMOV</string>
     </property>
    </widget>
+   <zorder>caframe_ilock_dmov</zorder>
    <zorder>caframe_3</zorder>
    <zorder>catextentry_21</zorder>
    <zorder>camessagebutton_64</zorder>
@@ -388,8 +415,8 @@
     <property name="trueColor">
      <color>
       <red>255</red>
-      <green>255</green>
-      <blue>75</blue>
+      <green>0</green>
+      <blue>0</blue>
      </color>
     </property>
    </widget>
@@ -437,8 +464,8 @@
     <property name="trueColor">
      <color>
       <red>255</red>
-      <green>255</green>
-      <blue>75</blue>
+      <green>0</green>
+      <blue>0</blue>
      </color>
     </property>
    </widget>

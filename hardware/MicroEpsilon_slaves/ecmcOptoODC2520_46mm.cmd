@@ -19,3 +19,5 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}slaveVerify.cmd
 #     PDO entry 0x6065:01, 32 bit, "Position of the first high-low edge"
 
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a00,0x6065,0x1,S32,analogInput01,1)"
+
+epicsEnvSet("ECMC_HW_PANEL"              "OptoILD2300_XXmm")

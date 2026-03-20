@@ -1,0 +1,104 @@
+axis:
+  id: ${AXIS_ID=1}                                    # Axis id
+  autoEnable:
+    enableTimeout: 5.0
+    disableTimeout: 5.0
+  tweakDist: 0.5
+
+epics:
+  name: ${AX_NAME=M1}                                 # Axis name
+  precision: 3                                        # Decimal count
+  description: EL7047 with EL5102 incremental encoder # Axis description
+  unit: mm                                            # Unit
+  motorRecord:
+    syncSoftLimits: False
+    fieldInit: 'RTRY=0,FOFF=Frozen'                   # Extra config for motor record
+
+drive:
+  numerator: 10                                       # Fastest speed in eng. units (2000 fullsteps/s = 10 mm/s)
+  denominator: 32768                                  # I/O range for velocity setpoint
+  type: 0                                             # Stepper: 0. DS402: 1
+  setpoint: ec0.s$(DRV_SID).velocitySetpoint01        # Velocity setpoint
+  control: ec0.s$(DRV_SID).driveControl01             # Control word EtherCAT entry
+  enable: 0                                           # Enable bit index in control word
+  reset: 1                                            # Reset bit index in control word
+  reduceTorque: 2                                     # Reduce torque bit in drive control word
+  reduceTorqueEnable: True                            # Enable reduce torque functionality
+  status: ec0.s$(DRV_SID).driveStatus01               # Status word EtherCAT entry
+  enabled: 1                                          # Enabled bit index in status word
+  warning: 2                                          # Warning bit in status word
+  error:                                              # Max 3 error bits in status word
+    - 3
+    - 7
+    - 14
+
+encoder:
+  desc: Incremental RS422
+  unit: mm
+  numerator: 1                                        # Scaling numerator
+  denominator: 4096                                   # Example: 4096 counts per mm
+  type: 0                                             # Type: 0=Incremental, 1=Absolute
+  bits: 32                                            # Total bit count of encoder raw data
+  absBits: 0                                          # Absolute bit count
+  position: ec0.s$(ENC_SID).positionActual${ENC_CH=01} # EtherCAT entry for actual position input
+  status: ec0.s$(ENC_SID).encoderStatus${ENC_CH=01}   # Encoder status word
+  control: ec0.s$(ENC_SID).encoderControl${ENC_CH=01} # Encoder control word
+  primary: True
+  latch:
+    position: ec0.s$(ENC_SID).encoderLatchPostion$(ENC_CH=01) # Latched position used by index homing
+    control: 0                                        # Latch arm bit in encoder control word
+    status: 0                                         # Latch event bit in encoder status word
+  homing:
+    type: 11                                          # Homing sequence type
+    position: 0                                       # Position to reference encoder to
+    velocity:
+      to: 2                                           # Velocity to first limit
+      from: 1                                         # Velocity while searching for index
+    acceleration: 1                                   # Acceleration during homing
+    deceleration: 1                                   # Deceleration during homing
+    latchCount: 1                                     # Ref on first index after the limit transition
+
+controller:
+  Kp: 2                                               # Proportional gain
+  Ki: 0                                               # Integral gain
+  Kd: 0                                               # Derivative gain
+
+trajectory:
+  axis:
+    velocity: 2                                       # Default axis velocity
+    acceleration: 2                                   # Default axis acceleration
+    deceleration: 2                                   # Default axis deceleration
+    emergencyDeceleration: 5                          # Deceleration when axis enters error state
+    jerk: 10                                          # Default jerk
+  jog:
+    velocity: 1                                       # Default jog velocity
+
+input:
+  limit:
+    forward: ec0.s$(DRV_SID).driveStatus01.12         # Forward limit switch input
+    backward: ec0.s$(DRV_SID).driveStatus01.11        # Backward limit switch input
+  home: 'ec0.s$(DRV_SID).ONE.0'                       # Placeholder home switch input
+  interlock: 'ec0.s$(DRV_SID).ONE.0'                  # Placeholder interlock switch input
+
+softlimits:
+  enable: false                                       # Enable soft limits
+  forward: 100                                        # Forward soft limit
+  forwardEnable: false
+  backward: -100                                      # Backward soft limit
+  backwardEnable: false
+
+monitoring:
+  lag:
+    enable: true                                      # Enable following error monitoring
+    tolerance: 0.5                                    # Allowed tolerance
+    time: 10                                          # Allowed time outside tolerance
+  velocity:
+    enable: false                                     # Enable velocity monitoring
+    max: 8                                            # Allowed max velocity
+    time:
+      trajectory: 100
+      drive: 200
+  target:
+    enable: true                                      # Enable at-target monitoring
+    tolerance: 0.01                                   # Allowed tolerance
+    time: 10                                          # Filter time inside tolerance

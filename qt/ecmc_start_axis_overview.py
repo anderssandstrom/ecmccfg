@@ -52,7 +52,7 @@ widget = b"""
       <string>IOC=%s,DEV=%s,AX_ID=%d,Axis=%s</string>
      </property>
      <property name="filename" stdset="0">
-      <string notr="true">ecmcAxisFrame.ui</string>
+      <string notr="true">%s</string>
      </property>
     </widget>
    </item>
@@ -90,8 +90,18 @@ from typing import List, NamedTuple
 
 import requests
 
-subPanelWidth = 330
-subPanelHeight = 500
+PANEL_CONFIGS = {
+    'default': {
+        'filename': 'ecmcAxisFrame.ui',
+        'width': 330,
+        'height': 500,
+    },
+    'mini': {
+        'filename': 'ecmcAxisMiniFrame.ui',
+        'width': 125,
+        'height': 112,
+    },
+}
 
 class axisModule(object):
     def __init__(self, index, name, dev):
@@ -179,21 +189,39 @@ def get_axes_from_ioc(ioc: str, grp_id, grp_name, grp_ax_id,grp_ax_name, sm_id_m
     print(axes)
     return axes, grp_id
 
-def create_ui_file(fname: str, ioc: str, axes, rows: int):
+def create_ui_file(fname: str, ioc: str, axes, rows: int, panel_type: str):
     """ Create UI file from axes """
     # Qt UI files are of UTF-8 encoded XML format.
+    panel = PANEL_CONFIGS[panel_type]
+    sub_panel_width = panel['width']
+    sub_panel_height = panel['height']
+    panel_filename = bytes(panel['filename'], 'utf8')
     
     with open(fname, 'wb') as f:
         
         # number of columns in the grid layout
         cols = math.ceil(len(axes) / rows)
         
-        f.write(header % (min(1000, subPanelWidth*cols), rows * subPanelHeight + 20, bytes(ioc, 'utf8'), subPanelWidth*cols, rows * subPanelHeight))
+        f.write(header % (
+            min(1000, sub_panel_width * cols),
+            rows * sub_panel_height + 20,
+            bytes(ioc, 'utf8'),
+            sub_panel_width * cols,
+            rows * sub_panel_height,
+        ))
 
         i=0
         for axis in axes:
             #<string>IOC=%s,DEV=%s,AX_ID=%d,Axis=%s</string>            
-            f.write(widget % (i//cols, i%cols, bytes(ioc, 'utf8'), bytes(axis['dev'],'utf8'), axis['id'], bytes(axis['name'],'utf8')))
+            f.write(widget % (
+                i // cols,
+                i % cols,
+                bytes(ioc, 'utf8'),
+                bytes(axis['dev'], 'utf8'),
+                axis['id'],
+                bytes(axis['name'], 'utf8'),
+                panel_filename,
+            ))
             i+=1
 
         f.write(footer)
@@ -215,6 +243,12 @@ def main():
     parser.add_argument('--grp_ax_name', type=str, default='', help='Only add axes belonging to same group as ax_name')
     parser.add_argument('--sm_id_mst', type=int, default=-1, help='Only add axes belonging to master group of master/slave state-machine defined by id')
     parser.add_argument('--sm_id_slv', type=int, default=-1, help='Only add axes belonging to slave group of master/slave state-machine defined by id')
+    parser.add_argument(
+        '--panel-type',
+        choices=sorted(PANEL_CONFIGS.keys()),
+        default='default',
+        help='Axis overview panel type to include',
+    )
 
     args = parser.parse_args()
 
@@ -224,10 +258,13 @@ def main():
     axes, grp_id_fname= get_axes_from_ioc(args.ioc, args.grp_id, args.grp_name, args.grp_ax_id, args.grp_ax_name, args.sm_id_mst, args.sm_id_slv)
 
     # Use a fixed pattern for output file
-    fname = os.path.join(tempfile.gettempdir(), '%s_grp%d_axes_overview.ui' % (args.ioc, int(grp_id_fname)))
+    if args.panel_type == 'default':
+        fname = os.path.join(tempfile.gettempdir(), '%s_grp%d_axes_overview.ui' % (args.ioc, int(grp_id_fname)))
+    else:
+        fname = os.path.join(tempfile.gettempdir(), '%s_grp%d_axes_overview_%s.ui' % (args.ioc, int(grp_id_fname), args.panel_type))
 
     # Create the output file
-    create_ui_file(fname, args.ioc, axes, args.rows)
+    create_ui_file(fname, args.ioc, axes, args.rows, args.panel_type)
 
     # Launch caqtdm
     os.system('caqtdm -x -noMsg %s' % fname)

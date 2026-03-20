@@ -10,6 +10,5 @@ epicsEnvSet(DRV_SID,${ECMC_EC_SLAVE_NUM})
 
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd,   "FILE=./cfg/axis.yaml,             DEV=${IOC}, AX_NAME=M1, AXIS_ID=1, DRV_SID=${DRV_SID}, ENC_SID=${DRV_SID}, ENC_CH=01" 
 
-# strange but in this case the incremental encoder is connected to ch2
+# secondary encoder of channel 1 is used for index homing in this example
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlEnc.cmd,    "FILE=./cfg/enc_inc.yaml,          DEV=${IOC}, ENC_SID=${DRV_SID},ENC_CH=01"
-

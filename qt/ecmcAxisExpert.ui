@@ -3228,7 +3228,7 @@
       </rect>
      </property>
      <property name="labels">
-      <string>Mini;Compact;Motor;Main</string>
+      <string>Axis Mini;Axis;Motor;Main</string>
      </property>
      <property name="files">
       <string>ecmcAxisMini.ui;ecmcAxis.ui;motorx_all.ui;ecmcMain.ui</string>

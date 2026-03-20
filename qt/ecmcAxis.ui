@@ -4033,7 +4033,7 @@
     </rect>
    </property>
    <property name="labels">
-    <string>Expert;Mini;Motor;Ilock;Main</string>
+    <string>Axis Expert;Axis Mini;Motor;Ilock;Main</string>
    </property>
    <property name="files">
     <string>ecmcAxisExpert.ui;ecmcAxisMini.ui;motorx_all.ui;ecmcIlock.ui;ecmcMain.ui</string>

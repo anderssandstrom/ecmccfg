@@ -684,7 +684,7 @@
     </rect>
    </property>
    <property name="labels">
-    <string>Expert;Normal;Motor;Ilock;Main</string>
+    <string>Axis Expert;Axis;Motor;Ilock;Main</string>
    </property>
    <property name="files">
     <string>ecmcAxisExpert.ui;ecmcAxis.ui;motorx_all.ui;ecmcIlock.ui;ecmcMain.ui</string>

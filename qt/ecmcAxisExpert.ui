@@ -1233,19 +1233,6 @@
      <string notr="true">$(DEV):$(Axis)-Blocked</string>
     </property>
    </widget>
-   <widget class="caInclude" name="cainclude">
-    <property name="geometry">
-     <rect>
-      <x>345</x>
-      <y>105</y>
-      <width>158</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="filename" stdset="0">
-     <string notr="true">ecmcIlock.ui</string>
-    </property>
-   </widget>
    <widget class="caLabel" name="calabel_125">
     <property name="geometry">
      <rect>
@@ -1263,6 +1250,28 @@
     </property>
     <property name="text">
      <string>Last Ilock.:</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="calineedit_8">
+    <property name="geometry">
+     <rect>
+      <x>325</x>
+      <y>110</y>
+      <width>176</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-IlockTxt</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Default</enum>
+    </property>
+    <property name="alarmHandling">
+     <enum>caLineEdit::onBackground</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::User</enum>
     </property>
    </widget>
   </widget>
@@ -3228,7 +3237,7 @@
       </rect>
      </property>
      <property name="labels">
-      <string>Axis Mini;Axis;Motor;Main</string>
+      <string>Mini;Compact;Motor;Main</string>
      </property>
      <property name="files">
       <string>ecmcAxisMini.ui;ecmcAxis.ui;motorx_all.ui;ecmcMain.ui</string>
@@ -6301,11 +6310,6 @@
    <class>caLabel</class>
    <extends>QLabel</extends>
    <header>caLabel</header>
-  </customwidget>
-  <customwidget>
-   <class>caInclude</class>
-   <extends>QWidget</extends>
-   <header>caInclude</header>
   </customwidget>
   <customwidget>
    <class>caLed</class>

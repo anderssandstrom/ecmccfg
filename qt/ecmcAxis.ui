@@ -873,20 +873,26 @@
      <string>Last Ilock:</string>
     </property>
    </widget>
-   <widget class="caInclude" name="cainclude_2">
+   <widget class="caLineEdit" name="calineedit_7">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>285</y>
-      <width>80</width>
-      <height>20</height>
+      <x>5</x>
+      <y>290</y>
+      <width>70</width>
+      <height>17</height>
      </rect>
     </property>
-    <property name="macro">
-     <string>DEV=$(DEV),Axis=$(Axis)</string>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-IlockShrtTxt</string>
     </property>
-    <property name="filename" stdset="0">
-     <string notr="true">ecmcIlockCompact.ui</string>
+    <property name="colorMode">
+     <enum>caLineEdit::Default</enum>
+    </property>
+    <property name="alarmHandling">
+     <enum>caLineEdit::onBackground</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::User</enum>
     </property>
    </widget>
   </widget>
@@ -3806,30 +3812,6 @@
     <zorder>catogglebutton_9</zorder>
     <zorder>caframe</zorder>
    </widget>
-   <widget class="QWidget" name="tab_3">
-    <attribute name="title">
-     <string>Motor Expert</string>
-    </attribute>
-    <widget class="caToggleButton" name="catogglebutton_12">
-     <property name="geometry">
-      <rect>
-       <x>90</x>
-       <y>10</y>
-       <width>111</width>
-       <height>18</height>
-      </rect>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::RightToLeft</enum>
-     </property>
-     <property name="text">
-      <string>sync. sft. lim.</string>
-     </property>
-     <property name="channel" stdset="0">
-      <string notr="true">$(DEV):$(Axis)-CfgSyncSftLim</string>
-     </property>
-    </widget>
-   </widget>
   </widget>
   <widget class="caFrame" name="StatusFrame_2">
    <property name="geometry">
@@ -4033,10 +4015,10 @@
     </rect>
    </property>
    <property name="labels">
-    <string>Axis Expert;Axis Mini;Motor;Ilock;Main</string>
+    <string>Expert;Mini;Motor;Ilock;Main</string>
    </property>
    <property name="files">
-    <string>ecmcAxisExpert.ui;ecmcAxisMini.ui;motorx_all.ui;ecmcIlock.ui;ecmcMain.ui</string>
+    <string>ecmcAxisExpert.ui;ecmcAxisMini.ui;motorx_all.ui;ecmcAxisErrorIlock.ui;ecmcMain.ui</string>
    </property>
    <property name="args">
     <string>DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC);DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC);P=$(DEV):,M=$(Axis);DEV=$(DEV),Axis=$(Axis);DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC)</string>
@@ -4499,11 +4481,6 @@
    <class>caGraphics</class>
    <extends>QWidget</extends>
    <header>caGraphics</header>
-  </customwidget>
-  <customwidget>
-   <class>caInclude</class>
-   <extends>QWidget</extends>
-   <header>caInclude</header>
   </customwidget>
   <customwidget>
    <class>caLed</class>

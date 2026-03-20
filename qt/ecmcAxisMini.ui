@@ -687,7 +687,7 @@
     <string>Axis Expert;Axis;Motor;Ilock;Main</string>
    </property>
    <property name="files">
-    <string>ecmcAxisExpert.ui;ecmcAxis.ui;motorx_all.ui;ecmcIlock.ui;ecmcMain.ui</string>
+    <string>ecmcAxisExpert.ui;ecmcAxis.ui;motorx_all.ui;ecmcAxisErrorIlock.ui;ecmcMain.ui</string>
    </property>
    <property name="args">
     <string>DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC);DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC);P=$(DEV):,M=$(Axis);DEV=$(DEV),Axis=$(Axis);DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC)</string>

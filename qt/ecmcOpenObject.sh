@@ -14,7 +14,7 @@
 #  AXIS_FIRST          : CMD, PREFIX
 #  AXIS_NEXT           : CMD, PREFIX, THIS_AX_ID
 #  AXIS_NAME           : CMD, IOC DEV, AX_NAME
-#  AXIS_OVERVIEW       : CMD, IOC 
+#  AXIS_OVERVIEW       : CMD, IOC, PANEL_TYPE(optional)
 #  AXIS_OVERVIEW_BY_GROUP_ID : CMD, IOC, GRP_ID
 #  AXIS_OVERVIEW_BY_GROUP_NAME : CMD, IOC, GRP_NAME
 #  AXIS_OVERVIEW_GROUP_BY_AX_ID : CMD, IOC, AX_ID
@@ -253,8 +253,13 @@ function openPrevAxis() {
 
 function openAxisOverview() {
   PREFIX=$1
+  PANEL_TYPE=${2:-default}
   ROWS=$( caget -noname -nostat -nounit -int $PREFIX:MCU-Cfg-UI-AX-Rows | tr -d '"')
-  python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows $ROWS $PREFIX
+  if [ "$PANEL_TYPE" = "mini" ]; then
+    python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows $ROWS --panel-type mini $PREFIX
+  else
+    python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows $ROWS $PREFIX
+  fi
 }
 
 function openAxisOverviewByGrpId() {
@@ -551,7 +556,7 @@ case $CMD in
   openAxisByName $2 $3 $4
   ;;
   "AXIS_OVERVIEW")
-  openAxisOverview $2
+  openAxisOverview $2 $3
   ;;
   "AXIS_OVERVIEW_BY_GROUP_ID")
   openAxisOverviewByGrpId $2 $3

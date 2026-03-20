@@ -15,12 +15,12 @@
 #  AXIS_NEXT           : CMD, PREFIX, THIS_AX_ID
 #  AXIS_NAME           : CMD, IOC DEV, AX_NAME
 #  AXIS_OVERVIEW       : CMD, IOC, PANEL_TYPE(optional)
-#  AXIS_OVERVIEW_BY_GROUP_ID : CMD, IOC, GRP_ID
-#  AXIS_OVERVIEW_BY_GROUP_NAME : CMD, IOC, GRP_NAME
-#  AXIS_OVERVIEW_GROUP_BY_AX_ID : CMD, IOC, AX_ID
-#  AXIS_OVERVIEW_GROUP_BY_AX_NAME : CMD, IOC, AX_NAME
-#  AXIS_OVERVIEW_GROUP_BY_SM_ID_MST : CMD, IOC, SM_ID
-#  AXIS_OVERVIEW_GROUP_BY_SM_ID_SLV : CMD, IOC, SM_ID
+#  AXIS_OVERVIEW_BY_GROUP_ID : CMD, IOC, GRP_ID, PANEL_TYPE(optional)
+#  AXIS_OVERVIEW_BY_GROUP_NAME : CMD, IOC, GRP_NAME, PANEL_TYPE(optional)
+#  AXIS_OVERVIEW_GROUP_BY_AX_ID : CMD, IOC, AX_ID, PANEL_TYPE(optional)
+#  AXIS_OVERVIEW_GROUP_BY_AX_NAME : CMD, IOC, AX_NAME, PANEL_TYPE(optional)
+#  AXIS_OVERVIEW_GROUP_BY_SM_ID_MST : CMD, IOC, SM_ID, PANEL_TYPE(optional)
+#  AXIS_OVERVIEW_GROUP_BY_SM_ID_SLV : CMD, IOC, SM_ID, PANEL_TYPE(optional)
 #  AXES_GROUP_OVERVIEW : CMD, IOC 
 #  DS_FIRST            : CMD, PREFIX
 #  DS_NEXT             : CMD, PREFIX, THIS_DS_ID
@@ -265,37 +265,67 @@ function openAxisOverview() {
 function openAxisOverviewByGrpId() {
   PREFIX=$1
   GRP_ID=$2
-  python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --grp_id $GRP_ID $PREFIX
+  PANEL_TYPE=${3:-default}
+  if [ "$PANEL_TYPE" = "mini" ]; then
+    python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --grp_id $GRP_ID --panel-type mini $PREFIX
+  else
+    python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --grp_id $GRP_ID $PREFIX
+  fi
 }
 
 function openAxisOverviewByGrpName() {
   PREFIX=$1
   GRP_NAME=$2
-  python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --grp_name $GRP_NAME $PREFIX
+  PANEL_TYPE=${3:-default}
+  if [ "$PANEL_TYPE" = "mini" ]; then
+    python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --grp_name $GRP_NAME --panel-type mini $PREFIX
+  else
+    python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --grp_name $GRP_NAME $PREFIX
+  fi
 }
 
 function openAxisOverviewGroupByAxId() {
   PREFIX=$1
   AX_ID=$2
-  python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --grp_ax_id $AX_ID $PREFIX
+  PANEL_TYPE=${3:-default}
+  if [ "$PANEL_TYPE" = "mini" ]; then
+    python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --grp_ax_id $AX_ID --panel-type mini $PREFIX
+  else
+    python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --grp_ax_id $AX_ID $PREFIX
+  fi
 }
 
 function openAxisOverviewGroupByAxName() {
   PREFIX=$1
   AX_NAME=$2
-  python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --grp_ax_name $AX_NAME $PREFIX
+  PANEL_TYPE=${3:-default}
+  if [ "$PANEL_TYPE" = "mini" ]; then
+    python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --grp_ax_name $AX_NAME --panel-type mini $PREFIX
+  else
+    python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --grp_ax_name $AX_NAME $PREFIX
+  fi
 }
 
 function openAxisOverviewGroupBySMIdMst() {
   PREFIX=$1
   SM_ID=$2
-  python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --sm_id_mst $SM_ID $PREFIX
+  PANEL_TYPE=${3:-default}
+  if [ "$PANEL_TYPE" = "mini" ]; then
+    python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --sm_id_mst $SM_ID --panel-type mini $PREFIX
+  else
+    python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --sm_id_mst $SM_ID $PREFIX
+  fi
 }
 
 function openAxisOverviewGroupBySMIdSlv() {
   PREFIX=$1
   SM_ID=$2
-  python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --sm_id_slv $SM_ID $PREFIX
+  PANEL_TYPE=${3:-default}
+  if [ "$PANEL_TYPE" = "mini" ]; then
+    python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --sm_id_slv $SM_ID --panel-type mini $PREFIX
+  else
+    python3 /ioc/modules/qt/ecmc_start_axis_overview.py --rows 1 --sm_id_slv $SM_ID $PREFIX
+  fi
 }
 
 function openAxesGroupOverview() {
@@ -559,22 +589,22 @@ case $CMD in
   openAxisOverview $2 $3
   ;;
   "AXIS_OVERVIEW_BY_GROUP_ID")
-  openAxisOverviewByGrpId $2 $3
+  openAxisOverviewByGrpId $2 $3 $4
   ;;
   "AXIS_OVERVIEW_BY_GROUP_NAME")
-  openAxisOverviewByGrpName $2 $3
+  openAxisOverviewByGrpName $2 $3 $4
   ;;
   "AXIS_OVERVIEW_GROUP_BY_AX_ID")
-  openAxisOverviewGroupByAxId $2 $3
+  openAxisOverviewGroupByAxId $2 $3 $4
   ;;
   "AXIS_OVERVIEW_GROUP_BY_AX_NAME")
-  openAxisOverviewGroupByAxName $2 $3
+  openAxisOverviewGroupByAxName $2 $3 $4
   ;;
   "AXIS_OVERVIEW_GROUP_BY_SM_ID_MST")
-  openAxisOverviewGroupBySMIdMst $2 $3
+  openAxisOverviewGroupBySMIdMst $2 $3 $4
   ;;
   "AXIS_OVERVIEW_GROUP_BY_SM_ID_SLV")
-  openAxisOverviewGroupBySMIdSlv $2 $3
+  openAxisOverviewGroupBySMIdSlv $2 $3 $4
   ;;
   "AXES_GROUP_OVERVIEW")
   openAxesGroupOverview $2

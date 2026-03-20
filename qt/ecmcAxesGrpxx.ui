@@ -124,7 +124,7 @@
     </rect>
    </property>
    <property name="label">
-    <string notr="true">Open axes</string>
+    <string notr="true">Open       </string>
    </property>
    <property name="labels">
     <string>Open overview</string>
@@ -134,6 +134,28 @@
    </property>
    <property name="args">
     <string>AXIS_OVERVIEW_BY_GROUP_ID $(IOC) $(GRP_ID);</string>
+   </property>
+  </widget>
+  <widget class="caShellCommand" name="cashellcommand_8">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>115</y>
+     <width>71</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="label">
+    <string notr="true">Open Mini</string>
+   </property>
+   <property name="labels">
+    <string>Open overview</string>
+   </property>
+   <property name="files">
+    <string>bash /ioc/modules/qt/ecmcOpenObject.sh</string>
+   </property>
+   <property name="args">
+    <string>AXIS_OVERVIEW_BY_GROUP_ID $(IOC) $(GRP_ID) mini;</string>
    </property>
   </widget>
  </widget>

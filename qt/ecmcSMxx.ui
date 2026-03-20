@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>247</width>
+    <width>243</width>
     <height>457</height>
    </rect>
   </property>
@@ -347,7 +347,7 @@
     <rect>
      <x>10</x>
      <y>90</y>
-     <width>176</width>
+     <width>136</width>
      <height>20</height>
     </rect>
    </property>
@@ -407,7 +407,7 @@
     <rect>
      <x>10</x>
      <y>130</y>
-     <width>176</width>
+     <width>131</width>
      <height>20</height>
     </rect>
    </property>
@@ -683,17 +683,17 @@
   <widget class="caShellCommand" name="cashellcommand_10">
    <property name="geometry">
     <rect>
-     <x>190</x>
+     <x>150</x>
      <y>90</y>
      <width>41</width>
      <height>18</height>
     </rect>
    </property>
    <property name="label">
-    <string notr="true">Axes</string>
+    <string notr="true">Open</string>
    </property>
    <property name="labels">
-    <string>Open first axis</string>
+    <string>Open Group</string>
    </property>
    <property name="files">
     <string>bash /ioc/modules/qt/ecmcOpenObject.sh</string>
@@ -705,23 +705,67 @@
   <widget class="caShellCommand" name="cashellcommand_11">
    <property name="geometry">
     <rect>
-     <x>190</x>
+     <x>150</x>
      <y>130</y>
      <width>41</width>
      <height>18</height>
     </rect>
    </property>
    <property name="label">
-    <string notr="true">Axes</string>
+    <string notr="true">Open</string>
    </property>
    <property name="labels">
-    <string>Open first axis</string>
+    <string>Open Axes</string>
    </property>
    <property name="files">
     <string>bash /ioc/modules/qt/ecmcOpenObject.sh</string>
    </property>
    <property name="args">
     <string>AXIS_OVERVIEW_GROUP_BY_SM_ID_SLV $(IOC) $(ID_2);</string>
+   </property>
+  </widget>
+  <widget class="caShellCommand" name="cashellcommand_13">
+   <property name="geometry">
+    <rect>
+     <x>195</x>
+     <y>90</y>
+     <width>41</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="label">
+    <string notr="true">Mini</string>
+   </property>
+   <property name="labels">
+    <string>Open Group</string>
+   </property>
+   <property name="files">
+    <string>bash /ioc/modules/qt/ecmcOpenObject.sh</string>
+   </property>
+   <property name="args">
+    <string>AXIS_OVERVIEW_GROUP_BY_SM_ID_MST $(IOC) $(ID_2) mini;</string>
+   </property>
+  </widget>
+  <widget class="caShellCommand" name="cashellcommand_12">
+   <property name="geometry">
+    <rect>
+     <x>195</x>
+     <y>130</y>
+     <width>41</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="label">
+    <string notr="true">Mini</string>
+   </property>
+   <property name="labels">
+    <string>Open Axes Mini</string>
+   </property>
+   <property name="files">
+    <string>bash /ioc/modules/qt/ecmcOpenObject.sh</string>
+   </property>
+   <property name="args">
+    <string>AXIS_OVERVIEW_GROUP_BY_SM_ID_SLV $(IOC) $(ID_2) mini;</string>
    </property>
   </widget>
  </widget>

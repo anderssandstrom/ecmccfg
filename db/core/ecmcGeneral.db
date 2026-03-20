@@ -190,4 +190,3 @@ record(ao,"${P}MCU-Cfg-UI-AXGRP-Rows") {
   field(DESC, "UI: Panel rows")
   field(VAL,  "1")
 }
-

@@ -852,7 +852,7 @@
          <x>170</x>
          <y>145</y>
          <width>66</width>
-         <height>31</height>
+         <height>51</height>
         </rect>
        </property>
        <property name="toolTipDuration">
@@ -890,6 +890,28 @@
         </property>
         <property name="args">
          <string>SM_FIRST $(IOC)</string>
+        </property>
+       </widget>
+       <widget class="caShellCommand" name="cashellcommand_33">
+        <property name="geometry">
+         <rect>
+          <x>5</x>
+          <y>30</y>
+          <width>55</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="label">
+         <string notr="true">&gt;&gt;</string>
+        </property>
+        <property name="labels">
+         <string>Open master/slave overview</string>
+        </property>
+        <property name="files">
+         <string>bash /ioc/modules/qt/ecmcOpenObject.sh</string>
+        </property>
+        <property name="args">
+         <string>SM_OVERVIEW $(IOC)</string>
         </property>
        </widget>
       </widget>
@@ -1121,7 +1143,7 @@
          <x>165</x>
          <y>45</y>
          <width>66</width>
-         <height>26</height>
+         <height>51</height>
         </rect>
        </property>
        <property name="macro">
@@ -1158,15 +1180,37 @@
          <string>PLC_FIRST $(IOC)</string>
         </property>
        </widget>
+       <widget class="caShellCommand" name="cashellcommand_34">
+        <property name="geometry">
+         <rect>
+          <x>5</x>
+          <y>30</y>
+          <width>55</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="label">
+         <string notr="true">&gt;&gt;</string>
+        </property>
+        <property name="labels">
+         <string>Open PLC overview</string>
+        </property>
+        <property name="files">
+         <string>bash /ioc/modules/qt/ecmcOpenObject.sh</string>
+        </property>
+        <property name="args">
+         <string>PLC_OVERVIEW $(IOC)</string>
+        </property>
+       </widget>
       </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_6">
-      <property name="geometry">
+     <property name="geometry">
        <rect>
         <x>300</x>
         <y>340</y>
         <width>251</width>
-        <height>86</height>
+        <height>111</height>
        </rect>
       </property>
       <property name="title">
@@ -1285,6 +1329,72 @@
        <property name="text">
         <string>Plugin count:</string>
        </property>
+      </widget>
+      <widget class="caFrame" name="caframe_11">
+       <property name="geometry">
+        <rect>
+         <x>165</x>
+         <y>45</y>
+         <width>66</width>
+         <height>51</height>
+        </rect>
+       </property>
+       <property name="macro">
+        <string notr="true">SYS=$(IOC),IOC=$(IOC)</string>
+       </property>
+       <property name="visibility">
+        <enum>caFrame::Calc</enum>
+       </property>
+       <property name="visibilityCalc">
+        <string notr="true">A&gt;-1</string>
+       </property>
+       <property name="channel" stdset="0">
+        <string notr="true">$(IOC):MCU-Cfg-PLG-FrstObjId</string>
+       </property>
+       <widget class="caShellCommand" name="cashellcommand_36">
+        <property name="geometry">
+         <rect>
+          <x>5</x>
+          <y>5</y>
+          <width>55</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="label">
+         <string notr="true">&gt;&gt;</string>
+        </property>
+        <property name="labels">
+         <string>Open first plugin</string>
+        </property>
+        <property name="files">
+         <string>bash /ioc/modules/qt/ecmcOpenObject.sh</string>
+        </property>
+        <property name="args">
+         <string>PLG_FIRST $(IOC)</string>
+        </property>
+       </widget>
+       <widget class="caShellCommand" name="cashellcommand_37">
+        <property name="geometry">
+         <rect>
+          <x>5</x>
+          <y>30</y>
+          <width>55</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="label">
+         <string notr="true">&gt;&gt;</string>
+        </property>
+        <property name="labels">
+         <string>Open plugin overview</string>
+        </property>
+        <property name="files">
+         <string>bash /ioc/modules/qt/ecmcOpenObject.sh</string>
+        </property>
+        <property name="args">
+         <string>PLG_OVERVIEW $(IOC)</string>
+        </property>
+       </widget>
       </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_7">
@@ -1419,7 +1529,7 @@
          <x>165</x>
          <y>45</y>
          <width>66</width>
-         <height>26</height>
+         <height>51</height>
         </rect>
        </property>
        <property name="macro">
@@ -1454,6 +1564,28 @@
         </property>
         <property name="args">
          <string>DS_FIRST $(IOC)</string>
+        </property>
+       </widget>
+       <widget class="caShellCommand" name="cashellcommand_35">
+        <property name="geometry">
+         <rect>
+          <x>5</x>
+          <y>30</y>
+          <width>55</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="label">
+         <string notr="true">&gt;&gt;</string>
+        </property>
+        <property name="labels">
+         <string>Open data storage overview</string>
+        </property>
+        <property name="files">
+         <string>bash /ioc/modules/qt/ecmcOpenObject.sh</string>
+        </property>
+        <property name="args">
+         <string>DS_OVERVIEW $(IOC)</string>
         </property>
        </widget>
       </widget>

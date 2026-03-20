@@ -22,12 +22,16 @@
 #  AXIS_OVERVIEW_GROUP_BY_SM_ID_MST : CMD, IOC, SM_ID, PANEL_TYPE(optional)
 #  AXIS_OVERVIEW_GROUP_BY_SM_ID_SLV : CMD, IOC, SM_ID, PANEL_TYPE(optional)
 #  AXES_GROUP_OVERVIEW : CMD, IOC 
+#  SM_OVERVIEW         : CMD, IOC
+#  DS_OVERVIEW         : CMD, PREFIX
 #  DS_FIRST            : CMD, PREFIX
 #  DS_NEXT             : CMD, PREFIX, THIS_DS_ID
 #  DS_PREV             : CMD, PREFIX, THIS_DS_ID
+#  PLC_OVERVIEW        : CMD, PREFIX
 #  PLC_FIRST           : CMD, PREFIX
 #  PLC_NEXT            : CMD, PREFIX, THIS_PLC_ID
 #  PLC_PREV            : CMD, PREFIX, THIS_PLC_ID
+#  PLG_OVERVIEW        : CMD, PREFIX
 #  PLG_FIRST           : CMD, PREFIX
 #  PLG_NEXT            : CMD, PREFIX, THIS_PLG_ID
 #  PLG_PREV            : CMD, PREFIX, THIS_PLG_ID
@@ -333,6 +337,16 @@ function openAxesGroupOverview() {
   python3 /ioc/modules/qt/ecmc_start_axesgroup_overview.py --rows 1 $PREFIX
 }
 
+function openSMOverview() {
+  PREFIX=$1
+  python3 /ioc/modules/qt/ecmc_start_sm_overview.py --rows 1 $PREFIX
+}
+
+function openDSOverview() {
+  PREFIX=$1
+  python3 /ioc/modules/qt/ecmc_start_ds_overview.py --rows 1 $PREFIX
+}
+
 # DATA STORAGE
 function openFirstDS() {
   PREFIX=$1
@@ -363,6 +377,16 @@ function openPrevDS() {
   MACROS="SYS=$PREFIX,IOC=$PREFIX,ID_1=$ID_1,ID_2=$ID_2"
   echo "MACROS=$MACROS"
   caqtdm -macro $MACROS ecmcDSxx.ui
+}
+
+function openPLCOverview() {
+  PREFIX=$1
+  python3 /ioc/modules/qt/ecmc_start_plc_overview.py --rows 1 $PREFIX
+}
+
+function openPLGOverview() {
+  PREFIX=$1
+  python3 /ioc/modules/qt/ecmc_start_plg_overview.py --rows 1 $PREFIX
 }
 
 
@@ -609,6 +633,12 @@ case $CMD in
   "AXES_GROUP_OVERVIEW")
   openAxesGroupOverview $2
   ;;
+  "SM_OVERVIEW")
+  openSMOverview $2
+  ;;
+  "DS_OVERVIEW")
+  openDSOverview $2
+  ;;
   "DS_FIRST")
   openFirstDS $2
   ;;
@@ -617,6 +647,12 @@ case $CMD in
   ;;
   "DS_PREV")
   openPrevDS $2  $3
+  ;;
+  "PLC_OVERVIEW")
+  openPLCOverview $2
+  ;;
+  "PLG_OVERVIEW")
+  openPLGOverview $2
   ;;
   "PLC_FIRST")
   openPLCFirst $2 $3

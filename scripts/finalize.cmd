@@ -34,4 +34,3 @@ ecmcIf("${ECMC_SET_APP_MODE_DONE=0}!=1")
 ${IF_TRUE}$(SCRIPTEXEC) ($(ecmccfg_DIR)setAppMode.cmd)
 ecmcEndIf()
 epicsEnvUnset(ECMC_SET_APP_MODE_DONE)
-

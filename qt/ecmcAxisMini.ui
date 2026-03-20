@@ -139,7 +139,7 @@
       <string>R</string>
      </property>
      <property name="channel" stdset="0">
-      <string notr="true">$(IOC):MCU-ErrRst</string>
+      <string notr="true">$(DEV):$(Axis)-RstCmd</string>
      </property>
      <property name="foreground">
       <color>
@@ -684,7 +684,7 @@
     </rect>
    </property>
    <property name="labels">
-    <string>Expert;Compact;Motor;Ilock;Main</string>
+    <string>Expert;Normal;Motor;Ilock;Main</string>
    </property>
    <property name="files">
     <string>ecmcAxisExpert.ui;ecmcAxis.ui;motorx_all.ui;ecmcIlock.ui;ecmcMain.ui</string>

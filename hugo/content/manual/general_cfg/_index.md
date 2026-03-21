@@ -26,6 +26,7 @@ General configuration covers IOC/bootstrap behavior that is not axis-specific:
 
 ### Use utility functions in startup scripts
 - [iocsh utilities]({{< relref "/manual/general_cfg/iocsh_utils.md" >}}) for `ecmcEpicsEnvSetCalc`, `ecmcIf`, loops, and file existence checks.
+- [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}}) for which `scripts/` entry points are public, advanced, or internal helpers.
 
 ### Configure generic data capture/buffering
 - [data storage buffer]({{< relref "/manual/general_cfg/data_storage.md" >}}) for `ds_append_data`/`ds_push_asyn` usage patterns.
@@ -45,5 +46,6 @@ General configuration covers IOC/bootstrap behavior that is not axis-specific:
 
 ### Script authoring / automation path
 1. [iocsh utilities]({{< relref "/manual/general_cfg/iocsh_utils.md" >}})
-2. [data storage buffer]({{< relref "/manual/general_cfg/data_storage.md" >}})
-3. [ecmc command reference]({{< relref "/manual/general_cfg/ecmc_command_ref.md" >}})
+2. [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}})
+3. [data storage buffer]({{< relref "/manual/general_cfg/data_storage.md" >}})
+4. [ecmc command reference]({{< relref "/manual/general_cfg/ecmc_command_ref.md" >}})

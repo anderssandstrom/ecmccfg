@@ -83,6 +83,6 @@ The `home` and `interlock` entries in `cfg/axis.yaml` are placeholders and shoul
 
 - [Hugo homing manual](../../../../../../hugo/content/manual/motion_cfg/homing.md)
 - [Post move after homing](../../../../../../hugo/content/manual/motion_cfg/homing.md#post-move-after-homing)
-- [EL7062 incremental best-practice example](../el7062/readme.md)
+- [EL7062 incremental best-practice example](../el7062/README.md)
 
 The sequence descriptions for `ECMC_SEQ_HOME_LOW_LIM_INDEX = 11` and `ECMC_SEQ_HOME_HIGH_LIM_INDEX = 12` are in the same homing manual.

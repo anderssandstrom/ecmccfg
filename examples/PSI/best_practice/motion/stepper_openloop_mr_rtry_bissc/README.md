@@ -72,6 +72,7 @@ epics:
 
 1. Start:
 ```
+cd el7041_el5042
 iocsh.bash startup.cmd
 ```
 2. Run positioning commands:

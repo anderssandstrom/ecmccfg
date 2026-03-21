@@ -1,0 +1,15 @@
+if(${SELF}.firstscan) {
+  static.counter := 0;
+  static.hold := 0;
+  global.mode := 0;
+  ${DBG=#}println('PLC ', ${SELF_ID}, ' started in master-less mode');
+};
+
+if(not(static.hold)) {
+  static.counter += 1;
+};
+
+if(static.counter >= 10) {
+  static.counter := 0;
+  global.mode := not(global.mode);
+};

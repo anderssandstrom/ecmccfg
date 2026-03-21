@@ -48,6 +48,31 @@ Normally these arguments are set when the module is required:
 require ecmccfg "ENG_MODE=1,MASTER_ID=2"
 ```
 
+## `MASTER_ID=-1`
+
+Setting `MASTER_ID=-1` starts ecmc without claiming an EtherCAT master.
+This is the supported master-less or non-EtherCAT mode.
+
+Typical use cases:
+
+- PLC-only IOC logic
+- data-storage workflows without fieldbus hardware
+- plugin development or testing without EtherCAT
+- startup and database testing on systems without realtime EtherCAT access
+
+Example:
+
+```iocsh
+require ecmccfg "MASTER_ID=-1,ENG_MODE=1"
+```
+
+In this mode, EtherCAT-dependent hardware setup scripts such as `addSlave.cmd`
+are normally not used, but other parts of ecmc still work, for example:
+
+- PLCs loaded with `loadPLCFile.cmd` or `loadYamlPlc.cmd`
+- data storage created with `addDataStorage.cmd`
+- PLC variables exposed as EPICS PVs
+- plugins that do not require an active EtherCAT master
+
 ## iocsh startup
 ecmc needs to be started with root privileges (or with a user in the realtime group), otherwise ecmc might segfault.
-

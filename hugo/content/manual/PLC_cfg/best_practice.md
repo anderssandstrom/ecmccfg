@@ -16,6 +16,12 @@ Here you can find some best practice configurations for common use cases.
 
 The corresponding startup files are located in `examples/PSI/best_practice/`.
 
+Public PLC best-practice examples include:
+
+- `examples/PSI/best_practice/plcs/basic/`
+- `examples/PSI/best_practice/plcs/masterless/`
+- `examples/PSI/best_practice/plcs/motion/stepper_bissc_forw_back_seq/`
+
 ### macros
 Use of macros makes the code more generic. When loading a PLC file with "loadPLCFile.cmd", custom macros can be defined in "PLC\_MACROS":
 ```shell

@@ -23,6 +23,7 @@ chapter = false
   - [Data storage buffer](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/general/data_storage)
 - **PLC examples** (`examples/PSI/best_practice/plcs/`)
   - [Basic PLC examples](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/plcs/basic)
+  - [Master-less PLC example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/plcs/masterless)
   - [Motion sequence PLC example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/plcs/motion/stepper_bissc_forw_back_seq)
 
 ## Common scripts

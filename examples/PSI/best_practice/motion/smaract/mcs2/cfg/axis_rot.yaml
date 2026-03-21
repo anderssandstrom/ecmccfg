@@ -1,0 +1,79 @@
+axis:
+  id: ${MCS2_CHID}
+  mode: CSP
+  autoMode:
+    modeSet: ec0.s${MCS2_SLAVE_NUM}.mode0${MCS2_CHID}
+    modeAct: ec0.s${MCS2_SLAVE_NUM}.modeActual0${MCS2_CHID}
+    modeCmdMotion: 8
+    modeCmdHome: 6
+
+epics:
+  name: Axis${MCS2_CHID}
+  precision: 3
+  description: SmarAct MCS2 rotary axis
+  unit: mdeg
+  fieldInit: 'TWV=1000'
+
+drive:
+  numerator: 1
+  denominator: 1000
+  type: 1
+  control: ec0.s${MCS2_SLAVE_NUM}.driveControl0${MCS2_CHID}
+  status: ec0.s${MCS2_SLAVE_NUM}.driveStatus0${MCS2_CHID}
+  setpoint: ec0.s${MCS2_SLAVE_NUM}.positionSetpoint0${MCS2_CHID}
+
+encoder:
+  desc: SmarAct encoder
+  numerator: 1
+  denominator: 1000
+  type: 0
+  bits: 32
+  absBits: 0
+  absOffset: 0
+  position: ec0.s${MCS2_SLAVE_NUM}.positionActual0${MCS2_CHID}
+  homing:
+    type: 26
+    position: -1000
+    postMoveEnable: yes
+    postMovePosition: 1000
+    trigg: ec0.s${MCS2_SLAVE_NUM}.driveCmdExe0${MCS2_CHID}.0
+    ready: ec0.s${MCS2_SLAVE_NUM}.driveStatus0${MCS2_CHID}.10
+    refAtHome: 1
+
+trajectory:
+  type: 0
+  axis:
+    velocity: 10000
+    acceleration: 10000
+    deceleration: 10000
+    jerk: 10
+
+input:
+  limit:
+    forward: ec0.s$(MCS2_SLAVE_NUM).ONE.0
+    backward: ec0.s$(MCS2_SLAVE_NUM).ONE.0
+  home: 'ec0.s$(MCS2_SLAVE_NUM).ONE.0'
+  interlock: 'ec0.s$(MCS2_SLAVE_NUM).ONE.0'
+
+softlimits:
+  enable: false
+  forward: 100
+  forwardEnable: false
+  backward: -100
+  backwardEnable: false
+
+monitoring:
+  lag:
+    enable: true
+    tolerance: 100
+    time: 100
+  target:
+    enable: true
+    tolerance: 20
+    time: 100
+  velocity:
+    enable: false
+    max: 100
+    time:
+      trajectory: 100
+      drive: 200

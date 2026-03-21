@@ -159,6 +159,11 @@ The effective active/inactive edges depend on the configured home-switch polarit
 
 This sequence requires encoder latch support. `ECMC_HOME_LATCH_COUNT_OFFSET` selects which index/latch event to use.
 
+Two common hardware patterns are used for this:
+
+- EL51xx encoder terminals such as EL5101 and EL5102 expose dedicated encoder latch objects. In that case, `encoder.control` and `encoder.status` are the encoder latch control/status PDOs, and `encoder.latch.position` is the latched encoder position PDO.
+- EL7062 does not use the EL51xx latch objects for index homing. Instead it uses the touch-probe objects, so `encoder.control` and `encoder.status` map to touch-probe control/status PDOs, and `encoder.latch.position` maps to the touch-probe latched position PDO.
+
 Example EtherCAT entry configuration for EL51xx:
 
 ```bash
@@ -203,6 +208,11 @@ Latch bit mapping:
 5. Stop and set the reference position so that the selected latched index position becomes `ECMC_HOME_POS`.
 
 This sequence requires encoder latch support. `ECMC_HOME_LATCH_COUNT_OFFSET` selects which index/latch event to use.
+
+The same EL51xx versus EL7062 distinction applies here as for sequence `11`:
+
+- EL5101/EL5102 use encoder latch PDOs.
+- EL7062 uses touch-probe PDOs.
 
 Example EtherCAT entry configuration for EL51xx:
 
@@ -363,8 +373,44 @@ Trigger a homing sequence in the drive itself.
 5. Optional: switch the drive back to normal motion mode and wait for mode readback.
 6. Optional: execute the configured post-home move.
 
-This is currently used for SmarAct drives:
-[SmarAct example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/test/smaract)
+For drives such as SmarAct MCS2, this sequence is normally used together with
+automatic drive-mode switching. In YAML-based axis configuration this is done
+with `autoMode`, where `modeSet` and `modeAct` point to the drive mode process
+data, and `modeCmdHome`/`modeCmdMotion` define the drive-specific mode values.
+
+Example:
+
+```yaml
+axis:
+  mode: CSP
+  autoMode:
+    modeSet: ec0.s${MCS2_SLAVE_NUM}.mode0${MCS2_CHID}
+    modeAct: ec0.s${MCS2_SLAVE_NUM}.modeActual0${MCS2_CHID}
+    modeCmdMotion: 8
+    modeCmdHome: 6
+
+encoder:
+  homing:
+    type: 26
+    trigg: ec0.s${MCS2_SLAVE_NUM}.driveCmdExe0${MCS2_CHID}.0
+    ready: ec0.s${MCS2_SLAVE_NUM}.driveStatus0${MCS2_CHID}.10
+    refAtHome: 1
+```
+
+Notes:
+
+- `trigg` shall point to the bit that starts homing in the drive.
+- `ready` shall point to the homing-done or homing-ready status bit from the drive.
+- The mode values are drive-specific. For SmarAct MCS2, normal CSP motion uses
+  `8` and homing uses `6`.
+- Homing velocity and acceleration can also be drive-specific. For SmarAct,
+  these are often configured in the actuator component setup rather than in the
+  generic YAML homing block.
+
+Examples:
+
+- [SmarAct test examples](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/test/smaract)
+- [SmarAct MCS2 best-practice example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/smaract/mcs2)
 
 ## Setting polarity of the home sensor
 

@@ -188,9 +188,11 @@ Trigger external homing sequence in drive.
 5. Optional: Change drive mode back to motion (and wait for mode readback)
 6. Optional: Init post move if configured
 
-Currently used for smaract:
-[smaracat example](../smaract/smaract.script)
-In this exmaple also the drive modes is automatically handled by ecmc.
+Currently used for SmarAct:
+- [MCS2 example](../smaract/mcs2/smaract.script)
+- [SDC2 example](../smaract/sdc2/sdc2_step_dir.script)
+
+In these examples the drive modes are handled by ecmc.
 
 ## Setting polarity of home sensor
 For some of the sequences it could be useful to change the polarity of the home sensor. That can be done with the following command:

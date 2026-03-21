@@ -227,8 +227,8 @@ chapter = false
 
 | Command syntax | Description |
 |---|---|
-| `Cfg.EcAddDataDT(<str>,<int>,<int>,<int>,<str>,<str>)` | Adds a data item object to access data directly from EtherCAT domain. |
-| `Cfg.EcAddDomain(<int>,<int>)` | Add domain |
+| `Cfg.EcAddDataDT(<str>,<int>,<int>,<int>,<str>,<str>)` | Adds a data item object to access data directly from EtherCAT domain. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
+| `Cfg.EcAddDomain(<int>,<int>)` | Add domain. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
 | `Cfg.EcAddEntryComplete(<int>,0x<hex>,0x<hex>,<int>,<int>,0x<hex>,0x<hex>,0x<hex>,<int>,<str>,<int>)` | Set update in realtime bit for an entry * If set to zero the entry will not be updated during realtime operation. |
 | `Cfg.EcAddEntryDT(<int>,0x<hex>,0x<hex>,<int>,<int>,0x<hex>,0x<hex>,0x<hex>,<str>,<str>)` | Adds an EtherCAT slave to the hardware configuration. |
 | `Cfg.EcAddEntryDT(<int>,0x<hex>,0x<hex>,<int>,<int>,0x<hex>,0x<hex>,0x<hex>,<str>,<str>,<int>)` | Adds an EtherCAT slave to the hardware configuration. |
@@ -256,17 +256,17 @@ chapter = false
 | `Cfg.EcSetAllowOffline(<int>)` | Allow master to be offline |
 | `Cfg.EcSetDelayECOkAtStartup(<int>)` | Delay ethercat OK status for a time * This can be useful to allow extra time for DC clocks to synchronize or for slaves that do not report correct data directly when entering OP. |
 | `Cfg.EcSetDiagnostics(<int>)` | Enable EtherCAT bus diagnostics. |
-| `Cfg.EcSetDomainAllowOffline(<int>)` | Allow domain to be offline |
-| `Cfg.EcSetDomainFailedCyclesLimit(<int>)` | Set allowed bus cycles in row of none complete domain data transfer. |
+| `Cfg.EcSetDomainAllowOffline(<int>)` | Allow domain to be offline. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
+| `Cfg.EcSetDomainFailedCyclesLimit(<int>)` | Set allowed bus cycles in row of none complete domain data transfer. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
 | `Cfg.EcSetEntryUpdateInRealtime(<int>,<str>,<int>)` | Set update in realtime bit for an entry * If set to zero the entry will not be updated during realtime operation. |
 | `Cfg.EcSetMaster(<int>)` | Selects EtherCAT master to use. |
 | `Cfg.EcSetSlaveEnableSDOCheck(<int>,<int>)` | Enable SDO setting check for a slave SDO setting check is default true for slaves linked to a motion axis. |
 | `Cfg.EcSetSlaveNeedSDOSettings(<int>,<int>,<int>)` | Set bit that slave needs SDO settings * This slave needs SDO settings i.e. |
 | `Cfg.EcSetSlaveSDOSettingsDone(<int>,<int>,<int>)` | Set bit that all SDOs has been set for this slave * After SDOs have been set this function should be called to tell ecmc that. |
-| `Cfg.EcSlaveConfigDC(<int>,0x<hex>,<int>,<int>,<int>,<int>)` | Configure slave DC clock. |
+| `Cfg.EcSlaveConfigDC(<int>,0x<hex>,<int>,<int>,<int>,<int>)` | Configure slave DC clock. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
 | `Cfg.EcSlaveConfigWatchDog(<int>,<int>,<int>)` | Configure Slave watch dog. |
-| `Cfg.EcSlaveVerify(<int>,<int>,0x<hex>,0x<hex>)` | Verify slave at position * The command verifies that the actual slave at a certain position\ has the correct alias, position, vendor id, product code and revision number. |
-| `Cfg.EcSlaveVerify(<int>,<int>,0x<hex>,0x<hex>,0x<hex>)` | Verify slave at position * The command verifies that the actual slave at a certain position\ has the correct alias, position, vendor id, product code and revision number. |
+| `Cfg.EcSlaveVerify(<int>,<int>,0x<hex>,0x<hex>)` | Verify slave at position * The command verifies that the actual slave at a certain position\ has the correct alias, position, vendor id, product code and revision number. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
+| `Cfg.EcSlaveVerify(<int>,<int>,0x<hex>,0x<hex>,0x<hex>)` | Verify slave at position * The command verifies that the actual slave at a certain position\ has the correct alias, position, vendor id, product code and revision number. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
 | `Cfg.EcUseClockRealtime(<int>)` | Use CLOCK_REALTIME * Ecmc will as default use CLOCK_MONOTONIC as clock source both for the RT loop and the ethercat bus. |
 | `Cfg.EcVerifySdo(<int>,0x<hex>,0x<hex>,0x<hex>,<int>)` | Verify a Service Data Object. |
 | `Cfg.EcVerifySdo(<int>,0x<hex>,0x<hex>,<int>,<int>)` | Verify a Service Data Object. |
@@ -287,7 +287,7 @@ chapter = false
 | `Cfg.ClearStorage(<int>)` | Clear data storage buffer. |
 | `Cfg.CreateStorage(<int>,<int>,<int>)` | Create a data storage object. |
 | `GetStorageDataIndex(<int>)` | Get current index of data in storage buffer. |
-| `Cfg.LoadLUTFile(<int>,<str>)` | Load and create lookup table (LUT). |
+| `Cfg.LoadLUTFile(<int>,<str>)` | Load and create lookup table (LUT). See [Lookup Tables]({{< relref "/manual/general_cfg/lut.md" >}}). |
 | `Cfg.PrintDataStorage(<int>)` | Print contents of buffer. |
 | `ReadDataStorage(<int>)` | Reads contents of storage buffer. |
 | `Cfg.SetDataStorageCurrentDataIndex(<int>,<int>)` | Set current data index of storage buffer. |

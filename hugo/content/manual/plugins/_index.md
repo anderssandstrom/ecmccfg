@@ -29,6 +29,12 @@ For the general script overview, see
 ## Start here
 
 - Use [Plugin Interface]({{< relref "/manual/plugins/interface.md" >}}) first for the common plugin API and runtime model.
+- Use [DAQ Plugin]({{< relref "/manual/plugins/daq.md" >}}) when your main question is synchronized acquisition rather than general plugin loading.
+- Use [FFT Plugin]({{< relref "/manual/plugins/fft.md" >}}) for spectral analysis.
+- Use [Motion Plugin]({{< relref "/manual/plugins/motion.md" >}}) for axis-focused commissioning capture.
+- Use [Safety Plugin]({{< relref "/manual/plugins/safety.md" >}}) for the interface towards external safety logic.
+- Use [SocketCAN Plugin]({{< relref "/manual/plugins/socketcan.md" >}}) for CAN/CANopen integration.
+- Use [Grbl Plugin]({{< relref "/manual/plugins/grbl.md" >}}) for NC/G-code workflows.
 - Use this page to decide which plugin family you need.
 - Then use the chosen plugin package's own examples/scripts for its plugin-specific config keys and objects.
 
@@ -54,5 +60,11 @@ The list below is based on currently available `ecmc_plugin*` repositories.
 
 ## Related pages
 - [Plugin Interface]({{< relref "/manual/plugins/interface.md" >}})
+- [DAQ Plugin]({{< relref "/manual/plugins/daq.md" >}})
+- [FFT Plugin]({{< relref "/manual/plugins/fft.md" >}})
+- [Motion Plugin]({{< relref "/manual/plugins/motion.md" >}})
+- [Safety Plugin]({{< relref "/manual/plugins/safety.md" >}})
+- [SocketCAN Plugin]({{< relref "/manual/plugins/socketcan.md" >}})
+- [Grbl Plugin]({{< relref "/manual/plugins/grbl.md" >}})
 - [General configuration]({{< relref "/manual/general_cfg/_index.md" >}})
 - [Examples]({{< relref "/manual/examples.md" >}})

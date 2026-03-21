@@ -4,6 +4,10 @@ weight = 19
 chapter = false
 +++
 
+## Scope
+Use this page for EL51xx incremental-encoder terminals, especially slave
+selection, channel mode, oversampling, and trigger/cam-capable variants.
+
 ## Overview
 The EL51xx series covers incremental encoder interfaces:
 1. EL5101: 1 ch, diff rs422, ttl, 1MHz
@@ -14,7 +18,9 @@ The EL51xx series covers incremental encoder interfaces:
 6. [Diagnostics](#diagnostics)
 
 ## General
-Normally, the incremental encoder interfaces do not require any SDO configuration. Therefore, `ecmccomp/applyComponent.cmd`, which is often needed after `ecmccfg/addSlave.cmd`, is in most cases not required.
+Normally, incremental encoder interfaces do not require any SDO configuration.
+Therefore, `ecmccomp/applyComponent.cmd`, which is often needed after
+`ecmccfg/addSlave.cmd`, is usually not required.
 
 ## Adding the slave
 Make sure you use the correct slave type when adding the slave. Some slaves have the same product ID but totally different process data, which can result in the slave not going into OP mode and ecmc failing to start with a timeout.
@@ -22,27 +28,34 @@ Make sure you use the correct slave type when adding the slave. Some slaves have
 For example, EL5101-**0010** and EL5101-**0011** have the same product ID but very different process data.
 So if an EL5101-**0011** is added to the configuration but the actual slave connected is an EL5101-**0010**, the initial product ID verification will not catch the mismatch. Later, the slave will not go online since the process data is wrong.
 
-The issue can be diagnosed by checking the dmesg logs:
+The issue can be diagnosed by checking the `dmesg` logs:
 ```bash
 # first login to host (ecmc server)
 sudo dmesg
 ```
-Configuring the wrong process data will lead to an error message  "* EtherCAT * Invalid input configuration"
+Configuring the wrong process data leads to an error such as
+`* EtherCAT * Invalid input configuration`.
 
 The solution is to use the correct configuration script.
 
 ## EL5101-0010
-This is commonly used at PSI (even though the EL5112 should be the standard choice). For configuration, use the EL5101-0010 configuration script:
-```
+This terminal is commonly used at PSI, although the EL5112 should normally be
+the standard choice. For configuration, use the EL5101-0010 startup script:
+```bash
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=16, HW_DESC=EL5101-0010"
 ```
+
 ## EL5101-0011
-This is an oversampling slave. Use the EL5101-0011 configuration script with an optional `NELM` which defines the level of oversampling:
-Example: Add an EL5101-0011, with 100 levels of oversampling:
-```
+This is an oversampling terminal. Use the EL5101-0011 startup script with the
+optional `NELM` macro, which defines the oversampling depth.
+
+Example: add an EL5101-0011 with `100` oversamples:
+```bash
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=16, HW_DESC=EL5101-0011, NELM=100"
 ```
-In the above example, for each EtherCAT frame, an array of 100 elements will be transferred. If the EtherCAT rate is 1kHz, then the incremental data will be sampled at 100kHz (which is also the maximum rate for this terminal).
+In this example, each EtherCAT frame transfers an array of 100 elements. If the
+EtherCAT rate is `1 kHz`, the incremental data is therefore sampled at
+`100 kHz`, which is also the maximum rate for this terminal.
 
 {{% notice note %}}
 `NELM` cannot be freely defined; depending on the EtherCAT rate, different `NELM` values will be accepted. Consult the EL5101-0011 manual for more information.
@@ -50,10 +63,13 @@ Normally, `NELM` needs to be an integer value, like 10, 20, 50, 100.
 {{% /notice %}}
 
 ## EL5112
-This is the PSI standard incremental encoder interface. The terminal can be used as one channel if index pulse needs to be connected or two channel if only A and B pulse trains are needed.
+This is the PSI standard incremental encoder terminal. It can be used in
+single-channel mode if an index pulse is needed, or in two-channel mode if only
+the A and B pulse trains are needed.
 
-For 1 channel operation with index pulse, use the EL5112_ABC configuration script and for two channel, the EL5112_AB script:
-```
+For one-channel operation with index pulse, use `EL5112_ABC`. For two-channel
+operation, use `EL5112_AB`:
+```bash
 # One channel:
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=16, HW_DESC=EL5112_ABC"
 
@@ -62,26 +78,34 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=16, HW_DESC=EL5112_AB"
 ```
 
 ## EL5131
-This terminal supports setting cam/trigger outputs at certain counter values (for predefined time and direction).
+This terminal supports cam/trigger outputs at selected counter values for a
+defined time and direction.
 
-8 predefined threshold counter values can be entered and configured switch outputs on or off. These thresholds can also be accessed/updated during runtime.
+Eight predefined threshold values can be configured to switch outputs on or
+off. These thresholds can also be accessed and updated at runtime.
 
-Depending on how the terminal should be used, the following startup scripts exist:
-* EL5131: Normal incremental encoder operation
-* EL5131_DC: Normal incremental encoder and DC clock (access to timestamps)
-* EL5131_DC_TRG: Incremental encoder, access to timestamps, access to configuration of thresholds for outputs for triggering.
+Depending on the intended use, the following startup scripts are available:
+* `EL5131`: normal incremental encoder operation
+* `EL5131_DC`: incremental encoder operation with DC-clock timestamp access
+* `EL5131_DC_TRG`: incremental encoder operation with timestamp access and
+  configurable output thresholds for triggering
 
-```
+```bash
 # EL5131: Normal incremental encoder operation:
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=16, HW_DESC=EL5131"
 
 # EL5131_DC: Normal incremental encoder and DC clock (access to timestamps)
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=16, HW_DESC=EL5131_DC"
 
-# EL5131_DC_TRG: Incremental encoder, access to timestamps and configuration of thresholds for outputs/triggering.
+# EL5131_DC_TRG: Incremental encoder with timestamps and trigger-threshold configuration.
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=16, HW_DESC=EL5131_DC"
 ```
 
 ## Diagnostics
 
-See the hardware diagnostics page.
+See the hardware diagnostics page for terminal-level diagnostic data.
+
+## Related Pages
+- [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
+- [Diagnostics]({{< relref "/manual/knowledgebase/hardware/Diag.md" >}})
+- [homing]({{< relref "/manual/motion_cfg/homing.md" >}})

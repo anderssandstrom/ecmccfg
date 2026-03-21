@@ -151,7 +151,7 @@ optional
 axis:
   id: 1
   # type: joint   # axis types:
-                  # 1 (equiv: physical, joint, j, motor, real)
+                  # 1 (equiv: physical, axis, j, motor, real)
                   # 2 (equiv: virtual, end_effector, end-effector, ee, e)
   # mode: CSV     # supported modes: CSV and CSP
   # parameters: powerAutoOnOff=2;powerOnDelay=6.0;powerOffDelay=1.0;
@@ -591,7 +591,7 @@ monitoring:
 ```
 axis:
   id: 1                                               # Axis id
-  type: joint                                         # this is for future selection of axis type
+  type: joint                                         # axis type selector for future use
   mode: CSV                                           # supported mode, CSV and CSP, defaults CSV
   # Please switch to ecmc auto-enable/disable (axis.autoEnable) instead of the motor record.
   parameters: 'axisPar' # additional parameters       # Additional params to motor record driver

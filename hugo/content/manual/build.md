@@ -5,20 +5,44 @@ chapter = false
 +++
 
 {{% notice warning %}}
-These instructions only work at PSI!
+These instructions are PSI-specific.
 {{% /notice %}}
 
-## Build at PSI, using driver.makefile
-by default this module is only built for Debian 10 and 12 and Epics >=R7.0.7
+## Scope
 
-### build on login cluster
+This page describes the local PSI build and test workflow for `ecmccfg`.
+
+## Build
+
+The normal build path uses `driver.makefile`.
+
+Current assumptions:
+
+- Debian 10 or Debian 12
+- EPICS `>= R7.0.7`
+
+Build on the login cluster with:
+
 ```bash
 make [LIBVERSION] [clean] [uninstall] install
 ```
 
-### check a particular version
-check the module loads for version `dev`, Epics `R7+` and ECMC version `dev`, note `MASTER_ID=-1` which runs ECMC in master-less mode.
-Make proper adjustments to match your needs in terms of versions.
+## Check a particular version
+
+To check that a specific module version loads, you can start an IOC shell with
+explicit versions.
+
+Example:
+
 ```bash
 iocsh -7 -r "ecmccfg,dev 'ECMC_VER=dev,MASTER_ID=-1'"
 ```
+
+This example checks:
+
+- `ecmccfg` version `dev`
+- `ECMC_VER=dev`
+- `MASTER_ID=-1`, which runs ecmc in master-less mode
+
+Adjust the versions and startup arguments to match the environment you want to
+test.

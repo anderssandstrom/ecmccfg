@@ -4,13 +4,13 @@ weight = 19
 chapter = false
 +++
 
-By popular demand, the topic scaling will be discusses in closer detail.
+This page describes axis scaling in more detail.
 
-ecmc has to scaling factors for each joint, firstly the [drive](#drive-scaling) scaling, secondly the [encoder](#encoder-scaling) scaling.
+ecmc has two scaling factors for each axis: the [drive](#drive-scaling) scaling and the [encoder](#encoder-scaling) scaling.
 
 {{% notice warning %}}
-Changes to the scaling have direct effects on the `Kp` of the PID-loop.
-If the drive scaling is changes, make sure to adjust the PID parameters accordingly.
+Changes to the scaling have direct effects on the `Kp` of the PID loop.
+If the drive scaling is changed, make sure to adjust the PID parameters accordingly.
 {{% /notice %}}
 
 ## drive scaling

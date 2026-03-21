@@ -4,21 +4,34 @@ weight = 17
 chapter = false
 +++
 
+## Scope
+Use this page for EL1xxx digital-input terminals with special timing or signal
+level behavior.
+
 ## EL1252, EL1252-0050
-EL1252-xxxx is a 2-channel digital input terminal with timestamps (low-to-high, high-to-low):
+`EL1252-xxxx` is a two-channel digital-input terminal with timestamps for both
+low-to-high and high-to-low edges:
 * EL1252: **24V signals**
 * EL1252-0050: **5V signals**
 
-Both terminals have the same product ID and process data and can therefore be configured as EL1252:
-```
+Both terminals have the same product ID and process data and can therefore be
+configured as `EL1252`:
+```bash
 # One channel:
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=16, HW_DESC=EL1252"
 ```
 
-These terminals are very powerful since they can latch the time of the positive edge and/or negative edge of the input signal (independent of the EtherCAT bus rate). These timestamps can then be used to correlate other data, like encoders or analog inputs with timestamps.
+These terminals are useful because they can latch the timestamp of the positive
+edge and/or negative edge of an input signal independently of the EtherCAT bus
+rate. These timestamps can then be correlated with other timestamped data, such
+as encoder or analog-input signals.
 
 **IMPORTANT**
-Since the EL1252-0050 is a 5V terminal, it needs to be powered with **5V**. If the terminal is powered with 24V, it will burn. The simplest way to achieve correct power supply is by adding an EL9505 (or similar) before the EL1252-0050.
+Since the `EL1252-0050` is a `5V` terminal, it must be powered with `5V`. If it
+is powered with `24V`, it will most likely be damaged. The simplest way to get
+the correct supply is to add an `EL9505` or similar terminal before the
+`EL1252-0050`.
+
 See [ELxxxx](../elxxxx/) for more information about terminal power levels.
 
 {{% notice warning %}}
@@ -26,5 +39,11 @@ See [ELxxxx](../elxxxx/) for more information about terminal power levels.
 {{% /notice %}}
 
 {{% notice note %}}
-A 5V signal will not be detected with the 24V version (EL1252), however the terminal will not be damaged. Furthermore, it is not a good idea to power the 24V version with 5V (EL9505, or similar).
+A `5V` signal will not be detected by the `24V` version (`EL1252`), but the
+terminal will not be damaged. Conversely, it is also not a good idea to power
+the `24V` version from an `EL9505` or similar `5V` supply.
 {{% /notice %}}
+
+## Related Pages
+- [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
+- [ELxxxx]({{< relref "/manual/knowledgebase/hardware/ELxxxx.md" >}})

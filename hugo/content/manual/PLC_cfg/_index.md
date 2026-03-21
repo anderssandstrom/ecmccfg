@@ -15,6 +15,10 @@ ECMC PLCs provide deterministic real-time logic in the ecmc cycle for:
 - motion limit/home override logic
 - derived signals and buffering workflows
 
+If you want the preferred meaning of terms such as `PLC`, `axis PLC`,
+`static`, `global`, and `master-less`, see
+[Terminology]({{< relref "/manual/terminology.md" >}}).
+
 ## By Task
 ### Load and run PLC code
 - Use classic text PLC loading:

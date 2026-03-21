@@ -7,7 +7,7 @@ chapter = false
 ## Scope
 
 Each motion axis can have a local axis PLC. This is configured as part of the
-[YAML axis configuration](./axisyaml/).
+[YAML axis configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}}).
 
 Use the axis PLC for logic that belongs directly to one axis, for example:
 
@@ -84,6 +84,6 @@ variables like `{{ var.ty1 }}`.
 
 ## Related pages
 
-- [YAML configuration](./axisyaml/)
-- [legacy motion](./legacy/)
+- [YAML configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
+- [legacy motion]({{< relref "/manual/motion_cfg/legacy.md" >}})
 - [PLC configuration]({{< relref "/manual/PLC_cfg/_index.md" >}})

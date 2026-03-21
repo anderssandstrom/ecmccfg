@@ -17,30 +17,47 @@ Troubleshooting EtherCAT motion systems can be difficult because errors often sp
 
 This knowledge base is a practical first-line guide for diagnosis and recovery.
 
-## Quick Triage Flow
-1. Start with [panel]({{< relref "/manual/knowledgebase/panel.md" >}}) for full system status from `ecmcMain.ui`.
-2. Check [general]({{< relref "/manual/knowledgebase/general.md" >}}) for common startup/runtime failures.
-3. Use [ethercat command line interface]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}}) to verify master/slave state from shell.
-4. Use [troubleshooting]({{< relref "/manual/knowledgebase/troubleshooting.md" >}}) as a symptom index.
-5. Branch into [motion]({{< relref "/manual/knowledgebase/motion.md" >}}), [tuning]({{< relref "/manual/knowledgebase/tuning.md" >}}), or [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}}) depending on symptom.
+## Start Here
+1. Open [panel]({{< relref "/manual/knowledgebase/panel.md" >}}) for a quick full-system view from `ecmcMain.ui`.
+2. Use [ethercat command line interface]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}}) to verify master/slave state from the host.
+3. Use [troubleshooting]({{< relref "/manual/knowledgebase/troubleshooting.md" >}}) as the symptom-based entry page.
+4. Then go to the detailed page for the relevant layer or device.
 
 ## By Symptom
-### IOC/host performance or timing instability
+### IOC does not start or stops during startup
+- [troubleshooting]({{< relref "/manual/knowledgebase/troubleshooting.md" >}})
+- [general]({{< relref "/manual/knowledgebase/general.md" >}})
+- [host / ecmc server]({{< relref "/manual/knowledgebase/host.md" >}})
+
+### Host performance, latency, or timing instability
 - [host / ecmc server]({{< relref "/manual/knowledgebase/host.md" >}})
 - [general]({{< relref "/manual/knowledgebase/general.md" >}})
 
-### EtherCAT state / communication issues
+### EtherCAT master or slaves are missing, down, or in the wrong state
 - [ethercat command line interface]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}})
+- [general]({{< relref "/manual/knowledgebase/general.md" >}})
 - [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
 
-### Axis does not move or reports motion faults
+### Axis does not enable, does not move, or reports motion faults
 - [troubleshooting]({{< relref "/manual/knowledgebase/troubleshooting.md" >}})
 - [motion]({{< relref "/manual/knowledgebase/motion.md" >}})
 - [tuning]({{< relref "/manual/knowledgebase/tuning.md" >}})
 - [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
 
-### Need panel-based diagnosis/operation context
+### Need panel-based diagnosis or operation context
 - [panel]({{< relref "/manual/knowledgebase/panel.md" >}})
+
+## By Layer
+- [general]({{< relref "/manual/knowledgebase/general.md" >}}) for common IOC startup/runtime failures.
+- [ethercat command line interface]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}}) for host-side EtherCAT verification.
+- [motion]({{< relref "/manual/knowledgebase/motion.md" >}}) for axis behavior, limits, following errors, and manual motion diagnostics.
+- [tuning]({{< relref "/manual/knowledgebase/tuning.md" >}}) for control-loop and motion-quality issues.
+- [host / ecmc server]({{< relref "/manual/knowledgebase/host.md" >}}) for NICs, drivers, latency, and deployment details.
+- [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}}) for device-specific notes.
+
+## Tools
+- [panel]({{< relref "/manual/knowledgebase/panel.md" >}})
+- [ethercat command line interface]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}})
 
 ## Topic Map
 - [general]({{< relref "/manual/knowledgebase/general.md" >}})

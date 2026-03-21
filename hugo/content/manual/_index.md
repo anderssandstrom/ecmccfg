@@ -14,7 +14,8 @@ Use this manual as follows:
 
 1. Start with [Quickstart](./quickstart/) if you want to bring up one axis with the current YAML-based workflow.
 2. Go to [Examples](./examples/) if you want a reusable starting point from `examples/PSI/best_practice/`.
-3. Go directly to the section below if you already know what you want to configure.
+3. Check [Terminology](./terminology/) first if you want the canonical meaning of terms such as `axis`, `axis PLC`, `component`, `plugin`, and `master-less`.
+4. Go directly to the section below if you already know what you want to configure.
 
 ## Common tasks
 
@@ -77,6 +78,7 @@ For the detailed step-by-step breakdown of the startup structure, see
 ## Main sections
 
 - [Quickstart](./quickstart/) for a minimal single-axis bring-up
+- [Terminology](./terminology/) for the preferred meaning of common manual terms
 - [Introduction](./introduction/) for the detailed IOC startup structure
 - [Motion configuration](./motion_cfg/) for scaling, direction, homing, synchronization, and YAML axis details
 - [PLC configuration]({{< relref "/manual/PLC_cfg/_index.md" >}}) for syntax, variables, patterns, functions, and best practices

@@ -9,6 +9,9 @@ chapter = false
 Start here if you want to configure axes, synchronization, homing, motor record
 behavior, or motion-related PLC logic.
 
+If you want the preferred meaning of terms such as `axis`, `axis PLC`, and
+`legacy motion`, see [Terminology]({{< relref "/manual/terminology.md" >}}).
+
 For new configurations, the preferred path is YAML-based:
 
 1. configure slaves with `addSlave.cmd` and `applyComponent.cmd`

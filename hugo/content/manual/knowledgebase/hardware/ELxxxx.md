@@ -4,6 +4,10 @@ weight = 16
 chapter = false
 +++
 
+## Scope
+Use this page for general Beckhoff terminal power-bus questions, especially
+mixed 5V and 24V terminal chains.
+
 ## Power bus - 5V or 24V terminals
 24V is the most common signal level for the terminals. However, some also support other voltage levels, for instance 5V or 12V.
 In that case, normally the terminal needs to be powered with the same voltage.
@@ -21,3 +25,8 @@ Example of slaves needing 5V power supply:
 {{% notice note %}}
 **The voltage level of the power bus after (downstream of) a 5V terminal is normally also 5V. If another voltage is needed, then another system terminal is needed to set a new voltage level of the power bus.**
 {{% /notice %}}
+
+## Related Pages
+- [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
+- [EL1xxx]({{< relref "/manual/knowledgebase/hardware/EL1xxx.md" >}})
+- [EL9xxx]({{< relref "/manual/knowledgebase/hardware/EL9xxx.md" >}})

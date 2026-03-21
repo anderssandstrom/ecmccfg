@@ -4,34 +4,51 @@ weight = 13
 chapter = false
 +++
 
-## data storage examples
-The corresponding best-practice example is located in:
+## Scope
+
+Data storage buffers are used when values should be collected over time and then
+pushed to EPICS as waveform data.
+
+Use data storage when:
+
+- values should be buffered in the realtime context
+- waveform updates should happen only on a trigger
+- a PLC should decide when buffered data is published to EPICS
+
+The corresponding public best-practice example is:
 
 - `examples/PSI/best_practice/general/data_storage/`
 
-1. Continuously add value to data storage. Push to epics by hw trigger.
-2. Continuously add value to data storage. Push to epics by epics pv trigger.
-Data buffered data can be accessed by the `<IOC>:ds0-Data-Act` waveform PV.
+The active waveform data can be read from:
 
-Custom scale and offset can be applied to the stored values by MACROS (to the plc) in the startup file.
+- `<IOC>:ds0-Data-Act`
 
-### 1 push to epics by hw trigger
+## Two common patterns
+
+1. append continuously and push to EPICS on a hardware event
+2. append continuously and push to EPICS on an EPICS trigger PV
+
+Custom scale and offset can be applied directly in the PLC expression by using
+macros in the startup file.
+
+## 1. Push to EPICS by hardware trigger
 
 One common pattern is to push the waveform on a hardware event, for example a
 falling edge of a limit switch.
 
-PLC-code:
-```
+PLC code:
+
+```text
 ##################################################################################
-# PLC to add encoder data to dataStorage and push data on falling edge of higlimit
+# PLC to add encoder data to dataStorage and push data on falling edge of high limit
 #
 # MACROS:
 #   DS_ID    = ID of ds to use as a filter id
 #   PLC_ID   = ID of this PLC
 #   ENC_S_ID = Slave id of encoder terminal
 #   DBG      = Set to empty string to get printouts, set to "#" to avoid printouts
-# SCALE          = Encoder scale value, defaults to 1
-# OFFSET         = Encoder offset value, defaults to 0
+#   SCALE    = Encoder scale value, defaults to 1
+#   OFFSET   = Encoder offset value, defaults to 0
 #
 
 # Append data to storage
@@ -44,28 +61,30 @@ if(static.highlimOld and not(ax1.mon.highlim)) {
 };
 
 static.highlimOld:=ax1.mon.highlim;
-
 ```
 
-### 2 push to epics by epics pv trigger
+## 2. Push to EPICS by EPICS trigger PV
 
-In the best-practice example the data stored in dataStorage 0 is pushed to
-EPICS at a rising edge of the `<IOC>:Set-PushDataTrigger-RB` PV.
+In the best-practice example, the data stored in data storage `0` is pushed to
+EPICS on a rising edge of the `<IOC>:Set-PushDataTrigger-RB` PV.
 
-The best-practice example uses a PLC-generated signal and is started with `startup.cmd`.
-```
+Start the example with:
+
+```bash
 iocsh.bash startup.cmd
 ```
 
-Trigger writes to EPICS by:
-```
+Trigger writes to EPICS with:
+
+```text
 dbpf <IOC>:Set-PushDataTrigger-RB 1
 dbpf <IOC>:Set-PushDataTrigger-RB 0
 dbpf <IOC>:Set-PushDataTrigger-RB 1
 ```
 
-PLC-code:
-```
+PLC code:
+
+```text
 ##################################################################################
 # PLC to generate a signal, append it to dataStorage, and push it on trigger
 #
@@ -84,5 +103,10 @@ if(static.trigg and not(static.triggOld)) {
 };
 
 static.triggOld:=static.trigg;
-
 ```
+
+## Related pages
+
+- [general best practice]({{< relref "/manual/general_cfg/best_practice.md" >}})
+- [script reference]({{< relref "/manual/general_cfg/script_reference.md" >}})
+- [PLC best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}})

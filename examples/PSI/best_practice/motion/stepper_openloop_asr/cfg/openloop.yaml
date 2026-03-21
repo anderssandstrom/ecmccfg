@@ -1,6 +1,6 @@
 axis:
   id: 1                                               # Axis id
-  type: joint                                         # this is for future selection of axis type
+  type: joint                                         # axis type selector for future use
 
 epics:
   name: Axis1                                         # Axis anme

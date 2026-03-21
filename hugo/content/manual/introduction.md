@@ -7,7 +7,8 @@ chapter = false
 This page describes the detailed IOC startup structure and the main classic
 entry points. If you want the shortest current path for a new configuration,
 start with [Quickstart]({{< relref "/manual/quickstart.md" >}}) and
-[Examples]({{< relref "/manual/examples.md" >}}) first.
+[Examples]({{< relref "/manual/examples.md" >}}) first. If any naming is
+unclear, see [Terminology]({{< relref "/manual/terminology.md" >}}).
 
 ## Principle
 EtherCAT requires the field bus components (slaves) to be configured on the master.

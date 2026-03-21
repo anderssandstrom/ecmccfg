@@ -4,6 +4,10 @@ weight = 22
 chapter = false
 +++
 
+## Scope
+Use this page for EL72xx servo-drive issues such as diagnostics, warning/fault
+states, tuning, and installation-related OCT problems.
+
 ## Topics
 1. [Diagnostics](#diagnostics)
 2. [Error/warning](#errorwarning)
@@ -38,26 +42,32 @@ msg_no  time                        text_id  text  flags  diag_code   dynamic
 3       2026-02-05 10:30:39.407639  0x8105         0x2    0x1c21e000  0x0
 ```
 
-Sometimes the `text_id` values are converted to readable messages by the tool, and sometimes not. In the case above, we need to look up the `text_id` values on Beckhoff's website.
+Sometimes the `text_id` values are converted to readable text by the tool, and
+sometimes they are not. In the example above, the codes need to be looked up on
+Beckhoff's site.
 
 Searching for the slave type and error code normally gives you the information:
 * 0x4411 : Warning "Drive. DC-Link undervoltage. (Warning). The DC link voltage of the terminal is lower than the parameterized minimum voltage"
 * 0x8406 : Error   "Drive. DC-Link undervoltage. (Error). The DC link voltage of the terminal is lower than the parameterized minimum voltage"
 * 0x8105 : Error   "General. PD-Watchdog. Communication between the fieldbus and the output stage is secured by a Watchdog."
 
-Here we can see that the drive is missing DC-link voltage (motor power). The watchdog error probably happens during startup of the IOC and is nothing to worry about.
+Here we can see that the drive is missing DC-link voltage, meaning motor power
+is missing. The watchdog error most likely happened during IOC startup and is
+not the main problem.
 
 ## Error/warning
-If the drive is in error/warning state and not possible to enable:
-* Missing power supply
+If the drive is in an error or warning state and cannot be enabled, common
+reasons are:
+* missing power supply
 * STO tripped
-* Defect cable
-* Wrong/messy cabling between connector and actual terminal.
-* Phases connected in wrong order resulting in commutation failure
+* defective cable
+* incorrect or messy cabling between the connector and the actual terminal
+* phases connected in the wrong order, resulting in commutation failure
 * PD-Watchdog error (see below)
 
 ### PD-Watchdog error
-PD watchdog error once occurred at restart of the system after a complete power-down event (yearly shutdown test).
+A PD-Watchdog error was once observed when restarting the system after a
+complete power-down event during a yearly shutdown test.
 
 Symptoms:
 * Slave goes to OP but stays in fault state (or sometimes not even in fault state).
@@ -84,15 +94,24 @@ DIAGNOSTIC MESSAGES:
 time                        text_id  text                 flags  dynamic
 2026-02-23 14:56:55.174172  0x8105   (error) PD-Watchdog  0x2    0x0000000000000000000000
 ```
-Reason seemed to be that the EtherCAT cable was connected to the lower port of the EK1100 coupler, resulting in wrong timing. Steppers worked fine, but servos that use DC clocks did not work. After moving the cable, a power cycle was needed.
+The likely reason was that the EtherCAT cable was connected to the lower port of
+the EK1100 coupler, which resulted in incorrect timing. Stepper systems still
+worked, but servos using DC clocks did not. After moving the cable, a power
+cycle was required.
 
-Reset with a power cycle of the power bus (communication bus can remain powered). If EL9227-5500 is before this point in the EtherCAT chain, the power bus can be toggled with channel 1 from panels. At PSI, do not toggle channel 2 since that could be connected to communication-bus feed of EK1100; then communication will be lost and can only be recovered by someone physically going to the crate and pressing the button/LED.
+Recover by power-cycling the power bus; the communication bus can remain
+powered. If an `EL9227-5500` is installed before this point in the EtherCAT
+chain, the power bus can be toggled with channel 1 from the panels. At PSI, do
+not toggle channel 2, since it may be connected to the communication-bus feed
+of the `EK1100`. In that case communication is lost and can only be recovered
+by someone physically going to the crate and pressing the button/LED.
 
 {{% notice warning %}}
-** PSI: Do not toggle channel 2 of EL9227-5500, this may break power supply to EtherCAT communication bus**
+**PSI: Do not toggle channel 2 of EL9227-5500, since this may break power to the EtherCAT communication bus.**
 {{% /notice %}}
 
-Note: restarting the IOC or switching the terminal between INIT and OP did not help for this issue.
+Restarting the IOC or switching the terminal between `INIT` and `OP` did not
+help in this case.
 
 ## Tuning
 
@@ -100,14 +119,25 @@ Note: restarting the IOC or switching the terminal between INIT and OP did not h
 **Always be prepared to "KILL" or estop the axes while performing tuning.**
 {{% /notice %}}
 
-* Make sure scaling factors are correct. Test by setting ecmc position controller parameters to 0 and performing a move. This move will basically be an open-loop positioning move. Normally, the actual value and setpoint still track very well during the move; if not, then scaling of drive or encoder is most likely wrong. Check gear ratios.
-* For most applications the default values for the current loop and velocity loop is good.
-* For slow motion, running slow, accurate and smooth, it could be beneficial to reduce velocity Kp and Ti in the drive.
+* Make sure the scaling factors are correct. Test by setting the ecmc position-controller parameters to `0` and performing a move. This effectively becomes an open-loop positioning move. Normally, the actual value and setpoint should still track each other closely during the move; if not, the drive or encoder scaling is most likely wrong. Check gear ratios as well.
+* For most applications, the default current-loop and velocity-loop values are good.
+* For slow, accurate, smooth motion, it can be beneficial to reduce the velocity `Kp` and `Ti` values in the drive.
 
 ## Electrical installation issues
-Strange issues have occurred if the OCT cable shielding is not kept intact until close to the terminal. Issues were identified when the individual wires were mixed randomly in cable management trays inside a control cabinet (with OCT connector on outside, then going to terminals, then single wires to EL72xx). This is not a good concept. Keep shielding of encoder and motor cables also inside the crate.
-The diagnostic buffer of EL72xx showed encoder related error messages.
+Strange issues have occurred when the OCT cable shielding was not kept intact up
+to the terminal. Problems were observed when individual wires were split out and
+mixed randomly in cable-management trays inside a control cabinet. This is not a
+good installation concept. Keep the shielding of both encoder and motor cables
+intact as far as possible, also inside the crate.
+
+In those cases, the EL72xx diagnostic buffer showed encoder-related errors.
 
 
 ## OCT cable failure
-Once identified defect OCT cable. Symptoms were frequent disabling of the drive, going to fault state.
+One identified issue was a defective OCT cable. Symptoms included frequent drive
+disable events and repeated transitions into fault state.
+
+## Related Pages
+- [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
+- [Diagnostics]({{< relref "/manual/knowledgebase/hardware/Diag.md" >}})
+- [tuning]({{< relref "/manual/knowledgebase/tuning.md" >}})

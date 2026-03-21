@@ -4,9 +4,11 @@ weight = 12
 chapter = false
 +++
 
-### General
+## Scope
+Use this page for common IOC startup/runtime issues that are not limited to one
+specific axis, drive, or hardware type.
 
-#### ERROR_EC_MAIN_INVALID_SLAVE_INDEX
+## `ERROR_EC_MAIN_INVALID_SLAVE_INDEX`
 
 This error could be generated if:
 * Power to the slaves are missing.
@@ -38,9 +40,10 @@ ecmcConfigOrDie "Cfg.EcSlaveVerify(0,0,0x2,0x044c2c52)"
 ECMC command "Cfg.EcSlaveVerify(0,0,0x2,0x044c2c52)" returned error: ERROR_EC_MAIN_INVALID_SLAVE_INDEX (0x26002)
 ```
 
-Diagnose the issue by logging into the host/server and running the `ethercat slaves` command. Ensure that the slaves are present and powered.
+Diagnose the issue by logging into the host/server and running the
+`ethercat slaves` command. Ensure that the slaves are present and powered.
 
-#### Asyn parameter count exceeded
+## Asyn Parameter Count Exceeded
 
 For big IOC:s sometimes the default maximum asyn parameter count might not be enough and an error will be shown:
 ```
@@ -56,7 +59,8 @@ The solution is to increase the maximum parameter count by setting the "MAX_PARA
 ```
 require ecmccfg "MASTER_ID=1,......,MAX_PARAM_COUNT=2000"
 ```
-#### Callback Queue Size
+
+## Callback Queue Size
 
 The default callback queue in EPICS base is only 2000 bytes.
 To increase the use the following command in the top of your startup script:
@@ -64,3 +68,8 @@ To increase the use the following command in the top of your startup script:
 callbackSetQueueSize(<size>)
 ```
 Increasing the callback queue size could solve issues like "WARNING dbEvent possible queue stall".
+
+## Related pages
+- [knowledge base]({{< relref "/manual/knowledgebase/_index.md" >}})
+- [host / ecmc server]({{< relref "/manual/knowledgebase/host.md" >}})
+- [ethercat command line interface]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}})

@@ -4,6 +4,11 @@ weight = 23
 chapter = false
 +++
 
+## Scope
+Use this page for EL9xxx supply and distribution terminals, especially
+over-current protection modules and passive-terminal-related slave-index
+confusion.
+
 ## Topics
 1. [Over-current protection](#over-current-protection)
 2. [Passive terminals](#passive-terminals)
@@ -32,3 +37,7 @@ The passive terminals will not show up as an EtherCAT slave when issuing the `et
 {{% notice warning %}}
 **When configuring ecmc, make sure the EtherCAT slave index is correct. Do not blindly trust the electrical drawings since a passive terminal could introduce a shift in the slave indices.**
 {{% /notice %}}
+
+## Related Pages
+- [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
+- [ethercat command line interface]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}})

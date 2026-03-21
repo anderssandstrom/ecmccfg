@@ -7,6 +7,9 @@ chapter = false
 ## Scope
 ECMC plugins extend the core ecmc runtime with domain-specific functionality.
 
+Use this page when you need functionality that does not naturally belong in the
+core axis, PLC, or data-storage configuration.
+
 Most plugins are loaded with:
 ```bash
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadPlugin.cmd, "PLUGIN_ID=<id>,FILE=<lib>,CONFIG='<cfg>',REPORT=1"
@@ -16,6 +19,9 @@ The safety plugin is loaded with:
 ```bash
 ecmcConfigOrDie "Cfg.LoadSafetyPlugin(<lib>,<cfg>)"
 ```
+
+For the general script overview, see
+[Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}}).
 
 ## Available plugin repositories
 The list below is based on currently available `ecmc_plugin*` repositories.
@@ -36,3 +42,7 @@ The list below is based on currently available `ecmc_plugin*` repositories.
 - Use `ecmc_plugin_grbl` for NC/G-code driven workflows.
 - Use `ecmc_plugin_socketcan` when CAN/CANopen devices must be integrated into the IOC.
 - Use `ecmc_plugin_safety` only as a non-safety-rated interface towards certified external safety logic.
+
+## Related pages
+- [General configuration]({{< relref "/manual/general_cfg/_index.md" >}})
+- [Examples]({{< relref "/manual/examples.md" >}})

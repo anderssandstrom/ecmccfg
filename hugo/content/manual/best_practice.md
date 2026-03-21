@@ -4,15 +4,33 @@ weight = 6
 chapter = false
 +++
 
-### Links to Best Practice
-* [General]({{< relref "/manual/general_cfg/best_practice.md" >}})
-* [Motion]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}})
-* [PLC]({{< relref "/manual/PLC_cfg/best_practice.md" >}})
+## Scope
 
-### ECMC Core Notes (From ecmc Release Docs)
-For recent core changes and recommendations, see the ecmc release notes (for example `RELEASE.md` in the ecmc repo).
-Highlights to consider in your configurations:
-- Use native axis auto-enable/disable (`axis.autoEnable`), added in ecmc v11.
-- Keep SDO verification enabled to catch drive current/SDO mismatches before startup.
-- You can declare PLC variables with `VAR ... END_VAR` blocks for clearer PLC code.
-- Motion parameters can be set via motor record fields (PCOF/ICOF/DCOF) but values must be 100× smaller than native ecmc settings.
+This page is the entry point for the public best-practice material in the
+manual.
+
+Use best-practice pages when you want:
+
+- a recommended starting point for a new configuration
+- example-driven guidance rather than full reference material
+- public examples that correspond to the manual text
+
+## By area
+
+- [General]({{< relref "/manual/general_cfg/best_practice.md" >}})
+  host setup, EtherCAT rate, and controller-side recommendations
+- [Motion]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}})
+  axis, encoder, homing, motor-record, and motion example patterns
+- [PLC]({{< relref "/manual/PLC_cfg/best_practice.md" >}})
+  PLC structure, macros, debug handling, and EPICS variable exposure
+
+## Core recommendations
+
+Some recurring recommendations apply across several sections:
+
+- prefer the YAML-based motion workflow for new configurations
+- keep SDO verification enabled so slave mismatches are caught at startup
+- prefer native axis auto-enable and disable via `axis.autoEnable`
+- use `VAR ... END_VAR` in PLC code for clearer structure
+- use public best-practice examples as the reusable starting point, not
+  `examples/test` or `lab_setup`

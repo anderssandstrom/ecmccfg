@@ -27,9 +27,12 @@ want to compare your own YAML configuration with a known working structure.
 
 ## Stepper examples
 
-### [stepper and BISS-C]({{< relref "/manual/motion_cfg/best_practice/stepper_biss_c.md" >}})
+### stepper and BISS-C
 
 Closed-loop stepper examples with linear BiSS-C encoder:
+
+Guide page:
+[stepper and BISS-C]({{< relref "/manual/motion_cfg/best_practice/stepper_biss_c.md" >}})
 
 1. EL7041-0052 and EL5042 in CSV
 2. EL7062_CSP and EL5042 in CSP with ecmc position loop enabled
@@ -63,24 +66,36 @@ Single-axis profile-move / PVT example:
 
 - `examples/PSI/best_practice/motion/pvt/el7041_0052/`
 
-### [servo]({{< relref "/manual/motion_cfg/best_practice/servo.md" >}})
+### servo
 
 Servo example based on Ex72xx drive and AM8xxx motor.
+
+Guide page:
+[servo]({{< relref "/manual/motion_cfg/best_practice/servo.md" >}})
 
 Example tree:
 `examples/PSI/best_practice/motion/servo/`
 
 ## Motor-record-related examples
 
-### [Auto save restore]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}})
+### Auto save restore
+
+Guide page:
+[motor record examples]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}})
 
 - `examples/PSI/best_practice/motion/stepper_openloop_asr/`
 
-### [Open loop retries]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}})
+### Open loop retries
+
+Guide page:
+[motor record examples]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}})
 
 - `examples/PSI/best_practice/motion/stepper_openloop_mr_rtry_bissc/`
 
-### [No motor record]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}})
+### No motor record
+
+Guide page:
+[motor record examples]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}})
 
 - `examples/PSI/best_practice/motion/stepper_bissc_no_mr/`
 

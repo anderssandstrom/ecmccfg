@@ -4,7 +4,11 @@ weight = 13
 chapter = false
 +++
 
-### `ethercat` CLI
+## Scope
+Use the `ethercat` CLI on the host when you need to verify master state, slave
+state, PDO/SDO content, or recover individual slaves without restarting the IOC.
+
+## `ethercat` CLI
 
 The IgH EtherCAT master provides a command line interface (CLI) which is a very powerful tool.
 The most common commands will be explained here.
@@ -171,3 +175,8 @@ Alternatively, cycling to 'INIT' and back to 'OP' might also be attempted.
 {{% notice info %}}
 A power cycling of the of the EtherCAT components is the **last** resort!
 {{% /notice %}}
+
+## Related Pages
+- [knowledge base]({{< relref "/manual/knowledgebase/_index.md" >}})
+- [troubleshooting]({{< relref "/manual/knowledgebase/troubleshooting.md" >}})
+- [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})

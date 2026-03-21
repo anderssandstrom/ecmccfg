@@ -4,6 +4,18 @@ weight = 14
 chapter = false
 +++
 
+## Scope
+Use this page when an axis is present in the IOC but motion still behaves
+incorrectly, for example due to limits, following errors, enable problems, or
+special PLC-based limit logic.
+
+## Related pages
+- [motion configuration]({{< relref "/manual/motion_cfg/_index.md" >}})
+- [homing]({{< relref "/manual/motion_cfg/homing.md" >}})
+- [troubleshooting]({{< relref "/manual/knowledgebase/troubleshooting.md" >}})
+- [tuning]({{< relref "/manual/knowledgebase/tuning.md" >}})
+- [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
+
 ## Topics
 1. [both_limits error](#both_limits-error)
 2. [position lag error, (following error)](#position-lag-error)
@@ -14,7 +26,11 @@ chapter = false
 ---
 
 ## both_limits error
-The "BOTH_LIMITS" error can be related to limit switches not being powered with 24V. At PSI, limits are normally fed from 24V outputs, typically an EL2819 terminal. The outputs therefore need to be set to `1` to power the switches. Check the schematics to find which output powers the switches for a given axis, then use one of the following approaches to set it to `1`:
+The `BOTH_LIMITS` error can be related to limit switches not being powered with
+24V. At PSI, limits are normally fed from 24V outputs, typically an EL2819
+terminal. The outputs therefore need to be set to `1` to power the switches.
+Check the schematics to find which output powers the switches for a given axis,
+then use one of the following approaches to set it to `1`:
 
 Define the output in the axis YAML file:
 ```yaml
@@ -92,7 +108,9 @@ Possible reasons:
 {{% notice warning %}}
 This procedure is for experts only. You run the risk of destroying expensive devices. Limit switches are _not_ obeyed. YOU HAVE BEEN WARNED!
 {{% /notice %}}
-In case the hardware is fine, the cables are checked, human error is mostly excluded, or the system used to work but doesn't work any longer, directly writing to the drive is possible.
+If the hardware looks fine, the cables are checked, normal setup mistakes are
+mostly excluded, or the system used to work but no longer does, directly
+writing to the drive can be used as a last diagnostic step.
 
 For this however, the IOC needs to be reconfigured to _not_ link the hardware to an axis!
 1. Edit the startup script and comment out the axis, just leave the slave configuration.

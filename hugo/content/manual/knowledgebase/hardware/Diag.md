@@ -4,6 +4,10 @@ weight = 14
 chapter = false
 +++
 
+## Scope
+Use this page when a Beckhoff drive or encoder terminal exposes diagnostic
+messages that need to be read directly from the slave.
+
 ## Diagnostics
 
 The more advanced Beckhoff EtherCAT slaves, like drives and encoder readers, have a diagnostics buffer that can be read with the `ec_diagnostic_messages.py` tool:
@@ -37,3 +41,7 @@ Searching the web for the slave type and error code normally gives you the infor
 * 0x8105 : Error   "General. PD-Watchdog. Communication between the fieldbus and the output stage is secured by a Watchdog."
 
 Here we can see that the drive is missing DC-link voltage (motor power). The watchdog error probably happens during startup of the IOC and is nothing to worry about.
+
+## Related Pages
+- [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
+- [ethercat command line interface]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}})

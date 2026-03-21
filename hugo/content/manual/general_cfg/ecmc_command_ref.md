@@ -33,7 +33,7 @@ chapter = false
 | `Cfg.AddAxisToGroupByName(<int>,<str>)` | Adds an axis to an group |
 | `Cfg.AddAxisToGroupByName(<int>,<str>,<int>)` | Adds an axis to an group |
 | `Cfg.AppendAxisPLCExpr(<int>)=<str>` | Append axis sync. |
-| `Cfg.CompileAxisPLC(<int>)` | Compile Axis PLC code. For syntax and usage patterns, see [PLC syntax](../PLC_cfg/syntax/) and [PLC patterns](../PLC_cfg/patterns/). |
+| `Cfg.CompileAxisPLC(<int>)` | Compile Axis PLC code. For syntax and usage patterns, see [PLC syntax]({{< relref "/manual/PLC_cfg/syntax.md" >}}) and [PLC patterns]({{< relref "/manual/PLC_cfg/patterns.md" >}}). |
 | `Cfg.CreateAxis(<int>)` | Creates an axis object at index axisIndex. |
 | `Cfg.CreateAxis(<int>,<int>)` | Creates an axis object at index axisIndex. |
 | `Cfg.CreateAxis(<int>,<int>,<int>)` | Creates an axis object at index axisIndex. |

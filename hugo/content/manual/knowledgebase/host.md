@@ -4,6 +4,10 @@ weight = 17
 chapter = false
 +++
 
+## Scope
+Use this page for host-level performance, EtherCAT driver, NIC, and deployment
+questions that affect the IOC as a whole.
+
 ## Topics
 1. [PSI specific](#psi-specific)
 2. [ECMC server cfg repository](#ecmc-server-cfg-repository)
@@ -33,7 +37,8 @@ Main content:
 {{% /notice %}}
 
 #### iocsh startup
-ecmc needs to be started with root privileges (or with a user in the realtime group); otherwise ecmc might segfault.
+ecmc needs to be started with root privileges, or with a user in the realtime
+group; otherwise ecmc might segfault.
 
 #### c6025-0010 startup
 Need to change boot setting:
@@ -167,3 +172,8 @@ In order to successfully run an ecmc EtherCAT system at higher rates, some tunin
 * only transfer the needed PVs to EPICS
 * affinity: use a dedicated core for the `ecmc_rt` thread and move other high-priority threads to other cores (see "High load on system" above).
 * consider use of more than one domain
+
+## Related pages
+- [general best practice]({{< relref "/manual/general_cfg/best_practice.md" >}})
+- [startup]({{< relref "/manual/general_cfg/startup/_index.md" >}})
+- [knowledge base]({{< relref "/manual/knowledgebase/_index.md" >}})

@@ -27,7 +27,7 @@ The configuration framework contains the necessary files to configure an EPICS I
 {{% children %}}
 
 ---
-## provided common user commands
+## Common Startup Commands
 
 * addAxis.cmd
 * addDataStorage.cmd
@@ -55,21 +55,20 @@ The configuration framework contains the necessary files to configure an EPICS I
 
 2.  add a coupler and slave
   ```bash
-  # slave 0 {ecmcEK1100}
-  ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}addSlave.cmd,       "HW_DESC=EK1100"
+  # slave 0 {EK1100}
+  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EK1100"
   # SLAVE_ID is automatically incremented
-  # slave 1 {ecmcEL1018}
-  ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}addSlave.cmd,       "HW_DESC=EL1018"
+  # slave 1 {EL1018}
+  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL1018"
   # skip slaves 2..6
-  # slave 7 {ecmcEL2008}, with optional SLAVE_ID
-  ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}addSlave.cmd,       "HW_DESC=E2008, SLAVE_ID=7"
-  #-- ATTENTION, this only work for certain slaves, as the EPICS templates have to be migrated before
-  # slave 9 {ecmcEL2008}, with optional SLAVE_ID and P_SCRIPT
-  ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}addSlave.cmd,       "HW_DESC=E2008, SLAVE_ID=9, P_SCRIPT=mXsXXX"
+  # slave 7 {EL2008}, with optional SLAVE_ID
+  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL2008, SLAVE_ID=7"
+  # slave 9 {EL2008}, with optional SLAVE_ID and P_SCRIPT
+  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL2008, SLAVE_ID=9, P_SCRIPT=mXsXXX"
   ```
 3.  add more slaves and apply configuration to the slaves
   ```bash
-  # slave 10 {ecmcEL7062}, add slave and apply component
+  # slave 10 {EL7062}, add slave and apply component
   ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL7062"
   ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Motor-Generic-2Phase-Stepper, CH_ID=1, MACROS='I_MAX_MA=1000, I_STDBY_MA=100, U_NOM_MV=24000, R_COIL_MOHM=1230,L_COIL_UH=500'"
   ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Motor-Generic-2Phase-Stepper, CH_ID=2, MACROS='I_MAX_MA=1000, I_STDBY_MA=100, U_NOM_MV=24000, R_COIL_MOHM=1230,L_COIL_UH=500'"
@@ -82,18 +81,18 @@ The configuration framework contains the necessary files to configure an EPICS I
   # Just ignore some slaves (increase SLAVE_ID with 4)
   ${SCRIPTEXEC} ${ecmccfg_DIR}ignoreSlaves.cmd    "COUNT=4"
 
-  # slave 16 {ecmcEL7037}, configure slave with optional SLAVE_ID. Please use applyComponent.cmd instead
-  ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}addSlave.cmd,  "HW_DESC=EL7037"
+  # slave 16 {EL7037}, configure slave with optional SLAVE_ID. Please use applyComponent.cmd instead
+  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,  "HW_DESC=EL7037"
   ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Motor-Generic-2Phase-Stepper, CH_ID=1, MACROS='I_MAX_MA=1000, I_STDBY_MA=100, U_NOM_MV=24000, R_COIL_MOHM=1230,L_COIL_UH=500'"
 
-  # slave 17 {ecmcEL7037}, addSlave, with immediate call off applySlaveConfig. Please use applyComponent.cmd instead
-  ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}addSlave.cmd,       "HW_DESC=EL7037"
-  ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}applySlaveConfig,   "CONFIG=-Motor-Nanotec-ST4118L1804-B"
+  # slave 17 {EL7037}, addSlave, with immediate call of applySlaveConfig. Please use applyComponent.cmd instead
+  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL7037"
+  ${SCRIPTEXEC} ${ecmccfg_DIR}applySlaveConfig.cmd,   "CONFIG=-Motor-Nanotec-ST4118L1804-B"
 
   # slave with local configuration, in this case provided by the module `ECMC_AGIR`
   epicsEnvSet("CFG_ROOT", "${ECMC_AGIR_DIR}/")
-  ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}addSlave.cmd,       "HW_DESC=EP7211-0034_ALL"
-  ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}applySlaveConfig.cmd, "LOCAL_CONFIG=${CFG_ROOT}AM8211_AGIR.cfg"
+  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EP7211-0034_ALL"
+  ${SCRIPTEXEC} ${ecmccfg_DIR}applySlaveConfig.cmd, "LOCAL_CONFIG=${CFG_ROOT}AM8211_AGIR.cfg"
   ```
 
 4. additional configuration
@@ -114,13 +113,13 @@ The configuration framework contains the necessary files to configure an EPICS I
 
   * yaml config
   ```bash
-  ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}loadYamlAxis.cmd, "FILE=./AM8111_CSV_minimum.yaml, ECMC_TMPDIR=/tmp/"
+  ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd, "FILE=./AM8111_CSV_minimum.yaml, ECMC_TMPDIR=/tmp/"
   ```
 
   * classic config, please use yaml config instead.
   ```bash
   epicsEnvSet("DEV",      "STEST-MYDEVICE")
-  ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}configureAxis.cmd,  "CONFIG=./cfg/axis_1"
+  ${SCRIPTEXEC} ${ecmccfg_DIR}configureAxis.cmd,  "CONFIG=./cfg/axis_1"
   ```
 
 6. adding a virtual motor axis, please use yaml config instead.
@@ -139,12 +138,12 @@ The configuration framework contains the necessary files to configure an EPICS I
   ```bash
   ${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd, "PLC_ID=0, FILE=./plc/homeSlit.plc, SAMPLE_RATE_MS=100"
   ```
-  * pure yaml based PLC, please use classic PLC-file load instead
+  * pure yaml based PLC
   ```bash
-  ${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}loadYamlPlc.cmd" "FILE=./plc1.yaml, ECMC_TMPDIR=/tmp/"
+  ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlPlc.cmd, "FILE=./plc1.yaml, ECMC_TMPDIR=/tmp/"
   ```
-  * pure yaml based PLC, please use classic PLC-file load instead, with classic PLC-file,
+  * yaml header with classic PLC-file,
   Note: `file` key in yaml config will overwrite anything in the `code` key!
   ```bash
-  ${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}loadYamlPlc.cmd" "FILE=./plc1File.yaml, ECMC_TMPDIR=/tmp/"
+  ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlPlc.cmd, "FILE=./plc1File.yaml, ECMC_TMPDIR=/tmp/"
   ```

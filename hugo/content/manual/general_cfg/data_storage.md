@@ -5,7 +5,7 @@ chapter = false
 +++
 
 ## data storage examples
-This dir contains two examples: [here](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/test/dataStorage).
+The corresponding example files are located in `examples/test/dataStorage/`.
 
 1. Continuously add value to data storage. Push to epics by hw trigger.
 2. Continuously add value to data storage. Push to epics by epics pv trigger.
@@ -55,7 +55,7 @@ static.highlimOld:=ax1.mon.highlim;
 
 In this example the data stored in dataStorage 0 is pushed to epics at a rising edge of the "IOC_TEST:Set-PushDataTrigger-RB" pv.
 
-Example 2 is started with the following startup file: "add_data_to_buffer_trigg_push_hw.script"
+Example 2 is started with the following startup file: "add_data_to_buffer_trigg_push_epics.script"
 ```
 iocsh.bash add_data_to_buffer_trigg_push_epics.script
 ```

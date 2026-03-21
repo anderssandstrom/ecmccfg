@@ -12,8 +12,9 @@ Here you can find some best practice configurations for common use cases.
 * Description
 * Common PLC code in ecmccfg/plc_lib
 * Variable declaration
+* Link PLC variables to EPICS PVs
 
-The complete examples with startup files can be found [here](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice)
+The corresponding startup files are located in `examples/PSI/best_practice/`.
 
 ### macros
 Use of macros makes the code more generic. When loading a PLC file with "loadPLCFile.cmd", custom macros can be defined in "PLC\_MACROS":
@@ -279,3 +280,95 @@ will be converted to:
 ```
 if(global.test+ 1 > 10+static.test+${M}.s${DRV_SID}.positionActual01) {
 ```
+
+### Link static and global variables to EPICS PVs
+
+PLC variables are exposed on the ecmc asyn port and can then be wrapped by normal
+EPICS records.
+
+The asyn naming convention is:
+
+- PLC-local static variable: `plcs.plc<id>.static.<name>`
+- Global variable: `plcs.global.<name>`
+
+Examples:
+
+- `plcs.plc0.static.seqStep`
+- `plcs.plc0.static.doMotion`
+- `plcs.global.mode`
+
+#### Quick way: use the provided record templates
+
+For numeric values, load `ecmcPlcAnalog.db`:
+
+```iocsh
+dbLoadRecords("ecmcPlcAnalog.db",
+              "P=$(IOC):,PORT=MC_CPU1,ASYN_NAME=plcs.plc${ECMC_PLC_ID}.static.seqStep,REC_NAME=-M1-State")
+```
+
+For boolean values, load `ecmcPlcBinary.db`:
+
+```iocsh
+dbLoadRecords("ecmcPlcBinary.db",
+              "P=$(IOC):,PORT=MC_CPU1,ASYN_NAME=plcs.plc${ECMC_PLC_ID}.static.doMotion,REC_NAME=-M1-DoMtn")
+```
+
+For a global variable:
+
+```iocsh
+dbLoadRecords("ecmcPlcBinary.db",
+              "P=$(IOC):,PORT=MC_CPU1,ASYN_NAME=plcs.global.mode,REC_NAME=-Mode")
+```
+
+These templates create a readback-enabled EPICS output record:
+
+- `ecmcPlcAnalog.db` creates `$(P)Set$(REC_NAME)-RB` as an `ao`
+- `ecmcPlcBinary.db` creates `$(P)Set$(REC_NAME)-RB` as a `bo`
+
+So the examples above create PVs such as:
+
+- `$(IOC):Set-M1-State-RB`
+- `$(IOC):Set-M1-DoMtn-RB`
+- `$(IOC):Set-Mode-RB`
+
+These records are useful when EPICS should both write the PLC variable and read
+back its current value.
+
+#### When to use `static` and when to use `global`
+
+- Use `static` for values owned by one PLC, for example a state machine step,
+  command bit, or internal setpoint.
+- Use `global` for values that must be shared between several PLCs or between a
+  PLC and a common EPICS control PV.
+
+#### Custom records for one-way links
+
+If a plain input or output record is needed instead of the standard readback
+template, link directly to the same asyn name.
+
+Read a PLC variable into EPICS:
+
+```db
+record(ai,"$(P)FromPLC"){
+  field(DTYP, "asynFloat64")
+  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=0))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynFloat64/plcs.plc0.static.toEpics?")
+  field(SCAN, "I/O Intr")
+}
+```
+
+Write an EPICS value into a PLC variable:
+
+```db
+record(ao,"$(P)ToPLC"){
+  field(DTYP, "asynFloat64")
+  field(OUT,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=0))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynFloat64/plcs.plc0.static.fromEpics=")
+  field(SCAN, "Passive")
+}
+```
+
+Notes:
+
+- `?` at the end of the asyn path reads a value.
+- `=` at the end of the asyn path writes a value.
+- `PORT` is normally `MC_CPU1`.
+- For boolean variables, use `ecmcPlcBinary.db` or `asynInt32`.

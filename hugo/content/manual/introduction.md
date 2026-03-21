@@ -12,7 +12,7 @@ During IOC-startup, the requested configuration is validated against the actuall
 Mismatches will result in an error, the IOC will _not_ start.
 
 {{% notice warning %}}
-Blindly restarting the IOC with only partially working EtherCAT hardware will result in an inoperable IOC! If troubleshooting is needed then check out the [knowledge base](../knowledgebase) for details.
+Blindly restarting the IOC with only partially working EtherCAT hardware will result in an inoperable IOC. If troubleshooting is needed then check the [knowledge base]({{< relref "/manual/knowledgebase/_index.md" >}}).
 {{% /notice %}}
 
 ### IOC structure
@@ -39,7 +39,8 @@ For this purpose scripts can be called for:
 * **adding and configure** while adding
 * **applying** a configuration to the previously added slaves
 
-In addition to these ecmccfg scripts also the ecmccomp repo that contains a component library can be used. Settings are then applied with the ecmccomp/applyComponent.cmd, see below examples.
+In addition to the ecmccfg scripts, the `ecmccomp` component library can also be used.
+Settings are then applied with `applyComponent.cmd`, see the examples below.
 
 ##### examples
 The `addSlave` is used for simple slaves, a default configuration is automatically applied.
@@ -58,7 +59,7 @@ This behavior can be modified by arguments.
   # slave 7 {EL2008}, with optional SLAVE_ID
   ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,        "HW_DESC=EL2008, SLAVE_ID=7"
   # slave 9 {EL2008}, with optional SLAVE_ID and P_SCRIPT
-  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,        "HW_DESC=EL2008, SLAVE_ID=7, P_SCRIPT=mXsXXX"
+  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,        "HW_DESC=EL2008, SLAVE_ID=9, P_SCRIPT=mXsXXX"
   # slave 10 {EL3204}, without any of the default PVs
   ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,        "HW_DESC=EL3204, DEFAULT_SUBS=false, DEFAULT_SLAVE_PVS=true"
 
@@ -90,7 +91,7 @@ In order to manually set `binaryOutput01` to `1` at startup, the following can b
   ```
 
 ##### adding a physical motor axis
-Axis configuration is explained in detail [here](../axis).
+Axis configuration is explained in detail in the [motion configuration section]({{< relref "/manual/motion_cfg/_index.md" >}}).
 The preferred way to configure axes is with the `yaml` based configuration.
 It unifies the way (1) physical axes, (2) virtual axes and (3) synchronization is handled.
 It is theoretically possible to use a mix of `yaml` and classic configuration, but this is untested.
@@ -105,7 +106,7 @@ It is theoretically possible to use a mix of `yaml` and classic configuration, b
   ${SCRIPTEXEC} ${ecmccfg_DIR}configureAxis.cmd,  "CONFIG=./cfg/axis_1"
   ```
 {{% notice tip %}}
-See [best practice](../motion_cfg/best_practice/) and [yaml cfg](../motion_cfg/axisyaml/) for more information.
+See [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}}) and [axis YAML]({{< relref "/manual/motion_cfg/axisYaml.md" >}}) for more information.
 {{% /notice %}}
 
 ##### adding a virtual motor axis
@@ -113,7 +114,7 @@ See [best practice](../motion_cfg/best_practice/) and [yaml cfg](../motion_cfg/a
   ${SCRIPTEXEC} ${ecmccfg_DIR}configureVirtualAxis.cmd,     "CONFIG=./cfg/axis_11_virt"
   ```
 {{% notice tip %}}
-See [best practice](../motion_cfg/best_practice/) and [yaml cfg](../motion_cfg/axisyaml/) for more information.
+See [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}}) and [axis YAML]({{< relref "/manual/motion_cfg/axisYaml.md" >}}) for more information.
 {{% /notice %}}
 
 ##### adding synchronization
@@ -122,11 +123,11 @@ See [best practice](../motion_cfg/best_practice/) and [yaml cfg](../motion_cfg/a
   ${SCRIPTEXEC} ${ecmccfg_DIR}applyAxisSynchronization.cmd, "CONFIG=./cfg/axis_11_sync"
   ```
 {{% notice tip %}}
-See [best practice](../motion_cfg/best_practice/) and [yaml cfg](../motion_cfg/axisyaml/) for more information.
+See [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}}) and [axis YAML]({{< relref "/manual/motion_cfg/axisYaml.md" >}}) for more information.
 {{% /notice %}}
 
 ##### loading a PLC from file
-The PLC functionality is explained in detail here.
+The PLC functionality is explained in detail in the [PLC configuration section]({{< relref "/manual/PLC_cfg/_index.md" >}}).
 ECMC PLCs can be loaded from classical PLC files, from pure yaml files or from a yaml/PLC hybrid.
   * classic PLC-file
   ```bash
@@ -134,12 +135,12 @@ ECMC PLCs can be loaded from classical PLC files, from pure yaml files or from a
   ```
   * pure yaml based PLC
   ```bash
-  ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlPlc.cmd "FILE=./plc1.yaml"
+  ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlPlc.cmd, "FILE=./plc1.yaml"
   ```
   * yaml definition, with classic PLC-file, Note: `file` key in yaml config will overwrite anything in the `code` key!
   ```bash
-  ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlPlc.cmd "FILE=./plc1File.yaml"
+  ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlPlc.cmd, "FILE=./plc1File.yaml"
   ```
 {{% notice tip %}}
-See [plc cfg](../plc_cfg/best_practice/) for more information.
+See [PLC best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}}) for more information.
 {{% /notice %}}

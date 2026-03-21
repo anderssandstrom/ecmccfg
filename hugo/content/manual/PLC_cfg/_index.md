@@ -37,7 +37,7 @@ YAML PLC loading supports both parser backends:
 - [function libs]({{< relref "/manual/PLC_cfg/function_libs.md" >}}) for `loadPLCLib.cmd`, function signatures, and constraints.
 
 ### Apply robust coding patterns
-- [best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}}) for macros, include/substitute usage, printout strategy, and declaration patterns.
+- [best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}}) for macros, include/substitute usage, printout strategy, declaration patterns, and exposing PLC variables as EPICS PVs.
 
 ## PLC Definition Styles
 `ecmccfg` supports three styles:

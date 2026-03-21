@@ -57,7 +57,7 @@ These commands are real user-facing interfaces, but they are lower level or more
 | `applyConfig.cmd` | Apply the EtherCAT configuration and calculate process-image offsets. |
 | `addDomain.cmd` | Create an additional EtherCAT domain with custom execution rate/offset. |
 | `addEcDataItem.cmd` | Expose a custom pointer into already configured process-image data as an EPICS-accessible item. |
-| `addEcSdoRT.cmd` | Add realtime/asynchronous SDO access objects and records. |
+| `addEcSdoRT.cmd` | Add runtime asynchronous SDO access objects and EPICS control/readback records. See [RT SDO Objects]({{< relref "/manual/general_cfg/rt_sdo.md" >}}). |
 | `applySlaveConfig.cmd` | Apply one legacy slave-specific config file after `addSlave.cmd`. |
 | `applySlaveDCconfig.cmd` | Apply distributed-clock settings to a slave. |
 | `slaveVerify.cmd` | Verify slave identity and optionally reset/read firmware. |
@@ -70,7 +70,7 @@ These commands are real user-facing interfaces, but they are lower level or more
 | `addAxis.cmd` | Low-level axis object and PV creation after a classic config file has populated the environment. |
 | `addVirtualAxis.cmd` | Low-level virtual-axis object and PV creation. |
 | `addEncoder.cmd` | Add an extra encoder to the most recently configured axis in classic setups. |
-| `addMasterSlaveSM.cmd` | Create a master/slave state machine object and its PVs. |
+| `addMasterSlaveSM.cmd` | Create a master/slave state machine object and its PVs. See [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}}). |
 | `loadAxisPLCFile.cmd` | Load an axis PLC file tied to a specific axis id. |
 | `loadLUTFile.cmd` | Load a lookup table into ecmc, for example for corrections or PLC use. |
 | `pvtControllerConfig.cmd` | Configure the profile-move/PVT controller records and trigger handling. |
@@ -155,6 +155,8 @@ should generally be seen as legacy entry points compared to the YAML-first path.
 - [startup.cmd]({{< relref "/manual/general_cfg/startup/_index.md" >}})
 - [PV Processing Rate]({{< relref "/manual/general_cfg/PVProcessingRate.md" >}})
 - [iocsh utilities]({{< relref "/manual/general_cfg/iocsh_utils.md" >}})
+- [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}})
+- [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}})
 - [motion configuration]({{< relref "/manual/motion_cfg/_index.md" >}})
 - [PLC configuration]({{< relref "/manual/PLC_cfg/_index.md" >}})
 - [plugins]({{< relref "/manual/plugins/_index.md" >}})

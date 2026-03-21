@@ -33,7 +33,7 @@ For examples and configuration guidance, use [yaml configuration](../axisyaml/).
 - `healthOutput` (optional) — EtherCAT entry for health output.
 - `feedSwitchesOutput` (optional) — EtherCAT entry for fed switches.
 - `feedSwitchesValue` (optional) — Value written to `axis.feedSwitchesOutput`; defaults to 1.
-- `group` (optional) — Group name; creates/uses a group and stores its id in `GRP<axis.group>_ID`.
+- `group` (optional) — Group name; creates/uses a group and stores its id in `GRP_<axis.group>_ID`. See [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}}).
 - `autoMode` (optional) — Auto-switch drive modes for motion/homing.
   - `modeSet` — EtherCAT entry to write drive mode (CSV/CSP/homing).
   - `modeAct` — EtherCAT entry reading drive mode.

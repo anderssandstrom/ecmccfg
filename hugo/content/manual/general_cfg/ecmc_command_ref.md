@@ -28,10 +28,10 @@ chapter = false
 | Command syntax | Description |
 |---|---|
 | `Cfg.AddAxisEnc(<int>)` | Add encoder object to axis. |
-| `Cfg.AddAxisGroup(<str>)` | Creates an axis group object. |
-| `Cfg.AddAxisToGroupByIndex(<int>,<int>)` | Adds an axis to an group |
-| `Cfg.AddAxisToGroupByName(<int>,<str>)` | Adds an axis to an group |
-| `Cfg.AddAxisToGroupByName(<int>,<str>,<int>)` | Adds an axis to an group |
+| `Cfg.AddAxisGroup(<str>)` | Creates an axis group object. See [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}}). |
+| `Cfg.AddAxisToGroupByIndex(<int>,<int>)` | Adds an axis to a group. See [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}}). |
+| `Cfg.AddAxisToGroupByName(<int>,<str>)` | Adds an axis to a group. See [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}}). |
+| `Cfg.AddAxisToGroupByName(<int>,<str>,<int>)` | Adds an axis to a group. See [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}}). |
 | `Cfg.AppendAxisPLCExpr(<int>)=<str>` | Append axis sync. |
 | `Cfg.CompileAxisPLC(<int>)` | Compile Axis PLC code. For syntax and usage patterns, see [PLC syntax]({{< relref "/manual/PLC_cfg/syntax.md" >}}) and [PLC patterns]({{< relref "/manual/PLC_cfg/patterns.md" >}}). |
 | `Cfg.CreateAxis(<int>)` | Creates an axis object at index axisIndex. |
@@ -39,7 +39,7 @@ chapter = false
 | `Cfg.CreateAxis(<int>,<int>,<int>)` | Creates an axis object at index axisIndex. |
 | `Cfg.CreateAxis(<int>,<int>,<int>,<int>)` | Creates an axis object at index axisIndex. |
 | `Cfg.CreateDefaultAxis(<int>)` | Creates an axis object at index axisIndex. |
-| `Cfg.CreateMasterSlaveSM(<int>,<str>,<str>,<str>,<int>,<int>)` | Create a new master slave state machine object |
+| `Cfg.CreateMasterSlaveSM(<int>,<str>,<str>,<str>,<int>,<int>)` | Create a new master/slave state machine object. See [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}}). |
 | `GetAxisAcc(<int>)` | Get axis acceleration setpoint. |
 | `GetAxisAllowCommandsFromPLC(<int>)` | Get axis allow command from PLC. |
 | `GetAxisBlockCom(<int>)` | Get axis block external com. |
@@ -55,8 +55,8 @@ chapter = false
 | `GetAxisEncScaleDenom(<int>)` | Get the denominator part of the encoder scale. |
 | `GetAxisEncScaleNum(<int>)` | Get the numerator part of the encoder scale. |
 | `GetAxisEncSourceType(<int>)` | Get axis encoder data source. |
-| `GetAxisGroupCount()` | Get total group count |
-| `GetAxisGroupIndexByName(<str>)` | Get index of axis group by name |
+| `GetAxisGroupCount()` | Get total axis-group count. See [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}}). |
+| `GetAxisGroupIndexByName(<str>)` | Get index of axis group by name. See [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}}). |
 | `GetAxisHomeVelOffCam(<int>)` | Get off cam referencing/homing velocity setpoint. |
 | `GetAxisHomeVelTowardsCam(<int>)` | Get Towards cam referencing/homing velocity setpoint. |
 | `GetAxisModRange(<int>)` | Get axis modulo range. |
@@ -236,7 +236,7 @@ chapter = false
 | `Cfg.EcAddMemMapDT(<str>,<int>,<int>,<str>,<str>)` | Adds a memory map object to access data directly from EtherCAT domain. |
 | `Cfg.EcAddSdo(<int>,0x<hex>,0x<hex>,0x<hex>,<int>)` | Adds a Service Data Object for writing. |
 | `Cfg.EcAddSdo(<int>,0x<hex>,0x<hex>,<int>,<int>)` | Adds a Service Data Object for writing. |
-| `Cfg.EcAddSdoAsync(<int>,0x<hex>,0x<hex>,<str>,<str>)` | Adds an async SDO object. |
+| `Cfg.EcAddSdoAsync(<int>,0x<hex>,0x<hex>,<str>,<str>)` | Adds an async SDO object. For the normal ecmccfg wrapper and resulting PVs, see [RT SDO Objects]({{< relref "/manual/general_cfg/rt_sdo.md" >}}). |
 | `Cfg.EcAddSdoBuffer(<int>,0x<hex>,0x<hex>,<str>,<int>)` | Adds a Service Data Object for writing. |
 | `Cfg.EcAddSdoComplete(<int>,0x<hex>,<str>,<int>)` | Adds a Service Data Object for writing. |
 | `Cfg.EcAddSdoDT(<int>,0x<hex>,0x<hex>,<str>,<str>)` | Adds a Service Data Object for writing. |
@@ -319,10 +319,10 @@ chapter = false
 
 | Command syntax | Description |
 |---|---|
-| `Cfg.LoadPlugin(<int>,<str>)` | Load a ecmc plugin. |
-| `Cfg.LoadPlugin(<int>,<str>,<str>)` | Load a ecmc plugin. |
-| `Cfg.LoadSafetyPlugin(<str>,<str>)` | Load safety plugin to ecmc (executes just before data is sent to the bus). |
-| `Cfg.ReportPlugin(<int>)` | Printout details of plugin. |
+| `Cfg.LoadPlugin(<int>,<str>)` | Load an ecmc plugin. See [Plugin Interface]({{< relref "/manual/plugins/interface.md" >}}). |
+| `Cfg.LoadPlugin(<int>,<str>,<str>)` | Load an ecmc plugin. See [Plugin Interface]({{< relref "/manual/plugins/interface.md" >}}). |
+| `Cfg.LoadSafetyPlugin(<str>,<str>)` | Load safety plugin to ecmc (executes just before data is sent to the bus). See [Plugin Interface]({{< relref "/manual/plugins/interface.md" >}}). |
+| `Cfg.ReportPlugin(<int>)` | Printout details of a plugin. See [Plugin Interface]({{< relref "/manual/plugins/interface.md" >}}). |
 
 ### Parser/Internal
 

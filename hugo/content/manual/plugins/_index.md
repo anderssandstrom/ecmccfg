@@ -15,6 +15,9 @@ Most plugins are loaded with:
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadPlugin.cmd, "PLUGIN_ID=<id>,FILE=<lib>,CONFIG='<cfg>',REPORT=1"
 ```
 
+For the common load/report/runtime model, see
+[Plugin Interface]({{< relref "/manual/plugins/interface.md" >}}).
+
 The safety plugin is loaded with:
 ```bash
 ecmcConfigOrDie "Cfg.LoadSafetyPlugin(<lib>,<cfg>)"
@@ -22,6 +25,12 @@ ecmcConfigOrDie "Cfg.LoadSafetyPlugin(<lib>,<cfg>)"
 
 For the general script overview, see
 [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}}).
+
+## Start here
+
+- Use [Plugin Interface]({{< relref "/manual/plugins/interface.md" >}}) first for the common plugin API and runtime model.
+- Use this page to decide which plugin family you need.
+- Then use the chosen plugin package's own examples/scripts for its plugin-specific config keys and objects.
 
 ## Available plugin repositories
 The list below is based on currently available `ecmc_plugin*` repositories.
@@ -44,5 +53,6 @@ The list below is based on currently available `ecmc_plugin*` repositories.
 - Use `ecmc_plugin_safety` only as a non-safety-rated interface towards certified external safety logic.
 
 ## Related pages
+- [Plugin Interface]({{< relref "/manual/plugins/interface.md" >}})
 - [General configuration]({{< relref "/manual/general_cfg/_index.md" >}})
 - [Examples]({{< relref "/manual/examples.md" >}})

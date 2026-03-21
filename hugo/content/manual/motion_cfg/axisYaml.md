@@ -116,6 +116,8 @@ Related motion docs:
 - [homing](../homing/)
 - [axis PLC](../axisplc/)
 - [motor record](../motor/)
+- [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}})
+- [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}})
 
 The configuration is separated into the following mandatory sections:
 
@@ -602,7 +604,7 @@ axis:
   feedSwitchesOutput: ec0...                          # EtherCAT entry for fed switches
   feedSwitchesValue: 1                                # Value to write to axis.feedSwitchesOutput. Defaults to 1
   group: testGroup                                    # Add axis to group (group will be created if it does not exist),
-  #                                                     group id will be stored in GRP<axis.group>_ID for later use.
+  #                                                     group id will be stored in GRP_<axis.group>_ID for later use.
   autoMode:                                           # Switch drive modes automatically for normal motion and homing (smaract for instance)
     modeSet: ec0..                                    # EtherCAT entry drive mode write (set CSV,CSP,homing)
     modeAct: ec0..                                    # EtherCAT entry drive mode reading (set CSV,CSP,homing)

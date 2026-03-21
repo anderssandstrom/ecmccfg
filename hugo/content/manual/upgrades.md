@@ -57,6 +57,8 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}addMasterSlaveSM.cmd "NAME=Slit_SM, MST_GRP_NAME=vir
 
 If you have multiple systems, use unique `NAME`, `MST_GRP_NAME`, and `SLV_GRP_NAME` per system.
 
+For the runtime PVs and the normal setup pattern, see [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}}).
+
 ### Limit logic via `plcOverride`
 Use `plcOverride` in YAML and compute limits in PLC logic:
 ```yaml

@@ -146,7 +146,8 @@ For synchronized systems, treat compensation features with extra care:
 * If a slaved axis enters interlock/error/limit, resolve the slaved axis condition first, then reset/recover the synchronization state machine.
 
 For setup patterns, see:
-* [Native master/slave state machine]({{< relref "/manual/upgrades.md#native-masterslave-state-machine" >}})
+* [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}})
+* [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}})
 * [Synchronization examples]({{< relref "/manual/examples.md" >}})
 
 #### Notes

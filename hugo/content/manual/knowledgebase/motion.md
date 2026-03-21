@@ -26,7 +26,7 @@ axis:
 ```
 
 By using the command `Cfg.WriteEcEntryEcPath(ec<master_id>.s<slave_id>.binaryOutput<id>,<value>)`:
-```iocsh
+```bash
 ecmcConfigOrDie "Cfg.WriteEcEntryEcPath(ec0.s5>.binaryOutput02,1)"
 ```
 

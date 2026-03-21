@@ -62,7 +62,7 @@ Typical use cases:
 
 Example:
 
-```iocsh
+```bash
 require ecmccfg "MASTER_ID=-1,ENG_MODE=1"
 ```
 

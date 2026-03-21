@@ -6,9 +6,24 @@ chapter = false
 +++
 
 Reference companion to [yaml configuration](../axisyaml/).
-Use this page for grouped headings; use the table view for full flat-key lookup.
+Use this page when you want to browse YAML settings by section instead of by
+full key name.
+
+Use the heading view when:
+
+- you are building a new axis YAML file section by section
+- you want to see related settings together
+- you know you are working in `encoder`, `trajectory`, `monitoring`, or `plc`
+  but do not remember the exact key names
+
+Use the table view when:
+
+- you want the exact full key path
+- you want the fastest mandatory/optional lookup
 
 See also: [Axis YAML settings table](../axisyaml-table/).
+
+For examples and configuration guidance, use [yaml configuration](../axisyaml/).
 
 ## axis
 - `id` (required) — Axis id.

@@ -6,6 +6,45 @@ chapter = false
 
 # homing
 
+## Start here
+
+Use this page when you need to choose or understand a homing sequence.
+
+For new configurations:
+
+- prefer YAML-based homing configuration under `encoder.homing`
+- use this page to choose the homing sequence type and supporting encoder or
+  switch wiring
+- start from a best-practice example when possible
+
+Legacy `epicsEnvSet(...)` examples are still shown in some sections because many
+older IOCs still use them, but YAML is preferred for new setups.
+
+## Common choices
+
+The most common homing cases are:
+
+- trusted absolute encoder, no active homing move:
+  sequence `0`
+- limit switch plus home switch:
+  sequence `3` or `4`
+- index homing with EL5101 / EL5102 latch objects:
+  sequence `11` or `12`
+- index homing with EL7062 touch probe:
+  sequence `11` or `12`
+- drive-internal homing triggered by ecmc:
+  sequence `26`
+- absolute encoder with one overflow in range:
+  see the dedicated section later on this page
+
+## Before choosing a sequence
+
+- verify whether the drive is in `CSV`, `CSP`, or a special homing mode
+- verify whether home and limit signals are wired into EtherCAT or handled in
+  the drive
+- verify whether index reference uses encoder latch PDOs or touch-probe PDOs
+- decide whether a post-move after homing is needed
+
 This page describes the homing sequences supported by ecmc.
 The following sequences are available:
 
@@ -35,6 +74,12 @@ Additionally, for homing of absolute encoder with **ONE** overflow in the range,
 `ECMC_HOME_POS` is the position written when homing is finalized.
 Low limit means backward limit switch. High limit means forward limit switch.
 Home switch edge means a change of the home switch state, with the effective edge depending on switch polarity.
+
+## Related pages
+
+- [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
+- [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}})
+- [legacy motion]({{< relref "/manual/motion_cfg/legacy.md" >}})
 
 ## Post move after homing
 
@@ -507,7 +552,7 @@ The file can also be included from another PLC file.
 
 Example `main.plc`:
 
-```plc
+```text
 # macros here or in PLC_MACROS in call to loadPLCFile.cmd:
 substitute(AX_ID=1,ENC_ID=1,RANGE=360,THRESHOLD=240)
 include "home_abs_enc_overflow.plc_inc"

@@ -1,16 +1,29 @@
 +++
-title = "PLC"
+title = "Axis PLC"
 weight = 22
 chapter = false
 +++
 
-## Introduction
-Each axis can have a native PLC.
-This PLC can be e.g. used for interlocking or synchronization.
-The axis PLC is part of the [YAML config](./axisyaml/).
-The code can be provided [inline](#inline) or in a separate [file](#file).
+## Scope
 
-### inline
+Each motion axis can have a local axis PLC. This is configured as part of the
+[YAML axis configuration](./axisyaml/).
+
+Use the axis PLC for logic that belongs directly to one axis, for example:
+
+- interlocking
+- derived setpoints
+- local synchronization logic
+- local signal filtering or overrides
+
+For larger machine logic or coordination between many objects, use a normal PLC
+instead of putting everything in the axis PLC.
+
+## Two ways to provide the code
+
+The code can be provided either inline in the YAML or in a separate file.
+
+### Inline
 ```yaml
 plc:
   enable: yes
@@ -26,7 +39,7 @@ plc:
       size: 100
 ```
 
-### file
+### File
 ```yaml
 plc:
   enable: yes
@@ -41,8 +54,36 @@ plc:
       size: 100
 ```
 
-This is the respective plc file
-```yaml
+The corresponding PLC file:
+
+```text
 ax${AXIS_NO}.enc.actpos:=(ax{{ var.ty1 }}.enc.actpos+ax{{ var.ty2 }}.enc.actpos)/2;
 ```
-Note the mixed use to MACROs `${AXIS_NO}` and local variables `{{ var.ty1 }}` to boost flexibility.
+
+Note the mixed use of startup macros like `${AXIS_NO}` and local template
+variables like `{{ var.ty1 }}`.
+
+## Main keys
+
+- `enable`
+  enable the axis PLC
+- `externalCommands`
+  allow the PLC to influence axis commands and setpoints
+- `code`
+  inline PLC lines
+- `file`
+  external PLC file
+- `filter`
+  optional filtering of encoder or trajectory velocity values used by the PLC
+
+## When to use inline vs file
+
+- Use `code` for a few short axis-specific lines.
+- Use `file` when the logic is more than a handful of lines or should be reused
+  across axes.
+
+## Related pages
+
+- [YAML configuration](./axisyaml/)
+- [legacy motion](./legacy/)
+- [PLC configuration]({{< relref "/manual/PLC_cfg/_index.md" >}})

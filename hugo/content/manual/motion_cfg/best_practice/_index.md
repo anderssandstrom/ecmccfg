@@ -4,50 +4,89 @@ weight = 30
 chapter = false
 +++
 
-## best practice
-Here you can find some best practice configurations for common use cases.
-The corresponding startup files are located in `examples/PSI/best_practice/`.
+## Purpose
+
+This section points to the public best-practice motion examples under
+`examples/PSI/best_practice/motion/`.
+
+Use these examples when you want a starting point for a new IOC or when you
+want to compare your own YAML configuration with a known working structure.
+
+## Start with these
+
+- I want a general closed-loop stepper example:
+  [stepper and BISS-C]({{< relref "/manual/motion_cfg/best_practice/stepper_biss_c.md" >}})
+- I want a servo example:
+  [servo]({{< relref "/manual/motion_cfg/best_practice/servo.md" >}})
+- I want motor-record-specific examples:
+  [motor record examples]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}})
+- I want SmarAct MCS2:
+  `examples/PSI/best_practice/motion/smaract/mcs2/`
+- I want profile move / PVT:
+  `examples/PSI/best_practice/motion/pvt/el7041_0052/`
+
+## Stepper examples
 
 ### [stepper and BISS-C]({{< relref "/manual/motion_cfg/best_practice/stepper_biss_c.md" >}})
-Example closed loop configurations for stepper and linear BISS-C encoder:
-1. EL7041-0052 and EL5042 (CSV)
-2. EL7062_CSP and EL5042. NOTE, this is **CSP**, with ecmc position loop enabled (EL7062 has firmware bug in CSV)
-The corresponding startup files are located in `examples/PSI/best_practice/motion/stepper_bissc/`.
 
-### stepper and incremental
-Example closed loop configurations for stepper and incremental encoder:
-1. EL7062_CSP. NOTE, this is **CSP**, with ecmc position loop enabled (EL7062 has firmware bug in CSV)
+Closed-loop stepper examples with linear BiSS-C encoder:
+
+1. EL7041-0052 and EL5042 in CSV
+2. EL7062_CSP and EL5042 in CSP with ecmc position loop enabled
+
+Example tree:
+`examples/PSI/best_practice/motion/stepper_bissc/`
+
+### Stepper and incremental
+
+Closed-loop stepper examples with incremental encoder:
+
+1. EL7062_CSP
 2. EL7047 and EL5102
 
-The corresponding startup files are located in:
+Example trees:
 
 - `examples/PSI/best_practice/motion/stepper_incremental/el7062/`
 - `examples/PSI/best_practice/motion/stepper_incremental/el7047_el5102/`
 
+## Special motion examples
+
 ### SmarAct
-Example CSP configuration for SmarAct MCS2 with drive-triggered homing:
+
+Drive-triggered homing and CSP example for SmarAct MCS2:
 
 - `examples/PSI/best_practice/motion/smaract/mcs2/`
 
 ### PVT
-Example profile-move / PVT configuration for a single EL7041-0052 axis:
+
+Single-axis profile-move / PVT example:
 
 - `examples/PSI/best_practice/motion/pvt/el7041_0052/`
 
 ### [servo]({{< relref "/manual/motion_cfg/best_practice/servo.md" >}})
-An example configuration of a Ex72xx servo drive with AM8xxx motor.
-The corresponding startup files are located in `examples/PSI/best_practice/motion/servo/`.
 
-### Motor record
+Servo example based on Ex72xx drive and AM8xxx motor.
 
-#### [Auto save restore]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}})
-Example of auto save restore configuration for motor record:
-`examples/PSI/best_practice/motion/stepper_openloop_asr/`
+Example tree:
+`examples/PSI/best_practice/motion/servo/`
 
-#### [Open loop retries]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}})
-Example of open loop configuration with motor record retries based on an absolute encoder
-`examples/PSI/best_practice/motion/stepper_openloop_mr_rtry_bissc/`
+## Motor-record-related examples
 
-#### [No motor record]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}})
-Example of configuration without motor:
-`examples/PSI/best_practice/motion/stepper_bissc_no_mr/`
+### [Auto save restore]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}})
+
+- `examples/PSI/best_practice/motion/stepper_openloop_asr/`
+
+### [Open loop retries]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}})
+
+- `examples/PSI/best_practice/motion/stepper_openloop_mr_rtry_bissc/`
+
+### [No motor record]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}})
+
+- `examples/PSI/best_practice/motion/stepper_bissc_no_mr/`
+
+## Related pages
+
+- [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
+- [homing]({{< relref "/manual/motion_cfg/homing.md" >}})
+- [motor record]({{< relref "/manual/motion_cfg/motor.md" >}})
+- [examples]({{< relref "/manual/examples.md" >}})

@@ -5,6 +5,21 @@ weight = 15
 chapter = false
 +++
 
+## Start here
+
+Use this page when you want to configure a new motion axis with the current
+preferred workflow.
+
+For new configurations:
+
+- use `loadYamlAxis.cmd`
+- use this page for the meaning of the YAML sections and keys
+- use [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}})
+  if you want a working example tree first
+
+If you are maintaining older `.ax`, `.vax`, and `.sax` files instead, use
+[legacy motion]({{< relref "/manual/motion_cfg/legacy.md" >}}).
+
 Since `ecmccfg` v7, axis configuration is YAML-based.
 {{% notice info %}}
 Backward compatibility with classic EPICS environment-variable based configuration is retained for legacy systems.
@@ -35,6 +50,60 @@ If `ECMC_CFG_TOOL=ecb`, the same loader uses the external C++ tool [`ecb`]({{< r
 If you use the external [ecmc_cfg_tool]({{< relref "/manual/motion_cfg/ecmc_cfg_tool.md" >}}), treat it as a runtime inspection/tuning layer with access to the ecmc command parser. Initial config loading still happens through `loadYamlAxis.cmd`.
 {{% /notice %}}
 
+## Minimal startup pattern
+
+Typical startup flow for one axis:
+
+```bash
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=EK1100"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=EL7062"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Motor-Generic-2Phase-Stepper, CH_ID=1, MACROS='I_MAX_MA=1000, I_STDBY_MA=100, U_NOM_MV=24000, R_COIL_MOHM=1230,L_COIL_UH=500'"
+${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd, "FILE=./cfg/ax1.yaml, DEV=${DEV}, DRV_SLAVE=4, ENC_SLAVE=3, ENC_CHANNEL=01, ECMC_TMPDIR=/tmp/"
+```
+
+Minimal YAML skeleton:
+
+```yaml
+axis:
+  id: 1
+  type: joint
+  mode: CSP
+
+epics:
+  name: M1
+  precision: 3
+  unit: mm
+
+drive:
+  numerator: 2880000
+  denominator: 2147483648
+  type: 1
+  control: ec0.s$(DRV_SLAVE).driveControl01
+  status: ec0.s$(DRV_SLAVE).driveStatus01
+  setpoint: ec0.s$(DRV_SLAVE).positionSetpoint01
+
+encoder:
+  numerator: 10
+  denominator: 65536
+  type: 0
+  bits: 16
+  absBits: 16
+  position: ec0.s$(ENC_SLAVE).encoderActualPosition$(ENC_CHANNEL)
+
+controller:
+  Kp: 10
+  Ki: 0
+  Kd: 0
+
+trajectory:
+  axis: 1
+
+input:
+  limit:
+    forward: ec0.s$(DRV_SLAVE).ONE
+    backward: ec0.s$(DRV_SLAVE).ONE
+```
+
 ## Companion References
 Use this page as the configuration guide, and use the two pages below as fast references:
 - [Axis YAML settings table](../axisyaml-table/) for compact key-by-key lookup.
@@ -45,6 +114,8 @@ Related motion docs:
 - [scaling](../scaling/)
 - [direction](../direction/)
 - [homing](../homing/)
+- [axis PLC](../axisplc/)
+- [motor record](../motor/)
 
 The configuration is separated into the following mandatory sections:
 

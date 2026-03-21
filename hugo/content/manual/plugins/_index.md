@@ -8,12 +8,12 @@ chapter = false
 ECMC plugins extend the core ecmc runtime with domain-specific functionality.
 
 Most plugins are loaded with:
-```iocsh
+```bash
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadPlugin.cmd, "PLUGIN_ID=<id>,FILE=<lib>,CONFIG='<cfg>',REPORT=1"
 ```
 
 The safety plugin is loaded with:
-```iocsh
+```bash
 ecmcConfigOrDie "Cfg.LoadSafetyPlugin(<lib>,<cfg>)"
 ```
 

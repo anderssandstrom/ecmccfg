@@ -22,6 +22,7 @@
 #-d   \note Example call:
 #-d   \code
 #-d     ${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarAnalog.cmd "NAME=Counter,PLC_VAR=counter,EGU=counts,PREC=0"
+#-d     ${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarAnalog.cmd "NAME=Counter,PLC_VAR=counter,PLC_ID=3,EGU=counts,PREC=0"
 #-d     ${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarAnalog.cmd "NAME=ModeValue,PLC_VAR=modeValue,SCOPE=global,EGU=state"
 #-d   \endcode
 #-d */

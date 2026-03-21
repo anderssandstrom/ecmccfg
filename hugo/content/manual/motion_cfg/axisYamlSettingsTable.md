@@ -6,9 +6,29 @@ chapter = false
 +++
 
 Reference companion to [yaml configuration](../axisyaml/).
-Use this page when you need a compact key list; use the heading view for grouped navigation.
+Use this page when you need the exact YAML key name quickly.
+
+Use the table view when:
+
+- you already know roughly which section you need
+- you want to confirm whether a key exists
+- you want a fast mandatory/optional check
+
+Use the heading view when:
+
+- you want grouped navigation by section
+- you want to browse related settings together
 
 See also: [Axis YAML settings (heading view)](../axisyaml-headings/).
+
+Notes:
+
+- `Optional = No` means the schema treats the key as required in the relevant
+  context.
+- Some keys are only required for physical axes or only required when a related
+  feature is enabled.
+- For explanations and examples, use
+  [yaml configuration](../axisyaml/) rather than this page.
 
 | Key | Description | Optional |
 | --- | --- | --- |

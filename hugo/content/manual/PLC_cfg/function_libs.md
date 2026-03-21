@@ -1,6 +1,6 @@
 +++
 title = "function libs"
-weight = 15
+weight = 18
 chapter = false
 +++
 
@@ -25,14 +25,14 @@ ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}loadPLCLib.cmd,     "FILE=./plc/test.plc_lib, P
 ```
 
 The functions must be defined according to this template (max 5 parameters):
-```C
+```text
 function <name>(<param1>,...,<param5>) {
   <code body>;
 }
 ```
 
 also without param is allowed:
-```C
+```text
 function <name>() {
   <code body>;
 }

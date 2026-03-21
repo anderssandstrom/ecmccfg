@@ -4,6 +4,11 @@ weight = 5
 chapter = false
 +++
 
+This page describes the detailed IOC startup structure and the main classic
+entry points. If you want the shortest current path for a new configuration,
+start with [Quickstart]({{< relref "/manual/quickstart.md" >}}) and
+[Examples]({{< relref "/manual/examples.md" >}}) first.
+
 ## Principle
 EtherCAT requires the field bus components (slaves) to be configured on the master.
 The master must know about the data exchanges with the slaves, this is referred to as **process image**.
@@ -142,5 +147,8 @@ ECMC PLCs can be loaded from classical PLC files, from pure yaml files or from a
   ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlPlc.cmd, "FILE=./plc1File.yaml"
   ```
 {{% notice tip %}}
-See [PLC best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}}) for more information.
+See the [PLC configuration section]({{< relref "/manual/PLC_cfg/_index.md" >}})
+for syntax, variables, patterns, and function reference, and
+[PLC best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}})
+for recommended structure and EPICS variable mapping.
 {{% /notice %}}

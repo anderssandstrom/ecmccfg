@@ -61,7 +61,7 @@ When this block is present, the axis loader:
 
 Minimal pattern:
 
-```iocsh
+```bash
 require ecmccfg "ENG_MODE=1,MASTER_ID=0"
 
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,      "SLAVE_ID=14,HW_DESC=EL7041-0052"

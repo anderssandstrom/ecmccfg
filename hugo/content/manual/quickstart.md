@@ -7,6 +7,10 @@ chapter = false
 ## Goal
 Bring up an IOC with a single axis using the YAML-based configuration.
 
+This page is intentionally short. For a more detailed walkthrough of the full
+startup structure, see [introduction]({{< relref "/manual/introduction.md" >}}).
+For reusable public examples, see [examples]({{< relref "/manual/examples.md" >}}).
+
 ## Prerequisites
 - `hugo/Readme.md` steps completed (repo cloned, prerequisites installed)
 - Working EtherCAT master and reachable slaves
@@ -39,5 +43,6 @@ Bring up an IOC with a single axis using the YAML-based configuration.
 
 ## Next steps
 - See [motion cfg](../motion_cfg/) for scaling, direction, and homing
-- See [PLC cfg](../PLC_cfg/) for PLC hooks and synchronization
+- See [PLC cfg]({{< relref "/manual/PLC_cfg/_index.md" >}}) for PLC hooks and synchronization
+- See [examples]({{< relref "/manual/examples.md" >}}) for best-practice example trees
 - See [troubleshooting](../knowledgebase/troubleshooting/) for common startup issues

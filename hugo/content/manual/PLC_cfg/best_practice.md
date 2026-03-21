@@ -1,6 +1,6 @@
 +++
 title = "PLC best practice"
-weight = 14
+weight = 17
 chapter = false
 +++
 
@@ -38,7 +38,7 @@ In addition to the custom macros, a few macros, that are often needed, are prede
 #### SELF_ID and SELF example
 A common use case is that some initiation is needed, could be triggering of a custom homing sequence:
 
-```C
+```text
 if(${SELF}.firstscan) {
   var plc:=${SELF_ID};
   ${DBG=#}println('PLC ',plc,' is starting up');
@@ -46,7 +46,7 @@ if(${SELF}.firstscan) {
 
 ```
 After macro expansion the code would look like this (for PLC id=0,DBG=''):
-```C
+```text
 if(plc0.firstscan) {
  var plc:=0;
  println('PLC ',plc,' is starting up');
@@ -58,7 +58,7 @@ All EtherCAT related information/data is accessible through the pattern "ec<mast
 To allow the same code to be loaded on different masters it's a good idea to use the predefined macros,"M" and "M_ID".
 
 Toggle an output:
-```shell
+```text
 ${M}.s${BO_S_ID}.binaryOutput${BO_CH=01}:=not(${M}.s${BO_S_ID}.binaryOutput${BO_CH=01});
 ${DBG=#}println('State: ', ${M}.s${BO_S_ID}.binaryOutput${BO_CH});
 ```
@@ -66,7 +66,7 @@ After macro expansion with the following macros the code would look like this:
 * BO\_S\_ID = 10
 * BO\_CH    = Not defined (defaults to "01")
 * DBG       = Not defined (defaults to "#")
-```c
+```text
 ec0.s10.binaryOutput01:=not(ec0.s10.binaryOutput01);
 #println('State: ', ec0.s10.binaryOutput01);
 ```
@@ -85,7 +85,7 @@ As a demo use case let's consider that a few outputs needs to be toggled.
 NOTE: There are simpler ways to write this specific code but it's used to demo how code can be divided.
 
 Lets first define some code that toggles a bit (toggle\_output.plc\_inc):
-```shell
+```text
 # Example of simple include file that toggles an binary output
 ${M}.s${BO_S_ID}.binaryOutput${BO_CH}:=not(${M}.s${BO_S_ID}.binaryOutput${BO_CH});
 ${DBG=#}println('State: ', ${M}.s${BO_S_ID}.binaryOutput${BO_CH});
@@ -93,7 +93,7 @@ ${DBG=#}println('State: ', ${M}.s${BO_S_ID}.binaryOutput${BO_CH});
 ```
 This code snippet then can be included in a main plc-file by using the "include" keyword.
 Each include can then be included with different macros by using the "substitute" keyword:
-```C
+```text
 substitute "BO_CH=01"
 include "toggle_output.plc_inc"
 
@@ -101,7 +101,7 @@ substitute "BO_CH=02, DBG="
 include "toggle_output.plc_inc"
 ```
 The above code would expand to:
-```C
+```text
 ec0.s10.binaryOutput01:=not(ec0.s10.binaryOutput01);
 #println('State:', ec0.s10.binaryOutput01);
 
@@ -121,7 +121,7 @@ There are two good ways to handle printouts:
 #### `plc<id>.dbg` or `${SELF}.dbg`
 
 The variable `plc<id>.dbg` or `${SELF}.dbg` can be used to turn on and of debug printouts for an PLC:
-```C
+```text
 if(${SELF}.dbg) {
   println('Time:            ',ec_get_time());
   println('Time MONO:       ',ec_get_time_frm_src(1));
@@ -138,11 +138,11 @@ Only use the `plc<id>.dbg` variable for dbg purpose. It should always be safe to
 Adding a DBG macro can be useful to be able to turn on/off printouts. Typically during commissioning it can be useful to have many printouts, but later when system goes into production, it could be a good idea to turn (some) printouts off.
 
 Example of a printout that can be turned on/off (default off)
-```C
+```text
 ${DBG=#}println('Value: ', ${M}.s${BO_S_ID}.binaryOutput${BO_CH});
 ```
 Will result in the below if setting the DBG='' (and some other macros, see above):
-```C
+```text
 println('Value: ', ec0.s10.binaryOutput01);
 ```
 
@@ -305,23 +305,27 @@ Examples:
 
 #### Preferred way: use the wrapper scripts
 
+Bare `PLC_VAR` names default to `static` variables in the last loaded PLC, using
+`ECMC_PLC_ID`. Use `SCOPE=global` if the variable should instead resolve to
+`plcs.global.<name>`.
+
 For numeric values:
 
-```iocsh
+```bash
 ${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarAnalog.cmd \
   "NAME=M1-State,PLC_VAR=seqStep,EGU=step,PREC=0"
 ```
 
 For boolean values:
 
-```iocsh
+```bash
 ${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarBinary.cmd \
   "NAME=M1-DoMtn,PLC_VAR=doMotion,ONAM=Run,ZNAM=Stop"
 ```
 
 For a global variable:
 
-```iocsh
+```bash
 ${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarBinary.cmd \
   "NAME=Mode,PLC_VAR=mode,SCOPE=global,ONAM=Remote,ZNAM=Local"
 ```
@@ -339,9 +343,18 @@ So the examples above create PVs such as:
 
 `DEV` defaults to `IOC`, but a different prefix can be provided:
 
-```iocsh
+```bash
 ${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarAnalog.cmd \
   "DEV=IOC_TEST,NAME=Counter,PLC_VAR=counter,EGU=counts,PREC=0"
+```
+
+`PLC_ID` can also be provided explicitly when the wrapper is not called
+directly after `loadPLCFile.cmd`, or when the variable should be taken from
+another PLC than the last one loaded:
+
+```bash
+${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarAnalog.cmd \
+  "NAME=Counter,PLC_VAR=counter,PLC_ID=3,EGU=counts,PREC=0"
 ```
 
 Extra record macros can be passed directly through the script call, either as
@@ -350,7 +363,7 @@ named script parameters like `EGU`, `PREC`, `ESLO`, `EOFF`, `DESC`, `HOPR`,
 
 Example with extra template macros:
 
-```iocsh
+```bash
 ${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarAnalog.cmd \
   "NAME=Counter,PLC_VAR=counter,EGU=counts,PREC=0,DB_MACROS='HHSV=MAJOR,HSV=MINOR'"
 ```
@@ -364,20 +377,22 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarAnalog.cmd \
 
 For bare names that should be global, set `SCOPE=global`:
 
-```iocsh
+```bash
 ${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarBinary.cmd \
   "NAME=Mode,PLC_VAR=mode,SCOPE=global,ONAM=Remote,ZNAM=Local"
 ```
 
-`PLC_ID` can be provided explicitly, but after `loadPLCFile.cmd` it normally
-does not need to be, because it defaults to the last loaded PLC id from
-`ECMC_PLC_ID`.
+`PLC_ID` can be provided explicitly, but immediately after `loadPLCFile.cmd` it
+normally does not need to be, because it defaults to the last loaded PLC id
+from `ECMC_PLC_ID`. If the wrapper call happens later, or should target another
+PLC than the last one loaded, then set `PLC_ID` explicitly. For example,
+`PLC_VAR=counter,PLC_ID=3` resolves to `plcs.plc3.static.counter`.
 
 #### Legacy way: load the older record templates directly
 
 The older `Set...-RB` naming is still available:
 
-```iocsh
+```bash
 dbLoadRecords("ecmcPlcAnalog.db",
               "P=$(IOC):,PORT=MC_CPU1,ASYN_NAME=plcs.plc${ECMC_PLC_ID}.static.seqStep,REC_NAME=-M1-State")
 dbLoadRecords("ecmcPlcBinary.db",

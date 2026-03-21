@@ -4,34 +4,65 @@ weight = 50
 chapter = false
 +++
 
-## Reference scenarios (PSI best practice)
-- **Motion** (`examples/PSI/best_practice/motion/`)
-  - [Stepper BiSS-C](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_bissc) (EL7041/EL5042 and EL7062/EL5042)
-  - [Stepper incremental, EL7047 + EL5102](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_incremental/el7047_el5102)
-  - [Stepper incremental, EL7062](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_incremental/el7062)
-  - [SmarAct MCS2](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/smaract/mcs2)
-  - [PVT profile move, EL7041-0052](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/pvt/el7041_0052)
-  - [Stepper open loop + autosave restore](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_openloop_asr)
-  - [Stepper open loop + retries](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_openloop_mr_rtry_bissc)
-  - [Stepper without motor record](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_bissc_no_mr)
-  - [Servo CSV](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/servo/csv)
-  - [Hardware substitution template](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_bissc_hw_subst)
-- **Synchronization** (`examples/PSI/best_practice/motion/syncs/`)
-  - [Slit synchronization](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/syncs/slit)
-  - [Mirror synchronization](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/syncs/mirror)
-- **General** (`examples/PSI/best_practice/general/`)
-  - [Data storage buffer](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/general/data_storage)
-- **PLC examples** (`examples/PSI/best_practice/plcs/`)
-  - [Basic PLC examples](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/plcs/basic)
-  - [Master-less PLC example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/plcs/masterless)
-  - [Motion sequence PLC example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/plcs/motion/stepper_bissc_forw_back_seq)
+## How to use this page
 
-## Common scripts
-- `addSlave.cmd`, `applyComponent.cmd`: add slaves and apply drive/encoder components
-- `loadYamlAxis.cmd`: load axis YAML (physical/virtual)
-- `configureVirtualAxis.cmd`: classic virtual axis config (legacy)
-- `loadPLCFile.cmd`: load PLC from file; `loadYamlPlc.cmd` for YAML-defined PLCs
+Prefer `examples/PSI/best_practice/` as the public, reusable starting point for
+new configurations. Pick the example that is closest to your hardware or use
+case, copy it into your IOC area, and then adapt the macros, component
+selection, and YAML files.
 
-## Tips
-- Prefer `examples/PSI/best_practice/` as the reusable starting point for new configurations.
-- Keep drive SDO verification enabled; configure unused channels with `Generic-Ch-Not-Used`.
+## Start from these first
+
+- I want a minimal axis example:
+  [Quickstart]({{< relref "/manual/quickstart.md" >}})
+- I want stepper motion with common Beckhoff terminals:
+  [Stepper BiSS-C](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_bissc)
+- I want incremental stepper examples:
+  [EL7047 + EL5102](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_incremental/el7047_el5102) or
+  [EL7062](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_incremental/el7062)
+- I want PLC examples:
+  [basic PLCs](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/plcs/basic) or
+  [master-less PLC](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/plcs/masterless)
+- I want data storage:
+  [data storage buffer](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/general/data_storage)
+
+## Motion examples
+
+- [Stepper BiSS-C](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_bissc)
+  EL7041/EL5042 and EL7062/EL5042 examples
+- [Stepper incremental, EL7047 + EL5102](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_incremental/el7047_el5102)
+- [Stepper incremental, EL7062](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_incremental/el7062)
+- [SmarAct MCS2](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/smaract/mcs2)
+- [PVT profile move, EL7041-0052](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/pvt/el7041_0052)
+- [Stepper open loop + autosave restore](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_openloop_asr)
+- [Stepper open loop + retries](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_openloop_mr_rtry_bissc)
+- [Stepper without motor record](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_bissc_no_mr)
+- [Servo CSV](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/servo/csv)
+- [Hardware substitution template](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_bissc_hw_subst)
+
+## Synchronization examples
+
+- [Slit synchronization](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/syncs/slit)
+- [Mirror synchronization](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/syncs/mirror)
+
+## PLC and general examples
+
+- [Basic PLC examples](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/plcs/basic)
+- [Master-less PLC example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/plcs/masterless)
+- [Motion sequence PLC example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/plcs/motion/stepper_bissc_forw_back_seq)
+- [Data storage buffer](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/general/data_storage)
+
+## Legacy ESS examples
+
+The `examples/ESS/` tree is mainly useful when reading or maintaining older
+classic motion configurations based on `.ax`, `.vax`, and `.sax` files.
+
+See [legacy motion]({{< relref "/manual/motion_cfg/legacy.md" >}}) for the
+corresponding manual page.
+
+## Notes
+
+- Prefer `addSlave.cmd` together with `applyComponent.cmd` for slave and component setup.
+- Prefer `loadYamlAxis.cmd` for axes.
+- Prefer `loadYamlPlc.cmd` or `loadPLCFile.cmd` for PLCs.
+- Keep drive SDO verification enabled, and configure unused channels with `Generic-Ch-Not-Used`.

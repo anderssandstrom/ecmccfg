@@ -4,64 +4,81 @@ weight = 8
 chapter = false
 +++
 
+## How to use this section
+
+Start here if you want to configure axes, synchronization, homing, motor record
+behavior, or motion-related PLC logic.
+
+For new configurations, the preferred path is YAML-based:
+
+1. configure slaves with `addSlave.cmd` and `applyComponent.cmd`
+2. load axes with `loadYamlAxis.cmd`
+3. load PLC logic with `loadYamlPlc.cmd` or `loadPLCFile.cmd`
+
+If you are maintaining an older IOC based on `.ax`, `.vax`, and `.sax` files,
+go directly to [legacy motion]({{< relref "/manual/motion_cfg/legacy.md" >}}).
+
+## Common tasks
+
+- I want to bring up a new axis:
+  [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
+- I want example-driven guidance:
+  [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}})
+- I need scaling, direction, or homing:
+  [scaling]({{< relref "/manual/motion_cfg/scaling.md" >}}),
+  [direction]({{< relref "/manual/motion_cfg/direction.md" >}}),
+  [homing]({{< relref "/manual/motion_cfg/homing.md" >}})
+- I need synchronization or axis-local PLC logic:
+  [axis PLC]({{< relref "/manual/motion_cfg/axisPLC.md" >}})
+- I need motor record behavior or PVT/profile moves:
+  [motor record]({{< relref "/manual/motion_cfg/motor.md" >}}),
+  [PVT]({{< relref "/manual/motion_cfg/pvt.md" >}})
+- I need runtime tuning or investigation:
+  [ecmc_cfg_tool]({{< relref "/manual/motion_cfg/ecmc_cfg_tool.md" >}})
+- I need older classic motion docs:
+  [legacy motion]({{< relref "/manual/motion_cfg/legacy.md" >}})
+
+## Recommended reading paths
+
+### New axis bring-up
+
+1. [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}})
+2. [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
+3. [drive modes CSV, CSP, CSP-PC]({{< relref "/manual/motion_cfg/modes_CSV_CSP_CSP_PC.md" >}})
+4. [scaling]({{< relref "/manual/motion_cfg/scaling.md" >}})
+5. [direction]({{< relref "/manual/motion_cfg/direction.md" >}})
+6. [homing]({{< relref "/manual/motion_cfg/homing.md" >}})
+7. [motor record]({{< relref "/manual/motion_cfg/motor.md" >}}) if the EPICS motor record is used
+
+### Synchronization and axis logic
+
+1. [axis PLC]({{< relref "/manual/motion_cfg/axisPLC.md" >}})
+2. [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
+3. [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}})
+
+### Existing IOC with classic motion files
+
+1. [legacy motion]({{< relref "/manual/motion_cfg/legacy.md" >}})
+2. [scaling]({{< relref "/manual/motion_cfg/scaling.md" >}})
+3. [direction]({{< relref "/manual/motion_cfg/direction.md" >}})
+4. [homing]({{< relref "/manual/motion_cfg/homing.md" >}})
+5. [motion knowledge base]({{< relref "/manual/knowledgebase/motion.md" >}})
+
+### Runtime tuning and diagnostics
+
+1. [ecmc_cfg_tool]({{< relref "/manual/motion_cfg/ecmc_cfg_tool.md" >}})
+2. [motion knowledge base]({{< relref "/manual/knowledgebase/motion.md" >}})
+3. [tuning knowledge base]({{< relref "/manual/knowledgebase/tuning.md" >}})
+
+## Key references
+
+- [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
+- [axis YAML settings table]({{< relref "/manual/motion_cfg/axisYamlSettingsTable.md" >}})
+- [axis YAML settings (heading view)]({{< relref "/manual/motion_cfg/axisYamlSettingsHeadings.md" >}})
+- [drive modes CSV, CSP, CSP-PC]({{< relref "/manual/motion_cfg/modes_CSV_CSP_CSP_PC.md" >}})
+- [PVT]({{< relref "/manual/motion_cfg/pvt.md" >}})
+- [ecmccomp]({{< relref "/manual/motion_cfg/ecmccomp.md" >}})
+- [ecb]({{< relref "/manual/motion_cfg/ecb.md" >}})
 
 ## Topics
 {{% children %}}
----
-
-## Scope
-ECMC motion covers two axis classes:
-1. Physical axes (joints, hardware-coupled)
-2. Virtual axes (end effectors)
-
-## By Task
-### Configure a motion axis (startup/static config)
-- [YAML config]({{< relref "/manual/motion_cfg/axisYaml.md" >}}) for full axis definition.
-- [Axis YAML settings table]({{< relref "/manual/motion_cfg/axisYamlSettingsTable.md" >}}) for fast key lookup.
-- [Axis YAML settings (heading view)]({{< relref "/manual/motion_cfg/axisYamlSettingsHeadings.md" >}}) for grouped key overview.
-- [Drive modes CSV, CSP, CSP-PC]({{< relref "/manual/motion_cfg/modes_CSV_CSP_CSP_PC.md" >}}) for mode selection.
-- [scaling]({{< relref "/manual/motion_cfg/scaling.md" >}}), [direction]({{< relref "/manual/motion_cfg/direction.md" >}}), and [homing]({{< relref "/manual/motion_cfg/homing.md" >}}) for core behavior.
-
-### Configure synchronization and logic around axes
-- [PLC YAML config]({{< relref "/manual/motion_cfg/axisPLC.md" >}}) for PLC-based synchronization/interlocking.
-- [Motor Record]({{< relref "/manual/motion_cfg/motor.md" >}}) for motor record behavior and integration.
-- [PVT]({{< relref "/manual/motion_cfg/pvt.md" >}}) for profile-move / position-velocity-time motion.
-
-### Runtime commissioning and tuning
-- [ecmc_cfg_tool]({{< relref "/manual/motion_cfg/ecmc_cfg_tool.md" >}}) for runtime inspection and tuning via the ecmc command parser.
-- [motion knowledge base]({{< relref "/manual/knowledgebase/motion.md" >}}) and [tuning knowledge base]({{< relref "/manual/knowledgebase/tuning.md" >}}) for troubleshooting/tuning workflows.
-
-### YAML parser backend
-- [ecb]({{< relref "/manual/motion_cfg/ecb.md" >}}) for C++ schema validation/rendering backend used by YAML loaders (`ECMC_CFG_TOOL=ecb`).
-
-### Reusable component-level slave configuration
-- [ecmccomp]({{< relref "/manual/motion_cfg/ecmccomp.md" >}}) for applying validated motor/encoder/slave components using `applyComponent.cmd`.
-
-### Patterns and conventions
-- [best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}}) for recommended configuration patterns.
-
-## Recommended Reading Paths
-### New axis bring-up (YAML-first)
-1. [YAML config]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
-2. [Drive modes CSV, CSP, CSP-PC]({{< relref "/manual/motion_cfg/modes_CSV_CSP_CSP_PC.md" >}})
-3. [scaling]({{< relref "/manual/motion_cfg/scaling.md" >}})
-4. [direction]({{< relref "/manual/motion_cfg/direction.md" >}})
-5. [homing]({{< relref "/manual/motion_cfg/homing.md" >}})
-6. [Motor Record]({{< relref "/manual/motion_cfg/motor.md" >}})
-7. [PVT]({{< relref "/manual/motion_cfg/pvt.md" >}}) if profile moves are needed
-8. [motion knowledge base]({{< relref "/manual/knowledgebase/motion.md" >}})
-
-### Runtime tuning/optimization
-1. [ecmc_cfg_tool]({{< relref "/manual/motion_cfg/ecmc_cfg_tool.md" >}})
-2. [tuning knowledge base]({{< relref "/manual/knowledgebase/tuning.md" >}})
-3. Reflect validated runtime changes back into [YAML config]({{< relref "/manual/motion_cfg/axisYaml.md" >}}) or startup scripts.
-
-### YAML parser backend selection
-1. [ecb]({{< relref "/manual/motion_cfg/ecb.md" >}})
-2. [YAML config]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
-3. [knowledge base motion parser notes]({{< relref "/manual/knowledgebase/motion.md" >}})
-
-### Component-library based hardware setup
-1. [ecmccomp]({{< relref "/manual/motion_cfg/ecmccomp.md" >}})
-2. [YAML config]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
-3. [scaling]({{< relref "/manual/motion_cfg/scaling.md" >}}) and [direction]({{< relref "/manual/motion_cfg/direction.md" >}})

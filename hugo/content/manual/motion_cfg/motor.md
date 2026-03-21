@@ -4,141 +4,180 @@ weight = 23
 chapter = false
 +++
 
-## Topics
-1. [Auto save restore](#auto-save-restore)
-2. [Open loop stepper with retries](#passive-terminals)
+## Scope
+
+This page covers motion topics related to the EPICS motor record in ecmccfg.
+
+Read this page when:
+
+- you use the motor record on a motion axis
+- you want auto save restore of motor position
+- you want retry behavior based on another readback source
+- you want to disable the motor record for a specific axis
+
+For YAML configuration of the motor record itself, see
+[yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}}).
+For example-driven setups, see
+[motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}}).
+
+## Common use cases
 
 ### Auto save restore
 
-Test IOC for open loop stepper motor with auto-save-restore
-The example is based on that PSI ioc install tool is used.
+Open-loop stepper systems with incremental encoders often use auto save restore
+through the motor record.
 
-#### Auto save restore configurations
-Auto save/restore of motor position is made through motor record.
-At PSI if the tool "ioc install" is used, its enough to add a file \<ioc_name\>_pos.req in the "./cfg/" sub dir listing the DVAL field of the motor record names that need to be auto saved restored.
+Important note:
 
-In order for restore of motor position to succeed, both restore pass 1 and 2 needs to executed (see EPICS hooks).
+- auto save restore is only meaningful with incremental encoders
+- in YAML terms this means `encoder.type: 0`
 
-**NOTE: Auto save restore will only work with incremental encoders (in axis definition YAML file, "encoder.type: 0").**
+At PSI, this is commonly done by adding a file ending in `_pos.req` in the
+local `cfg/` directory and listing the `DVAL` fields that should be restored.
 
-#### Example of a _pos.req file in ./cfg/
-ioc install automatically adds restore at both passes ("#ENABLE-PASS=2") if filename ends with  "_pos.req"
-```
+Example:
+
+```text
 MTEST04-MTN-ASM:Axis1.DVAL
 ```
-##### Example of a x.req file in ./cfg/
 
-If the file is named something else (without ending with "_pos.req") then also "#ENABLE-PASS=2" needs to be added:
-```
+If the request file does not end with `_pos.req`, then restore pass 2 must be
+enabled explicitly:
+
+```text
 #ENABLE-PASS=2
 MTEST04-MTN-ASM:Axis1.DVAL
 ```
 
-### Open loop stepper with retries
-The motion axis in this example is configured to move in open loop but executing retries based on an absolute encoder.
+### Open-loop retries based on another readback
 
-### General configuration
-Two encoders are configured for the motion object:
-* **01**: BISS-C absolute encoder
-* **02**: Open loop counter
+Another common use case is open-loop motion with retries based on an absolute
+encoder or another EPICS readback source.
 
-The system will startup with the open loop encoder as primary (used for control) and the motor record are configured to use retries to control on the absolute BISS-C encoder.
+Typical setup:
 
-## Motor record
-Important motor record fields are:
-1. **RTRY** : Max retry count
-2. **RMOD** : Retry Mode
-3. **UEIP** : Use encoder if present
-4. **RDBD** : Retry deadband
-5. **URIP** : Use RDBL Link If Present
-6. **RDBL** : Readback link (position from an EPICS variable)
+- one encoder is used for the axis control path
+- another readback PV is connected to the motor record retry logic
+- the motor record retries until the readback is within the retry deadband
 
-### RTRY : Max retry count
-maximum retry count. Needs to be set to a number higher than 0
+This is the pattern used in the open-loop retry examples.
 
-### RMOD : Retry Mode
-Can be set to:
-* 0: "Unity"
-* 1: "Arithmetic"
-* 2: "Geometric"
-* 3: "In-Position"
+## Useful motor-record fields
 
-Use setting 1 or 2 for this test, for more information read motor record doc.
+These fields are often relevant in retry-based setups:
 
-### UEIP : Use encoder if present
-Not used in this test. Set to 0.
+1. `RTRY`: max retry count
+2. `RMOD`: retry mode
+3. `UEIP`: use encoder if present
+4. `RDBD`: retry deadband
+5. `URIP`: use RDBL link if present
+6. `RDBL`: readback link
 
-### RDBD : Retry deadband
+### `RTRY`
 
-Set to 0.01mm in this test (motor record will execute new mode if outside this limit).
+Maximum retry count. Must be greater than zero to enable retry behavior.
 
-### URIP : Use RDBL Link If Present
-Set to 1
+### `RMOD`
 
-### RDBL : Readback link (position from EPICS variable)
-This should be a record holding the value for control, could any PV. In this example another configured encoder is used
+Retry mode:
 
-In this example the axis encoder 01 `<prefix>:<axis_name>-Enc<enc_id>-PosAct`
+- `0`: Unity
+- `1`: Arithmetic
+- `2`: Geometric
+- `3`: In-Position
 
-## Feed settings to motor record by `epics.motorRecord.fieldInit` var:
+For retry tests, modes `1` and `2` are the normal choices.
 
-Any vars added to `epics.motorRecord.fieldInit` will be forwarded to motor record at init:
+### `UEIP`
 
-```
-##### Pass extra parameters to motor record:
-# RTRY : Max retry count
-# RMOD : Retry Mode
-# UEIP : Use encoder if present
-# RDBD : Retry deadband
-# URIP : Use RDBL Link If Present
-# RDBL : Readback link (position from an EPICS variable)
+Use encoder if present. In the retry example this is normally set to `0`.
 
+### `RDBD`
+
+Retry deadband. If the readback is outside this band, another move is started.
+
+### `URIP`
+
+Use `RDBL` if present. Set this to `1` when the retry logic should use the
+linked readback PV.
+
+### `RDBL`
+
+Readback link used by the motor record retry logic. This can be any EPICS PV.
+In practice it is often linked to another encoder readback.
+
+## Setting fields from YAML
+
+Additional motor-record fields can be set through
+`epics.motorRecord.fieldInit`.
+
+Example:
+
+```yaml
 epics:
-  name: ${AX_NAME=M1}                                 # Axis name
-  precision: 3                                        # Decimal count
-  description: Test cfg                               # Axis description
-  unit: mm                                            # Unit
+  name: ${AX_NAME=M1}
+  precision: 3
+  description: Test cfg
+  unit: mm
   motorRecord:
-    syncSoftLimits: False
     fieldInit: 'FOFF=Frozen,RRES=1.0,RTRY=2,RMOD=1,UEIP=0,RDBD=0.1,URIP=1,RDBL=$(IOC):${AX_NAME=M1}-Enc${RTRY_ENC_CH=01}-PosAct'
 ```
-**NOTE: Do not use "CP" on the RDBL link...**
 
-## Running the test
+{{% notice warning %}}
+Do not use `CP` on the `RDBL` link in this workflow.
+{{% /notice %}}
 
-1. Start:
-```
-iocsh.bash startup.cmd
-```
-2. Run positioning commands:
-```
+## Running a retry-based test
+
+Typical sequence:
+
+1. start the IOC
+2. write a target position to the motor record
+3. observe the move and retry behavior until the linked readback is within
+   deadband
+
+Example:
+
+```text
 dbpf IOC_TEST:Axis1 10
 ```
-Now the motion should be going stepwise (depending on RTRY) and end up in:
-1. ecmc act pos = 10/0.95
-2. motor record act pos = 10
 
-NOTE: JOGGING is not supported (motor record will stop any started JOGGING cmd)
+Expected result in the retry example:
 
-## Stop on RDBL pv alarms
-Motor record stops motion if the RDBL linked PV is in alarm state (MAJOR or INVALID) independent on if severity propagation is set (disregarding NMS,MS,MSS...)
+1. ecmc axis actual position ends at the open-loop equivalent value
+2. motor record position ends at the requested target
 
-The simulated position is configured like this:
-```
-  field(LOW,  "-50")
-  field(LOLO, "-60")
-  field(HIGH, "50")
-  field(HIHI, "60")
-```
+Jogging is generally not supported in this retry-based setup.
 
-**IMPORTANT:** If you use an incremental encoder linked to calc record, you can sometimes experience stops during homing sequence since then the motion axis might go outside of the alarm limits defined. Normally motor record driver will not update the position during homing but I will happen for instance when activating limit switch or homing switch. Then a stop could occur
-This is of course no problem if the RDBL linked value is absolute like intended.
+## Alarm behavior on `RDBL`
 
-## How to move when RDBL alarm interlock
+If the `RDBL` PV goes into `MAJOR` or `INVALID` alarm, the motor record stops
+motion independent of severity propagation settings.
 
-If motion is interlocked by the RDBL alarm then motion can be executed by setting the URIP to 0 (disabling RDBL).
-```
+This is useful for protective interlocking, but it also means that badly chosen
+alarm limits on the linked readback can stop motion unexpectedly.
+
+This is especially relevant if the linked value is derived from an incremental
+encoder or a calculated signal that can leave the normal operating range during
+homing or switch events.
+
+## Temporarily bypassing the `RDBL` interlock
+
+If motion is blocked by the `RDBL` alarm path, the retry link can be disabled by
+setting `URIP` to `0`:
+
+```text
 dbpf IOC_TEST:Axis1.URIP 0
 ```
-Motion can now be executed.
-Note: The RDBL link are now not used (retries based on RDBL will not be executed)
+
+Motion can then continue, but retries based on `RDBL` are disabled while this
+setting is active.
+
+## Related examples
+
+- auto save restore:
+  `examples/PSI/best_practice/motion/stepper_openloop_asr/`
+- open loop retries:
+  `examples/PSI/best_practice/motion/stepper_openloop_mr_rtry_bissc/`
+- no motor record:
+  `examples/PSI/best_practice/motion/stepper_bissc_no_mr/`

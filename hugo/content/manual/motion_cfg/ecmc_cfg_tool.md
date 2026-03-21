@@ -58,7 +58,7 @@ Typical flow:
 ## Runtime Still Uses `loadYamlAxis.cmd`
 Initial axis configuration is still typically loaded through:
 
-```iocsh
+```bash
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd, "FILE=./cfg/ax1.yaml, DEV=${DEV}, DRV_SLAVE=4, ENC_SLAVE=3, ENC_CHANNEL=01"
 ```
 

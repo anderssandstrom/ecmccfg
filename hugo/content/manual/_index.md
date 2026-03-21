@@ -8,142 +8,83 @@ chapter = true
 
 A configuration framework for ECMC Motion Control Module for EPICS.
 
-## Purpose
+## Start here
 
-The configuration framework contains the necessary files to configure an EPICS IOC for EtherCAT based motion control and DAQ.
+Use this manual as follows:
 
-## Navigation
+1. Start with [Quickstart](./quickstart/) if you want to bring up one axis with the current YAML-based workflow.
+2. Go to [Examples](./examples/) if you want a reusable starting point from `examples/PSI/best_practice/`.
+3. Go directly to the section below if you already know what you want to configure.
+
+## Common tasks
+
+- I want to configure one or more axes:
+  [motion configuration](./motion_cfg/) and
+  [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}})
+- I want to load PLC logic:
+  [PLC configuration]({{< relref "/manual/PLC_cfg/_index.md" >}})
+- I want to expose PLC variables as EPICS PVs:
+  [PLC best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}})
+- I want to run without EtherCAT hardware:
+  [startup]({{< relref "/manual/general_cfg/startup/_index.md" >}})
+  and the `MASTER_ID=-1` section
+- I want to capture buffered data or use data storage:
+  [data storage]({{< relref "/manual/general_cfg/data_storage.md" >}})
+- I want to load plugins:
+  [plugins](./plugins/)
+- I want a ready-made example:
+  [examples](./examples/)
+- I need troubleshooting or hardware notes:
+  [knowledge base](./knowledgebase/)
+
+## Recommended workflow
+
+For new configurations, the normal path is:
+
+1. `require ecmccfg`
+2. add slaves with `addSlave.cmd`
+3. apply hardware-specific setup with `applyComponent.cmd`
+4. load axes with `loadYamlAxis.cmd`
+5. load PLCs with `loadYamlPlc.cmd` or `loadPLCFile.cmd`
+6. add optional features such as data storage or plugins
+7. switch to runtime with `setAppMode.cmd` or `finalize.cmd`
+
+Minimal startup skeleton:
+
+```bash
+require ecmccfg <VERSION>
+
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=EK1100"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=EL7062"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Motor-Generic-2Phase-Stepper, CH_ID=1, MACROS='I_MAX_MA=1000, I_STDBY_MA=100, U_NOM_MV=24000, R_COIL_MOHM=1230,L_COIL_UH=500'"
+
+${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd, "FILE=./cfg/ax1.yaml, ECMC_TMPDIR=/tmp/"
+${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd, "FILE=./cfg/main.plc, SAMPLE_RATE_MS=100"
+```
+
+For the detailed step-by-step breakdown of the startup structure, see
+[introduction](./introduction/).
+
+## Preferred entry points
+
+- `loadYamlAxis.cmd`: preferred axis configuration path
+- `loadYamlPlc.cmd`: preferred structured PLC path
+- `loadPLCFile.cmd`: classic PLC-file path
+- `applyComponent.cmd`: preferred drive and encoder component setup
+- `configureAxis.cmd`, `configureVirtualAxis.cmd`, and `applyAxisSynchronization.cmd`:
+  still supported, but mainly legacy compared to the YAML-first flow
+
+## Main sections
+
 - [Quickstart](./quickstart/) for a minimal single-axis bring-up
-- [Motion configuration](./motion_cfg/) for scaling, direction, homing, and YAML axis details
-- [Plugins](./plugins/) for available ecmc plugins and when to use each one
-- [PLC configuration](./PLC_cfg/) for PLC syntax, utilities, and best practices
-- [Knowledge base](./knowledgebase/) for troubleshooting, hardware notes, and diagnostics
+- [Introduction](./introduction/) for the detailed IOC startup structure
+- [Motion configuration](./motion_cfg/) for scaling, direction, homing, synchronization, and YAML axis details
+- [PLC configuration]({{< relref "/manual/PLC_cfg/_index.md" >}}) for syntax, variables, patterns, functions, and best practices
+- [General configuration]({{< relref "/manual/general_cfg/_index.md" >}}) for startup, scripts, data storage, and utilities
+- [Plugins](./plugins/) for available ecmc plugins and when to use them
 - [Examples](./examples/) for ready-to-adapt scenarios and scripts
-- [Troubleshooting](./knowledgebase/troubleshooting/) for common startup and motion issues
+- [Knowledge base](./knowledgebase/) for troubleshooting, hardware notes, and diagnostics
 - [Upgrades](./upgrades/) for migration checklists and breaking changes
 
-***
 ## Topics
 {{% children %}}
-
----
-## Common Startup Commands
-
-* addAxis.cmd
-* addDataStorage.cmd
-* addMaster.cmd
-* addSlave.cmd
-* addSlaveKL.cmd
-* addVirtualAxis.cmd
-* applyAxisSynchronization.cmd
-* applyConfig.cmd
-* applySlaveConfig.cmd
-* configureAxis.cmd
-* configureSlave.cmd
-* configureVirtualAxis.cmd
-* loadPLCFile.cmd
-* loadPlugin.cmd
-* setAppMode.cmd
-* setDiagnostics.cmd
-
-## Example IOC
-
-1.  `require` the configuration module with optional version
-  ```bash
-  require ecmccfg <VERSION>
-  ```
-
-2.  add a coupler and slave
-  ```bash
-  # slave 0 {EK1100}
-  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EK1100"
-  # SLAVE_ID is automatically incremented
-  # slave 1 {EL1018}
-  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL1018"
-  # skip slaves 2..6
-  # slave 7 {EL2008}, with optional SLAVE_ID
-  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL2008, SLAVE_ID=7"
-  # slave 9 {EL2008}, with optional SLAVE_ID and P_SCRIPT
-  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL2008, SLAVE_ID=9, P_SCRIPT=mXsXXX"
-  ```
-3.  add more slaves and apply configuration to the slaves
-  ```bash
-  # slave 10 {EL7062}, add slave and apply component
-  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL7062"
-  ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Motor-Generic-2Phase-Stepper, CH_ID=1, MACROS='I_MAX_MA=1000, I_STDBY_MA=100, U_NOM_MV=24000, R_COIL_MOHM=1230,L_COIL_UH=500'"
-  ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Motor-Generic-2Phase-Stepper, CH_ID=2, MACROS='I_MAX_MA=1000, I_STDBY_MA=100, U_NOM_MV=24000, R_COIL_MOHM=1230,L_COIL_UH=500'"
-
-  # For two channel drives, both channels must be configured (ensure correct motor cfgs are used). If channel is not in use, then apply the "Generic-Ch-Not-Used" component.
-  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL7062"
-  ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Motor-Generic-2Phase-Stepper, CH_ID=1, MACROS='I_MAX_MA=1000, I_STDBY_MA=100, U_NOM_MV=24000, R_COIL_MOHM=1230,L_COIL_UH=500'"
-  ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Generic-Ch-Not-Used"
-
-  # Just ignore some slaves (increase SLAVE_ID with 4)
-  ${SCRIPTEXEC} ${ecmccfg_DIR}ignoreSlaves.cmd    "COUNT=4"
-
-  # slave 16 {EL7037}, configure slave with optional SLAVE_ID. Please use applyComponent.cmd instead
-  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,  "HW_DESC=EL7037"
-  ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Motor-Generic-2Phase-Stepper, CH_ID=1, MACROS='I_MAX_MA=1000, I_STDBY_MA=100, U_NOM_MV=24000, R_COIL_MOHM=1230,L_COIL_UH=500'"
-
-  # slave 17 {EL7037}, addSlave, with immediate call of applySlaveConfig. Please use applyComponent.cmd instead
-  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL7037"
-  ${SCRIPTEXEC} ${ecmccfg_DIR}applySlaveConfig.cmd,   "CONFIG=-Motor-Nanotec-ST4118L1804-B"
-
-  # slave with local configuration, in this case provided by the module `ECMC_AGIR`
-  epicsEnvSet("CFG_ROOT", "${ECMC_AGIR_DIR}/")
-  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EP7211-0034_ALL"
-  ${SCRIPTEXEC} ${ecmccfg_DIR}applySlaveConfig.cmd, "LOCAL_CONFIG=${CFG_ROOT}AM8211_AGIR.cfg"
-  ```
-
-4. additional configuration
-
-  manually set `binaryOutput01` to `1`
-
-  ```bash
-  ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM_DIG_OUT},binaryOutput01,1)"
-  ```
-  If a limit switch needs to be fed from a binary output then this can be configured in the yaml configuration for the axis by setting (cleaner solution):
-
-  ```bash
-  axis:
-    feedSwitchesOutput: ec0.s1.binaryOutput04
-  ```
-
-5. adding a physical motor axis
-
-  * yaml config
-  ```bash
-  ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd, "FILE=./AM8111_CSV_minimum.yaml, ECMC_TMPDIR=/tmp/"
-  ```
-
-  * classic config, please use yaml config instead.
-  ```bash
-  epicsEnvSet("DEV",      "STEST-MYDEVICE")
-  ${SCRIPTEXEC} ${ecmccfg_DIR}configureAxis.cmd,  "CONFIG=./cfg/axis_1"
-  ```
-
-6. adding a virtual motor axis, please use yaml config instead.
-  ```bash
-  ${SCRIPTEXEC} ${ecmccfg_DIR}configureVirtualAxis.cmd,     "CONFIG=./cfg/axis_11_virt"
-  ```
-
-7. adding synchronization, can be simpler to add the code in a normal PLC, see.
-  ```bash
-  ${SCRIPTEXEC} ${ecmccfg_DIR}applyAxisSynchronization.cmd, "CONFIG=./cfg/axis_1_sync"
-  ${SCRIPTEXEC} ${ecmccfg_DIR}applyAxisSynchronization.cmd, "CONFIG=./cfg/axis_11_sync"
-  ```
-
-8. loading a PLC from file
-  * classic PLC-file
-  ```bash
-  ${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd, "PLC_ID=0, FILE=./plc/homeSlit.plc, SAMPLE_RATE_MS=100"
-  ```
-  * pure yaml based PLC
-  ```bash
-  ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlPlc.cmd, "FILE=./plc1.yaml, ECMC_TMPDIR=/tmp/"
-  ```
-  * yaml header with classic PLC-file,
-  Note: `file` key in yaml config will overwrite anything in the `code` key!
-  ```bash
-  ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlPlc.cmd, "FILE=./plc1File.yaml, ECMC_TMPDIR=/tmp/"
-  ```

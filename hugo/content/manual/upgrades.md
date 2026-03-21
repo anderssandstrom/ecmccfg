@@ -51,7 +51,7 @@ axis:
 
 ### Native master/slave state machine
 For virtual/physical synchronized systems, replace PLC-side state machine code with `addMasterSlaveSM.cmd`:
-```iocsh
+```bash
 ${SCRIPTEXEC} ${ecmccfg_DIR}addMasterSlaveSM.cmd "NAME=Slit_SM, MST_GRP_NAME=virtualAxes, SLV_GRP_NAME=realAxes"
 ```
 

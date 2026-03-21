@@ -6,7 +6,7 @@ It demonstrates:
 
 - running ecmc without claiming an EtherCAT master
 - loading a classic PLC file with `loadPLCFile.cmd`
-- exposing `static` and `global` PLC variables as EPICS PVs
+- exposing `static` and `global` PLC variables as EPICS PVs through wrapper scripts
 - controlling a PLC variable from EPICS in master-less mode
 
 ## Files
@@ -20,16 +20,16 @@ It demonstrates:
 require ecmccfg "MASTER_ID=-1,ENG_MODE=1"
 
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd "FILE=./cfg/main.plc, INC=.:./cfg/, DESC='Master-less PLC', SAMPLE_RATE_MS=100, PLC_MACROS='DBG='"
-dbLoadRecords("ecmcPlcBinary.db","P=$(IOC):,PORT=MC_CPU1,ASYN_NAME=plcs.plc0.static.hold,REC_NAME=-Hold")
-dbLoadRecords("ecmcPlcAnalog.db","P=$(IOC):,PORT=MC_CPU1,ASYN_NAME=plcs.plc0.static.counter,REC_NAME=-Counter")
-dbLoadRecords("ecmcPlcBinary.db","P=$(IOC):,PORT=MC_CPU1,ASYN_NAME=plcs.global.mode,REC_NAME=-Mode")
+${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarBinary.cmd "NAME=Hold,PLC_VAR=hold,ONAM=Hold,ZNAM=Run"
+${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarAnalog.cmd "NAME=Counter,PLC_VAR=counter,PREC=0,EGU=counts"
+${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarBinary.cmd "NAME=Mode,PLC_VAR=mode,SCOPE=global,ONAM=One,ZNAM=Zero"
 ```
 
 ## Important PVs
 
-- `<IOC>:Set-Hold-RB`: writable hold bit for the PLC counter
-- `<IOC>:Set-Counter-RB`: current counter value
-- `<IOC>:Set-Mode-RB`: global mode bit toggled by the PLC
+- `<IOC>:Hold`: writable hold bit for the PLC counter
+- `<IOC>:Counter`: current counter value
+- `<IOC>:Mode`: global mode bit toggled by the PLC
 
 ## PLC behavior
 
@@ -48,7 +48,7 @@ iocsh.bash startup.cmd
 Example interaction:
 
 ```sh
-camonitor <IOC>:Set-Counter-RB <IOC>:Set-Mode-RB
-caput <IOC>:Set-Hold-RB 1
-caput <IOC>:Set-Hold-RB 0
+camonitor <IOC>:Counter <IOC>:Mode
+caput <IOC>:Hold 1
+caput <IOC>:Hold 0
 ```

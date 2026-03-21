@@ -7,6 +7,6 @@ require ecmccfg "MASTER_ID=-1,ENG_MODE=1"
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd "FILE=./cfg/main.plc, INC=.:./cfg/, DESC='Master-less PLC', SAMPLE_RATE_MS=100, PLC_MACROS='DBG='"
 
 # Expose one writable static variable, one readback counter, and one global bit.
-dbLoadRecords("ecmcPlcBinary.db","P=$(IOC):,PORT=MC_CPU1,ASYN_NAME=plcs.plc0.static.hold,REC_NAME=-Hold")
-dbLoadRecords("ecmcPlcAnalog.db","P=$(IOC):,PORT=MC_CPU1,ASYN_NAME=plcs.plc0.static.counter,REC_NAME=-Counter")
-dbLoadRecords("ecmcPlcBinary.db","P=$(IOC):,PORT=MC_CPU1,ASYN_NAME=plcs.global.mode,REC_NAME=-Mode")
+${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarBinary.cmd "NAME=Hold,PLC_VAR=hold,ONAM=Hold,ZNAM=Run"
+${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarAnalog.cmd "NAME=Counter,PLC_VAR=counter,PREC=0,EGU=counts"
+${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarBinary.cmd "NAME=Mode,PLC_VAR=mode,SCOPE=global,ONAM=One,ZNAM=Zero"

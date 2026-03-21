@@ -303,42 +303,90 @@ Examples:
 - `plcs.plc0.static.doMotion`
 - `plcs.global.mode`
 
-#### Quick way: use the provided record templates
+#### Preferred way: use the wrapper scripts
 
-For numeric values, load `ecmcPlcAnalog.db`:
+For numeric values:
 
 ```iocsh
-dbLoadRecords("ecmcPlcAnalog.db",
-              "P=$(IOC):,PORT=MC_CPU1,ASYN_NAME=plcs.plc${ECMC_PLC_ID}.static.seqStep,REC_NAME=-M1-State")
+${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarAnalog.cmd \
+  "NAME=M1-State,PLC_VAR=seqStep,EGU=step,PREC=0"
 ```
 
-For boolean values, load `ecmcPlcBinary.db`:
+For boolean values:
 
 ```iocsh
-dbLoadRecords("ecmcPlcBinary.db",
-              "P=$(IOC):,PORT=MC_CPU1,ASYN_NAME=plcs.plc${ECMC_PLC_ID}.static.doMotion,REC_NAME=-M1-DoMtn")
+${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarBinary.cmd \
+  "NAME=M1-DoMtn,PLC_VAR=doMotion,ONAM=Run,ZNAM=Stop"
 ```
 
 For a global variable:
 
 ```iocsh
-dbLoadRecords("ecmcPlcBinary.db",
-              "P=$(IOC):,PORT=MC_CPU1,ASYN_NAME=plcs.global.mode,REC_NAME=-Mode")
+${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarBinary.cmd \
+  "NAME=Mode,PLC_VAR=mode,SCOPE=global,ONAM=Remote,ZNAM=Local"
 ```
 
-These templates create a readback-enabled EPICS output record:
+These scripts load the new templates:
 
-- `ecmcPlcAnalog.db` creates `$(P)Set$(REC_NAME)-RB` as an `ao`
-- `ecmcPlcBinary.db` creates `$(P)Set$(REC_NAME)-RB` as a `bo`
+- `ecmcPlcVarAnalog.db` creates `$(DEV):$(NAME)` as an `ao`
+- `ecmcPlcVarBinary.db` creates `$(DEV):$(NAME)` as a `bo`
 
 So the examples above create PVs such as:
 
-- `$(IOC):Set-M1-State-RB`
-- `$(IOC):Set-M1-DoMtn-RB`
-- `$(IOC):Set-Mode-RB`
+- `$(IOC):M1-State`
+- `$(IOC):M1-DoMtn`
+- `$(IOC):Mode`
 
-These records are useful when EPICS should both write the PLC variable and read
-back its current value.
+`DEV` defaults to `IOC`, but a different prefix can be provided:
+
+```iocsh
+${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarAnalog.cmd \
+  "DEV=IOC_TEST,NAME=Counter,PLC_VAR=counter,EGU=counts,PREC=0"
+```
+
+Extra record macros can be passed directly through the script call, either as
+named script parameters like `EGU`, `PREC`, `ESLO`, `EOFF`, `DESC`, `HOPR`,
+`LOPR`, `DRVH`, and `DRVL`, or through `DB_MACROS` for less common fields.
+
+Example with extra template macros:
+
+```iocsh
+${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarAnalog.cmd \
+  "NAME=Counter,PLC_VAR=counter,EGU=counts,PREC=0,DB_MACROS='HHSV=MAJOR,HSV=MINOR'"
+```
+
+`PLC_VAR` supports these forms:
+
+- `counter`: resolved as `plcs.plc${ECMC_PLC_ID}.static.counter`
+- `static.counter`: resolved as `plcs.plc${ECMC_PLC_ID}.static.counter`
+- `global.mode`: resolved as `plcs.global.mode`
+- `plcs.plc3.static.counter`: used as-is
+
+For bare names that should be global, set `SCOPE=global`:
+
+```iocsh
+${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarBinary.cmd \
+  "NAME=Mode,PLC_VAR=mode,SCOPE=global,ONAM=Remote,ZNAM=Local"
+```
+
+`PLC_ID` can be provided explicitly, but after `loadPLCFile.cmd` it normally
+does not need to be, because it defaults to the last loaded PLC id from
+`ECMC_PLC_ID`.
+
+#### Legacy way: load the older record templates directly
+
+The older `Set...-RB` naming is still available:
+
+```iocsh
+dbLoadRecords("ecmcPlcAnalog.db",
+              "P=$(IOC):,PORT=MC_CPU1,ASYN_NAME=plcs.plc${ECMC_PLC_ID}.static.seqStep,REC_NAME=-M1-State")
+dbLoadRecords("ecmcPlcBinary.db",
+              "P=$(IOC):,PORT=MC_CPU1,ASYN_NAME=plcs.plc${ECMC_PLC_ID}.static.doMotion,REC_NAME=-M1-DoMtn")
+```
+
+These records are also useful when EPICS should both write the PLC variable and read
+back its current value, but the new wrapper scripts provide the cleaner `DEV:NAME`
+PV naming.
 
 #### When to use `static` and when to use `global`
 
@@ -377,4 +425,4 @@ Notes:
 - `?` at the end of the asyn path reads a value.
 - `=` at the end of the asyn path writes a value.
 - `PORT` is normally `MC_CPU1`.
-- For boolean variables, use `ecmcPlcBinary.db` or `asynInt32`.
+- For boolean variables, use `addPlcVarBinary.cmd`, `ecmcPlcBinary.db`, or `asynInt32`.

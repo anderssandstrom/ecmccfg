@@ -236,7 +236,7 @@ chapter = false
 | `Cfg.EcAddMemMapDT(<str>,<int>,<int>,<str>,<str>)` | Adds a memory map object to access data directly from EtherCAT domain. |
 | `Cfg.EcAddSdo(<int>,0x<hex>,0x<hex>,0x<hex>,<int>)` | Adds a Service Data Object for writing. |
 | `Cfg.EcAddSdo(<int>,0x<hex>,0x<hex>,<int>,<int>)` | Adds a Service Data Object for writing. |
-| `Cfg.EcAddSdoAsync(<int>,0x<hex>,0x<hex>,<str>,<str>)` | Adds an async SDO object. For the normal ecmccfg wrapper and resulting PVs, see [RT SDO Objects]({{< relref "/manual/general_cfg/rt_sdo.md" >}}). |
+| `Cfg.EcAddSdoAsync(<int>,0x<hex>,0x<hex>,<str>,<str>)` | Adds an async SDO object. For the normal ecmccfg wrapper and resulting PVs, see [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
 | `Cfg.EcAddSdoBuffer(<int>,0x<hex>,0x<hex>,<str>,<int>)` | Adds a Service Data Object for writing. |
 | `Cfg.EcAddSdoComplete(<int>,0x<hex>,<str>,<int>)` | Adds a Service Data Object for writing. |
 | `Cfg.EcAddSdoDT(<int>,0x<hex>,0x<hex>,<str>,<str>)` | Adds a Service Data Object for writing. |

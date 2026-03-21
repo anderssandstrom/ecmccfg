@@ -57,7 +57,7 @@ These commands are real user-facing interfaces, but they are lower level or more
 | `applyConfig.cmd` | Apply the EtherCAT configuration and calculate process-image offsets. |
 | `addDomain.cmd` | Create an additional EtherCAT domain with custom execution rate/offset. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
 | `addEcDataItem.cmd` | Expose a custom pointer into already configured process-image data as an EPICS-accessible item. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
-| `addEcSdoRT.cmd` | Add runtime asynchronous SDO access objects and EPICS control/readback records. See [RT SDO Objects]({{< relref "/manual/general_cfg/rt_sdo.md" >}}). |
+| `addEcSdoRT.cmd` | Add runtime asynchronous SDO access objects and EPICS control/readback records. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
 | `applySlaveConfig.cmd` | Apply one legacy slave-specific config file after `addSlave.cmd`. |
 | `applySlaveDCconfig.cmd` | Apply distributed-clock settings to a slave. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
 | `slaveVerify.cmd` | Verify slave identity and optionally reset/read firmware. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |

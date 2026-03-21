@@ -8,13 +8,13 @@ chapter = false
 Here you can find some best practice configurations for common use cases.
 The corresponding startup files are located in `examples/PSI/best_practice/`.
 
-### [stepper and BISS-C](stepper_biss_c)
+### [stepper and BISS-C]({{< relref "/manual/motion_cfg/best_practice/stepper_biss_c.md" >}})
 Example closed loop configurations for stepper and linear BISS-C encoder:
 1. EL7041-0052 and EL5042 (CSV)
 2. EL7062_CSP and EL5042. NOTE, this is **CSP**, with ecmc position loop enabled (EL7062 has firmware bug in CSV)
 The corresponding startup files are located in `examples/PSI/best_practice/motion/stepper_bissc/`.
 
-### [stepper and incremental]
+### stepper and incremental
 Example closed loop configurations for stepper and incremental encoder:
 1. EL7062_CSP. NOTE, this is **CSP**, with ecmc position loop enabled (EL7062 has firmware bug in CSV)
 2. EL7047 and EL5102
@@ -34,20 +34,20 @@ Example profile-move / PVT configuration for a single EL7041-0052 axis:
 
 - `examples/PSI/best_practice/motion/pvt/el7041_0052/`
 
-### [servo](servo)
+### [servo]({{< relref "/manual/motion_cfg/best_practice/servo.md" >}})
 An example configuration of a Ex72xx servo drive with AM8xxx motor.
 The corresponding startup files are located in `examples/PSI/best_practice/motion/servo/`.
 
 ### Motor record
 
-#### [Auto save restore](motor)
+#### [Auto save restore]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}})
 Example of auto save restore configuration for motor record:
 `examples/PSI/best_practice/motion/stepper_openloop_asr/`
 
-#### [Open loop retries](motor)
+#### [Open loop retries]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}})
 Example of open loop configuration with motor record retries based on an absolute encoder
 `examples/PSI/best_practice/motion/stepper_openloop_mr_rtry_bissc/`
 
-#### [No motor record](motor)
+#### [No motor record]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}})
 Example of configuration without motor:
 `examples/PSI/best_practice/motion/stepper_bissc_no_mr/`

@@ -5,9 +5,9 @@ chapter = false
 +++
 
 ### Links to Best Practice
-* [General](../general_cfg/best_practice/)
-* [Motion](../motion_cfg/best_practice/)
-* [PLC](../PLC_cfg/best_practice/)
+* [General]({{< relref "/manual/general_cfg/best_practice.md" >}})
+* [Motion]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}})
+* [PLC]({{< relref "/manual/PLC_cfg/best_practice.md" >}})
 
 ### ECMC Core Notes (From ecmc Release Docs)
 For recent core changes and recommendations, see the ecmc release notes (for example `RELEASE.md` in the ecmc repo).

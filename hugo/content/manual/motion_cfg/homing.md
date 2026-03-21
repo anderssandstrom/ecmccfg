@@ -164,7 +164,7 @@ Two common hardware patterns are used for this:
 - EL51xx encoder terminals such as EL5101 and EL5102 expose dedicated encoder latch objects. In that case, `encoder.control` and `encoder.status` are the encoder latch control/status PDOs, and `encoder.latch.position` is the latched encoder position PDO.
 - EL7062 does not use the EL51xx latch objects for index homing. Instead it uses the touch-probe objects, so `encoder.control` and `encoder.status` map to touch-probe control/status PDOs, and `encoder.latch.position` maps to the touch-probe latched position PDO.
 
-Example EtherCAT entry configuration for EL51xx:
+Legacy `epicsEnvSet(...)` configuration still works:
 
 ```bash
 epicsEnvSet("ECMC_EC_ENC_LATCHPOS",        "ec0.s3.encoderLatchPostion01") # Latch position entry
@@ -173,24 +173,36 @@ epicsEnvSet("ECMC_EC_ENC_LATCH_STATUS",    "ec0.s3.encoderStatus01.0")     # Lat
 epicsEnvSet("ECMC_HOME_LATCH_COUNT_OFFSET","2")                            # 1 = first latch, 2 = second latch, ...
 ```
 
-YAML-based EL51xx example:
+For new configs, prefer the YAML-based encoder configuration used in the
+EL7047 + EL5102 best-practice example:
+
+YAML-based EL51xx example from the EL7047 + EL5102 best-practice config:
 
 ```yaml
 encoder:
-  position: ec$(MASTER_ID).s$(ENC_SID).positionActual$(ENC_CHAN)
+  desc: Incremental RS422
+  unit: mm
+  numerator: 1
+  denominator: 4096
   type: 0
-  numerator: -3.1415926
-  denominator: 118000
   bits: 32
-  primary: 0
-  control: "ec$(MASTER_ID).s$(ENC_SID).encoderControl$(ENC_CHAN)"
-  status: "ec$(MASTER_ID).s$(ENC_SID).encoderStatus$(ENC_CHAN)"
+  absBits: 0
+  position: ec0.s$(ENC_SID).positionActual${ENC_CH=01}
+  status: ec0.s$(ENC_SID).encoderStatus${ENC_CH=01}
+  control: ec0.s$(ENC_SID).encoderControl${ENC_CH=01}
+  primary: True
   latch:
-    position: "ec$(MASTER_ID).s$(ENC_SID).encoderLatchPostion$(ENC_CHAN)"
+    position: ec0.s$(ENC_SID).encoderLatchPostion$(ENC_CH=01)
     control: 0
     status: 0
   homing:
     type: 11
+    position: 0
+    velocity:
+      to: 2
+      from: 1
+    acceleration: 1
+    deceleration: 1
     latchCount: 1
 ```
 
@@ -214,7 +226,7 @@ The same EL51xx versus EL7062 distinction applies here as for sequence `11`:
 - EL5101/EL5102 use encoder latch PDOs.
 - EL7062 uses touch-probe PDOs.
 
-Example EtherCAT entry configuration for EL51xx:
+Legacy `epicsEnvSet(...)` configuration still works:
 
 ```bash
 epicsEnvSet("ECMC_EC_ENC_LATCHPOS",        "ec0.s3.encoderLatchPostion01") # Latch position entry
@@ -223,24 +235,36 @@ epicsEnvSet("ECMC_EC_ENC_LATCH_STATUS",    "ec0.s3.encoderStatus01.0")     # Lat
 epicsEnvSet("ECMC_HOME_LATCH_COUNT_OFFSET","2")                            # 1 = first latch, 2 = second latch, ...
 ```
 
-YAML-based EL51xx example:
+For new configs, prefer the YAML-based encoder configuration used in the
+EL7047 + EL5102 best-practice example:
+
+YAML-based EL51xx example from the EL7047 + EL5102 best-practice config:
 
 ```yaml
 encoder:
-  position: ec$(MASTER_ID).s$(ENC_SID).positionActual$(ENC_CHAN)
+  desc: Incremental RS422
+  unit: mm
+  numerator: 1
+  denominator: 4096
   type: 0
-  numerator: -3.1415926
-  denominator: 118000
   bits: 32
-  primary: 0
-  control: "ec$(MASTER_ID).s$(ENC_SID).encoderControl$(ENC_CHAN)"
-  status: "ec$(MASTER_ID).s$(ENC_SID).encoderStatus$(ENC_CHAN)"
+  absBits: 0
+  position: ec0.s$(ENC_SID).positionActual${ENC_CH=01}
+  status: ec0.s$(ENC_SID).encoderStatus${ENC_CH=01}
+  control: ec0.s$(ENC_SID).encoderControl${ENC_CH=01}
+  primary: True
   latch:
-    position: "ec$(MASTER_ID).s$(ENC_SID).encoderLatchPostion$(ENC_CHAN)"
+    position: ec0.s$(ENC_SID).encoderLatchPostion$(ENC_CH=01)
     control: 0
     status: 0
   homing:
     type: 12
+    position: 0
+    velocity:
+      to: 2
+      from: 1
+    acceleration: 1
+    deceleration: 1
     latchCount: 1
 ```
 

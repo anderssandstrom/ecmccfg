@@ -12,7 +12,7 @@ Example: Set rate to 500Hz
 require ecmccfg "EC_RATE=500"
 ...
 ```
-For more information see the chapter [startup.cmd](../startup/).
+For more information see the chapter [startup.cmd]({{< relref "/manual/general_cfg/startup/_index.md" >}}).
 
 As a comparison, TwinCAT default EtherCAT rates are:
 * 100Hz for PLC

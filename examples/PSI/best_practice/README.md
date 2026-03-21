@@ -1,5 +1,12 @@
 # Best practice for ecmc
 
+## General
+
+### Data storage
+* Data-storage buffer without EtherCAT hardware
+* PLC-generated signal buffered with `addDataStorage.cmd`
+* Push to EPICS on demand through an exposed PLC trigger PV
+
 ## Motion
 
 ### stepper and BISS-C
@@ -20,7 +27,11 @@
 * Auto mode switching for homing and motion
 * Linear and rotary YAML axis examples
 
+### PVT
+* Profile-move / PVT motion
+* One-axis EL7041-0052 example
+* Explicit `pvtControllerConfig.cmd` startup sequence
+
 ## PLC
 * Macros
 * include, substitute
-

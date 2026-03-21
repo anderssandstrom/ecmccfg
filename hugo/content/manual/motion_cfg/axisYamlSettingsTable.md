@@ -41,6 +41,8 @@ See also: [Axis YAML settings (heading view)](../axisyaml-headings/).
 | epics.motorRecord.description | This is MR | No |
 | epics.motorRecord.fieldInit | Extra config for motor record | No |
 | epics.motorRecord.syncSoftLimits | Sync softlimits between motor and ecmc (default false) | No |
+| epics.motorRecord.pvt.npoints | Max number of target points for PVT/profile move | No |
+| epics.motorRecord.pvt.nreadback | Max number of readback points for PVT/profile move | No |
 | drive.numerator | Fastest speed in engineering units | No |
 | drive.denominator | I/O range for ECMC_EC_ALIAS_DRV_VELO_SET | No |
 | drive.type | Stepper: 0. DS402: 1 (DS402 = servos and advanced stepper drives) | No |

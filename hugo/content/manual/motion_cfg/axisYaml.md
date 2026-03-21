@@ -148,6 +148,9 @@ optional
   * `enable`: set to false to disable motor record
   * `description`: DESC field; default ''
   * `fieldInit`: string with additional field initial values; default ''
+  * `pvt`
+    * `npoints`: max number of target points for PVT/profile move
+    * `nreadback`: max number of readback points for PVT/profile move
 
 ```yaml
 epics:
@@ -159,6 +162,9 @@ epics:
   #   fieldInit: 'RRES=1.0,RTRY=2,RMOD=1,UEIP=0,RDBD=0.1,URIP=1,RDBL=$(IOC):$(ECMC_MOTOR_NAME)-PosActSim'
   #   fieldInit: 'NTM=1'
   #   description: AM8111 CSV
+  #   pvt:
+  #     npoints: 20
+  #     nreadback: 20
 ```
 
 ## drive

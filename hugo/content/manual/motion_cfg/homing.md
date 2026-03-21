@@ -407,9 +407,8 @@ Notes:
   these are often configured in the actuator component setup rather than in the
   generic YAML homing block.
 
-Examples:
+Example:
 
-- [SmarAct test examples](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/test/smaract)
 - [SmarAct MCS2 best-practice example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/smaract/mcs2)
 
 ## Setting polarity of the home sensor

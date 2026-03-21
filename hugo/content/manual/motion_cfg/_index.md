@@ -25,6 +25,7 @@ ECMC motion covers two axis classes:
 ### Configure synchronization and logic around axes
 - [PLC YAML config]({{< relref "/manual/motion_cfg/axisPLC.md" >}}) for PLC-based synchronization/interlocking.
 - [Motor Record]({{< relref "/manual/motion_cfg/motor.md" >}}) for motor record behavior and integration.
+- [PVT]({{< relref "/manual/motion_cfg/pvt.md" >}}) for profile-move / position-velocity-time motion.
 
 ### Runtime commissioning and tuning
 - [ecmc_cfg_tool]({{< relref "/manual/motion_cfg/ecmc_cfg_tool.md" >}}) for runtime inspection and tuning via the ecmc command parser.
@@ -47,7 +48,8 @@ ECMC motion covers two axis classes:
 4. [direction]({{< relref "/manual/motion_cfg/direction.md" >}})
 5. [homing]({{< relref "/manual/motion_cfg/homing.md" >}})
 6. [Motor Record]({{< relref "/manual/motion_cfg/motor.md" >}})
-7. [motion knowledge base]({{< relref "/manual/knowledgebase/motion.md" >}})
+7. [PVT]({{< relref "/manual/motion_cfg/pvt.md" >}}) if profile moves are needed
+8. [motion knowledge base]({{< relref "/manual/knowledgebase/motion.md" >}})
 
 ### Runtime tuning/optimization
 1. [ecmc_cfg_tool]({{< relref "/manual/motion_cfg/ecmc_cfg_tool.md" >}})

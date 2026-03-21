@@ -29,6 +29,11 @@ Example CSP configuration for SmarAct MCS2 with drive-triggered homing:
 
 - `examples/PSI/best_practice/motion/smaract/mcs2/`
 
+### PVT
+Example profile-move / PVT configuration for a single EL7041-0052 axis:
+
+- `examples/PSI/best_practice/motion/pvt/el7041_0052/`
+
 ### [servo](servo)
 An example configuration of a Ex72xx servo drive with AM8xxx motor.
 The corresponding startup files are located in `examples/PSI/best_practice/motion/servo/`.

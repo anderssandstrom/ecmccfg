@@ -1,0 +1,18 @@
+##################################################################################
+# PLC to generate a signal, append it to data storage, and push the waveform
+# to EPICS on a rising edge of a PLC variable exposed as an EPICS PV.
+#
+# MACROS:
+#   DS_ID = data storage id
+#   DBG   = set to empty string for printouts, "#" to suppress
+#
+
+static.signal += 1;
+ds_append_data(${DS_ID}, static.signal);
+
+if(static.trigg and not(static.triggOld)) {
+  ${DBG=#}println('Pushing data to EPICS....');
+  ds_push_asyn(${DS_ID});
+};
+
+static.triggOld := static.trigg;

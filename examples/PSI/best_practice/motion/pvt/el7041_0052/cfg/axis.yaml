@@ -1,0 +1,81 @@
+axis:
+  id: ${AXIS_ID=1}
+  type: joint
+
+epics:
+  name: ${AX_NAME=Axis1}
+  precision: 3
+  description: Stepper axis with PVT enabled
+  unit: mm
+  motorRecord:
+    enable: true
+    description: PVT example
+    pvt:
+      npoints: 20
+      nreadback: 20
+
+drive:
+  numerator: 10
+  denominator: 32768
+  type: 0
+  control: ec0.s$(DRV_SLAVE).driveControl01
+  enable: 0
+  enabled: 1
+  status: ec0.s$(DRV_SLAVE).driveStatus01
+  setpoint: ec0.s$(DRV_SLAVE).velocitySetpoint01
+  reset: 1
+  reduceTorque: 2
+  reduceTorqueEnable: true
+  warning: 2
+  error:
+    - 3
+    - 7
+    - 14
+
+encoder:
+  desc: Open loop step counter
+  numerator: 1
+  denominator: 12800
+  type: 0
+  bits: 16
+  position: ec0.s$(DRV_SLAVE).positionActual01
+  control: ec0.s$(DRV_SLAVE).encoderControl01
+  status: ec0.s$(DRV_SLAVE).encoderStatus01
+
+trajectory:
+  axis:
+    velocity: 5
+    acceleration: 20
+    deceleration: 20
+  jog:
+    velocity: 1
+
+input:
+  limit:
+    forward: ec0.s$(DRV_SLAVE).driveStatus01.12
+    backward: ec0.s$(DRV_SLAVE).driveStatus01.11
+  home: 'ec0.s$(DRV_SLAVE).ONE.0'
+  interlock: 'ec0.s$(DRV_SLAVE).ONE.0'
+
+softlimits:
+  enable: false
+  forward: 100
+  forwardEnable: false
+  backward: -100
+  backwardEnable: false
+
+monitoring:
+  lag:
+    enable: true
+    tolerance: 3
+    time: 10
+  velocity:
+    enable: false
+    max: 100
+    time:
+      trajectory: 100
+      drive: 200
+  target:
+    enable: true
+    tolerance: 0.1
+    time: 10

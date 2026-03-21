@@ -46,6 +46,9 @@ See also: [Axis YAML settings table](../axisyaml-table/).
   - `description` — Motor record description.
   - `fieldInit` — Additional motor record fields.
   - `syncSoftLimits` — Sync soft limits between motor record and ecmc (default false).
+  - `pvt` — PVT/profile-move support.
+    - `npoints` — Max number of target points.
+    - `nreadback` — Max number of readback points.
 
 ## drive
 - `numerator` (required) — Fastest speed in engineering units.

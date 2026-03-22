@@ -104,6 +104,31 @@ Call `pvtControllerConfig.cmd` explicitly when you need to:
 - override sizes manually
 - configure the controller before `setAppMode.cmd`
 
+## Direct motor-record iocsh commands
+
+For normal `ecmccfg` usage, the YAML loader and `pvtControllerConfig.cmd`
+handle the required motor-record setup for you.
+
+The underlying motor-record layer in `ecmc` also exposes direct iocsh commands:
+
+```text
+ecmcCreateProfile(<controllerPort>, <maxPoints>)
+ecmcEnablePVTForAxis(<controllerPort>, <axisId>, <enable>)
+```
+
+Use these only when working directly with the low-level motor-record controller
+layer rather than the normal `ecmccfg` startup flow.
+
+Meaning:
+
+- `ecmcCreateProfile(...)` allocates the shared profile buffer for the selected controller
+- `ecmcEnablePVTForAxis(...)` enables or disables PVT support for one axis on that controller
+
+In a normal `ecmccfg` IOC:
+
+- `pvtControllerConfig.cmd` covers the controller-side allocation
+- YAML `epics.motorRecord.pvt` covers per-axis enablement
+
 ## Main PVs
 
 ### Controller-level PVs

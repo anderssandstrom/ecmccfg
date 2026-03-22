@@ -149,6 +149,26 @@ Expected result in the retry example:
 
 Jogging is generally not supported in this retry-based setup.
 
+## Low-level motor-controller iocsh commands
+
+Most `ecmccfg` users do not need to call the low-level motor-record iocsh
+commands directly, because the startup scripts and YAML loaders do that work.
+
+The underlying motor layer in `ecmc` also registers:
+
+```text
+ecmcMotorRecordCreateController(<port>, <not_used>, <not_used>, <movingPollMs>, <idlePollMs>, <options>)
+ecmcMotorRecordCreateAxis(<controllerPort>, <axisNo>, <axisFlags>, <axisOptions>)
+```
+
+These are relevant mainly when:
+
+- bringing up raw `ecmc` without the normal `ecmccfg` startup flow
+- debugging the motor-record layer itself
+- working directly with custom controller/axis creation outside the YAML and classic wrappers
+
+For PVT/profile-move specific direct commands, see [PVT]({{< relref "/manual/motion_cfg/pvt.md" >}}).
+
 ## Alarm behavior on `RDBL`
 
 If the `RDBL` PV goes into `MAJOR` or `INVALID` alarm, the motor record stops

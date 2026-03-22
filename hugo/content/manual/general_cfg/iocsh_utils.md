@@ -4,15 +4,28 @@ weight = 14
 chapter = false
 +++
 
-## ECMC Iocsh Utilities
+## Scope
+
+This page documents the ecmc-specific iocsh helper commands that are useful in
+startup files and low-level commissioning.
+
+Most users primarily need:
+
+- expression helpers such as `ecmcEpicsEnvSetCalc`
+- conditional/script helpers such as `ecmcIf` and `ecmcForLoop`
+- direct parser access through `ecmcConfig` / `ecmcConfigOrDie`
 
 ### ecmcEpicsEnvSetCalc
- "ecmcEpicsEnvSetCalc()" is used to evaluate expressions and set result to EPCIS environment variables. Useful for calculate:
-  * slave offsets
-  * sdo/pdo addresses (also in hex)
-  * motion scaling
-  * record fields
-  * ...
+`ecmcEpicsEnvSetCalc()` evaluates an expression and writes the result to an
+EPICS environment variable.
+
+Typical uses:
+
+- slave offsets
+- SDO/PDO addresses, including hexadecimal formatting
+- motion scaling
+- record fields
+- general startup-time calculations
 
 ```text
 ecmcEpicsEnvSetCalc -h
@@ -34,7 +47,7 @@ ecmcEpicsEnvSetCalc -h
          - Non floating point values will be rounded to nearest int.
 
 ```
-#### Examples:
+#### Examples
 ```text
 #### Calculate addresses in HEX with specified width
 # ecmcEpicsEnvSetCalc("test2", "$(test1)+1+2+3+4+5*10.1", "%03x")
@@ -84,11 +97,16 @@ epicsEnvShow("result")
 result=0
 ```
 ### ecmcEpicsEnvSetCalcTernary
- "ecmcEpicsEnvSetCalcTernary()" is used o evaluate expressions and set EPCIS environment variables to different strings.
- depending on if the expression evaluates to "true" or "false". Can be useful for:
- * Choose different files to load like plc-files, axis configurations, db-files or..
- * making conditional ecmc settings
- * ...
+
+`ecmcEpicsEnvSetCalcTernary()` evaluates an expression and sets an EPICS
+environment variable to one of two strings depending on whether the expression
+evaluates to true or false.
+
+Typical uses:
+
+- choosing between alternative PLC, YAML, or DB files
+- conditional ecmc settings
+- simple startup-time branching without a larger iocsh block
 
 ```text
 ecmcEpicsEnvSetCalcTernary -h
@@ -106,7 +124,7 @@ ecmcEpicsEnvSetCalcTernary -h
           <falseString> : String to set <envVarName> if expression (or "RESULT") evaluates to false.
 
 ```
-#### Examples:
+#### Examples
 ```text
 ### Simple true false
 epicsEnvSet("VALUE",10)
@@ -135,25 +153,32 @@ result=no_use_this_file.cfg
 ```
 
 ### ecmcIf(\<expression\>,\<optional true macro\>,\<optional false macro\>)
-ecmcIf() set two macros depending on the value of the evaluated expression. If it evaluates to true:
-1. IF_TRUE=""        Allows execution of a line of code
-2. IF_FALSE= "#-"    Block execution of a line of code
 
-If expression evaluates to false:
-1. IF_TRUE="#-"      Block execution of a line of code
-2. IF_FALSE= ""      Allows execution of a line of code
+`ecmcIf()` sets two macros depending on the value of the evaluated expression.
 
-Note: These macros are the default names for the macros (but can be changed by assignment of the 2 last params in call to ecmcIf()):
-1. IF_TRUE for true
-2. IF_FALSE for false
+If the expression is true:
+
+1. `IF_TRUE=""` allows execution of a line
+2. `IF_FALSE="#-"` comments out a line
+
+If the expression is false:
+
+1. `IF_TRUE="#-"` comments out a line
+2. `IF_FALSE=""` allows execution of a line
+
+These are the default macro names, but the last two arguments to `ecmcIf()`
+can override them.
 
 ### ecmcEndIf
 ```text
 ecmcEndIf()
 ```
 The ecmcEndIf() command unsets the last used macros (for true and false), if different names are passed as arguments then then these macros are unset (for nested if statements).
+`ecmcEndIf()` unsets the macros used by the most recent `ecmcIf()` call. If
+explicit names are passed as arguments, those names are unset instead. This is
+useful for nested `ecmcIf()` blocks.
 
-#### Example of syntax
+#### Examples
 Example 1:
 ```text
 ecmcIf("<expression>")
@@ -170,18 +195,37 @@ ${IF_TRUE}epicsEnvSet(IS_EQUAL,"1")
 ${IF_FALSE}epicsEnvSet(IS_EQUAL,"0")
 ecmcEndIf()
 ```
-Note: For nested calls to ecmcIf() and ecmcEndIf() optional macros must be used.
+For nested calls to `ecmcIf()` and `ecmcEndIf()`, use explicit macro names.
+
+Example 3, nested:
+```text
+ecmcIf("$(OUTER)>0",OUTER_TRUE,OUTER_FALSE)
+${OUTER_TRUE}ecmcIf("$(INNER)>0",INNER_TRUE,INNER_FALSE)
+${INNER_TRUE}epicsEnvSet("RESULT","both_true")
+#- else
+${INNER_FALSE}epicsEnvSet("RESULT","outer_true_inner_false")
+${OUTER_TRUE}ecmcEndIf(INNER_TRUE,INNER_FALSE)
+#- else
+${OUTER_FALSE}epicsEnvSet("RESULT","outer_false")
+ecmcEndIf(OUTER_TRUE,OUTER_FALSE)
+```
+
+The important point is that the inner `ecmcIf()` must use different macro names
+from the outer one, and the matching `ecmcEndIf()` call should unset those same
+names.
 
 ### ecmcForLoop
+
 Useful for:
-* Large systems with many similar sub systems
-* Configuring hardware with many PDOs (oversampling)
+
+- large systems with many similar subsystems
+- repetitive hardware configuration, for example many PDOs or oversampling blocks
 
 ```text
-"ecmcForLoop(<filename>, <macros>, <loopvar>, <from>, <to>, <step>)" to loop execution of file with a changing loop variable.
+Use `ecmcForLoop(<filename>, <macros>, <loopvar>, <from>, <to>, <step>)` to execute one file repeatedly while changing a loop variable.
              <filename> : Filename to execute in for loop.
              <macros>   : Macros to feed to execution of file.
-             <loopvar   : Environment variable to use as index in for loop.
+             <loopvar>  : Environment variable to use as index in for loop.
              <from>     : <loopvar> start value.
              <to>       : <loopvar> end value.
              <step>     : Step to increase <loopvar> each loop cycle.
@@ -207,24 +251,28 @@ ecmcEpicsEnvSetCalc("TESTING",5*10)
 epicsEnvShow("TESTING")
 TESTING=50
 ```
-where "loopStep.cmd" file looks like this (note the use of "ECMC_LOOP_IDX"):
+where `loopStep.cmd` looks like this:
 ```text
-#- Commands tp execute in each loop of example ecmcForLoop.script
+#- Commands to execute in each loop of the ecmcForLoop example
 ecmcEpicsEnvSetCalc("TESTING",${ECMC_LOOP_IDX}*10)
 epicsEnvShow("TESTING")
 ```
 
 ### ecmcFileExist
-Useful for checking that configuration files really exist and then can be loaded.
+
+Useful for checking that configuration files really exist before they are loaded.
+
 ```text
-ecmcFileExist(<filename>, <die>, <check EPICS dirs>, <dirs>)" to check if a file exists.
+Use `ecmcFileExist(<filename>, <die>, <check EPICS dirs>, <dirs>)` to check whether a file exists.
               <filename>          : Filename to check.
               <die>               : Exit EPICS if file not exist. Optional, defaults to 0.
-              <check EPICS dirs>  : Look for files in EPICS_DB_INCLUDE_PATH dirs. Optional, defaults to 0.\n");
+              <check EPICS dirs>  : Look for files in `EPICS_DB_INCLUDE_PATH`. Optional, defaults to 0.
               <dirs>              : List of dirs to search for file in (separated with ':').
-result will be stored in the EPICS environment variable "ECMC_FILE_EXIST_RETURN_VAL"
+The result is stored in the EPICS environment variable `ECMC_FILE_EXIST_RETURN_VAL`.
 ```
-Example:
+
+#### Examples
+
 ```text
 ecmcFileExist("file_exist.cfg")
 epicsEnvShow(ECMC_FILE_EXIST_RETURN_VAL)
@@ -243,9 +291,11 @@ ECMC_FILE_EXIST_RETURN_VAL=0
 ```
 ### Use return value of ecmcConfig(OrDie):
 
-The return value from ecmcConfig(OrDie) is stored in the EPICS environment variable
-"ECMC_CONFIG_RETURN_VAL". This value can be used to make som dynamic configuration.
-All ASCII configuration commands for ecmcConfig(OrDie) can be used in the same way.
+The return value from `ecmcConfig()` or `ecmcConfigOrDie()` is stored in the
+EPICS environment variable `ECMC_CONFIG_RETURN_VAL`.
+
+This is useful for dynamic startup logic. All normal ASCII parser commands can
+be used this way.
 
 #### Example: Read firmware version of an EL7037 stepper drive
 Note: SDO reads need to be before "SetAppMode(1)"
@@ -255,7 +305,8 @@ epicsEnvShow(ECMC_CONFIG_RETURN_VAL)
 ECMC_CONFIG_RETURN_VAL=14640
 
 ```
-The variable "ECMC_CONFIG_RETURN_VAL" then can be used to set record fields, name or alias for instance..
+`ECMC_CONFIG_RETURN_VAL` can then be used to set record fields, names, aliases,
+or other startup macros.
 
 ### Example: Read "ID" PDO from EK1101 (shown in detail in aliasRecordFromPdoData.script)
 Note: PDO reads need to be after "SetAppMode(1)" since cyclic value
@@ -265,13 +316,153 @@ ecmcConfig "ReadEcEntryIDString(${ECMC_SLAVE_NUM},"ID")"
 epicsEnvShow(ECMC_CONFIG_RETURN_VAL)
 ECMC_CONFIG_RETURN_VAL=1024
 ```
-The variable "ECMC_CONFIG_RETURN_VAL" then can be used to set record fields, name or alias for instance..
+`ECMC_CONFIG_RETURN_VAL` can then be used to set record fields, names, aliases,
+or other startup macros.
 
-### Todo
-Add docs for:
-* ecmcConfigOrDie
-* ecmcConfig
-* ecmcGrepParam
-* ecmcGrepRecord
-* ecmcReport
-* ecmcAsynPortDriverConfigure
+## Operational iocsh commands
+
+The commands above are mostly macro helpers.
+
+The commands below are the direct operational iocsh layer registered by ecmc
+itself. They are useful when:
+
+- bringing up ecmc without the full `ecmccfg` startup flow
+- debugging parameter names and records
+- running lower-level commissioning commands directly
+
+### ecmcAsynPortDriverConfigure
+
+```text
+ecmcAsynPortDriverConfigure(<portName>, <paramTableSize>, <axisCount>, <disableAutoConnect>, <sampleRateMs>)
+```
+
+This creates the main ecmc asyn port driver object.
+
+In normal `ecmccfg` usage this is handled for you by `startup.cmd`, so most
+users should not call it directly.
+
+Use it only when:
+
+- bringing up raw ecmc manually
+- testing direct ecmc integration outside the normal `ecmccfg` startup path
+- diagnosing startup issues where the asyn layer itself is the problem
+
+### ecmcConfig and ecmcConfigOrDie
+
+```text
+ecmcConfig("<parser command>")
+ecmcConfigOrDie("<parser command>")
+```
+
+These send one command string to the ecmc command parser.
+
+Difference:
+
+- `ecmcConfig` prints the parser result and continues
+- `ecmcConfigOrDie` exits immediately on parser error
+
+Use `ecmcConfigOrDie` in startup scripts when a failed command should stop the
+IOC. Use `ecmcConfig` when the command is exploratory, optional, or when you
+want to inspect the return value without aborting startup.
+
+The parser return value is stored in:
+
+```text
+ECMC_CONFIG_RETURN_VAL
+```
+
+### ecmcReport
+
+```text
+ecmcReport(<level>)
+```
+
+This is the ecmc-specific equivalent of an asyn report for the ecmc port.
+
+Use it when you want a quick summary of:
+
+- configured objects
+- parameters
+- current asyn-facing interface state
+
+Typical usage:
+
+```text
+ecmcReport(2)
+```
+
+### ecmcGrepParam
+
+```text
+ecmcGrepParam(<pattern>, <details>)
+```
+
+Lists ecmc parameters whose names match the pattern.
+
+Use it when:
+
+- you know part of an asyn parameter name
+- you want to discover the exact runtime name to use in EPICS or PLC logic
+- you are checking what a plugin or object actually exported
+
+Typical usage:
+
+```text
+ecmcGrepParam("ax1",1)
+ecmcGrepParam("plugin",1)
+```
+
+### ecmcGrepRecord
+
+```text
+ecmcGrepRecord(<pattern>)
+```
+
+Lists EPICS record names created by ecmc that match the pattern.
+
+Use it when:
+
+- you know part of the record name but not the full PV
+- you want to confirm that a startup step actually created the expected records
+
+### ecmcGetSlaveIdFromEcPath
+
+```text
+ecmcGetSlaveIdFromEcPath(<ec_path>, <result_env_var>)
+```
+
+Extracts the slave id from an EtherCAT path such as:
+
+```text
+ec1.s12.positionActual
+```
+
+and stores the result in the chosen EPICS environment variable.
+
+If no slave id can be parsed, the result variable is set to `-2`.
+
+Use it when startup logic needs to derive a slave number from a path macro
+instead of being given the slave position explicitly.
+
+### ecmcExit
+
+```text
+ecmcExit(...)
+```
+
+Exits the IOC process immediately.
+
+This is mostly useful in defensive startup logic, for example after a failed
+condition that should stop the IOC before partial configuration continues.
+
+### Obsolete command
+
+```text
+ecmcAsynPortDriverAddParameter(...)
+```
+
+This command is still registered for compatibility, but the implementation marks
+it as obsolete.
+
+Do not build new startup logic around it. Use `asynReport` / `ecmcReport` /
+`ecmcGrepParam` to inspect available parameters instead.

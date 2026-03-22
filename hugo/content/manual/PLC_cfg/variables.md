@@ -129,18 +129,27 @@ are shared between PLCs. Both can also be exposed as EPICS PVs; see
  42. ax<id>.mon.highsoftlim       high soft limit                  (rw)
  43. ax<id>.mon.lowsoftlimenable  low soft limit enable            (rw)
  44. ax<id>.mon.highsoftlimenable high soft limit enable           (rw)
- 45. ax<id>.blockcom              Enables/disables "set" commands  (rw)
-                                  via command parser (ascii commands)
-                                  Statuses can still be read.
+ 45. ax<id>.blockcom              Blocks active command-parser      (rw)
+                                  "set" commands for this axis.
+                                  Status and read commands still
+                                  work.
+                                  Same state as:
+                                  - "Cfg.SetAxisBlockCom(axid,block)"
+                                  - "GetAxisBlockCom(axid)"
                                   Exceptions ("set"-commands) that
-                                  will work:
+                                  still work:
                                   - "StopMotion(axid)"
+                                  - "StopMotion(axid,1)"
                                   - "Cfg.SetAxisBlockCom(axid,block)"
  46. ax<id>.ctrl.kp               Set PID-controller kp            (rw)
  47. ax<id>.ctrl.ki               Set PID-controller ki            (rw)
  48. ax<id>.ctrl.kd               Set PID-controller kd            (rw)
  49. ax<id>.ctrl.kff              Set PID-controller kff           (rw)
 ```
+
+`ax<id>.blockcom` is a per-axis protection bit. It is independent of the
+global parser runtime gate `Cfg.SetBlockCfgCmdsInRuntime(...)`, which instead
+blocks most `Cfg.` commands after ecmc has entered runtime.
 
 ### PLC
 ```text

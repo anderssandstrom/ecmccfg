@@ -371,6 +371,44 @@ The parser return value is stored in:
 ECMC_CONFIG_RETURN_VAL
 ```
 
+#### Runtime parser blocking
+
+Two separate runtime-protection features are available through the parser:
+
+- `Cfg.SetAxisBlockCom(axis,block)` / `GetAxisBlockCom(axis)` block active
+  command-parser set commands for one axis.
+- `Cfg.SetBlockCfgCmdsInRuntime(block)` / `GetBlockCfgCmdsInRuntime()` block
+  most `Cfg.` parser commands globally once ecmc is already in runtime.
+
+Use axis blocking when one axis should remain readable but not accept normal
+external motion or configuration commands through the parser. Use the runtime
+`Cfg.` block when you want to prevent late structural reconfiguration after the
+IOC has entered operational mode.
+
+Notes:
+
+- `Get...` status and readback commands still work while the corresponding block is active.
+- Axis blocking is per-axis and does not block all parser traffic.
+- Axis blocking still allows stop and stop-with-kill commands such as `StopMotion(axis)` and `StopMotion(axis,1)`.
+- `Cfg.SetBlockCfgCmdsInRuntime(...)` must be set before `Cfg.SetAppMode(1)`.
+  Once ecmc is already in runtime, changing that flag is itself rejected.
+
+Typical usage:
+
+```text
+# Enable global blocking of Cfg.* parser commands before entering runtime
+ecmcConfigOrDie("Cfg.SetBlockCfgCmdsInRuntime(1)")
+
+# Later, verify the global runtime block state
+ecmcConfig("GetBlockCfgCmdsInRuntime()")
+
+# Block active parser set commands for axis 3
+ecmcConfig("Cfg.SetAxisBlockCom(3,1)")
+
+# Read back the per-axis block state
+ecmcConfig("GetAxisBlockCom(3)")
+```
+
 ### ecmcReport
 
 ```text

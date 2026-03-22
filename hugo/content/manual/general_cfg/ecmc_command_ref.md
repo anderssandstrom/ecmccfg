@@ -18,7 +18,9 @@ chapter = false
 
 | Command syntax | Description |
 |---|---|
+| `GetBlockCfgCmdsInRuntime()` | Get whether `Cfg.` parser commands are blocked while ecmc is in runtime. |
 | `Cfg.LinkEcEntryToObject(<str>,<str>)` | Links an EtherCAT entry to an object. |
+| `Cfg.SetBlockCfgCmdsInRuntime(<int>)` | Enable or disable blocking of most `Cfg.` parser commands during runtime. Must be set before entering runtime. |
 | `Cfg.SetEnableFuncCallDiag(<int>)` | Enable printouts of which functions in hw_motor.cpp are being called. |
 | `Cfg.SetEnableTimeDiag(<int>)` | Enable printouts of timing information related to the realtime thread. |
 | `Cfg.ValidateConfig()` | Validates the current configuration) |
@@ -42,7 +44,7 @@ chapter = false
 | `Cfg.CreateMasterSlaveSM(<int>,<str>,<str>,<str>,<int>,<int>)` | Create a new master/slave state machine object. See [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}}). |
 | `GetAxisAcc(<int>)` | Get axis acceleration setpoint. |
 | `GetAxisAllowCommandsFromPLC(<int>)` | Get axis allow command from PLC. |
-| `GetAxisBlockCom(<int>)` | Get axis block external com. |
+| `GetAxisBlockCom(<int>)` | Get whether active command-parser set commands are blocked for an axis. |
 | `GetAxisCycleCounter(<int>)` | Get axis execution cycle counter. |
 | `GetAxisDec(<int>)` | Get axis deceleration setpoint. |
 | `GetAxisDrvScaleNum(<int>)` | Get drive output scale numerator. |
@@ -109,7 +111,7 @@ chapter = false
 | `Cfg.SetAxisAutoEnableTimeout(<int>,<float>)` | Set axis auto amplifier enable timout time. |
 | `Cfg.SetAxisAutoModeCmdHoming(<int>,<int>)` | Set axis auto mode command for homing. |
 | `Cfg.SetAxisAutoModeCmdMotion(<int>,<int>)` | Set axis auto mode command for motion. |
-| `Cfg.SetAxisBlockCom(<int>,<int>)` | Block/unblock communicatiom from via cmd parser. |
+| `Cfg.SetAxisBlockCom(<int>,<int>)` | Block or unblock active command-parser set commands for an axis. |
 | `Cfg.SetAxisCntrlDeadband(<int>,<float>)` | Set PID-controller deadband. |
 | `Cfg.SetAxisCntrlDeadbandTime(<int>,<int>)` | Set PID-controller deadband time filter. |
 | `Cfg.SetAxisCntrlInnerParams(<int>,<float>,<float>,<float>,<float>)` | Use a differnt set of pid parameters if within a certain distance of target |

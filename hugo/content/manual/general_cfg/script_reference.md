@@ -38,6 +38,8 @@ These are the scripts most users should start from.
 | `loadPLCLib.cmd` | Load a reusable PLC function library into a PLC. | Shared PLC functions and includes. |
 | `addPlcVarAnalog.cmd` | Link one PLC numeric variable to an EPICS `ao` named `DEV:NAME`. | Simple EPICS exposure of `static` or `global` PLC variables. |
 | `addPlcVarBinary.cmd` | Link one PLC boolean variable to an EPICS `bo` named `DEV:NAME`. | Simple EPICS exposure of `static` or `global` PLC variables. |
+| `addAsynVarAnalog.cmd` | Link one asyn variable to an EPICS `ao` named `DEV:NAME`. | Simple EPICS exposure of plugin or other runtime asyn values. |
+| `addAsynVarBinary.cmd` | Link one asyn variable to an EPICS `bo` named `DEV:NAME`. | Simple EPICS exposure of plugin or other runtime asyn values. |
 | `configureAxis.cmd` | Legacy classic axis configuration from `.ax`/`.pax` style files. | Older classic axis setups. |
 | `configureVirtualAxis.cmd` | Legacy classic virtual-axis configuration. | Older classic virtual-axis setups. |
 | `applyAxisSynchronization.cmd` | Attach synchronization logic to the most recently configured axis. | Classic synchronization setups. |

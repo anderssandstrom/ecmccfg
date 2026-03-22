@@ -79,18 +79,22 @@ The runtime interface is not identical across plugins, but most plugins expose o
 
 Some plugins expose runtime values through the normal ecmc asyn port.
 
-Those values can then be mapped to EPICS records with generic db templates.
+Those values can then be mapped to EPICS records with the generic wrapper scripts:
+
+- `addAsynVarAnalog.cmd`
+- `addAsynVarBinary.cmd`
 
 Example:
 
 ```bash
-dbLoadRecords("ecmcGenericAnalog.db", \
-  "REC_NAME=$(IOC):Plugin-Adv-Counter,PORT=MC_CPU1,ASYN_NAME=plugin.adv.counter,TSE=0,T_SMP_MS=100")
+${SCRIPTEXEC} ${ecmccfg_DIR}addAsynVarAnalog.cmd \
+  "NAME=Plugin-Adv-Counter,ASYN_NAME=plugin.adv.counter,PREC=0"
 ```
 
 Here:
 
-- `PORT` is the normal ecmc asyn port
+- the resulting PV is `DEV:NAME`, where `DEV` defaults to `IOC`
+- `PORT` is the normal ecmc asyn port unless overridden
 - `ASYN_NAME` is the plugin-defined runtime variable name
 - the `plugin.adv.counter` namespace is defined by that specific plugin
 
@@ -158,6 +162,7 @@ In those cases, the common pattern is:
 1. Load the plugin with `loadPlugin.cmd`.
 2. Use `REPORT=1` while commissioning so the plugin reports its object/config details.
 3. Expose plugin data either with plugin templates or with generic `ecmcGeneric*.db` records.
+3. Expose plugin data either with plugin templates or with `addAsynVarAnalog.cmd` / `addAsynVarBinary.cmd`.
 4. If the plugin adds PLC functions, keep the PLC code explicit about those plugin dependencies.
 5. Treat plugin runtime names as plugin API, not as generic ecmccfg names.
 

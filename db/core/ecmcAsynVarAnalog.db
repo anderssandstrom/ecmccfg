@@ -1,0 +1,18 @@
+# AO with readback, named as DEV:NAME
+record(ao,"$(DEV):$(NAME)"){
+  info(asyn:READBACK,"1")
+  field(PINI, "$(PINI=1)")
+  field(DESC, "$(DESC=)")
+  field(DTYP, "asynFloat64")
+  field(OUT,  "@asyn($(PORT=MC_CPU1),$(ADDR=0),$(TIMEOUT=0))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynFloat64/$(ASYN_NAME)?")
+  field(PREC, "$(PREC=3)")
+  field(ESLO, "$(ESLO=1)")
+  field(EOFF, "$(EOFF=0)")
+  field(EGU,  "$(EGU=)")
+  field(LOPR, "$(LOPR=0)")
+  field(HOPR, "$(HOPR=0)")
+  field(DRVL, "$(DRVL=0)")
+  field(DRVH, "$(DRVH=0)")
+  field(SCAN, "Passive")
+  field(TSE,  "$(TSE=0)")
+}

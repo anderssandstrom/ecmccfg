@@ -1386,7 +1386,7 @@
      <x>10</x>
      <y>0</y>
      <width>211</width>
-     <height>311</height>
+     <height>336</height>
     </rect>
    </property>
    <property name="title">
@@ -2259,14 +2259,78 @@
      </color>
     </property>
    </widget>
+   <widget class="caLed" name="caled_94">
+    <property name="geometry">
+     <rect>
+      <x>156</x>
+      <y>300</y>
+      <width>14</width>
+      <height>14</height>
+     </rect>
+    </property>
+    <property name="rectangular">
+     <bool>true</bool>
+    </property>
+    <property name="gradientEnabled">
+     <bool>false</bool>
+    </property>
+    <property name="ledWidth">
+     <number>12</number>
+    </property>
+    <property name="ledHeight">
+     <number>12</number>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-BlckMtnCmd</string>
+    </property>
+    <property name="falseColor">
+     <color>
+      <red>160</red>
+      <green>160</green>
+      <blue>160</blue>
+     </color>
+    </property>
+    <property name="trueColor">
+     <color>
+      <red>0</red>
+      <green>85</green>
+      <blue>0</blue>
+     </color>
+    </property>
+   </widget>
+   <widget class="caToggleButton" name="catogglebutton_46">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>300</y>
+      <width>131</width>
+      <height>14</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>18</height>
+     </size>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::RightToLeft</enum>
+    </property>
+    <property name="text">
+     <string>Block motion:</string>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-BlckMtnCmd</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>315</y>
+     <y>345</y>
      <width>211</width>
-     <height>181</height>
+     <height>151</height>
     </rect>
    </property>
    <property name="title">

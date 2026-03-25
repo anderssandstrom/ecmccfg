@@ -50,21 +50,21 @@ epicsEnvUnset(ECMC_DS_ID_2_CHARS)
 # Do not set NxtObj "pointer" if this is the first dataStorage (ECMC_PREV_DS_OBJ_ID==-1)
 ecmcEpicsEnvSetCalcTernary(ECMC_EXE_NEXT_DS,"${ECMC_PREV_DS_OBJ_ID=-1}>=0", "","#- ")
 ${ECMC_EXE_NEXT_DS}ecmcFileExist(ecmcDsPrevDs.db,1,1)
-${ECMC_EXE_NEXT_DS}dbLoadRecords(ecmcDsPrevDs.db,"NEXT_OBJ_ID=${DS_ID=-1},PREV_ECMC_P=${ECMC_PREV_DS_P=""}")
+${ECMC_EXE_NEXT_DS}dbLoadRecords(ecmcDsPrevDs.db,"NEXT_OBJ_ID=${ECMC_DS_ID=-1},PREV_ECMC_P=${ECMC_PREV_DS_P=""}")
 epicsEnvUnset(ECMC_EXE_NEXT_DS)
 
 #- If this is the first added dataStorage then store value in P:MCU-Cfg-DS-FrstObjId
 ecmcEpicsEnvSetCalcTernary(ECMC_EXE_FIRST_DS,"${ECMC_PREV_DS_OBJ_ID=-1}<0", "","#- ")
 ${ECMC_EXE_FIRST_DS}ecmcFileExist(ecmcDsFirstDs.db,1,1)
-${ECMC_EXE_FIRST_DS}dbLoadRecords(ecmcDsFirstDs.db,"P=${ECMC_PREFIX},FIRST_OBJ_ID=${DS_ID}")
+${ECMC_EXE_FIRST_DS}dbLoadRecords(ecmcDsFirstDs.db,"P=${ECMC_PREFIX},FIRST_OBJ_ID=${ECMC_DS_ID}")
 epicsEnvUnset(ECMC_EXE_FIRST_DS)
 
 #- Store info to populate the ECMC_P-NxtObj "pointer" of next added dataStorage
-epicsEnvSet(ECMC_PREV_DS_P,"$(ECMC_PREFIX)MCU-Cfg-DS${DS_ID}-")
-epicsEnvSet(ECMC_PREV_DS_OBJ_ID,${DS_ID})
+epicsEnvSet(ECMC_PREV_DS_P,"$(ECMC_PREFIX)MCU-Cfg-DS${ECMC_DS_ID}-")
+epicsEnvSet(ECMC_PREV_DS_OBJ_ID,${ECMC_DS_ID})
 
 ecmcEpicsEnvSetCalc(ECMC_DS_COUNT, "$(ECMC_DS_COUNT=0)+1")
 
 epicsEnvSet(ECMC_PREV_STORAGE_INDEX,$(ECMC_DS_ID=-1))
 #- Load next DS at next available index
-ecmcEpicsEnvSetCalc(DS_ID, "$(DS_ID) + 1")
+ecmcEpicsEnvSetCalc(DS_ID, "$(ECMC_DS_ID) + 1")

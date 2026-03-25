@@ -24,6 +24,10 @@ ecmcEpicsEnvSetCalcTernary("ECMC_PLUGIN_REPORT", "${REPORT=-1}>0","","#")
 ${ECMC_PLUGIN_REPORT}ecmcConfigOrDie "Cfg.ReportPlugin(${ECMC_PLUGIN_ID})"
 epicsEnvUnset(ECMC_PLUGIN_REPORT);
 
+#- Add per-plugin object records with default end-of-list links
+ecmcFileExist(ecmcPlg.db,1,1)
+dbLoadRecords(ecmcPlg.db,"P=${ECMC_PREFIX},Index=${ECMC_PLUGIN_ID},PREV_OBJ_ID=${ECMC_PREV_PLG_OBJ_ID=-1}")
+
 #- Below for facilitate auto gui generation
 # Do not set NxtObj "pointer" if this is the first plugin (ECMC_PREV_PLG_OBJ_ID==-1)
 ecmcEpicsEnvSetCalcTernary(ECMC_EXE_NEXT_PLG,"${ECMC_PREV_PLG_OBJ_ID=-1}>=0", "","#- ")

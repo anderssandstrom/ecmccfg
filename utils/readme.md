@@ -1,4 +1,35 @@
 # ecmc utilities
+
+## Hardware product-id summary
+
+Generate a summary of `ECMC_EC_PRODUCT_ID` usage in `hardware/**/*.cmd`.
+
+The script scans all `.cmd` files below `../hardware`, ignores commented lines,
+extracts `epicsEnvSet("ECMC_EC_PRODUCT_ID" "...")`, and groups snippets by
+product ID.
+
+Default grouped summary:
+
+```bash
+cd utils
+python3 generate_hardware_product_id_summary.py
+```
+
+This writes `../hardware/product_id_summary.tsv` with the columns:
+
+```text
+../hardware/product_id_summary.md
+```
+
+The output is a Markdown table with the columns:
+
+```text
+Product ID | Count | Paths
+```
+
+If a product ID is used by multiple snippets, the `Paths` cell contains the
+matching snippet paths separated by `<br>`.
+
 ## PDO read
 
 Tool to read data from slaves (actually SDO data).

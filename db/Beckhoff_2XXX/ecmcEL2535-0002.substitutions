@@ -1,0 +1,53 @@
+#-  ecmc database for: EL2535-0002 2Ch. Pulse Width Current Output (24V, 2 A)
+#- Standard
+#- source ESI file: /Users/sandst_a/sources/Beckhoff_EtherCAT_XML/Beckhoff EL25xx.xml
+#- selected slave: type=EL2535-0002, product=0x9e73052, revision=0x170002
+#- selected mapping id: M01 of 3
+#-      ECMC_EC_HWTYPE:     EL2535_0002
+#-      ECMC_EC_VENDOR_ID:  0x2
+#-      ECMC_EC_PRODUCT_ID: 0x9e73052
+#-      ECMC_EC_REVISION:   0x170002
+#-      templates:          db/generic/ecmc_ESI_*.template
+
+file "ecmc_ESI_mbboDirect.template" {
+    pattern { REC_NAME, DESC , SRC_NAME}
+        #- PWM01_Ctrl B0=Enable dithering
+        #- PWM01_Ctrl B1..B4=gap
+        #- PWM01_Ctrl B5=Enable
+        #- PWM01_Ctrl B6=Reset
+        #- PWM01_Ctrl B7..B15=gap
+        {"PWM01-Ctrl", "PWM Control Channel 1 packed bits", "PWM01_Ctrl"}
+        #- PWM02_Ctrl B0=Enable dithering
+        #- PWM02_Ctrl B1..B4=gap
+        #- PWM02_Ctrl B5=Enable
+        #- PWM02_Ctrl B6=Reset
+        #- PWM02_Ctrl B7..B15=gap
+        {"PWM02-Ctrl", "PWM Control Channel 2 packed bits", "PWM02_Ctrl"}
+}
+
+file "ecmc_ESI_mbbiDirect.template" {
+    pattern { REC_NAME, DESC, FLNK , SRC_NAME}
+        #- PWM01_Stat B0=Digital input 1
+        #- PWM01_Stat B1..B3=gap
+        #- PWM01_Stat B4=Ready to enable
+        #- PWM01_Stat B5=Warning
+        #- PWM01_Stat B6=Error
+        #- PWM01_Stat B7..B14=gap
+        #- PWM01_Stat B15=TxPDO Toggle
+        {"PWM01-Stat", "PWM Status Channel 1 packed bits", "", "PWM01_Stat"}
+        #- PWM02_Stat B0=Digital input 1
+        #- PWM02_Stat B1..B3=gap
+        #- PWM02_Stat B4=Ready to enable
+        #- PWM02_Stat B5=Warning
+        #- PWM02_Stat B6=Error
+        #- PWM02_Stat B7..B14=gap
+        #- PWM02_Stat B15=TxPDO Toggle
+        {"PWM02-Stat", "PWM Status Channel 2 packed bits", "", "PWM02_Stat"}
+}
+
+# 24 V
+file "ecmc_ESI_ao.template" {
+    pattern { REC_NAME, DESC , SRC_NAME,           ESLO}
+        {"PWM01-Outp", "PWM output", "PWM01_Outp", 7.3242E-4}
+        {"PWM02-Outp", "PWM output", "PWM02_Outp", 7.3242E-4}
+}

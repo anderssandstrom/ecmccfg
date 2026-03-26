@@ -15,7 +15,7 @@ cd utils
 python3 generate_hardware_product_id_summary.py
 ```
 
-This writes `../hardware/product_id_summary.tsv` with the columns:
+This writes `../hardware/product_id_summary.md`.
 
 ```text
 ../hardware/product_id_summary.md
@@ -24,7 +24,7 @@ This writes `../hardware/product_id_summary.tsv` with the columns:
 The output is a Markdown table with the columns:
 
 ```text
-Product ID | Count | Paths
+# | Product ID | Count | Paths
 ```
 
 If a product ID is used by multiple snippets, the `Paths` cell contains the

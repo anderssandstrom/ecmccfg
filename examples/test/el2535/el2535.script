@@ -1,0 +1,7 @@
+##############################################################################
+## Example config for EL2535-0002 PWM
+
+require ecmccfg v11.0.6_RC1
+
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=20, HW_DESC=EL2535-0002"
+

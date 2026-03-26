@@ -1,0 +1,16 @@
+##############################################################################
+## Example config for EL2535-0002 PWM motion axis as heater control example:
+## * PWM output connected to heater (drive)
+## * ELM3504 with pt1000 as feedback (encoder)
+
+require ecmccfg sandst_a
+
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=20, HW_DESC=EL2535-0002"
+epicsEnvSet(DRV_ID, $(ECMC_EC_SLAVE_NUM))
+
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=ELM3504_Scalar"
+epicsEnvSet(ENC_ID, $(ECMC_EC_SLAVE_NUM))
+# PT1000 2 wire
+ecmcConfigOrDie "Cfg.EcAddSdo($(ECMC_EC_SLAVE_NUM),0x8000,0x1,42,2)"
+
+$(SCRIPTEXEC) $(ecmccfg_DIR)loadYamlAxis.cmd     "FILE=./cfg/axis.yaml, DRV_ID=$(DRV_ID),ENC_ID=$(ENC_ID), AX_NAME='H1', AX_ID=1"

@@ -98,7 +98,18 @@ def get_plugins_from_ioc(ioc: str):
 
     while plg_id != -1:
         plugins.append({'id': plg_id})
-        plg_id = epicsPV.epicsPV('%s:MCU-Cfg-PLG%d-NxtObjId' % (ioc, plg_id)).getw()
+        next_pv = '%s:MCU-Cfg-PLG%d-NxtObjId' % (ioc, plg_id)
+        try:
+            plg_id = epicsPV.epicsPV(next_pv).getw()
+        except ca.ca_nothing:
+            print('Missing %s, assuming end of plugin list\n' % next_pv)
+            plg_id = -1
+        except Exception as ex:
+            if 'timeout' in str(ex).lower():
+                print('Missing %s, assuming end of plugin list\n' % next_pv)
+                plg_id = -1
+            else:
+                raise
 
     print('Plugin count: ' + str(len(plugins)))
     return plugins

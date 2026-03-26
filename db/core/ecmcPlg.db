@@ -1,0 +1,9 @@
+record(ai,"$(P)MCU-Cfg-PLG${Index}-NxtObjId") {
+    field(DESC, "Plugin number of next plugin")
+    field(VAL,  "$(NEXT_OBJ_ID=-1)")
+}
+
+record(ai,"$(P)MCU-Cfg-PLG${Index}-PrvObjId") {
+    field(DESC, "Plugin number of prev plugin")
+    field(VAL,  "$(PREV_OBJ_ID=-1)")
+}

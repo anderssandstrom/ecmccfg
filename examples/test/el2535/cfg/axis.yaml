@@ -26,7 +26,6 @@ drive:
   error:                                     # max 3 error bits in status word
     - 6                                      # Error 0 (if no drive error bit then leave empty)
 
-# The encoder on most motors are 20bit single turn and 12 bit multiturn (4096 turns)
 encoder:
   type: 1
   position: ec0.s$(ENC_ID).analogInput01
@@ -48,7 +47,7 @@ trajectory:
   source: 0
   type: 1
   axis:
-    velocity: 0.1
+    velocity: 0.01
     acceleration: 0.01
     deceleration: 0.01
 

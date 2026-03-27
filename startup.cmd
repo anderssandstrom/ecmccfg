@@ -15,7 +15,7 @@
 #- SYS
 #-
 #- [optional]
-#- ECMC_VER          = 11.0.5
+#- ECMC_VER          = 11.0.6
 #- EthercatMC_VER    = 3.0.2 (obsolete)
 #- INIT              = initAll
 #- MASTER_ID         = 0 <-- put negatuve number to disable master, aka non ec-mode
@@ -37,7 +37,7 @@
 #- ECMC_CONFIG_ROOT       = root directory of ${MODULE}
 #- ECMC_CONFIG_DB         = database directory of ${MODULE}
 #- EthercatMC_DB          = database directory of EthercatMC
-#- ECMC_EC_MASTER_ID      =  EtherCAT master id in use (for use in later scripts)
+#- ECMC_EC_MASTER_ID      = EtherCAT master id in use (for use in later scripts)
 #- ECMC_EC_SAMPLE_RATE    = EtherCAT bus sampling rate [Hz] (1000 default)
 #- ECMC_EC_SAMPLE_RATE_MS = EtherCAT bus sampling rate [ms] (1 default)
 #- ECMC_MODE              = ecmc mode. FULL/DAQ, Defaults to FULL
@@ -54,7 +54,7 @@ on error halt
 #-
 #-------------------------------------------------------------------------------
 #- load required modules
-epicsEnvSet(ECMC_VER,${ECMC_VER=11.0.5})
+epicsEnvSet(ECMC_VER,${ECMC_VER=11.0.6})
 require ecmc "${ECMC_VER}"
 
 #- Require EthercatMC if used.

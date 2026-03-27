@@ -35,10 +35,10 @@ ecmcConfigOrDie "Cfg.EcWriteSdo(${ECMC_EC_SLAVE_NUM},0x8008,0x2,1,1)"
 ecmcConfigOrDie "Cfg.EcWriteSdo(${ECMC_EC_SLAVE_NUM},0x8008,0x3,1,1)"
 
 #- ############  set velocity loop parameters
-#- TODO: For some strange reason, those two paramters are read from the motor, but seem not to take effect
+#- TODO: For some strange reason, those two parameters are read from the motor, but seem not to take effect
 #- Velocity loop integral time = 50
 ecmcConfigOrDie "Cfg.EcWriteSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x14,50,4)"
-#- Velocity loop proportianal gain = 50
+#- Velocity loop proportional gain = 50
 ecmcConfigOrDie "Cfg.EcWriteSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x15,50,4)"
 
 #- common PDOs for CSV
@@ -62,7 +62,7 @@ ecmcConfigOrDie "Cfg.EcSlaveConfigWatchDog(${ECMC_EC_SLAVE_NUM},${ECMC_TEMP_WHAT
 
 # NOTE: Sometimes the EL7211-0010 will not go to op with the following error in /var/log/messages:
 # Sep  8 09:54:21 mcag-epics4 kernel: EtherCAT ERROR 0-40: SDO download 0x1C32:01 (2 bytes) aborted.
-# Then if the below command is not executed the slave will go online abnd work. Could be related to firmware versions.. Also see below 0x1c33
+# Then if the command below is not executed, the slave will come online and work. This could be related to firmware versions. Also see below 0x1c33.
 
 #- Sync mode
 #ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x1C32,0x1,3,2)"
@@ -71,7 +71,7 @@ ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x1C32,0x2,${ECMC_TEMP_PERIOD
 
 # NOTE: Sometimes the EL7211-0010 will not go to op with the following error in /var/log/messages:
 # Sep  8 09:54:21 mcag-epics4 kernel: EtherCAT ERROR 0-40: SDO download 0x1C33:01 (2 bytes) aborted.
-# Then if the below command is not executed the slave will go online abnd work. Could be related to firmware versions.. Also see above 0x1c32
+# Then if the command below is not executed, the slave will come online and work. This could be related to firmware versions. Also see above 0x1c32.
 #- Sync mode
 #ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x1C33,0x1,3,2)"
 #- Cycle time
@@ -82,9 +82,9 @@ epicsEnvUnset(ECMC_TEMP_PERIOD_NANO_SECS_HALF)
 epicsEnvUnset(ECMC_TEMP_WHATCHDOG_1)
 epicsEnvUnset(ECMC_TEMP_WHATCHDOG_2)
 
-#- Set 4000ms delay of ethercat bus at startup:
-#- Somtimes the Ex72xx-xxxx will not report a correct encoder signal when transition from PREOP to OP. This is not reflected in any status word or bit
-#- This will result in problems sicne ecmc cannot know if teh value is correct or not after startup.
+#- Set 4000 ms delay of the EtherCAT bus at startup:
+#- Sometimes the Ex72xx-xxxx will not report a correct encoder signal when transitioning from PREOP to OP. This is not reflected in any status word or bit.
+#- This will result in problems since ecmc cannot know if the value is correct or not after startup.
 #- For the drives with problems measurements have been made which concludes that after 2600ms after entering OP the EL72xx will give correct encoder position.
 #- For twincat probably this is not an isue since the terminals are not goung from PROP to OP so often. 
 #- Conclusion: Need to contact Beckhoff. Probably firmware bug.

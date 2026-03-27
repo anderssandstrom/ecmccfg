@@ -2,10 +2,10 @@
 #-d   \brief hardware script for KL2032
 #-d   \details 2ch 24V digital output, 0.5A
 #-d   \note This is not an EtherCAT slave and needs to be configured
-#-d   togheter with an BK1250 or similar.
-#-d   The BL1250 coupler automatically scans the bus and generates pdos for the terminals downstream.
-#-d   Terminals are adressed by their position relative the BK1250 starting with
-#-d   the first KL slave with at index 0.
+#-d   together with a BK1250 or similar.
+#-d   The BK1250 coupler automatically scans the bus and generates PDOs for the terminals downstream.
+#-d   Terminals are addressed by their position relative to the BK1250, starting with
+#-d   the first KL slave at index 0.
 #-d   Outputs of KL slaves are mapped to SM2 pdo index 0x60<ECMC_KL_SLAVE_NUM>0 (for slave "00" => 0x6000, slave "1A" 0x61A0...)
 #-d   Inputs of KL slaves are mapped to SM3 pdo index 0x70<ECMC_KL_SLAVE_NUM>0 (for slave "00" => 0x7000, slave "1B" 0x71B0...)
 #-d   Note that all these pdo entries are accessed through the BK1250 coupler (with slave id ECMC_EC_SLAVE_NUM).

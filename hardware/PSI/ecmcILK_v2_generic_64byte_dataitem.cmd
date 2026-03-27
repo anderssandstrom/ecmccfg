@@ -11,7 +11,7 @@ epicsEnvSet("ECMC_SIZE"     "${NELM=64}")
 ecmcEpicsEnvSetCalc(FOR_LAST_IDX,"${ECMC_SIZE=64}-1")
 
 
-#- The records will only be INPUTS to view the current status of teh buffer
+#- The records will only be INPUTS to view the current status of the buffer
 epicsEnvSet("ECMC_EC_KEY"   "byteOutput")
 epicsEnvSet("ECMC_PARAM"    "sm2.p0.e")
 ecmcFileExist(${ecmccfg_DIR}ecmcILK_v2_generic_loopStep_dataitem.cmd,1)

@@ -1,7 +1,7 @@
 #########################################################
 #  Parsing of Technosoft setup-file to ECMC format.
 #      Input file name: DC48V_TRQ_MODE_40A_AND_TML.sw
-#      Block start adress: 0x7abf
+#      Block start address: 0x7abf
 #      Output file name: DC48V_TRQ_MODE_40A_AND_TML.cmd
 #      Date: 2024/06/28 10:03:30
 #########################################################
@@ -2553,7 +2553,7 @@ ecmcConfigOrDie "Cfg.EcVerifySdo(${ECMC_EC_SLAVE_NUM},0x206A,0x0,0x62ea,2)"
 #########################################################
 #  Parsing of Technosoft setup-file to ECMC format.
 #      Input file name: DC48V_TRQ_MODE_40A_AND_TML.sw
-#      Block start adress: 0x7fbf
+#      Block start address: 0x7fbf
 #      Output file name: DC48V_TRQ_MODE_40A_AND_TML.cmd
 #      Date: 2024/06/28 10:03:30
 #########################################################
@@ -2643,7 +2643,7 @@ ecmcConfigOrDie "Cfg.EcVerifySdo(${ECMC_EC_SLAVE_NUM},0x206A,0x0,0xffff,2)"
 #########################################################
 #  Parsing of Technosoft setup-file to ECMC format.
 #      Input file name: DC48V_TRQ_MODE_40A_AND_TML.sw
-#      Block start adress: 0x7fff
+#      Block start address: 0x7fff
 #      Output file name: DC48V_TRQ_MODE_40A_AND_TML.cmd
 #      Date: 2024/06/28 10:03:30
 #########################################################
@@ -2667,7 +2667,7 @@ ecmcConfigOrDie "Cfg.EcVerifySdo(${ECMC_EC_SLAVE_NUM},0x206A,0x0,0x7abf,2)"
 #########################################################
 #  Parsing of Technosoft setup-file to ECMC format.
 #      Input file name: DC48V_TRQ_MODE_40A_AND_TML.sw
-#      Block start adress: 0x4000
+#      Block start address: 0x4000
 #      Output file name: DC48V_TRQ_MODE_40A_AND_TML.cmd
 #      Date: 2024/06/28 10:03:30
 #########################################################

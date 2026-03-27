@@ -7,12 +7,12 @@
 
 ############################################################
 ############# General:
-# This file is only used to download the basic setup to an technosoft drive.
+# This file is only used to download the basic setup to a Technosoft drive.
 # Normally this is done from Technosoft EasySetup or EasyMotion Studio.
 # The setup information can be downloaded via SDO access (after parsing to ecmc format)
 # Parsing tool can be found in ecmctraining/V2/startup/hardware/technosoft
-# This procedure should only be needed to perform once (new drive or replacing of drive)
-# Please ensure that the online cheksum corresponds to the offline checksum (see logfile printouts)
+# This procedure should only need to be performed once (new drive or drive replacement)
+# Please ensure that the online checksum corresponds to the offline checksum (see logfile printouts)
 ############################################################
 
 epicsEnvSet("IOC" ,"${IOC="IOC_TEST"}")

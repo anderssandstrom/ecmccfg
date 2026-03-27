@@ -59,7 +59,7 @@ ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${EC
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a40,0x6100,0x11,U32,positionActual02)"
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a50,0x6110,0x01,U16,driveStatus02)"
 
-#- Ensure drive recives some SDO settings
+#- Ensure the drive receives some SDO settings
 ecmcConfigOrDie "Cfg.EcSetSlaveNeedSDOSettings(${ECMC_EC_SLAVE_NUM},1,1)"
 ecmcConfigOrDie "Cfg.EcSetSlaveNeedSDOSettings(${ECMC_EC_SLAVE_NUM},2,1)"
 
@@ -73,9 +73,9 @@ epicsEnvUnset("ECMC_TEMP_PERIOD_NANO_SECS")
 #- watchdog
 ${SCRIPTEXEC} ${ecmccfg_DIR}ecmcWatchDog.cmd
 
-#- Set 4000 ms delay of ethercat bus at startup:
-#- Somtimes the Ex72xx-xxxx will not report a correct encoder signal when transition from PREOP to OP. This is not reflected in any status word or bit
-#- This will result in problems sicne ecmc cannot know if teh value is correct or not after startup.
+#- Set 4000 ms delay of the EtherCAT bus at startup:
+#- Sometimes the Ex72xx-xxxx will not report a correct encoder signal when transitioning from PREOP to OP. This is not reflected in any status word or bit.
+#- This will result in problems since ecmc cannot know if the value is correct or not after startup.
 #- For the drives with problems measurements have been made which concludes that after 2600ms after entering OP the EL72xx will give correct encoder position.
 #- For twincat probably this is not an isue since the terminals are not goung from PROP to OP so often. 
 #- Conclusion: Need to contact Beckhoff. Probably firmware bug.

@@ -8,7 +8,7 @@
 #########################################################
 #  Parsing of Technosoft setup-file to ECMC format.
 #      Input file name: ESM_projects/iPOS8020 BA-CAT_Base_V1_0_EEPROM_prog_file.sw
-#      Input file start adress: 0x7b75
+#      Input file start address: 0x7b75
 #      Output file name: ../ecmcIPOS8020-EEPROM-BaseConfig-StepperOpenLoopCSV
 #      Date: 2018/01/23 14:38:07
 #########################################################

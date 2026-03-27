@@ -55,7 +55,7 @@ ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${EC
 #-    backward: ec$(MASTER_ID).s$(DRV_SID).touchProbeStatus01.7
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a07,0x6001,0x01,U16,touchProbeStatus01)"
 
-#- Ensure drive recives some SDO settings
+#- Ensure the drive receives some SDO settings
 ecmcConfigOrDie "Cfg.EcSetSlaveNeedSDOSettings(${ECMC_EC_SLAVE_NUM},1,1)"
 
 #- ############ Distributed clocks config EP7211:
@@ -75,7 +75,7 @@ ecmcConfigOrDie "Cfg.EcSlaveConfigWatchDog(${ECMC_EC_SLAVE_NUM},${ECMC_TEMP_WHAT
 
 #- NOTE: Sometimes the EP7211-0034 will not go to op with the following error in /var/log/messages:
 #- Sep  8 09:54:21 mcag-epics4 kernel: EtherCAT ERROR 0-40: SDO download 0x1C32:01 (2 bytes) aborted.
-#- Then if the below command is not executed the slave will go online abnd work. Could be related to firmware versions.. Also see below 0x1c33
+#- Then if the command below is not executed, the slave will come online and work. This could be related to firmware versions. Also see below 0x1c33.
 #- Sync mode
 #ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x1C32,0x1,3,2)"
 #- Cycle time
@@ -83,7 +83,7 @@ ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x1C32,0x2,${ECMC_TEMP_PERIOD
 
 #- NOTE: Sometimes the EP7211-0034 will not go to op with the following error in /var/log/messages:
 #- Sep  8 09:54:21 mcag-epics4 kernel: EtherCAT ERROR 0-40: SDO download 0x1C33:01 (2 bytes) aborted.
-#- Then if the below command is not executed the slave will go online abnd work. Could be related to firmware versions.. Also see above 0x1c32
+#- Then if the command below is not executed, the slave will come online and work. This could be related to firmware versions. Also see above 0x1c32.
 #- Sync mode
 #ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x1C33,0x1,3,2)"
 #- Cycle time
@@ -94,9 +94,9 @@ epicsEnvUnset(ECMC_TEMP_PERIOD_NANO_SECS_HALF)
 epicsEnvUnset(ECMC_TEMP_WHATCHDOG_1)
 epicsEnvUnset(ECMC_TEMP_WHATCHDOG_2)
 
-#- Set 4000ms delay of ethercat bus at startup:
-#- Somtimes the Ex72xx-xxxx will not report a correct encoder signal when transition from PREOP to OP. This is not reflected in any status word or bit
-#- This will result in problems sicne ecmc cannot know if teh value is correct or not after startup.
+#- Set 4000 ms delay of the EtherCAT bus at startup:
+#- Sometimes the Ex72xx-xxxx will not report a correct encoder signal when transitioning from PREOP to OP. This is not reflected in any status word or bit.
+#- This will result in problems since ecmc cannot know if the value is correct or not after startup.
 #- For the drives with problems measurements have been made which concludes that after 2600ms after entering OP the EL72xx will give correct encoder position.
 #- For twincat probably this is not an isue since the terminals are not goung from PROP to OP so often. 
 #- Conclusion: Need to contact Beckhoff. Probably firmware bug.

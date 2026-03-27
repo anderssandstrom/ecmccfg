@@ -70,7 +70,7 @@ ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x12,10,2)"
 #- Current loop P (0.1V/A) default 10 = 1V/A
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x13,10,2)"
 
-#- Velocity loop proportianal gain = 20
+#- Velocity loop proportional gain = 20
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x15,20,4)"
 #- Velocity loop integral time = 50
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x14,50,4)"

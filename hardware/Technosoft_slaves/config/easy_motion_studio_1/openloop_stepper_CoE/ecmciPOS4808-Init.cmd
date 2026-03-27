@@ -7,7 +7,7 @@
 
 ############################################################
 ############# General:
-# This file is only used to download the basic setup to an technosoft drive.
+# This file is only used to download the basic setup to a Technosoft drive.
 # Normally this is done from Technosoft EasySetup or EasyMotion Studio.
 # The setup information can be downloaded via SDO access (after parsing to ecmc format)
 # Parsing tool can be found in ecmctraining/V2/startup/hardware/technosoft

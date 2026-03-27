@@ -49,7 +49,7 @@ ecmcConfigOrDie "Cfg.EcWriteSdo(${ECMC_EC_SLAVE_NUM},0x2064,0x0,0x02A90084,4)"
 ${SCRIPTEXEC} ${ecmccfg_DIR}addEcDataItem.cmd "STRT_ENTRY_NAME=tmlComIF01,OFFSET_BYTE=2,OFFSET_BITS=0,RW=1,DT=U16,NAME=TML-ComCfgIF01"
 #- This is actuall the output voltage setpoint corresponfing to the velo setpoint (record loaded in subst later)
 ${SCRIPTEXEC} ${ecmccfg_DIR}addEcDataItem.cmd "STRT_ENTRY_NAME=tmlComIF01,OFFSET_BYTE=0,OFFSET_BITS=0,RW=1,DT=S16,NAME=velocitySetpoint01, LOAD_RECS='#-'"
-#- Write adress 0x02A9 = 
+#- Write address 0x02A9 =
 ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},TML-ComCfgIF01,681)"
 #- Now direct access to EREF should be possible through DATA_IF_DATA_01
 

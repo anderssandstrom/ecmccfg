@@ -11,9 +11,9 @@ ecmcConfigOrDie "Cfg.EcSetSlaveNeedSDOSettings(${ECMC_EC_SLAVE_NUM},1,1)"
 #- Activly choose CSP mode
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x7010,0x3,8,1)"
 
-#- Set 4000ms delay of ethercat bus at startup:
-#- Somtimes the Ex72xx-xxxx will not report a correct encoder signal when transition from PREOP to OP. This is not reflected in any status word or bit
-#- This will result in problems sicne ecmc cannot know if teh value is correct or not after startup.
+#- Set 4000 ms delay of the EtherCAT bus at startup:
+#- Sometimes the Ex72xx-xxxx will not report a correct encoder signal when transitioning from PREOP to OP. This is not reflected in any status word or bit.
+#- This will result in problems since ecmc cannot know if the value is correct or not after startup.
 #- For the drives with problems measurements have been made which concludes that after 2600ms after entering OP the EL72xx will give correct encoder position.
 #- For twincat probably this is not an isue since the terminals are not goung from PROP to OP so often. 
 #- Conclusion: Need to contact Beckhoff. Probably firmware bug.

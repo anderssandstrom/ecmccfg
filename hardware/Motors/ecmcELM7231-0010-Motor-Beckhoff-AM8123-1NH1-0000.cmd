@@ -12,7 +12,7 @@
 
 #- Current loop integral time
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x12,21,2)"
-#- Current loop proportianal gain
+#- Current loop proportional gain
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x13,58,2)"
 
 #- Motor max current

@@ -48,6 +48,9 @@ These are the scripts most users should start from.
 | `setAppMode.cmd` | Switch to operational mode and start the realtime thread. | Normal transition to running IOC. |
 | `finalize.cmd` | Convenience wrapper that applies config if needed, loads some summary objects, and sets app mode. | Compact startup files that want the default finishing sequence. |
 
+For a generated list of available `HW_DESC` values together with product IDs and
+hardware snippet paths, see [Supported Slaves]({{< relref "/manual/general_cfg/supported_slaves.md" >}}).
+
 ## Advanced Commands
 
 These commands are real user-facing interfaces, but they are lower level or more specialized.

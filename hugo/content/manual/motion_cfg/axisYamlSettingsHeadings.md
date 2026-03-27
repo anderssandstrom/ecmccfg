@@ -146,8 +146,8 @@ For examples and configuration guidance, use [yaml configuration](../axisyaml/).
 - `Kff` (optional) — Feed-forward gain.
 - `deadband.tol` (optional) — Stop control within this distance.
 - `deadband.time` (optional) — Deadband time filter.
-- `limits.minOutput` / `maxOutput` (optional) — Output clamps.
-- `limits.minIntegral` / `maxIntegral` (optional) — Integral clamps.
+- `limits.minOutput` / `maxOutput` (optional) — Output clamps. Active only when `maxOutput > minOutput`; both `0` disables the limits.
+- `limits.minIntegral` / `maxIntegral` (optional) — Integral clamps. Active only when `maxIntegral > minIntegral`; both `0` disables the limits.
 - `inner.Kp` / `inner.Ki` / `inner.Kd` / `inner.tol` (optional) — Inner PID used near target.
 
 ## trajectory

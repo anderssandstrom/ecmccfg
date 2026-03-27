@@ -367,6 +367,13 @@ optional
   - `Ki`: Ki for when close to target
   - `Kd`: Kd for when close to target
 
+Limit handling for `controller.limits`:
+
+- Output limiting is active only when `maxOutput > minOutput`.
+- If `minOutput = 0` and `maxOutput = 0`, the controller output limits are disabled.
+- Integral limiting follows the same rule: it is active only when `maxIntegral > minIntegral`.
+- If `minIntegral = 0` and `maxIntegral = 0`, the integral limits are disabled.
+
 ```yaml
 controller:
   Kp:  90

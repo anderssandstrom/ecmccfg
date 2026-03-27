@@ -1,3 +1,9 @@
++++
+title = "Supported Slaves"
+weight = 17
+chapter = false
++++
+
 # Supported Slaves
 
 Generated from `hardware/**/*.cmd`.

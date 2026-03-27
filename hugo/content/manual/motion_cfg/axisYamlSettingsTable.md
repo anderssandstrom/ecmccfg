@@ -137,10 +137,10 @@ Notes:
 | controller.Kff | Feed forward gain | Yes |
 | controller.deadband.tol | Stop control if within this distance from target for the below time | Yes |
 | controller.deadband.time | Deadband time filter | Yes |
-| controller.limits.minOutput | Minimum controller output | Yes |
-| controller.limits.maxOutput | Maximum controller output | Yes |
-| controller.limits.minIntegral | Minimum integral output | Yes |
-| controller.limits.maxIntegral | Maximum integral output | Yes |
+| controller.limits.minOutput | Minimum controller output. Output limiting is active only when `maxOutput > minOutput`; `minOutput=0` and `maxOutput=0` disables it. | Yes |
+| controller.limits.maxOutput | Maximum controller output. Output limiting is active only when `maxOutput > minOutput`; `minOutput=0` and `maxOutput=0` disables it. | Yes |
+| controller.limits.minIntegral | Minimum integral output. Integral limiting is active only when `maxIntegral > minIntegral`; `minIntegral=0` and `maxIntegral=0` disables it. | Yes |
+| controller.limits.maxIntegral | Maximum integral output. Integral limiting is active only when `maxIntegral > minIntegral`; `minIntegral=0` and `maxIntegral=0` disables it. | Yes |
 | controller.inner.Kp | Kp for when close to target | Yes |
 | controller.inner.Ki | Ki for when close to target | Yes |
 | controller.inner.Kd | Kd for when close to target | Yes |

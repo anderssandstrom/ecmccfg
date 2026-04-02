@@ -1082,6 +1082,10 @@ def _chars_after_space_to_upper(text: str) -> str:
     return "".join(result)
 
 
+def _sanitize_generated_entry_text(text: str) -> str:
+    return text.replace("[", "").replace("]", "")
+
+
 def _if_digit_last_make_it_2wide(text: str) -> str:
     i = len(text) - 1
     while i >= 0 and text[i].isdigit():
@@ -1145,7 +1149,7 @@ def _entry_record_name(
     pdo: PdoInfo, entry_name: str, slave: Optional[SlaveInfo] = None, legacy_naming: bool = False
 ) -> str:
     dev, prefix = _pdo_type_and_prefix(pdo, slave=slave, legacy_naming=legacy_naming)
-    text = _chars_after_space_to_upper(entry_name)
+    text = _sanitize_generated_entry_text(_chars_after_space_to_upper(entry_name))
     text = _replace_tokens(text, ENTRY_TOKEN_MAP)
     text = text.replace("__", "-")
     text = text.replace(" ", "")
@@ -1872,8 +1876,9 @@ def generate_substitutions(
         rows.append("    pattern { REC_NAME, DESC , SRC_NAME, DTYP}")
         for entry in entries:
             rec_name = entry.source_name.replace("_", "-")
+            desc = _sanitize_generated_entry_text(entry.desc)
             rows.append(
-                f'        {{"{_esc_subst(rec_name)}", "{_esc_subst(entry.desc)}", "{entry.source_name}", "{_entry_to_asyn_dtyp(entry)}"}}'
+                f'        {{"{_esc_subst(rec_name)}", "{_esc_subst(desc)}", "{entry.source_name}", "{_entry_to_asyn_dtyp(entry)}"}}'
             )
         rows.append("}")
         rows.append("")
@@ -1885,7 +1890,8 @@ def generate_substitutions(
         rows.append("    pattern { REC_NAME, DESC , SRC_NAME}")
         for entry in entries:
             rec_name = entry.source_name.replace("_", "-")
-            rows.append(f'        {{"{_esc_subst(rec_name)}", "{_esc_subst(entry.desc)}", "{entry.source_name}"}}')
+            desc = _sanitize_generated_entry_text(entry.desc)
+            rows.append(f'        {{"{_esc_subst(rec_name)}", "{_esc_subst(desc)}", "{entry.source_name}"}}')
         rows.append("}")
         rows.append("")
 
@@ -1896,10 +1902,11 @@ def generate_substitutions(
         rows.append("    pattern { REC_NAME, DESC, FLNK , SRC_NAME}")
         for entry in entries:
             rec_name = entry.source_name.replace("_", "-")
+            desc = _sanitize_generated_entry_text(entry.desc)
             if entry.bit_comment:
                 for bit_line in _bit_comment_lines(entry.bit_comment):
                     rows.append(f"        #- {entry.source_name} {bit_line}")
-            rows.append(f'        {{"{_esc_subst(rec_name)}", "{_esc_subst(entry.desc)}", "", "{entry.source_name}"}}')
+            rows.append(f'        {{"{_esc_subst(rec_name)}", "{_esc_subst(desc)}", "", "{entry.source_name}"}}')
         rows.append("}")
         rows.append("")
 
@@ -1910,10 +1917,11 @@ def generate_substitutions(
         rows.append("    pattern { REC_NAME, DESC , SRC_NAME}")
         for entry in entries:
             rec_name = entry.source_name.replace("_", "-")
+            desc = _sanitize_generated_entry_text(entry.desc)
             if entry.bit_comment:
                 for bit_line in _bit_comment_lines(entry.bit_comment):
                     rows.append(f"        #- {entry.source_name} {bit_line}")
-            rows.append(f'        {{"{_esc_subst(rec_name)}", "{_esc_subst(entry.desc)}", "{entry.source_name}"}}')
+            rows.append(f'        {{"{_esc_subst(rec_name)}", "{_esc_subst(desc)}", "{entry.source_name}"}}')
         rows.append("}")
         rows.append("")
 
@@ -2584,12 +2592,18 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
             self.slave_list.config(yscrollcommand=slave_scroll.set)
             self.slave_list.bind("<<ListboxSelect>>", self._on_slave_select)
 
-            ttk.Label(right_frame, text="PDO mappings").pack(anchor=tk.W, pady=(0, 4))
-            self.mapping_list = tk.Listbox(right_frame, exportselection=False, height=6)
-            self.mapping_list.pack(fill=tk.X)
-            self.mapping_list.bind("<<ListboxSelect>>", self._on_mapping_select)
+            right_panes = ttk.Panedwindow(right_frame, orient=tk.VERTICAL)
+            right_panes.pack(fill=tk.BOTH, expand=True)
 
-            coe_header = ttk.Frame(right_frame)
+            mapping_section = ttk.Frame(right_panes)
+            ttk.Label(mapping_section, text="PDO mappings").pack(anchor=tk.W, pady=(0, 4))
+            self.mapping_list = tk.Listbox(mapping_section, exportselection=False, height=6)
+            self.mapping_list.pack(fill=tk.BOTH, expand=True)
+            self.mapping_list.bind("<<ListboxSelect>>", self._on_mapping_select)
+            right_panes.add(mapping_section, weight=1)
+
+            coe_section = ttk.Frame(right_panes)
+            coe_header = ttk.Frame(coe_section)
             coe_header.pack(fill=tk.X, pady=(8, 4))
             ttk.Label(coe_header, text="CoE InitCmd startup SDOs").pack(side=tk.LEFT)
             self.coe_only_representable_var = tk.BooleanVar(value=False)
@@ -2599,21 +2613,23 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
                 variable=self.coe_only_representable_var,
                 command=self._on_coe_filter_toggle,
             ).pack(side=tk.RIGHT)
-            coe_frame = ttk.Frame(right_frame)
-            coe_frame.pack(fill=tk.X)
+            coe_frame = ttk.Frame(coe_section)
+            coe_frame.pack(fill=tk.BOTH, expand=True)
             self.coe_list = tk.Listbox(coe_frame, exportselection=False, height=5)
-            self.coe_list.pack(side=tk.LEFT, fill=tk.X, expand=True)
+            self.coe_list.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
             coe_scroll = ttk.Scrollbar(coe_frame, orient=tk.VERTICAL, command=self.coe_list.yview)
             coe_scroll.pack(side=tk.RIGHT, fill=tk.Y)
             self.coe_list.config(yscrollcommand=coe_scroll.set)
             self.coe_list.bind("<<ListboxSelect>>", self._on_coe_select)
+            right_panes.add(coe_section, weight=1)
 
+            pdo_section = ttk.Frame(right_panes)
             ttk.Label(
-                right_frame,
+                pdo_section,
                 text="PDO tree (expand PDO rows to inspect entries, toggle selection in Sel column)",
             ).pack(anchor=tk.W, pady=(8, 4))
-            optional_frame = ttk.Frame(right_frame)
-            optional_frame.pack(fill=tk.BOTH, expand=False)
+            optional_frame = ttk.Frame(pdo_section)
+            optional_frame.pack(fill=tk.BOTH, expand=True)
             self.pdo_tree = ttk.Treeview(
                 optional_frame,
                 columns=("sel", "type", "index", "dir", "sm"),
@@ -2642,6 +2658,7 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
             self.pdo_tree.bind("<<TreeviewSelect>>", self._on_pdo_tree_select)
             self.pdo_tree.bind("<Button-1>", self._on_pdo_tree_click)
             self.pdo_tree.bind("<space>", self._on_pdo_tree_space)
+            right_panes.add(pdo_section, weight=3)
 
             action_row = ttk.Frame(right_frame)
             action_row.pack(fill=tk.X, pady=(6, 4))
@@ -2651,12 +2668,16 @@ def run_gui(initial_file: Path, initial_name: str, initial_rev: str) -> int:
             )
             ttk.Label(action_row, textvariable=self.hwtype_label_var).pack(side=tk.RIGHT)
 
-            ttk.Label(right_frame, text="Details").pack(anchor=tk.W, pady=(8, 4))
-            self.details = tk.Text(right_frame, wrap=tk.NONE, height=24)
+            details_section = ttk.Frame(right_panes)
+            ttk.Label(details_section, text="Details").pack(anchor=tk.W, pady=(8, 4))
+            details_frame = ttk.Frame(details_section)
+            details_frame.pack(fill=tk.BOTH, expand=True)
+            self.details = tk.Text(details_frame, wrap=tk.NONE, height=24)
             self.details.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-            details_scroll = ttk.Scrollbar(right_frame, orient=tk.VERTICAL, command=self.details.yview)
+            details_scroll = ttk.Scrollbar(details_frame, orient=tk.VERTICAL, command=self.details.yview)
             details_scroll.pack(side=tk.RIGHT, fill=tk.Y)
             self.details.config(yscrollcommand=details_scroll.set)
+            right_panes.add(details_section, weight=3)
 
             self.status_var = tk.StringVar(value="Idle")
             self.busy_var = tk.StringVar(value="Idle")

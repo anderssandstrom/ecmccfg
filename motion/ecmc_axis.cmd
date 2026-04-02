@@ -31,6 +31,7 @@ ecmcConfigOrDie "Cfg.CreateAxis(${ECMC_AXIS_NO},1,${ECMC_DRV_TYPE=0},${ECMC_TRAJ
 ecmcConfigOrDie "Cfg.LinkEcEntryToObject(${ECMC_EC_AXIS_HEALTH},"ax${ECMC_AXIS_NO}.health")"
 ecmcConfigOrDie "Cfg.SetAxisModRange(${ECMC_AXIS_NO}, ${ECMC_MOD_RANGE=0})"
 ecmcConfigOrDie "Cfg.SetAxisModType(${ECMC_AXIS_NO}, ${ECMC_MOD_TYPE=0})"
+ecmcConfigOrDie "Cfg.SetAutoResetEnable(${ECMC_AXIS_NO}, ${ECMC_AUTO_RESET=1})"
 
 #- Trajectory
 #- Issue Warning if ECMC_ACCL is set. ECMC_ACCS_EGU_PER_S2 with unit EGU/s² should be used instead

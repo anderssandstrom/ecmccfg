@@ -27,6 +27,8 @@ Backward compatibility with classic EPICS environment-variable based configurati
 
 {{% notice warning %}}
 `YAML` is, like `Python`, indentation-sensitive.
+Do not use tab characters or trailing spaces in YAML files.
+Tabs in particular can lead to cryptic error messages during Python parsing.
 {{% /notice %}}
 
 {{% notice tip %}}
@@ -250,6 +252,14 @@ mandatory for physical axis
 - `status`: status word entry
 - `setpoint`: setpoint entry, **position** or **velocity**, depending on mode
 
+{{% notice info %}}
+Floating-point EtherCAT entries are supported in ecmc, but the rules differ by use case:
+
+- encoder actual-position entries (`encoder.position`) with `F32`/`F64` are only valid for absolute encoders (`encoder.type: 1`)
+- CSP drive position setpoints with `F32`/`F64` require the selected CSP encoder actual-position entry to use the same EtherCAT datatype
+- CSV drive velocity setpoints with `F32`/`F64` are supported
+{{% /notice %}}
+
 optional
 
 - `reduceTorque`: control word _bit_ to set for reduced torque mode
@@ -334,6 +344,20 @@ encoder:
   #   status: ''
 ```
 
+If `encoder.position` or the drive setpoint/actual-position entry uses `F32` or `F64`
+data in EtherCAT, then configure absolute encoder mode:
+
+- `encoder.type: 1`
+
+Keep `encoder.bits` and `encoder.absBits` aligned with the floating-point width:
+
+- `encoder.bits: 32` and `encoder.absBits: 32` for `F32`
+- `encoder.bits: 64` and `encoder.absBits: 64` for `F64`
+
+In current ecmc, those two keys are accepted for floating-point encoder entries but
+ignored during validation, and a warning is printed. It is still recommended to set
+them consistently in YAML for clarity.
+
 optional
 
 - `velocityFilterSize`: Add filtering if the encoder is too coarse to reliably determine velocity each PLC cycle
@@ -366,6 +390,13 @@ optional
   - `Kp`: Kp for when close to target
   - `Ki`: Ki for when close to target
   - `Kd`: Kd for when close to target
+
+Limit handling for `controller.limits`:
+
+- Output limiting is active only when `maxOutput > minOutput`.
+- If `minOutput = 0` and `maxOutput = 0`, the controller output limits are disabled.
+- Integral limiting follows the same rule: it is active only when `maxIntegral > minIntegral`.
+- If `minIntegral = 0` and `maxIntegral = 0`, the integral limits are disabled.
 
 ```yaml
 controller:

@@ -50,7 +50,7 @@ epicsEnvSet("I_MAX_MA_LOCAL"          "0084")
 
 #- ############ Number of steps per revolution:
 #-  NOTE:If changed from default then save and reset is needed (SE BELOW "Save and Reset section")!
-#-  SFTCL1 at technosoft adress 280:
+#-  SFTCL1 at Technosoft address 280:
 #-  SFTCL1 = log(2048/NoMicroStepsPerStep)/log(2)-1
 #-  SFTCL1= log(2048/256)/log(2)-1=2
 
@@ -60,8 +60,8 @@ epicsEnvSet("ECMC_TECHNOSOFT_DATA_HEX"         "0002")
 ${SCRIPTEXEC} ${ecmccfg_DIR}technosoftWriteGenericCfg.cmd
 
 #-  SCL2L_long = 2*DSP_FREQ*NoMicroStepsPerStep*Ts_S ()
-#-  SCL2H=HIGH(SCL2L_long) at technosoft adress 281:
-#-  SCL2L=LOW(SCL2L_long) at technosoft adress 282:
+#-  SCL2H=HIGH(SCL2L_long) at Technosoft address 281:
+#-  SCL2L=LOW(SCL2L_long) at Technosoft address 282:
 
 #-  Write SCL2H=0x02BF (read in EasyMotion Studio)
 epicsEnvSet("ECMC_TECHNOSOFT_ADR_HEX"          "0281")
@@ -73,7 +73,7 @@ epicsEnvSet("ECMC_TECHNOSOFT_ADR_HEX"          "0282")
 epicsEnvSet("ECMC_TECHNOSOFT_DATA_HEX"         "2000")
 ${SCRIPTEXEC} ${ecmccfg_DIR}technosoftWriteGenericCfg.cmd
 
-#-  STEPRES at technosoft adress 802
+#-  STEPRES at Technosoft address 802
 #-  STEPRES=NoMotorSteps*NoMicroStepsPerStep (200*256)
 #-  Write STEPRES=C800 (51200) (read in EasyMotion Studio)
 epicsEnvSet("ECMC_TECHNOSOFT_ADR_HEX"          "0282")

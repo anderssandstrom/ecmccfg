@@ -175,7 +175,7 @@ ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x2036,0x0,1000,4)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x2037,0x0,-10,4)"
 #Step counter as position
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x320A,0x4,-1,4)"
-#Use ethercat (bit 4=1=>20)
+# Use EtherCAT (bit 4 = 1 => 20)
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x2102,0x0,20,4)"
 
 #Acceleration steps. Set high to minimize effect of the local trajectory generator (10000000 steps for one second)

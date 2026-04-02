@@ -12,12 +12,12 @@
 
 #- Current loop integral time
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x12,6,2)"
-#- Current loop proportianal gain
+#- Current loop proportional gain
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x13,133,2)"
 
 #- Velocity loop integral time
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x14,150,4)"
-#- Velocity loop proportianal gain
+#- Velocity loop proportional gain
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x15,82,4)"
 
 #- standstill window

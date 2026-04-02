@@ -8,8 +8,8 @@
 
 ## Configure drive (download file, write file):
 1. Identify correct bin configuration file (see sub-dirs in "ecmccfg/hardware/Technosoft_slaves/config/")
-2. Allow writes in BOOT by write 1 to 0x210c 0x0 `ethercat download -m<masterid> -p<slaveid> 0x210c 0x0 1`
-3. Set drive ethercat state to BOOT (even though the manual states download should be made in PREOP, OP or SAFEOP): `ethercat states -m<masterid> -p<slaveid> BOOT`
+2. Allow writes in BOOT by writing `1` to `0x210c 0x0`: `ethercat download -m<masterid> -p<slaveid> 0x210c 0x0 1`
+3. Set the drive EtherCAT state to BOOT (even though the manual states that download should be performed in PREOP, OP or SAFEOP): `ethercat states -m<masterid> -p<slaveid> BOOT`
 4. Download file: `ethercat -m<masterid> -p<slaveid> foe_write <filename>`
 3. Power cycle of drive is needed in order to load the new config.
 

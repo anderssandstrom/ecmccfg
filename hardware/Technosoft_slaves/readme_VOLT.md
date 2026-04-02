@@ -29,7 +29,7 @@ caput c6025a-04:m0s017-Drv01-Eref 32000
 ```
 In test setup 32000 corresponds to 22V (powersupply 24V)
 
-# Use ethercat tool to write to EREF
+# Use the EtherCAT tool to write to EREF
 
 source writeToEREF.sh <16 bit data in hex without 0x>:
 ```

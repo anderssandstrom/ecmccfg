@@ -33,3 +33,7 @@ hugo/content/source/
 
 .hugo_build.lock
 hugo/public
+.codex
+.codex/
+**/.codex
+**/.codex/

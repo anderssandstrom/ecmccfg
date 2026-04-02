@@ -48,6 +48,9 @@ These are the scripts most users should start from.
 | `setAppMode.cmd` | Switch to operational mode and start the realtime thread. | Normal transition to running IOC. |
 | `finalize.cmd` | Convenience wrapper that applies config if needed, loads some summary objects, and sets app mode. | Compact startup files that want the default finishing sequence. |
 
+For a generated list of available `HW_DESC` values together with product IDs and
+hardware snippet paths, see [Supported Slaves]({{< relref "/manual/general_cfg/supported_slaves.md" >}}).
+
 ## Advanced Commands
 
 These commands are real user-facing interfaces, but they are lower level or more specialized.
@@ -90,6 +93,16 @@ These commands are real user-facing interfaces, but they are lower level or more
 
 These scripts exist for implementation support, conversions, or developer workflows.
 They are generally not the first thing to call directly from a normal IOC startup file.
+
+### Utility Scripts In `utils/`
+
+These are repository utilities rather than IOC startup scripts:
+
+- legacy EtherCAT ESI parser for extracting PDO mappings and generating draft
+  ecmc hardware snippets. See
+  [ESI Parser]({{< relref "/manual/general_cfg/esi_parser.md" >}}).
+- `utils/esi_mapping_browser.py`: newer interactive/browser-oriented ESI mapping
+  inspection and snippet generation tool.
 
 ### Template / Substitution Helpers
 
@@ -157,6 +170,7 @@ should generally be seen as legacy entry points compared to the YAML-first path.
 - [startup.cmd]({{< relref "/manual/general_cfg/startup/_index.md" >}})
 - [PV Processing Rate]({{< relref "/manual/general_cfg/PVProcessingRate.md" >}})
 - [iocsh utilities]({{< relref "/manual/general_cfg/iocsh_utils.md" >}})
+- [ESI Parser]({{< relref "/manual/general_cfg/esi_parser.md" >}})
 - [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}})
 - [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}})
 - [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}})

@@ -1,7 +1,7 @@
 #########################################################
 #  Parsing of Technosoft setup-file to ECMC format.
 #      Input file name: 4808_BRUSHDC_VOLT_48V_20A_plusTML.sw
-#      Block start adress: 0x7abd
+#      Block start address: 0x7abd
 #      Output file name: 4808_BRUSHDC_VOLT_48V_20A_plusTML.cmd
 #      Date: 2024/09/23 14:07:27
 #########################################################
@@ -2557,7 +2557,7 @@ ecmcConfigOrDie "Cfg.EcVerifySdo(${ECMC_EC_SLAVE_NUM},0x206A,0x0,0x4a2a,2)"
 #########################################################
 #  Parsing of Technosoft setup-file to ECMC format.
 #      Input file name: 4808_BRUSHDC_VOLT_48V_20A_plusTML.sw
-#      Block start adress: 0x7fbf
+#      Block start address: 0x7fbf
 #      Output file name: 4808_BRUSHDC_VOLT_48V_20A_plusTML.cmd
 #      Date: 2024/09/23 14:07:27
 #########################################################
@@ -2647,7 +2647,7 @@ ecmcConfigOrDie "Cfg.EcVerifySdo(${ECMC_EC_SLAVE_NUM},0x206A,0x0,0xffff,2)"
 #########################################################
 #  Parsing of Technosoft setup-file to ECMC format.
 #      Input file name: 4808_BRUSHDC_VOLT_48V_20A_plusTML.sw
-#      Block start adress: 0x7fff
+#      Block start address: 0x7fff
 #      Output file name: 4808_BRUSHDC_VOLT_48V_20A_plusTML.cmd
 #      Date: 2024/09/23 14:07:27
 #########################################################
@@ -2671,7 +2671,7 @@ ecmcConfigOrDie "Cfg.EcVerifySdo(${ECMC_EC_SLAVE_NUM},0x206A,0x0,0x7abd,2)"
 #########################################################
 #  Parsing of Technosoft setup-file to ECMC format.
 #      Input file name: 4808_BRUSHDC_VOLT_48V_20A_plusTML.sw
-#      Block start adress: 0x4000
+#      Block start address: 0x4000
 #      Output file name: 4808_BRUSHDC_VOLT_48V_20A_plusTML.cmd
 #      Date: 2024/09/23 14:07:27
 #########################################################

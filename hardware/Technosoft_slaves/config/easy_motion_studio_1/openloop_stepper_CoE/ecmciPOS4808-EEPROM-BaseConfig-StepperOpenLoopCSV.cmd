@@ -9,7 +9,7 @@
 #-########################################################
 #-  Parsing of Technosoft setup-file to ECMC format.
 #-     Input file name: ipos4808/ESM_projects/iPOS4808-BX-CAT_Base_V1_0_EEPROM_prog_file.sw
-#-     Input file start adress: 0x7b78
+#-     Input file start address: 0x7b78
 #-     Output file name: ../ecmcIPOS4808-EEPROM-BaseConfig-StepperOpenLoopCSV
 #-     Date: 2018/01/24 09:40:21
 #-########################################################

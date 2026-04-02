@@ -1,4 +1,37 @@
 # ecmc utilities
+
+## Hardware product-id summary
+
+Generate a summary of `ECMC_EC_PRODUCT_ID` usage in `hardware/**/*.cmd`.
+
+The script scans all `.cmd` files below `../hardware`, ignores commented lines,
+extracts `epicsEnvSet("ECMC_EC_HWTYPE" "...")` and
+`epicsEnvSet("ECMC_EC_PRODUCT_ID" "...")`, and groups snippets by product ID.
+
+Default grouped summary:
+
+```bash
+cd utils
+python3 generate_hardware_product_id_summary.py
+```
+
+This writes:
+
+```text
+../hardware/product_id_summary.md
+../hugo/content/manual/general_cfg/supported_slaves.md
+```
+
+```text
+# | HW_DESC | Vendor/type | Product ID | Count | Paths
+```
+
+If a product ID is used by multiple snippets, the `Paths` cell contains the
+matching snippet paths separated by `<br>`. If multiple hardware descriptors
+share one product ID, the `HW_DESC` cell lists them separated by `<br>`. The
+`Vendor/type` column is derived from the top-level directory below `hardware/`;
+a trailing `_slaves` suffix is removed for display.
+
 ## PDO read
 
 Tool to read data from slaves (actually SDO data).

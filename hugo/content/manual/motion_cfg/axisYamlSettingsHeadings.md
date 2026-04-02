@@ -73,7 +73,7 @@ For examples and configuration guidance, use [yaml configuration](../axisyaml/).
 - `enable` (required for non-DS402) — Enable bit index in control word.
 - `enabled` (required for non-DS402) — Enabled bit index in status word.
 - `status` (required) — Status word EtherCAT entry.
-- `setpoint` (required) — Velocity setpoint if CSV; position setpoint if CSP.
+- `setpoint` (required) — Velocity setpoint if CSV; position setpoint if CSP. `F32`/`F64` CSV setpoints are supported. `F32`/`F64` CSP setpoints require the selected CSP encoder actual-position entry to use the same datatype.
 - `reduceTorque` (optional) — Reduce torque bit in control word.
 - `reduceTorqueEnable` (optional) — Enable reduce torque handling.
 - `brake` (optional) — Brake control block.
@@ -93,7 +93,7 @@ For examples and configuration guidance, use [yaml configuration](../axisyaml/).
 - `absBits` (required) — Absolute bit count (LSBs of `bits`).
 - `absOffset` (required) — Offset in engineering units for absolute encoders.
 - `mask` (optional) — Mask applied to raw encoder value.
-- `position` (required) — EtherCAT entry for actual position.
+- `position` (required) — EtherCAT entry for actual position. `F32`/`F64` actual-position entries are only valid for absolute encoders (`type: 1`). Keep `bits` and `absBits` aligned with the datatype width (`32`/`32` or `64`/`64`).
 - `control` (optional; required if reset is used) — Encoder control word entry.
 - `status` (optional; required if warning/error are used) — Encoder status word entry.
 - `ready` (optional) — Status bit for encoder ready.
@@ -146,8 +146,8 @@ For examples and configuration guidance, use [yaml configuration](../axisyaml/).
 - `Kff` (optional) — Feed-forward gain.
 - `deadband.tol` (optional) — Stop control within this distance.
 - `deadband.time` (optional) — Deadband time filter.
-- `limits.minOutput` / `maxOutput` (optional) — Output clamps.
-- `limits.minIntegral` / `maxIntegral` (optional) — Integral clamps.
+- `limits.minOutput` / `maxOutput` (optional) — Output clamps. Active only when `maxOutput > minOutput`; both `0` disables the limits.
+- `limits.minIntegral` / `maxIntegral` (optional) — Integral clamps. Active only when `maxIntegral > minIntegral`; both `0` disables the limits.
 - `inner.Kp` / `inner.Ki` / `inner.Kd` / `inner.tol` (optional) — Inner PID used near target.
 
 ## trajectory

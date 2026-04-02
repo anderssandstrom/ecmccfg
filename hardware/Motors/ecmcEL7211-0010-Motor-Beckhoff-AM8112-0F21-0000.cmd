@@ -48,13 +48,13 @@ ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8011,0x1b,4500,4)"
 #- Current loop integral time = 5 (reset by auto-configuration to 5)
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x12,5,2)"
 #-
-#- Current loop proportianal gain = 106 (reset by auto-configuration to 106)
+#- Current loop proportional gain = 106 (reset by auto-configuration to 106)
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x13,106,2)"
 #-
 #- Velocity loop integral time = 50 (reset by auto-configuration to 50)
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x14,50,4)"
 #-
-#- Velocity loop proportianal gain = 150 (reset by auto-configuration to 150)
+#- Velocity loop proportional gain = 150 (reset by auto-configuration to 150)
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x15,150,4)"
 
 #- INDEX ==== 0x9008 ====

@@ -1,7 +1,7 @@
 #########################################################
 #  Parsing of Technosoft setup-file to ECMC format.
 #      Input file name: /home/iocuser/ecmcCfg.sw
-#      Input file start adress: 0x7adc
+#      Input file start address: 0x7adc
 #      Output file name: ecmciPOS8020BX-EEPROM-BaseConfig-StepperOpenLoopCSV.cmd
 #      Date: 2020/02/20 10:01:53
 #########################################################

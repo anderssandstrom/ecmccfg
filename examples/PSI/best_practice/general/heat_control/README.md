@@ -24,7 +24,7 @@ The example uses:
 - `F32` scalar analog input from `ELM3504`
 - absolute encoder mode with `F32` input (`bits: 32`, `absBits: 32`)
 - PT1000 4-wire sensor setup with Celsius scaling
-- controller output limited to `0..100` so the heater command cannot go negative
+- controller output limited to `0..0.01` so the heater command cannot exceed full heater output
 
 ## Startup
 

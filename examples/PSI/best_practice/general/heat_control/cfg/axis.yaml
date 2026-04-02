@@ -30,7 +30,7 @@ encoder:
   type: 1
   position: ec0.s$(ENC_ID).analogInput01
   numerator: 1
-  denominator: 1
+  denominator: 1                         # For integer ELM3504 setup, adjust scaling here instead of using the F32 value directly
   bits: 32
   absBits: 32
   absOffset: 0

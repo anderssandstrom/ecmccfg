@@ -8,6 +8,8 @@ require ecmccfg v11.0.7_RC1, "ECMC_VER=v11.0.7_RC1"
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=20, HW_DESC=EL2535-0002"
 epicsEnvSet(DRV_ID, $(ECMC_EC_SLAVE_NUM))
 
+# For integer input instead of F32, use `HW_DESC=ELM3504_Scalar` here and
+# update the encoder scaling in `cfg/axis.yaml` to match the integer format.
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=ELM3504_F32_Scalar"
 epicsEnvSet(ENC_ID, $(ECMC_EC_SLAVE_NUM))
 

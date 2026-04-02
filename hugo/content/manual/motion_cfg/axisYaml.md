@@ -27,6 +27,8 @@ Backward compatibility with classic EPICS environment-variable based configurati
 
 {{% notice warning %}}
 `YAML` is, like `Python`, indentation-sensitive.
+Do not use tab characters or trailing spaces in YAML files.
+Tabs in particular can lead to cryptic error messages during Python parsing.
 {{% /notice %}}
 
 {{% notice tip %}}

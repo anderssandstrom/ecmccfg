@@ -13,8 +13,8 @@ epics:
     fieldInit: "RTRY=0,FOFF=Frozen"
 
 drive:
-  numerator: 0.01                    # deq/s, Max speed is 8000 rev/sec for drive with 6 pole motor
-  denominator: 32768
+  numerator: 0.01                    # deq/s at 24V
+  denominator: 32768                 # 15bit corresponding to 24V
   type: 0                            # Stepper: 0, DS402: 1 (servos)
   control: ec0.s$(DRV_ID).PWM${DRV_CH=01}_Ctrl
   status: ec0.s$(DRV_ID).PWM${DRV_CH=01}_Stat
@@ -30,7 +30,7 @@ encoder:
   type: 1
   position: ec0.s$(ENC_ID).analogInput01
   numerator: 1
-  denominator: 100
+  denominator: 1
   bits: 32
   absBits: 32
   absOffset: 0
@@ -80,3 +80,5 @@ monitoring:
     time:
       trajectory: 100
       drive: 200
+  stall:
+    enable: no

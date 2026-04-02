@@ -70,7 +70,7 @@ Notes:
 | drive.enable | Enable bit index in control word (not used if DS402) | No |
 | drive.enabled | Enabled bit index in status word (not used if DS402) | No |
 | drive.status | Status word EtherCAT entry | No |
-| drive.setpoint | Velocity setpoint if CSV. Position setpoint if CSP | No |
+| drive.setpoint | Velocity setpoint if CSV. Position setpoint if CSP. `F32`/`F64` CSV setpoints are supported; `F32`/`F64` CSP setpoints require the selected CSP encoder actual-position entry to use the same datatype. | No |
 | drive.reduceTorque | Reduce torque bit in drive control word | No |
 | drive.reduceTorqueEnable | Enable reduce torque functionality | No |
 | drive.brake.enable |  | No |
@@ -89,7 +89,7 @@ Notes:
 | encoder.absBits | Absolute bit count (for absolute encoders) always least significant part of 'bits' | No |
 | encoder.absOffset | Encoder offset in eng units (for absolute encoders) | No |
 | encoder.mask | Mask applied to raw encoder value | No |
-| encoder.position | EtherCAT entry for actual position input (encoder) | No |
+| encoder.position | EtherCAT entry for actual position input (encoder). `F32`/`F64` actual-position entries are only valid for absolute encoders (`encoder.type: 1`). Keep `encoder.bits` and `encoder.absBits` aligned with the datatype width (`32`/`32` or `64`/`64`). | No |
 | encoder.control | Mandatory only if 'reset' is used | No |
 | encoder.status | Mandatory only if 'warning' or 'error' are used | No |
 | encoder.ready | Bit in encoder status word for encoder ready | Yes |

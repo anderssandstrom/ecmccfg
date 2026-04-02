@@ -1027,6 +1027,13 @@ def _entry_to_ecmc_dt(entry: PdoEntry) -> str:
         "INT": "S16",
         "DINT": "S32",
         "LINT": "S64",
+        "REAL": "F32",
+        "REAL32": "F32",
+        "FLOAT": "F32",
+        "SINGLE": "F32",
+        "LREAL": "F64",
+        "REAL64": "F64",
+        "DOUBLE": "F64",
     }
     if dt in mapping:
         if dt == "BOOL" and entry.bitlen > 1:
@@ -1802,6 +1809,12 @@ def _entry_to_subst_group(entry: GeneratedEntry) -> str:
     return "ao" if entry.direction == "1" else "ai"
 
 
+def _entry_to_asyn_dtyp(entry: GeneratedEntry) -> str:
+    if entry.dt in {"F32", "F64"}:
+        return "asynFloat64"
+    return "asynInt32"
+
+
 def generate_substitutions(
     slave: SlaveInfo,
     mapping: PdoMapping,
@@ -1856,10 +1869,12 @@ def generate_substitutions(
         if not entries:
             return
         rows.append(f'file "{template}" {{')
-        rows.append("    pattern { REC_NAME, DESC , SRC_NAME}")
+        rows.append("    pattern { REC_NAME, DESC , SRC_NAME, DTYP}")
         for entry in entries:
             rec_name = entry.source_name.replace("_", "-")
-            rows.append(f'        {{"{_esc_subst(rec_name)}", "{_esc_subst(entry.desc)}", "{entry.source_name}"}}')
+            rows.append(
+                f'        {{"{_esc_subst(rec_name)}", "{_esc_subst(entry.desc)}", "{entry.source_name}", "{_entry_to_asyn_dtyp(entry)}"}}'
+            )
         rows.append("}")
         rows.append("")
 

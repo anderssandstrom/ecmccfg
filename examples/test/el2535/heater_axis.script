@@ -3,7 +3,7 @@
 ## * PWM output connected to heater (drive)
 ## * ELM3504 with pt1000 as feedback (encoder)
 
-require ecmccfg sandst_a, "ECMC_VER=sandst_a"
+require ecmccfg v11.0.7_RC1, "ECMC_VER=v11.0.7_RC1"
 
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=20, HW_DESC=EL2535-0002"
 epicsEnvSet(DRV_ID, $(ECMC_EC_SLAVE_NUM))

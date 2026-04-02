@@ -6,25 +6,25 @@ axis:
 epics:
   name: ${AX_NAME=Axis1}
   precision: 3
-  unit: deqC
+  unit: degC
   motorRecord:
     enable: true
-    description: ""
+    description: Heat controller
     fieldInit: "RTRY=0,FOFF=Frozen"
 
 drive:
-  numerator: 0.01                    # deq/s at 24V
-  denominator: 32768                 # 15bit corresponding to 24V
-  type: 0                            # Stepper: 0, DS402: 1 (servos)
+  numerator: 0.01
+  denominator: 32768
+  type: 0
   control: ec0.s$(DRV_ID).PWM${DRV_CH=01}_Ctrl
   status: ec0.s$(DRV_ID).PWM${DRV_CH=01}_Stat
-  setpoint: ec0.s$(DRV_ID).PWM${DRV_CH=01}_Outp  
-  enable: 5                                  # Enable bit index in control word (not used if DS402)
-  reset: 6       # This is actuallu ready-bit, no enabled bit in status word
-  enabled: 4                                 # Enabled bit index in status word (not used if DS402)  
-  warning: 5                                 # Warning bit in status word (if no drive warning bit then leave empty)
-  error:                                     # max 3 error bits in status word
-    - 6                                      # Error 0 (if no drive error bit then leave empty)
+  setpoint: ec0.s$(DRV_ID).PWM${DRV_CH=01}_Outp
+  enable: 5
+  reset: 6
+  enabled: 4
+  warning: 5
+  error:
+    - 6
 
 encoder:
   type: 1

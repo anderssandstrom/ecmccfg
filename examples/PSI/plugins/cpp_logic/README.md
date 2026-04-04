@@ -28,6 +28,14 @@ Helper files:
 - `utils/cpp_logic_ioc_qtgen.py`: simple IOC-local caQtDM panel generator
 - `utils/cpp_logic_new_ioc.py`: scaffold generator for a new IOC-style cpp logic example
 
+Generic UI:
+
+- `$(ecmccfg_DIR)qt/ecmcCppLogic.ui`: generic runtime panel for one cpp logic instance
+  - uses macros `IOC=<ioc-name>,CPP_ID=<logic-id>`
+  - includes an `Open app panel` button
+  - that button resolves the IOC-local app panel path from
+    `$(IOC):CppLogic$(CPP_ID)-AppPnlPath`
+
 Notes:
 
 - The default build helper points at a sibling `ecmc` source tree through `ECMC=...`.
@@ -39,3 +47,7 @@ Notes:
   `bin/main.so.substitutions`.
 - `make` also generates `qt/<IOC>_cpp_logic.ui` by default. Disable with
   `make GENERATE_QT=0`.
+- `loadCppLogic.cmd` also publishes a soft PV for the app panel path:
+  - `$(IOC):CppLogic$(CPP_ID)-AppPnlPath`
+  - default value: `qt/<IOC>_cpp_logic.ui`
+  - override with `APP_PANEL=...`

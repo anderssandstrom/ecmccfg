@@ -30,6 +30,7 @@ Important defaults in `loadCppLogic.cmd`:
 - `FILE`: defaults to `bin/main.so`
 - `LOGIC_ID`: defaults to the next free id
 - `ASYN_PORT`: defaults to `CPP.LOGIC<LOGIC_ID>`
+- `APP_PANEL`: defaults to `qt/${IOC}_cpp_logic.ui`
 - `LOAD_DEFAULT_PVS`: defaults to `1`
 - `LOAD_APP_PVS`: defaults to `0`
 - `EPICS_SUBST`: defaults to `${FILE}.substitutions` when `LOAD_APP_PVS=1`
@@ -144,6 +145,18 @@ The built-in core substitutions are loaded from:
 $(ecmccfg_DIR)db/generic/ecmcCppLogicCore.substitutions
 ```
 
+The generic caQtDM runtime panel is:
+
+```text
+$(ecmccfg_DIR)qt/ecmcCppLogic.ui
+```
+
+Open it with macros such as:
+
+```bash
+caqtdm -macro "IOC=<ioc-name>,CPP_ID=0" $(ecmccfg_DIR)qt/ecmcCppLogic.ui
+```
+
 The built-in runtime names currently include:
 
 - `logic.ctrl.word`
@@ -156,6 +169,15 @@ The built-in runtime names currently include:
 - `logic.stat.div`
 - `logic.stat.count`
 - `logic.stat.dbg_txt`
+
+The generic core substitutions also add one soft EPICS record for the
+application panel path:
+
+- `$(IOC):CppLogic$(CPP_ID)-AppPnlPath`
+
+That defaults to `qt/<IOC>_cpp_logic.ui` and is used by the `Open app panel`
+button in the generic `ecmcCppLogic.ui` panel. Override it with
+`APP_PANEL=...` in `loadCppLogic.cmd` if needed.
 
 Current control word bits are:
 

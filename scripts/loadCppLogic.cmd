@@ -11,7 +11,7 @@
 #-d   \file
 #-d   \param FILE      Shared library implementing ecmc_cpp_logic_get_api(),
 #-d                  default `bin/main.so`.
-#-d   \param LOGIC_ID  Native logic instance index, default 0. Incremented for
+#-d   \param LOGIC_ID  C++ logic instance index, default 0. Incremented for
 #-d                  the next call after a successful load.
 #-d   \param ASYN_PORT Optional dedicated asyn port, default CPP.LOGIC<LOGIC_ID>.
 #-d   \param SAMPLE_RATE_MS Optional execution rate in milliseconds.

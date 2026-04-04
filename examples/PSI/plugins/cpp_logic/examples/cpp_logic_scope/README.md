@@ -1,7 +1,7 @@
 # `CPP-LOGIC-SCOPE-IOC`
 
 This IOC example uses EL3702 and EL1252 terminals to build a small
-trigger-aligned scope around the cpp logic array helpers.
+trigger-aligned scope around the C++ logic array helpers.
 
 The source tree is:
 

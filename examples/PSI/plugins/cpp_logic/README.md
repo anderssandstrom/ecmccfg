@@ -1,6 +1,6 @@
 # Cpp Logic IOC Examples
 
-This directory contains IOC-style example projects for the additive native C/C++
+This directory contains IOC-style example projects for the additive cpp C/C++
 logic interface in `ecmc`.
 
 Each example follows the same basic layout as the `MTEST` IOC examples used for
@@ -30,6 +30,6 @@ Notes:
   Override `ECMC` if your local layout differs.
 - IOC startup is intended to use:
   - `$(ecmccfg_DIR)scripts/loadCppLogic.cmd`
-- Built-in native-logic PVs load by default through that script.
+- Built-in cpp_logic PVs load by default through that script.
 - With `LOAD_APP_PVS=1`, generated custom `epics.*` substitutions default to
   `bin/main.so.substitutions`.

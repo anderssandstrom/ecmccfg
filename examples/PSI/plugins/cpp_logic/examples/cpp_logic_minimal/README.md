@@ -1,6 +1,6 @@
 # `CPP-LOGIC-MINIMAL-IOC`
 
-This IOC example is the native C/C++ equivalent of the small direct-mapped
+This IOC example is the C++ equivalent of the small direct-mapped
 MTEST style example.
 
 The source tree is:

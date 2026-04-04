@@ -35,6 +35,9 @@ Generic UI:
   - includes an `Open app panel` button
   - that button resolves the IOC-local app panel path from
     `$(IOC):CppLogic$(CPP_ID)-AppPnlPath`
+- `$(ecmccfg_DIR)qt/ecmcCppLogicOverview.ui`: compact overview for logic ids `0..7`
+  - uses macro `IOC=<ioc-name>`
+  - each row opens one instance in `ecmcCppLogic.ui`
 
 Notes:
 

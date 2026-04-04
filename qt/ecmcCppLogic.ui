@@ -35,6 +35,13 @@
     </font>
    </property>
   </widget>
+  <widget class="caShellCommand" name="caShellCommandOverview">
+   <property name="geometry"><rect><x>470</x><y>10</y><width>100</width><height>22</height></rect></property>
+   <property name="label"><string notr="true">Overview</string></property>
+   <property name="labels"><string>Open cpp_logic overview</string></property>
+   <property name="files"><string>bash /ioc/modules/ecmccfg/qt/ecmcOpenObject.sh</string></property>
+   <property name="args"><string>CPP_LOGIC_OVERVIEW $(IOC)</string></property>
+  </widget>
   <widget class="caLabel" name="caLabelCtrl">
    <property name="geometry"><rect><x>10</x><y>48</y><width>190</width><height>18</height></rect></property>
    <property name="text"><string>Control word</string></property>

@@ -157,6 +157,15 @@ Open it with macros such as:
 caqtdm -macro "IOC=<ioc-name>,CPP_ID=0" $(ecmccfg_DIR)qt/ecmcCppLogic.ui
 ```
 
+There is also a compact overview panel for several logic instances:
+
+```bash
+caqtdm -macro "IOC=<ioc-name>" $(ecmccfg_DIR)qt/ecmcCppLogicOverview.ui
+```
+
+That overview shows logic ids `0..7` and opens one instance in
+`ecmcCppLogic.ui`.
+
 The built-in runtime names currently include:
 
 - `logic.ctrl.word`

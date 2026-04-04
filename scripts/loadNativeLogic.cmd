@@ -11,7 +11,8 @@
 #-d   \file
 #-d   \param FILE      Shared library implementing ecmc_native_logic_get_api(),
 #-d                  default `bin/main.so`.
-#-d   \param LOGIC_ID  Native logic instance index, default 0.
+#-d   \param LOGIC_ID  Native logic instance index, default 0. Incremented for
+#-d                  the next call after a successful load.
 #-d   \param ASYN_PORT Optional dedicated asyn port, default NATIVE.LOGIC<LOGIC_ID>.
 #-d   \param SAMPLE_RATE_MS Optional execution rate in milliseconds.
 #-d   \param LOAD_DEFAULT_PVS Load built-in control/status PVs, default 1.
@@ -72,3 +73,6 @@ ecmcIf("'${LOAD_APP_PVS=0}'='0'",NATIVE_LOGIC_APP_SKIP_TRUE,NATIVE_LOGIC_APP_SKI
   ${NATIVE_LOGIC_APP_SKIP_FALSE}${NATIVE_LOGIC_APP_SUBST_EMPTY_FALSE}ecmcEndIf(NATIVE_LOGIC_APP_DB_EMPTY_TRUE_2,NATIVE_LOGIC_APP_DB_EMPTY_FALSE_2)
   ${NATIVE_LOGIC_APP_SKIP_FALSE}ecmcEndIf(NATIVE_LOGIC_APP_SUBST_EMPTY_TRUE,NATIVE_LOGIC_APP_SUBST_EMPTY_FALSE)
 ecmcEndIf(NATIVE_LOGIC_APP_SKIP_TRUE,NATIVE_LOGIC_APP_SKIP_FALSE)
+
+ecmcEpicsEnvSetCalc(ECMC_NATIVE_LOGIC_COUNT, "$(ECMC_NATIVE_LOGIC_COUNT=0)+1")
+ecmcEpicsEnvSetCalc(LOGIC_ID, "${ECMC_NATIVE_LOGIC_ID}+1", "%d")

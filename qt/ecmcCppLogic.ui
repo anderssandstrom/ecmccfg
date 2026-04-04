@@ -168,8 +168,8 @@
    <property name="geometry"><rect><x>430</x><y>256</y><width>140</width><height>24</height></rect></property>
    <property name="label"><string notr="true">Open app panel</string></property>
    <property name="labels"><string>Open generated cpp_logic app panel</string></property>
-   <property name="files"><string>bash /ioc/modules/ecmccfg/scripts/openCppLogicPanel.sh</string></property>
-   <property name="args"><string>$(IOC) $(IOC):CppLogic$(CPP_ID=0)-AppPnlPath IOC=$(IOC),CPP_ID=$(CPP_ID=0)</string></property>
+   <property name="files"><string>bash /ioc/modules/ecmccfg/qt/ecmcOpenObject.sh</string></property>
+   <property name="args"><string>CPP_LOGIC_APP_PANEL $(IOC) $(IOC):CppLogic$(CPP_ID=0)-AppPnlPath IOC=$(IOC),CPP_ID=$(CPP_ID=0)</string></property>
   </widget>
  </widget>
  <customwidgets>

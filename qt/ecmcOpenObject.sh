@@ -37,6 +37,7 @@
 #  PLG_PREV            : CMD, PREFIX, THIS_PLG_ID
 #  PLG_SAFETY_GRP      : CMD, PREFIX, GRP_ID
 #  PLG_SAFETY_GRP_AXIS : CMD, PREFIX, DEV,        AX_NAME
+#  CPP_LOGIC_APP_PANEL : CMD, IOC,    PANEL_PV,   QTDM_MACROS(optional)
 #  PVT_MAIN            : CMD, PREFIX
 #  SM_FIRST            : CMD, PREFIX
 #  SM_NEXT             : CMD, PREFIX, THIS_PLC_ID
@@ -571,6 +572,46 @@ function openEcToolReadHwDiagMain() {
   caput $PREFIX:m$MID-EcTool.PROC 1
 }
 
+function openCppLogicAppPanel() {
+  IOC=$1
+  PANEL_PV=$2
+  QTDM_MACROS=$3
+
+  PANEL_PATH=$( caget -St $PANEL_PV 2>/dev/null | tr -d '\r' | tr -d '\n' | tr -d '"')
+  echo "PANEL_PATH=$PANEL_PATH"
+
+  if [ -z "$PANEL_PATH" ]; then
+    echo "cpp_logic panel path PV '$PANEL_PV' is empty"
+    exit 1
+  fi
+
+  case "$PANEL_PATH" in
+    /*)
+      RESOLVED_PATH=$PANEL_PATH
+      ;;
+    */*)
+      RESOLVED_PATH=/ioc/$IOC/$PANEL_PATH
+      ;;
+    *)
+      RESOLVED_PATH=/ioc/$IOC/qt/$PANEL_PATH
+      ;;
+  esac
+
+  echo "RESOLVED_PATH=$RESOLVED_PATH"
+
+  if [ ! -f "$RESOLVED_PATH" ]; then
+    echo "cpp_logic panel '$RESOLVED_PATH' does not exist"
+    exit 1
+  fi
+
+  if [ -n "$QTDM_MACROS" ]; then
+    echo "QTDM_MACROS=$QTDM_MACROS"
+    caqtdm -macro "$QTDM_MACROS" "$RESOLVED_PATH"
+  else
+    caqtdm "$RESOLVED_PATH"
+  fi
+}
+
 # Parse commands
 case $CMD in
   "EC_EXP")
@@ -680,6 +721,9 @@ case $CMD in
   ;;
   "PLG_SAFETY_GRP_AXIS")
   openPLGSafetyGrpAxis $2 $3 $4
+  ;;
+  "CPP_LOGIC_APP_PANEL")
+  openCppLogicAppPanel $2 $3 $4
   ;;
   "PVT_MAIN")
   openPVTMain $2

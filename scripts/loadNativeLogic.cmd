@@ -1,6 +1,6 @@
 #==============================================================================
 # loadNativeLogic.cmd
-#- Arguments: FILE, [LOGIC_ID], [ASYN_PORT], [SAMPLE_RATE_MS], [LOAD_DEFAULT_PVS], [LOAD_APP_PVS], [EPICS_SUBST], [DB_PREFIX], [DB_MACROS], [REPORT]
+#- Arguments: [FILE], [LOGIC_ID], [ASYN_PORT], [SAMPLE_RATE_MS], [LOAD_DEFAULT_PVS], [LOAD_APP_PVS], [EPICS_SUBST], [DB_PREFIX], [DB_MACROS], [REPORT]
 
 #-d /**
 #-d   \brief Script for loading a native C/C++ logic shared library in ecmc.
@@ -9,7 +9,8 @@
 #-d            for the user-defined `epics.*` exports.
 #-d   \author Anders Sandström, OpenAI Codex
 #-d   \file
-#-d   \param FILE      Shared library implementing ecmc_native_logic_get_api().
+#-d   \param FILE      Shared library implementing ecmc_native_logic_get_api(),
+#-d                  default `bin/main.so`.
 #-d   \param LOGIC_ID  Native logic instance index, default 0.
 #-d   \param ASYN_PORT Optional dedicated asyn port, default NATIVE.LOGIC<LOGIC_ID>.
 #-d   \param SAMPLE_RATE_MS Optional execution rate in milliseconds.
@@ -22,7 +23,7 @@
 #-d */
 
 epicsEnvSet("ECMC_NATIVE_LOGIC_ID", "${LOGIC_ID=0}")
-epicsEnvSet("ECMC_NATIVE_LOGIC_FILE", "${FILE}")
+epicsEnvSet("ECMC_NATIVE_LOGIC_FILE", "${FILE=bin/main.so}")
 
 ecmcIf("'${ASYN_PORT=EMPTY}'='EMPTY'",ECMC_NATIVE_LOGIC_PORT_EMPTY_TRUE,ECMC_NATIVE_LOGIC_PORT_EMPTY_FALSE)
 ${ECMC_NATIVE_LOGIC_PORT_EMPTY_TRUE}epicsEnvSet("ECMC_NATIVE_LOGIC_PORT", "NATIVE.LOGIC${ECMC_NATIVE_LOGIC_ID}")

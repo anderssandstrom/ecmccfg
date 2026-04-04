@@ -21,4 +21,9 @@ The build stages:
 
 - `bin/main.so`
 - `bin/main.so.substitutions`
-- `NATIVE-LOGIC-CPP-MOTION-IOC_native_logic.subs`
+
+The startup script uses the defaults from `loadNativeLogic.cmd`, so with
+`LOAD_APP_PVS=1` it automatically loads:
+
+- `bin/main.so`
+- `bin/main.so.substitutions`

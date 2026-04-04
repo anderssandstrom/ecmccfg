@@ -31,5 +31,5 @@ Notes:
 - IOC startup is intended to use:
   - `$(ecmccfg_DIR)scripts/loadNativeLogic.cmd`
 - Built-in native-logic PVs load by default through that script.
-- Generated custom `epics.*` substitutions are loaded through the IOC-local
-  `*_native_logic.subs` file.
+- With `LOAD_APP_PVS=1`, generated custom `epics.*` substitutions default to
+  `bin/main.so.substitutions`.

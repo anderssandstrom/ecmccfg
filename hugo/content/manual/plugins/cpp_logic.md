@@ -64,6 +64,9 @@ The public C++ headers are:
 - `ecmcCppControl.hpp`
 - `ecmcCppUtils.hpp`
 
+For a helper/header-oriented summary, see
+[C++ Logic Helpers]({{< relref "/manual/plugins/cpp_logic_helpers.md" >}}).
+
 Typical user code looks like:
 
 ```cpp
@@ -207,6 +210,7 @@ Current example families include:
 ## Related Pages
 
 - [plugins]({{< relref "/manual/plugins/_index.md" >}})
+- [C++ Logic Helpers]({{< relref "/manual/plugins/cpp_logic_helpers.md" >}})
 - [Plugin Interface]({{< relref "/manual/plugins/interface.md" >}})
 - [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}})
 - [ecmc command reference]({{< relref "/manual/general_cfg/ecmc_command_ref.md" >}})

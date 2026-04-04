@@ -30,6 +30,7 @@ For the general script overview, see
 
 - Use [Plugin Interface]({{< relref "/manual/plugins/interface.md" >}}) first for the common plugin API and runtime model.
 - Use [C++ Logic]({{< relref "/manual/plugins/cpp_logic.md" >}}) for additive user-defined cyclic C/C++ logic loaded directly by `ecmc`.
+- Use [C++ Logic Helpers]({{< relref "/manual/plugins/cpp_logic_helpers.md" >}}) for the helper headers (`ecmcCppLogic.hpp`, `ecmcCppMotion.hpp`, `ecmcCppControl.hpp`, `ecmcCppUtils.hpp`).
 - Use [DAQ Plugin]({{< relref "/manual/plugins/daq.md" >}}) when your main question is synchronized acquisition rather than general plugin loading.
 - Use [FFT Plugin]({{< relref "/manual/plugins/fft.md" >}}) for spectral analysis.
 - Use [Motion Plugin]({{< relref "/manual/plugins/motion.md" >}}) for axis-focused commissioning capture.
@@ -62,6 +63,7 @@ The list below is based on currently available `ecmc_plugin*` repositories.
 ## Related pages
 - [Plugin Interface]({{< relref "/manual/plugins/interface.md" >}})
 - [C++ Logic]({{< relref "/manual/plugins/cpp_logic.md" >}})
+- [C++ Logic Helpers]({{< relref "/manual/plugins/cpp_logic_helpers.md" >}})
 - [DAQ Plugin]({{< relref "/manual/plugins/daq.md" >}})
 - [FFT Plugin]({{< relref "/manual/plugins/fft.md" >}})
 - [Motion Plugin]({{< relref "/manual/plugins/motion.md" >}})

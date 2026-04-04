@@ -11,9 +11,11 @@ Each example follows the same basic layout as the `MTEST` IOC examples used for
 - IOC-named `*_parameters.yaml`
 - `src/` with `main.cpp` and a small build `Makefile`
 - `bin/` for staged `main.so` and `main.so.substitutions`
+- `qt/` for an auto-generated simple caQtDM panel
 
 Examples:
 
+- `examples/cpp_logic_starter`
 - `examples/cpp_logic_minimal`
 - `examples/cpp_logic_control`
 - `examples/cpp_logic_motion`
@@ -23,6 +25,8 @@ Helper files:
 
 - `utils/cpp_logic_ioc.make`: shared cpp logic build helper
 - `utils/ecmcCppLogicSubstGen.py`: substitutions generator for `epics.*` exports
+- `utils/cpp_logic_ioc_qtgen.py`: simple IOC-local caQtDM panel generator
+- `utils/cpp_logic_new_ioc.py`: scaffold generator for a new IOC-style cpp logic example
 
 Notes:
 
@@ -33,3 +37,5 @@ Notes:
 - Built-in cpp_logic PVs load by default through that script.
 - With `LOAD_APP_PVS=1`, generated custom `epics.*` substitutions default to
   `bin/main.so.substitutions`.
+- `make` also generates `qt/<IOC>_cpp_logic.ui` by default. Disable with
+  `make GENERATE_QT=0`.

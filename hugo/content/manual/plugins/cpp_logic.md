@@ -185,6 +185,24 @@ staged as:
 bin/main.so.substitutions
 ```
 
+The IOC-style examples also generate a simple local caQtDM panel by default:
+
+```text
+qt/<IOC>_cpp_logic.ui
+```
+
+Disable that generation with:
+
+```bash
+make GENERATE_QT=0
+```
+
+For new IOC projects there is also a scaffold helper:
+
+```bash
+python3 examples/PSI/plugins/cpp_logic/utils/cpp_logic_new_ioc.py <new-dir>
+```
+
 ## Execution Order
 
 The `cpp_logic` execution point is before the safety plugin.
@@ -202,6 +220,7 @@ examples/PSI/plugins/cpp_logic/
 
 Current example families include:
 
+- starter IOC project with one input, two outputs, and two exported PVs
 - minimal scalar binding/export
 - control/helper usage
 - motion wrappers (`MC_*` style)

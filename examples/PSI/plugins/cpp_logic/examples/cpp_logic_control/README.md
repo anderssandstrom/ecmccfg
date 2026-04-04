@@ -20,9 +20,16 @@ The build stages:
 
 - `bin/main.so`
 - `bin/main.so.substitutions`
+- `qt/CPP-LOGIC-CONTROL-IOC_cpp_logic.ui`
 
 The startup script uses the defaults from `loadCppLogic.cmd`, so with
 `LOAD_APP_PVS=1` it automatically loads:
 
 - `bin/main.so`
 - `bin/main.so.substitutions`
+
+`make` also generates a simple IOC-local caQtDM panel:
+
+```sh
+caqtdm qt/CPP-LOGIC-CONTROL-IOC_cpp_logic.ui
+```

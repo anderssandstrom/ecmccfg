@@ -176,6 +176,7 @@ These are intended to feel familiar to users coming from IEC/ST helper blocks.
 
 The main example families are:
 
+- starter IOC project
 - minimal scalar binding/export
 - control/helper usage
 - motion wrappers

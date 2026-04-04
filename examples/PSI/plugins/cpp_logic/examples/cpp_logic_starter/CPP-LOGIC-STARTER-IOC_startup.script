@@ -1,0 +1,15 @@
+# Starter cpp logic IOC example using direct EL7041 item bindings.
+#
+# The staged cpp logic library lives in the IOC-local bin directory:
+#   bin/main.so
+#   bin/main.so.substitutions
+#
+# This sample expects direct EL7041 PDO items:
+#   ec0.s14.positionActual01
+#   ec0.s14.driveControl01
+#   ec0.s14.velocitySetpoint01
+
+require ecmccfg "ECMC_VER=struc"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=14,HW_DESC=EL7041-0052"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd, "COMP=Motor-Generic-2Phase-Stepper,MACROS='I_MAX_MA=500,I_STDBY_MA=200,U_NOM_MV=48000,R_COIL_MOHM=1230'"
+${SCRIPTEXEC} ${ecmccfg_DIR}scripts/loadCppLogic.cmd, "LOAD_APP_PVS=1,REPORT=1"

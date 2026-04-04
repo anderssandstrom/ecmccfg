@@ -1,29 +1,24 @@
-# Native Logic Motion
+# `NATIVE-LOGIC-CPP-MOTION-IOC`
 
-This example shows how the additive native-logic interface can reuse the
-existing `ecmcMcApi` PLCopen-style motion backend through the C++ wrapper in
-[`ecmcNativeMotion.hpp`](../../ecmcNativeMotion.hpp).
+This IOC example uses the native `MC_*` wrappers against axis 1, following the
+same open-loop EL7041 axis setup used by the motion MTEST examples.
 
-It uses:
+The source tree is:
 
-- `ecmcNative::LogicBase`
-- `ecmcNative::McPower`
-- `ecmcNative::McMoveAbsolute`
-- `ecmcNative::McReadStatus`
-- `ecmcNative::McReadActualPosition`
+- `src/main.cpp`
+- `src/Makefile`
+- `cfg/openloop.yaml`
+- `NATIVE-LOGIC-CPP-MOTION-IOC_startup.script`
+- `NATIVE-LOGIC-CPP-MOTION-IOC_parameters.yaml`
 
-Behavior:
+Expected flow:
 
-- powers axis `1`
-- commands alternating absolute moves between `0` and `12800`
-- exports a few status variables through `pv`
+1. `make`
+2. `ioc install --clean -V --ioc NATIVE-LOGIC-CPP-MOTION-IOC`
+3. start the IOC with `NATIVE-LOGIC-CPP-MOTION-IOC_startup.script`
 
-Main source:
+The build stages:
 
-- [`main.cpp`](./main.cpp)
-
-Minimal syntax-only check:
-
-```sh
-c++ -std=c++17 -fsyntax-only main.cpp -I../.. -I../../../motion
-```
+- `bin/main.so`
+- `bin/main.so.substitutions`
+- `NATIVE-LOGIC-CPP-MOTION-IOC_native_logic.subs`

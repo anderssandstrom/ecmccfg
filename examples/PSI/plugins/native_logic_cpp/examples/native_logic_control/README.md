@@ -1,22 +1,23 @@
-# Native Logic Control
+# `NATIVE-LOGIC-CPP-CONTROL-IOC`
 
-This example shows how to use the native control and utility helpers:
+This IOC example uses the native control and utility helpers on the same direct
+EL7041 mapping as the minimal example.
 
-- [`ecmcNativeControl.hpp`](../../ecmcNativeControl.hpp)
-- [`ecmcNativeUtils.hpp`](../../ecmcNativeUtils.hpp)
+The source tree is:
 
-The example uses:
+- `src/main.cpp`
+- `src/Makefile`
+- `NATIVE-LOGIC-CPP-CONTROL-IOC_startup.script`
+- `NATIVE-LOGIC-CPP-CONTROL-IOC_parameters.yaml`
 
-- `ecmcNative::Pid` to turn a position error into a velocity command
-- `ecmcNative::RateLimiter` to ramp the velocity setpoint
-- `ecmcNative::HysteresisBool` for a simple in-position window
+Expected flow:
 
-Main source:
+1. `make`
+2. `ioc install --clean -V --ioc NATIVE-LOGIC-CPP-CONTROL-IOC`
+3. start the IOC with `NATIVE-LOGIC-CPP-CONTROL-IOC_startup.script`
 
-- [`main.cpp`](./main.cpp)
+The build stages:
 
-Minimal syntax-only check:
-
-```sh
-c++ -std=c++17 -fsyntax-only main.cpp -I../..
-```
+- `bin/main.so`
+- `bin/main.so.substitutions`
+- `NATIVE-LOGIC-CPP-CONTROL-IOC_native_logic.subs`

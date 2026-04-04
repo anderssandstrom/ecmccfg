@@ -1,28 +1,23 @@
-# Native Logic Minimal
+# `NATIVE-LOGIC-CPP-MINIMAL-IOC`
 
-This example shows the simplest intended C++ usage of the additive native-logic
-interface in `ecmc`.
+This IOC example is the native C/C++ equivalent of the small direct-mapped
+MTEST style example.
 
-The example uses:
+The source tree is:
 
-- `ecmcNative::LogicBase`
-- `ecmc` for live `ecmc` item bindings
-- `epics` for EPICS-facing exported values
-- `ECMC_NATIVE_LOGIC_REGISTER_DEFAULT(...)`
+- `src/main.cpp`
+- `src/Makefile`
+- `NATIVE-LOGIC-CPP-MINIMAL-IOC_startup.script`
+- `NATIVE-LOGIC-CPP-MINIMAL-IOC_parameters.yaml`
 
-Main source:
+Expected flow:
 
-- [`main.cpp`](./main.cpp)
+1. `make`
+2. `ioc install --clean -V --ioc NATIVE-LOGIC-CPP-MINIMAL-IOC`
+3. start the IOC with `NATIVE-LOGIC-CPP-MINIMAL-IOC_startup.script`
 
-The example is intentionally header-only on the `ecmc` side. A future loader can
-compile this file into a shared library and query:
+The build stages:
 
-```cpp
-ecmc_native_logic_get_api()
-```
-
-Minimal syntax-only check:
-
-```sh
-c++ -std=c++17 -fsyntax-only main.cpp -I../..
-```
+- `bin/main.so`
+- `bin/main.so.substitutions`
+- `NATIVE-LOGIC-CPP-MINIMAL-IOC_native_logic.subs`

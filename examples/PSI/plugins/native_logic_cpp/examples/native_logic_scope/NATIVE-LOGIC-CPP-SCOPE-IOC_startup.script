@@ -1,0 +1,18 @@
+# Native scope IOC example using EL3702 oversampling data and EL1252 timestamps.
+#
+# The staged native logic library lives in the IOC-local bin directory:
+#   bin/main.so
+#   bin/main.so.substitutions
+#
+# This sample expects:
+#   ec0.s20.mm.analogInputArray01
+#   ec0.s20.mm.analogInputArray02
+#   ec0.s20.nextSyncTime
+#   ec0.s21.binaryInput01
+#   ec0.s21.timestampLatchPositive01
+
+require ecmccfg "ECMC_VER=struc"
+epicsEnvSet("ECMC_OVER_SMP", "100")
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=20,HW_DESC=EL3702,NELM=${ECMC_OVER_SMP}"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=21,HW_DESC=EL1252"
+${SCRIPTEXEC} ${ecmccfg_DIR}scripts/loadNativeLogic.cmd, "LOGIC_ID=0,FILE=bin/main.so,ASYN_PORT=NATIVE.LOGIC0,LOAD_APP_PVS=1,EPICS_SUBST=NATIVE-LOGIC-CPP-SCOPE-IOC_native_logic.subs,REPORT=1"

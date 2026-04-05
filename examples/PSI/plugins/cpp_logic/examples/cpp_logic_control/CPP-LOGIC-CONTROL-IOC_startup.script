@@ -3,6 +3,11 @@
 # The staged cpp logic library lives in the IOC-local bin directory:
 #   bin/main.so
 #   bin/main.so.substitutions
+#
+# Useful panels after startup:
+#   caqtdm -macro "IOC=CPP-LOGIC-CONTROL-IOC" $(ecmccfg_DIR)qt/ecmcCppLogicOverview.ui
+#   caqtdm -macro "IOC=CPP-LOGIC-CONTROL-IOC,CPP_ID=0" $(ecmccfg_DIR)qt/ecmcCppLogic.ui
+#   caqtdm qt/CPP-LOGIC-CONTROL-IOC_cpp_logic.ui
 
 require ecmccfg "ECMC_VER=struc"
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=14,HW_DESC=EL7041-0052"

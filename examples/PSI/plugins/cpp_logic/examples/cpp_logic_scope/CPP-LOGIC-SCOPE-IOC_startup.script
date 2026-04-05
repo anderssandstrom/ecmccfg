@@ -10,6 +10,11 @@
 #   ec0.s20.nextSyncTime
 #   ec0.s21.binaryInput01
 #   ec0.s21.timestampLatchPositive01
+#
+# Useful panels after startup:
+#   caqtdm -macro "IOC=CPP-LOGIC-SCOPE-IOC" $(ecmccfg_DIR)qt/ecmcCppLogicOverview.ui
+#   caqtdm -macro "IOC=CPP-LOGIC-SCOPE-IOC,CPP_ID=0" $(ecmccfg_DIR)qt/ecmcCppLogic.ui
+#   caqtdm qt/CPP-LOGIC-SCOPE-IOC_cpp_logic.ui
 
 require ecmccfg "ECMC_VER=struc"
 epicsEnvSet("ECMC_OVER_SMP", "100")

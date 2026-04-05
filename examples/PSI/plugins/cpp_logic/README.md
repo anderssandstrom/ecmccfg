@@ -26,7 +26,7 @@ Helper files:
 - `utils/cpp_logic_ioc.make`: shared cpp logic build helper
 - `utils/ecmcCppLogicSubstGen.py`: substitutions generator for `epics.*` exports
 - `utils/cpp_logic_ioc_qtgen.py`: simple IOC-local caQtDM panel generator
-- `utils/cpp_logic_new_ioc.py`: scaffold generator for a new IOC-style cpp logic example
+- `utils/cpp_logic_new_ioc.py`: user-facing scaffold generator for a new IOC-style cpp logic example
 
 Generic UI:
 
@@ -54,3 +54,7 @@ Notes:
   - `$(IOC):CppLogic$(CPP_ID)-AppPnlPath`
   - default value: `qt/<IOC>_cpp_logic.ui`
   - override with `APP_PANEL=...`
+- checked-in and generated startup scripts include exact `caqtdm` commands for:
+  - `ecmcCppLogicOverview.ui`
+  - `ecmcCppLogic.ui`
+  - the IOC-local generated app panel

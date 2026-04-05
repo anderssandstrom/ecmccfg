@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>610</width>
-    <height>302</height>
+    <height>364</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -75,12 +75,32 @@
    <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
    <property name="unitsEnabled"><bool>true</bool></property>
   </widget>
-  <widget class="caLabel" name="caLabelExec">
+  <widget class="caLabel" name="caLabelUpdateSet">
    <property name="geometry"><rect><x>10</x><y>146</y><width>190</width><height>18</height></rect></property>
+   <property name="text"><string>Requested PV update rate [ms]</string></property>
+  </widget>
+  <widget class="caTextEntry" name="caTextEntryUpdateSet">
+   <property name="geometry"><rect><x>210</x><y>142</y><width>100</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(IOC):CppLogic$(CPP_ID=0)-UpdMs-RB</string></property>
+  </widget>
+  <widget class="caLabel" name="caLabelUpdateAct">
+   <property name="geometry"><rect><x>10</x><y>176</y><width>190</width><height>18</height></rect></property>
+   <property name="text"><string>Actual PV update rate [ms]</string></property>
+  </widget>
+  <widget class="caLineEdit" name="caLineEditUpdateAct">
+   <property name="geometry"><rect><x>210</x><y>172</y><width>100</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(IOC):CppLogic$(CPP_ID=0)-UpdMsAct</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="unitsEnabled"><bool>true</bool></property>
+  </widget>
+  <widget class="caLabel" name="caLabelExec">
+   <property name="geometry"><rect><x>10</x><y>210</y><width>190</width><height>18</height></rect></property>
    <property name="text"><string>Logic exec time [ms]</string></property>
   </widget>
   <widget class="caLineEdit" name="caLineEditExec">
-   <property name="geometry"><rect><x>210</x><y>142</y><width>100</width><height>22</height></rect></property>
+   <property name="geometry"><rect><x>210</x><y>206</y><width>100</width><height>22</height></rect></property>
    <property name="channel" stdset="0"><string notr="true">$(IOC):CppLogic$(CPP_ID=0)-ExeMsAct</string></property>
    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
    <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
@@ -88,11 +108,11 @@
    <property name="unitsEnabled"><bool>true</bool></property>
   </widget>
   <widget class="caLabel" name="caLabelIn">
-   <property name="geometry"><rect><x>10</x><y>176</y><width>190</width><height>18</height></rect></property>
+   <property name="geometry"><rect><x>10</x><y>240</y><width>190</width><height>18</height></rect></property>
    <property name="text"><string>Input copy time [ms]</string></property>
   </widget>
   <widget class="caLineEdit" name="caLineEditIn">
-   <property name="geometry"><rect><x>210</x><y>172</y><width>100</width><height>22</height></rect></property>
+   <property name="geometry"><rect><x>210</x><y>236</y><width>100</width><height>22</height></rect></property>
    <property name="channel" stdset="0"><string notr="true">$(IOC):CppLogic$(CPP_ID=0)-InMsAct</string></property>
    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
    <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
@@ -100,11 +120,11 @@
    <property name="unitsEnabled"><bool>true</bool></property>
   </widget>
   <widget class="caLabel" name="caLabelOut">
-   <property name="geometry"><rect><x>10</x><y>206</y><width>190</width><height>18</height></rect></property>
+   <property name="geometry"><rect><x>10</x><y>270</y><width>190</width><height>18</height></rect></property>
    <property name="text"><string>Output copy time [ms]</string></property>
   </widget>
   <widget class="caLineEdit" name="caLineEditOut">
-   <property name="geometry"><rect><x>210</x><y>202</y><width>100</width><height>22</height></rect></property>
+   <property name="geometry"><rect><x>210</x><y>266</y><width>100</width><height>22</height></rect></property>
    <property name="channel" stdset="0"><string notr="true">$(IOC):CppLogic$(CPP_ID=0)-OutMsAct</string></property>
    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
    <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
@@ -112,11 +132,11 @@
    <property name="unitsEnabled"><bool>true</bool></property>
   </widget>
   <widget class="caLabel" name="caLabelTot">
-   <property name="geometry"><rect><x>10</x><y>236</y><width>190</width><height>18</height></rect></property>
+   <property name="geometry"><rect><x>10</x><y>300</y><width>190</width><height>18</height></rect></property>
    <property name="text"><string>Total logic time [ms]</string></property>
   </widget>
   <widget class="caLineEdit" name="caLineEditTot">
-   <property name="geometry"><rect><x>210</x><y>232</y><width>100</width><height>22</height></rect></property>
+   <property name="geometry"><rect><x>210</x><y>296</y><width>100</width><height>22</height></rect></property>
    <property name="channel" stdset="0"><string notr="true">$(IOC):CppLogic$(CPP_ID=0)-TotMsAct</string></property>
    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
    <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
@@ -124,11 +144,11 @@
    <property name="unitsEnabled"><bool>true</bool></property>
   </widget>
   <widget class="caLabel" name="caLabelDiv">
-   <property name="geometry"><rect><x>340</x><y>82</y><width>120</width><height>18</height></rect></property>
+   <property name="geometry"><rect><x>340</x><y>94</y><width>120</width><height>18</height></rect></property>
    <property name="text"><string>Execute divider</string></property>
   </widget>
   <widget class="caLineEdit" name="caLineEditDiv">
-   <property name="geometry"><rect><x>470</x><y>78</y><width>100</width><height>22</height></rect></property>
+   <property name="geometry"><rect><x>470</x><y>90</y><width>100</width><height>22</height></rect></property>
    <property name="channel" stdset="0"><string notr="true">$(IOC):CppLogic$(CPP_ID=0)-DivAct</string></property>
    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
    <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
@@ -136,11 +156,11 @@
    <property name="unitsEnabled"><bool>true</bool></property>
   </widget>
   <widget class="caLabel" name="caLabelCnt">
-   <property name="geometry"><rect><x>340</x><y>112</y><width>120</width><height>18</height></rect></property>
+   <property name="geometry"><rect><x>340</x><y>124</y><width>120</width><height>18</height></rect></property>
    <property name="text"><string>Execute count</string></property>
   </widget>
   <widget class="caLineEdit" name="caLineEditCnt">
-   <property name="geometry"><rect><x>470</x><y>108</y><width>100</width><height>22</height></rect></property>
+   <property name="geometry"><rect><x>470</x><y>120</y><width>100</width><height>22</height></rect></property>
    <property name="channel" stdset="0"><string notr="true">$(IOC):CppLogic$(CPP_ID=0)-CntAct</string></property>
    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
    <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
@@ -148,11 +168,11 @@
    <property name="unitsEnabled"><bool>true</bool></property>
   </widget>
   <widget class="caLabel" name="caLabelDbg">
-   <property name="geometry"><rect><x>340</x><y>146</y><width>120</width><height>18</height></rect></property>
+   <property name="geometry"><rect><x>340</x><y>158</y><width>120</width><height>18</height></rect></property>
    <property name="text"><string>Debug text</string></property>
   </widget>
   <widget class="caLineEdit" name="caLineEditDbg">
-   <property name="geometry"><rect><x>340</x><y>168</y><width>230</width><height>22</height></rect></property>
+   <property name="geometry"><rect><x>340</x><y>180</y><width>230</width><height>22</height></rect></property>
    <property name="channel" stdset="0"><string notr="true">$(IOC):CppLogic$(CPP_ID=0)-DbgTxtAct</string></property>
    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
    <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
@@ -160,11 +180,11 @@
    <property name="unitsEnabled"><bool>true</bool></property>
   </widget>
   <widget class="caLabel" name="caLabelAppPanel">
-   <property name="geometry"><rect><x>340</x><y>202</y><width>120</width><height>18</height></rect></property>
+   <property name="geometry"><rect><x>340</x><y>236</y><width>120</width><height>18</height></rect></property>
    <property name="text"><string>App panel path</string></property>
   </widget>
   <widget class="caLineEdit" name="caLineEditAppPanel">
-   <property name="geometry"><rect><x>340</x><y>224</y><width>230</width><height>22</height></rect></property>
+   <property name="geometry"><rect><x>340</x><y>258</y><width>230</width><height>22</height></rect></property>
    <property name="channel" stdset="0"><string notr="true">$(IOC):CppLogic$(CPP_ID=0)-AppPnlPath</string></property>
    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
    <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
@@ -172,7 +192,7 @@
    <property name="unitsEnabled"><bool>true</bool></property>
   </widget>
   <widget class="caShellCommand" name="caShellCommandOpenAppPanel">
-   <property name="geometry"><rect><x>430</x><y>256</y><width>140</width><height>24</height></rect></property>
+   <property name="geometry"><rect><x>430</x><y>302</y><width>140</width><height>24</height></rect></property>
    <property name="label"><string notr="true">Open app panel</string></property>
    <property name="labels"><string>Open generated cpp_logic app panel</string></property>
    <property name="files"><string>bash /ioc/modules/ecmccfg/qt/ecmcOpenObject.sh</string></property>

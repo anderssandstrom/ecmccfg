@@ -171,6 +171,8 @@ The built-in runtime names currently include:
 - `logic.ctrl.word`
 - `logic.ctrl.rate_ms`
 - `logic.stat.rate_ms`
+- `logic.ctrl.update_rate_ms`
+- `logic.stat.update_rate_ms`
 - `logic.stat.exec_ms`
 - `logic.stat.input_ms`
 - `logic.stat.output_ms`
@@ -228,11 +230,19 @@ Disable that generation with:
 make GENERATE_QT=0
 ```
 
-For new IOC projects there is also a scaffold helper:
+For new IOC projects there is also a scaffold helper in the `cpp_logic` utils
+area:
 
 ```bash
 python3 examples/PSI/plugins/cpp_logic/utils/cpp_logic_new_ioc.py <new-dir>
 ```
+
+Generated and checked-in startup scripts also include exact `caqtdm` commands
+for:
+
+- `ecmcCppLogicOverview.ui`
+- `ecmcCppLogic.ui`
+- the IOC-local generated app panel
 
 ## Execution Order
 

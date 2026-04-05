@@ -1,6 +1,6 @@
 #==============================================================================
 # loadCppLogic.cmd
-#- Arguments: [FILE], [LOGIC_ID], [ASYN_PORT], [SAMPLE_RATE_MS], [APP_PANEL], [LOAD_DEFAULT_PVS], [LOAD_APP_PVS], [EPICS_SUBST], [DB_PREFIX], [DB_MACROS], [REPORT]
+#- Arguments: [FILE], [LOGIC_ID], [ASYN_PORT], [SAMPLE_RATE_MS], [UPDATE_RATE_MS], [APP_PANEL], [LOAD_DEFAULT_PVS], [LOAD_APP_PVS], [EPICS_SUBST], [DB_PREFIX], [DB_MACROS], [REPORT]
 
 #-d /**
 #-d   \brief Script for loading a native C/C++ logic shared library in ecmc.
@@ -15,6 +15,7 @@
 #-d                  the next call after a successful load.
 #-d   \param ASYN_PORT Optional dedicated asyn port, default CPP.LOGIC<LOGIC_ID>.
 #-d   \param SAMPLE_RATE_MS Optional execution rate in milliseconds.
+#-d   \param UPDATE_RATE_MS Optional EPICS/asyn publish rate in milliseconds.
 #-d   \param APP_PANEL Optional IOC-local application panel path shown in the
 #-d                  generic panel, default `qt/${IOC}_cpp_logic.ui`.
 #-d   \param LOAD_DEFAULT_PVS Load built-in control/status PVs, default 1.
@@ -40,7 +41,7 @@ ${ECMC_CPP_LOGIC_PANEL_EMPTY_TRUE}epicsEnvSet("ECMC_CPP_LOGIC_APP_PANEL", "qt/${
 ${ECMC_CPP_LOGIC_PANEL_EMPTY_FALSE}epicsEnvSet("ECMC_CPP_LOGIC_APP_PANEL", "${APP_PANEL}")
 ecmcEndIf(ECMC_CPP_LOGIC_PANEL_EMPTY_TRUE,ECMC_CPP_LOGIC_PANEL_EMPTY_FALSE)
 
-epicsEnvSet("ECMC_CPP_LOGIC_CONFIG", "asyn_port=${ECMC_CPP_LOGIC_PORT};sample_rate_ms=${SAMPLE_RATE_MS=}")
+epicsEnvSet("ECMC_CPP_LOGIC_CONFIG", "asyn_port=${ECMC_CPP_LOGIC_PORT};sample_rate_ms=${SAMPLE_RATE_MS=};update_rate_ms=${UPDATE_RATE_MS=}")
 epicsEnvSet("ECMC_CPP_LOGIC_CORE_EPICS_SUBST", "${ecmccfg_DIR}db/generic/ecmcCppLogicCore.substitutions")
 epicsEnvSet("ECMC_CPP_LOGIC_DB_MACROS_BASE", "P=${DB_PREFIX=$(IOC):},PORT=${ECMC_CPP_LOGIC_PORT},CPP_ID=${ECMC_CPP_LOGIC_ID},APP_PANEL=${ECMC_CPP_LOGIC_APP_PANEL}")
 epicsEnvSet("ECMC_CPP_LOGIC_DEFAULT_EPICS_SUBST", "${ECMC_CPP_LOGIC_FILE}.substitutions")

@@ -25,6 +25,8 @@ The current helper headers are:
 - `ecmcCppMotion.hpp`
 - `ecmcCppControl.hpp`
 - `ecmcCppUtils.hpp`
+- `ecmcCppTrace.hpp`
+- `ecmcCppPersist.hpp`
 
 These are additive helper layers on top of the `cpp_logic` ABI. They do not
 replace the original plugin ABI in `ecmcPluginDefs.h`.
@@ -119,10 +121,15 @@ Current wrappers include:
 
 - `ecmcCpp::McAxisRef`
 - `ecmcCpp::McPower`
+- `ecmcCpp::McReset`
 - `ecmcCpp::McMoveAbsolute`
+- `ecmcCpp::McMoveRelative`
+- `ecmcCpp::McHome`
 - `ecmcCpp::McMoveVelocity`
+- `ecmcCpp::McStop`
 - `ecmcCpp::McReadStatus`
 - `ecmcCpp::McReadActualPosition`
+- `ecmcCpp::McReadActualVelocity`
 
 Use it when you want PLCopen-style motion patterns from native C++ logic
 without writing the lower-level axis API calls directly.
@@ -172,6 +179,32 @@ These are intended to feel familiar to users coming from IEC/ST helper blocks.
 - `ecmcCpp::EcMasterStatus`
 - `ecmcCpp::EcSlaveStatus`
 
+## ecmcCppTrace.hpp
+
+Current trace helper:
+
+- `ecmcCpp::TriggeredTrace<T, Capacity>`
+
+It provides:
+
+- rolling pre-trigger history
+- capture of pre-trigger, trigger, and post-trigger samples
+- fixed-capacity waveform-style output arrays
+- explicit arming and capture-ready state
+
+## ecmcCppPersist.hpp
+
+Current persistence helper:
+
+- `ecmcCpp::RetainedValue<T>`
+
+It provides:
+
+- binary load/save of trivially copyable values
+- explicit `restore()` and `store()` calls
+- a simple retained-parameter pattern for startup/manual save actions
+- a design intended for infrequent persistence, not per-cycle file I/O
+
 ## Examples
 
 The main example families are:
@@ -181,6 +214,8 @@ The main example families are:
 - control/helper usage
 - motion wrappers
 - array/buffer bindings
+- reusable triggered trace capture
+- retained parameter/state handling
 - triggered EL3702/EL1252-style scope capture
 
 See the IOC-style examples in:
@@ -191,6 +226,8 @@ examples/PSI/plugins/cpp_logic/
 
 The best example for container and array bindings is the array-oriented
 example. The best example for timers/triggers/filtering is the control example.
+The best examples for the new helpers are the dedicated trace and retained
+examples.
 
 ## Related Pages
 

@@ -64,6 +64,8 @@ The public C++ headers are:
 - `ecmcCppMotion.hpp`
 - `ecmcCppControl.hpp`
 - `ecmcCppUtils.hpp`
+- `ecmcCppTrace.hpp`
+- `ecmcCppPersist.hpp`
 
 For a helper/header-oriented summary, see
 [C++ Logic Helpers]({{< relref "/manual/plugins/cpp_logic_helpers.md" >}}).
@@ -265,6 +267,9 @@ Current example families include:
 - minimal scalar binding/export
 - control/helper usage
 - motion wrappers (`MC_*` style)
+- array/buffer bindings
+- reusable triggered trace capture
+- retained parameter/state handling
 - EL3702/EL1252-style triggered scope capture
 
 ## Related Pages

@@ -1,4 +1,4 @@
-.PHONY: all install clean
+include /ioc/tools/sls_ioc.makefile
 
 IOC_STARTUP_FILE := $(notdir $(firstword $(wildcard *_startup.script)))
 IOC_PARAMS_FILE := $(notdir $(firstword $(wildcard *_parameters.yaml)))
@@ -11,14 +11,12 @@ PYTHON ?= python3
 GENERATE_QT ?= 1
 IOC_QT_PANEL := qt/$(IOC_NAME)_cpp_logic.ui
 IOC_QTGEN := $(CPP_LOGIC_ROOT)/utils/cpp_logic_ioc_qtgen.py
+IOC_SUBS_FILE := bin/main.so.substitutions
 
-all:
+.PHONY: pvs ui
+
+pvs:
 	$(MAKE) -C src stage
-	if [ "$(GENERATE_QT)" = "1" ]; then $(PYTHON) $(IOC_QTGEN) --input bin/main.so.substitutions --output $(IOC_QT_PANEL) --pv-prefix "$(IOC_NAME):" --title "$(IOC_NAME) cpp_logic PVs"; fi
 
-install: all
-	ioc install --clean -V --ioc $(IOC_NAME)
-
-clean:
-	$(MAKE) -C src clean
-	$(RM) $(IOC_QT_PANEL)
+ui: pvs
+	if [ "$(GENERATE_QT)" = "1" ]; then $(PYTHON) $(IOC_QTGEN) --input $(IOC_SUBS_FILE) --output $(IOC_QT_PANEL) --pv-prefix "$(IOC_NAME):" --title "$(IOC_NAME) cpp_logic PVs"; fi

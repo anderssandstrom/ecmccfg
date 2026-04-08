@@ -12,8 +12,11 @@
 #include "ecmcCppLogic.hpp"
 
 struct NativeBounceLogic : public ecmcCpp::LogicBase {
-  int32_t actual_position {0};
-  int16_t drive_control {0};
+  static constexpr uint16_t lower_turnaround_position {100};
+  static constexpr uint16_t upper_turnaround_position {12800};
+
+  uint16_t actual_position {0};
+  uint16_t drive_control {0};
   int16_t velocity_setpoint {1000};
   int32_t cycle_counter {0};
 
@@ -21,6 +24,8 @@ struct NativeBounceLogic : public ecmcCpp::LogicBase {
     ecmc.input("ec.s14.positionActual01", actual_position)
         .output("ec.s14.driveControl01", drive_control)
         .output("ec.s14.velocitySetpoint01", velocity_setpoint);
+
+    ecmcCpp::setEnableDbg(true);
 
     epics.readOnly("main.actual_position", actual_position)
          .readOnly("main.cycle_counter", cycle_counter)
@@ -34,9 +39,9 @@ struct NativeBounceLogic : public ecmcCpp::LogicBase {
     if (velocity_setpoint == 0) {
       velocity_setpoint = 1000;
     }
-    if (actual_position <= 0) {
+    if (actual_position <= lower_turnaround_position) {
       velocity_setpoint = 1000;
-    } else if (actual_position >= 12800) {
+    } else if (actual_position >= upper_turnaround_position) {
       velocity_setpoint = -1000;
     }
 

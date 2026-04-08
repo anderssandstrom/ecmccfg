@@ -1,4 +1,4 @@
-# Starter cpp logic IOC example using direct EL7041 item bindings.
+# Minimal cpp logic IOC example using direct EL7041 item bindings.
 #
 # The staged cpp logic library lives in the IOC-local bin directory:
 #   bin/main.so
@@ -10,11 +10,11 @@
 #   ec0.s14.velocitySetpoint01
 #
 # Useful panels after startup:
-#   caqtdm -macro "IOC=CPP-LOGIC-STARTER-IOC" $(ecmccfg_DIR)qt/ecmcCppLogicOverview.ui
-#   caqtdm -macro "IOC=CPP-LOGIC-STARTER-IOC,CPP_ID=0" $(ecmccfg_DIR)qt/ecmcCppLogic.ui
-#   caqtdm qt/CPP-LOGIC-STARTER-IOC_cpp_logic.ui
+#   caqtdm -macro "IOC=MTEST04-MTN-CPP-LOGIC" $(ecmccfg_DIR)qt/ecmcCppLogicOverview.ui
+#   caqtdm -macro "IOC=MTEST04-MTN-CPP-LOGIC,CPP_ID=0" $(ecmccfg_DIR)qt/ecmcCppLogic.ui
+#   caqtdm qt/MTEST04-MTN-CPP-LOGIC_cpp_logic.ui
 
-require ecmccfg "ECMC_VER=struc"
+require ecmccfg sandst_a "ECMC_VER=strucpp"
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=14,HW_DESC=EL7041-0052"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd, "COMP=Motor-Generic-2Phase-Stepper,MACROS='I_MAX_MA=500,I_STDBY_MA=200,U_NOM_MV=48000,R_COIL_MOHM=1230'"
-${SCRIPTEXEC} ${ecmccfg_DIR}scripts/loadCppLogic.cmd, "LOAD_APP_PVS=1,REPORT=1"
+${SCRIPTEXEC} ${ecmccfg_DIR}loadCppLogic.cmd, "LOAD_APP_PVS=1,REPORT=1"

@@ -10,9 +10,9 @@
 #   ec0.s14.velocitySetpoint01
 #
 # Useful panels after startup:
-#   caqtdm -macro "IOC=MTEST04-MTN-CPP-LOGIC" $(ecmccfg_DIR)qt/ecmcCppLogicOverview.ui
-#   caqtdm -macro "IOC=MTEST04-MTN-CPP-LOGIC,CPP_ID=0" $(ecmccfg_DIR)qt/ecmcCppLogic.ui
-#   caqtdm qt/MTEST04-MTN-CPP-LOGIC_cpp_logic.ui
+#   caqtdm -macro "IOC=MTEST04-MTN-CPP-LOGIC" ecmcCppLogicOverview.ui
+#   caqtdm -macro "IOC=MTEST04-MTN-CPP-LOGIC,CPP_ID=0" ecmcCppLogic.ui
+#   caqtdm MTEST04-MTN-CPP-LOGIC_cpp_logic.ui
 
 require ecmccfg sandst_a "ECMC_VER=strucpp"
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=14,HW_DESC=EL7041-0052"

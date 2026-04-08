@@ -1,6 +1,7 @@
 record(ai, "$(P)$(REC)") {
   field(DESC, "$(DESC=)")
+  field(DTYP, "$(DTYP=asynFloat64)")
   field(PREC, "$(PREC=3)")
-  field(SCAN, "I/O Intr")
-  field(INP,  "@asyn($(PORT),0,1000)$(PARAM)")
+  field(SCAN, "$(SCAN=1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)TYPE=$(DTYP=asynFloat64)/$(PARAM)?")
 }

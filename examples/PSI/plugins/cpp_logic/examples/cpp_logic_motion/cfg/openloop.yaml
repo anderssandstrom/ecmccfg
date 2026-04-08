@@ -36,15 +36,15 @@ encoder:
 
 controller:
   Kp: 10                                              # Kp proportinal gain
-  Ki: 0.2                                             # Ki integral gain
+  Ki: 0                                               # Ki integral gain
   Kd: 0                                               # Kd derivative gain
 
 trajectory:
   axis:
-    velocity: 500                                     # Default velo for axis
-    acceleration: 2000                                # Default acc for axis
-    deceleration: 2000                                # Default dec for axis
-    jerk: 10                                          # Default jerk for axis
+    velocity: 360                                     # Default velo for axis
+    acceleration: 100                                 # Default acc for axis
+    deceleration: 100                                 # Default dec for axis
+    jerk: 100                                         # Default jerk for axis
   jog:
     velocity: 5                                       # Default velo fro JOG (motor record)
 

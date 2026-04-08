@@ -52,7 +52,7 @@ struct NativeMotionLogic : public ecmcCpp::LogicBase {
     standstill = read_status.StandStill ? 1u : 0u;
 
     const bool should_execute = power.Status && status_valid;
-    move_absolute.run(axis, should_execute, target_position, 1000.0, 2000.0, 2000.0);
+    move_absolute.run(axis, should_execute, target_position, 100.0, 200.0, 200.0);
 
     move_busy = move_absolute.Busy ? 1u : 0u;
     move_done = move_absolute.Done ? 1u : 0u;

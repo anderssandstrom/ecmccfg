@@ -19,9 +19,13 @@ STD_ARRAY_DECL_RE = re.compile(
     re.MULTILINE,
 )
 EXPORT_CALL_RE = re.compile(
+<<<<<<< HEAD
     r'(?:epics\.|\.)'
     r'(readOnly|writable|readOnlyArray|writableArray)\('
     r'\s*"([^"]+)"\s*,\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)'
+=======
+    r'epics\.(readOnly|writable|readOnlyArray|writableArray)\(\s*"([^"]+)"\s*,\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)'
+>>>>>>> ad579a2f16f87df52b66f1eaf0dab26f1b6c3e66
 )
 
 

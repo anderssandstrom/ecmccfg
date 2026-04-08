@@ -36,10 +36,37 @@ class CppLogicApi(ctypes.Structure):
 
 SET_HOST = ctypes.CFUNCTYPE(None, ctypes.c_void_p)
 CREATE_INSTANCE = ctypes.CFUNCTYPE(ctypes.c_void_p)
+ENTER_REALTIME = ctypes.CFUNCTYPE(None, ctypes.c_void_p)
+EXIT_REALTIME = ctypes.CFUNCTYPE(None, ctypes.c_void_p)
 DESTROY_INSTANCE = ctypes.CFUNCTYPE(None, ctypes.c_void_p)
 RUN_CYCLE = ctypes.CFUNCTYPE(None, ctypes.c_void_p)
 GET_EXPORTED_VARS = ctypes.CFUNCTYPE(ctypes.POINTER(ExportedVar), ctypes.c_void_p)
 GET_EXPORTED_VAR_COUNT = ctypes.CFUNCTYPE(ctypes.c_uint32, ctypes.c_void_p)
+
+
+class CppLogicHostServices(ctypes.Structure):
+    _fields_ = [
+        ("version", ctypes.c_uint32),
+        ("get_cycle_time_s", ctypes.c_void_p),
+        ("get_ec_master_state_word", ctypes.c_void_p),
+        ("get_ec_slave_state_word", ctypes.c_void_p),
+        ("get_axis_traj_source", ctypes.c_void_p),
+        ("get_axis_enc_source", ctypes.c_void_p),
+        ("get_axis_actual_pos", ctypes.c_void_p),
+        ("get_axis_setpoint_pos", ctypes.c_void_p),
+        ("get_axis_actual_vel", ctypes.c_void_p),
+        ("get_axis_setpoint_vel", ctypes.c_void_p),
+        ("get_axis_enabled", ctypes.c_void_p),
+        ("get_axis_busy", ctypes.c_void_p),
+        ("get_axis_error", ctypes.c_void_p),
+        ("get_axis_error_id", ctypes.c_void_p),
+        ("set_axis_traj_source", ctypes.c_void_p),
+        ("set_axis_enc_source", ctypes.c_void_p),
+        ("set_axis_ext_set_pos", ctypes.c_void_p),
+        ("set_axis_ext_act_pos", ctypes.c_void_p),
+        ("get_ioc_state", ctypes.c_void_p),
+        ("publish_debug_text", ctypes.c_void_p),
+    ]
 
 
 CppLogicApi._fields_ = [
@@ -47,6 +74,8 @@ CppLogicApi._fields_ = [
     ("name", ctypes.c_char_p),
     ("setHostServices", SET_HOST),
     ("createInstance", CREATE_INSTANCE),
+    ("enterRealtime", ENTER_REALTIME),
+    ("exitRealtime", EXIT_REALTIME),
     ("destroyInstance", DESTROY_INSTANCE),
     ("runCycle", RUN_CYCLE),
     ("getItemBindings", ctypes.c_void_p),
@@ -101,7 +130,11 @@ def scalar_template(value_type: int, writable: bool) -> str:
 
 
 def build_template_spec(param_prefix: str, export_var: ExportedVar) -> TemplateSpec:
+    if not export_var.name:
+        return None
     name = export_var.name.decode()
+    if not name:
+        return None
     param_name = f"{param_prefix}{name}" if param_prefix else name
     rec_name = sanitize_record_name(name)
     is_array = export_var.bytes > type_size(export_var.type)
@@ -153,7 +186,7 @@ def type_size(value_type: int) -> int:
 def load_exports(logic_lib: Path) -> tuple[str, list[ExportedVar]]:
     lib = ctypes.CDLL(str(logic_lib))
     get_api = None
-    for symbol_name in ("ecmc_cpp_logic_get_api"):
+    for symbol_name in ("ecmc_cpp_logic_get_api",):
         if hasattr(lib, symbol_name):
             get_api = getattr(lib, symbol_name)
             break
@@ -162,6 +195,11 @@ def load_exports(logic_lib: Path) -> tuple[str, list[ExportedVar]]:
     get_api.restype = ctypes.POINTER(CppLogicApi)
     api = get_api().contents
     logic_name = api.name.decode() if api.name else logic_lib.stem
+    host_services = CppLogicHostServices()
+    host_services.version = api.abiVersion
+
+    if api.setHostServices:
+        api.setHostServices(ctypes.byref(host_services))
 
     instance = api.createInstance()
     try:
@@ -209,7 +247,11 @@ def main() -> int:
     args = parser.parse_args()
 
     logic_name, exports = load_exports(Path(args.logic_lib))
-    specs = [build_template_spec(args.param_prefix, export_var) for export_var in exports]
+    specs = [
+        spec
+        for spec in (build_template_spec(args.param_prefix, export_var) for export_var in exports)
+        if spec is not None
+    ]
     Path(args.output).write_text(render_substitutions(logic_name, specs))
     return 0
 

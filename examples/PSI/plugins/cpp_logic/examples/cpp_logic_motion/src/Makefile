@@ -13,7 +13,7 @@ HEADERS += $(foreach d,${DIRS}, $(wildcard $d/*.hpp))
 CPP_LOGIC_ROOT ?= $(abspath ../../..)
 PYTHON ?= python3
 SUBSGEN := $(CPP_LOGIC_ROOT)/utils/ecmcCppLogicSourceSubstGen.py
-STAGE_SUBS ?= ../bin/main.so.substitutions
+STAGE_SUBS ?= ../$(LOCAL_MODULE)_cpp_logic.subs
 STAGE_DIR := $(dir $(STAGE_SUBS))
 LOCAL_MODULE := $(notdir $(abspath ..))
 

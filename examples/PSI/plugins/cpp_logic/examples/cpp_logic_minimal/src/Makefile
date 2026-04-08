@@ -1,4 +1,5 @@
 include /ioc/tools/driver.makefile
+MODULE = main
 BUILDCLASSES = Linux
 ARCH_FILTER = deb10% deb12%
 EXCLUDE_VERSIONS+=3 7.0.5 7.0.6 7.0.7

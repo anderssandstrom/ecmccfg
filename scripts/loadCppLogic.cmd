@@ -10,7 +10,7 @@
 #-d   \author Anders Sandström, OpenAI Codex
 #-d   \file
 #-d   \param FILE      Shared library implementing ecmc_cpp_logic_get_api(),
-#-d                  default `bin/main.so`.
+#-d                  default `bin/libmain.so`.
 #-d   \param LOGIC_ID  C++ logic instance index, default 0. Incremented for
 #-d                  the next call after a successful load.
 #-d   \param ASYN_PORT Optional dedicated asyn port, default CPP.LOGIC<LOGIC_ID>.
@@ -27,7 +27,7 @@
 #-d */
 
 epicsEnvSet("ECMC_CPP_LOGIC_ID", "${LOGIC_ID=0}")
-epicsEnvSet("ECMC_CPP_LOGIC_FILE", "${FILE=bin/main.so}")
+epicsEnvSet("ECMC_CPP_LOGIC_FILE", "${FILE=bin/libmain.so}")
 
 ecmcIf("'${ASYN_PORT=EMPTY}'='EMPTY'",ECMC_CPP_LOGIC_PORT_EMPTY_TRUE,ECMC_CPP_LOGIC_PORT_EMPTY_FALSE)
 ${ECMC_CPP_LOGIC_PORT_EMPTY_TRUE}epicsEnvSet("ECMC_CPP_LOGIC_PORT", "CPP.LOGIC${ECMC_CPP_LOGIC_ID}")

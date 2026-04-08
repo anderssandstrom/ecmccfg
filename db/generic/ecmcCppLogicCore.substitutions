@@ -5,7 +5,7 @@ file ecmcCppLogicLongOut.template {
 
 file ecmcCppLogicLongIn.template {
   pattern { REC, PARAM, DESC }
-  { "CppLogic$(CPP_ID=0)-StatWord", "logic.stat.word", "bit0 loaded, bit1 rt, bit2 exec, bit3 timing, bit4 dbg" }
+  { "CppLogic$(CPP_ID=0)-StatWord", "logic.stat.word", "Status bits 0..4" }
   { "CppLogic$(CPP_ID=0)-DivAct",   "logic.stat.div",  "Execute divider" }
   { "CppLogic$(CPP_ID=0)-CntAct",   "logic.stat.count","Execute count" }
 }

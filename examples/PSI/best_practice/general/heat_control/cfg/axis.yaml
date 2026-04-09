@@ -44,10 +44,10 @@ controller:
     tol: 0
     time: 100
   limits:
-    minOutput: 0                          # Important for heaters: do not allow negative output
-    maxOutput: 100
+    minOutput: 0                             # Important for heaters: do not allow negative output
+    maxOutput: 0.01
     minIntegral: 0
-    maxIntegral: 1
+    maxIntegral: 0.01
 
 trajectory:
   source: 0

@@ -88,6 +88,56 @@ For raw buffers:
 - `epics.readOnlyBytes(...)`
 - `epics.writableBytes(...)`
 
+### Runtime/service helpers
+
+The core header also exposes small helper functions backed by ECMC host
+services:
+
+- `ecmcCpp::getCycleTimeS()`
+- `ecmcCpp::getEcMasterStateWord(...)`
+- `ecmcCpp::getEcSlaveStateWord(...)`
+- `ecmcCpp::setEnableDbg(...)`
+- `ecmcCpp::publishDebugText(...)`
+
+Typical use cases:
+
+- read the configured realtime cycle time without hard-coding it
+- inspect EtherCAT master/slave state words from logic code
+- enable cpp-logic debug publishing from code
+- publish one-line runtime debug/status messages to the built-in debug text path
+
+### Axis host-service helpers
+
+`ecmcCppLogic.hpp` also exposes direct axis-oriented helpers backed by ECMC host
+services. These are separate from the `MC_*` wrappers in `ecmcCppMotion.hpp`.
+
+Trajectory and encoder source selection:
+
+- `ecmcCpp::axisUseInternalTraj(...)`
+- `ecmcCpp::axisUseExternalTraj(...)`
+- `ecmcCpp::axisUseInternalEnc(...)`
+- `ecmcCpp::axisUseExternalEnc(...)`
+
+Axis state readback:
+
+- `ecmcCpp::axisGetActualPos(...)`
+- `ecmcCpp::axisGetSetpointPos(...)`
+- `ecmcCpp::axisGetActualVel(...)`
+- `ecmcCpp::axisGetSetpointVel(...)`
+- `ecmcCpp::axisIsEnabled(...)`
+- `ecmcCpp::axisIsBusy(...)`
+- `ecmcCpp::axisHasError(...)`
+- `ecmcCpp::axisGetErrorId(...)`
+
+External source value injection:
+
+- `ecmcCpp::axisSetExternalSetpointPos(...)`
+- `ecmcCpp::axisSetExternalEncoderPos(...)`
+
+Use these helpers when the logic should work directly with ECMC axis source
+selection or external trajectory/encoder feeds, instead of using the higher
+level PLCopen-style `MC_*` blocks.
+
 ## ecmcCppControl.hpp
 
 Current control helper:

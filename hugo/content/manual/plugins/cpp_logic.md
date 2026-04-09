@@ -22,7 +22,7 @@ modules rather than full standalone plugins.
 The normal IOC-level entry point is:
 
 ```bash
-${SCRIPTEXEC} ${ecmccfg_DIR}scripts/loadCppLogic.cmd, "FILE=/path/to/main.so,LOAD_APP_PVS=1,REPORT=1"
+${SCRIPTEXEC} ${ecmccfg_DIR}scripts/loadCppLogic.cmd, "FILE=/path/to/main.so,REPORT=1"
 ```
 
 Important defaults in `loadCppLogic.cmd`:
@@ -32,8 +32,7 @@ Important defaults in `loadCppLogic.cmd`:
 - `ASYN_PORT`: defaults to `CPP.LOGIC<LOGIC_ID>`
 - `APP_PANEL`: defaults to `qt/${IOC}_cpp_logic.ui`
 - `LOAD_DEFAULT_PVS`: defaults to `1`
-- `LOAD_APP_PVS`: defaults to `0`
-- `EPICS_SUBST`: defaults to `${FILE}.substitutions` when `LOAD_APP_PVS=1`
+- `EPICS_SUBST`: optional custom substitutions file for exported `epics.*` PVs
 - `DB_PREFIX`: defaults to `$(IOC):`
 
 The wrapper:
@@ -41,7 +40,7 @@ The wrapper:
 1. loads one compiled C++ logic shared library
 2. optionally reports the loaded object
 3. loads the built-in control/status PVs
-4. optionally loads generated substitutions for user-defined `epics.*` exports
+4. optionally loads a custom substitutions file for user-defined `epics.*` exports
 
 ## Underlying ecmc Commands
 
@@ -171,6 +170,7 @@ That overview shows logic ids `0..7` and opens one instance in
 The built-in runtime names currently include:
 
 - `logic.ctrl.word`
+- `logic.stat.word`
 - `logic.ctrl.rate_ms`
 - `logic.stat.rate_ms`
 - `logic.ctrl.update_rate_ms`
@@ -203,33 +203,36 @@ Current control word bits are:
 User-defined `epics.*` exports can be turned into substitutions offline with:
 
 ```bash
-python3 examples/PSI/plugins/cpp_logic/utils/ecmcCppLogicSubstGen.py \
-  --logic-lib path/to/main.so \
+python3 examples/PSI/plugins/cpp_logic/utils/ecmcCppLogicSourceSubstGen.py \
+  --source src/main.cpp \
   --output cpp_logic.subs
 ```
 
 The `loadCppLogic.cmd` wrapper can then load:
 
 - built-in core substitutions automatically
-- the generated custom substitutions when `LOAD_APP_PVS=1`
+- the generated custom substitutions when `EPICS_SUBST=...` is provided
 
 In the IOC-style `cpp_logic` examples, the custom substitutions are normally
-staged as:
+generated in the example root as:
 
 ```text
-bin/main.so.substitutions
+<IOC>_cpp_logic.subs
 ```
 
-The IOC-style examples also generate a simple local caQtDM panel by default:
+The IOC-style examples generate a simple local caQtDM panel with:
 
 ```text
 qt/<IOC>_cpp_logic.ui
 ```
 
-Disable that generation with:
+Typical example flow:
 
 ```bash
-make GENERATE_QT=0
+make
+make pvs
+make ui
+make install
 ```
 
 For new IOC projects there is also a scaffold helper in the `cpp_logic` utils
@@ -245,6 +248,13 @@ for:
 - `ecmcCppLogicOverview.ui`
 - `ecmcCppLogic.ui`
 - the IOC-local generated app panel
+
+To load the generated application PVs, pass the substitutions file explicitly:
+
+```bash
+${SCRIPTEXEC} ${ecmccfg_DIR}scripts/loadCppLogic.cmd, \
+  "FILE=bin/main.so,EPICS_SUBST=<IOC>_cpp_logic.subs,REPORT=1"
+```
 
 ## Execution Order
 

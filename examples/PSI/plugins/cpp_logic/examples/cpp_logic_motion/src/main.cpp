@@ -52,7 +52,7 @@ struct NativeMotionLogic : public ecmcCpp::LogicBase {
 
   void run() override {
     cycle_counter += 1;
-
+      
     power.run(axis, true);
     read_status.run(axis, true);
     read_position.run(axis, true);

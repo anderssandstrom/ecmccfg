@@ -13,22 +13,23 @@ The source tree is:
 Expected flow:
 
 1. `make`
-2. `ioc install --clean -V --ioc MTEST04-MTN-CPP-LOGIC`
-3. start the IOC with `MTEST04-MTN-CPP-LOGIC_startup.script`
+2. `make pvs`
+3. `make ui`
+4. `make install`
+5. start the IOC with `MTEST04-MTN-CPP-LOGIC_startup.script`
 
 The build stages:
 
 - `bin/main.so`
-- `bin/main.so.substitutions`
+- `MTEST04-MTN-CPP-LOGIC_cpp_logic.subs`
 - `qt/MTEST04-MTN-CPP-LOGIC_cpp_logic.ui`
 
-The startup script uses the defaults from `loadCppLogic.cmd`, so with
-`LOAD_APP_PVS=1` it automatically loads:
+The startup script loads the built-in core PVs by default. To load the
+generated `epics.*` PVs too, pass the substitutions file explicitly:
 
-- `bin/main.so`
-- `bin/main.so.substitutions`
+- `EPICS_SUBST=MTEST04-MTN-CPP-LOGIC_cpp_logic.subs`
 
-`make` also generates a simple IOC-local caQtDM panel:
+`make ui` generates a simple IOC-local caQtDM panel:
 
 ```sh
 caqtdm qt/MTEST04-MTN-CPP-LOGIC_cpp_logic.ui

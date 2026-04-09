@@ -242,6 +242,92 @@
     <string>TITLE=$(IOC):m$(MasterID)s$(SlaveID)-AI01 ,PV=$(IOC):m$(MasterID)s$(SlaveID)-AI01,IOC=$(IOC)</string>
    </property>
   </widget>
+  <widget class="caLineEdit" name="calineedit_43">
+   <property name="geometry">
+    <rect>
+     <x>15</x>
+     <y>260</y>
+     <width>71</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>18</height>
+    </size>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-AI01-CurrAct</string>
+   </property>
+   <property name="background">
+    <color alpha="222">
+     <red>192</red>
+     <green>192</green>
+     <blue>192</blue>
+    </color>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Static</enum>
+   </property>
+   <property name="precisionMode">
+    <enum>caLineEdit::Channel</enum>
+   </property>
+   <property name="limitsMode">
+    <enum>caLineEdit::User</enum>
+   </property>
+   <property name="unitsEnabled">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="caRelatedDisplay" name="carelateddisplay_3">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>260</y>
+     <width>16</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="labels">
+    <string>&gt;</string>
+   </property>
+   <property name="files">
+    <string>ecmcGraph_v1.ui</string>
+   </property>
+   <property name="args">
+    <string>TITLE=$(IOC):m$(MasterID)s$(SlaveID) Act Current ,PV=$(IOC):m$(MasterID)s$(SlaveID)-AI01-CurrAct,IOC=$(IOC)</string>
+   </property>
+  </widget>
+  <widget class="caLabel" name="calabel_9">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>170</y>
+     <width>70</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Voltage:</string>
+   </property>
+  </widget>
+  <widget class="caLabel" name="calabel_10">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>240</y>
+     <width>70</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Current:</string>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>

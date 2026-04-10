@@ -60,7 +60,7 @@ For examples and configuration guidance, use [yaml configuration](../axisyaml/).
   - `enable` — Enable motor record.
   - `description` — Motor record description.
   - `fieldInit` — Additional motor record fields.
-  - `syncSoftLimits` — Sync soft limits between motor record and ecmc (default false).
+  - `syncSoftLimits` — Sync soft limits between motor record and ecmc (default false). When false, motor record `HLM`/`LLM` and ecmc soft limits may differ. On false-to-true, ecmc soft limits are copied to the motor record; while true, later motor record soft-limit changes are written back to ecmc.
   - `pvt` — PVT/profile-move support.
     - `npoints` — Max number of target points.
     - `nreadback` — Max number of readback points.

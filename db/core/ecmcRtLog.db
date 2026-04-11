@@ -1,0 +1,77 @@
+record(waveform,"$(P)MCU-RTLog-Msg") {
+  field(DESC, "Realtime log last message")
+  field(DTYP, "asynOctetRead")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_LAST_MESSAGE")
+  field(FTVL, "CHAR")
+  field(NELM, "192")
+  field(SCAN, "I/O Intr")
+}
+
+record(mbbi,"$(P)MCU-RTLog-Level") {
+  field(DESC, "Realtime log last level")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_LAST_LEVEL")
+  field(ZRVL, "0")
+  field(ZRST, "INFO")
+  field(ONVL, "1")
+  field(ONST, "ERROR")
+  field(SCAN, "I/O Intr")
+}
+
+record(stringin,"$(P)MCU-RTLog-LevelTxt") {
+  field(DESC, "Realtime log last level text")
+  field(DTYP, "asynOctetRead")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_LAST_LEVEL_TEXT")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin,"$(P)MCU-RTLog-Cnt") {
+  field(DESC, "Realtime log message count")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_MESSAGE_COUNT")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin,"$(P)MCU-RTLog-DropCnt") {
+  field(DESC, "Realtime log dropped count")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_DROPPED_COUNT")
+  field(SCAN, "I/O Intr")
+}
+
+record(longout,"$(P)MCU-RTLog-Ctrl") {
+  info(asyn:READBACK,"1")
+  field(DESC, "Realtime log control word")
+  field(DTYP, "asynInt32")
+  field(VAL,  "3")
+  field(OUT,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_CONTROL")
+}
+
+record(longin,"$(P)MCU-RTLog-Ctrl-RB") {
+  field(DESC, "Realtime log control word rb")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_CONTROL")
+  field(SCAN, "I/O Intr")
+  field(FLNK, "$(P)MCU-RTLog-Ctrl_.PROC")
+}
+
+record(mbbiDirect,"$(P)MCU-RTLog-Ctrl_") {
+  field(DESC, "Realtime log control bits")
+  field(INP,  "$(P)MCU-RTLog-Ctrl-RB")
+  field(FLNK, "$(P)MCU-RTLog-InfoEna.PROC")
+}
+
+record(bi,"$(P)MCU-RTLog-InfoEna") {
+  field(DESC, "Realtime log info enabled")
+  field(INP,  "$(P)MCU-RTLog-Ctrl_.B0")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+  field(FLNK, "$(P)MCU-RTLog-ErrEna.PROC")
+}
+
+record(bi,"$(P)MCU-RTLog-ErrEna") {
+  field(DESC, "Realtime log error enabled")
+  field(INP,  "$(P)MCU-RTLog-Ctrl_.B1")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}

@@ -80,7 +80,7 @@ record(longout,"$(P)MCU-RTLog-FilterMode") {
   info(asyn:READBACK,"1")
   field(DESC, "Realtime log filter mode")
   field(DTYP, "asynInt32")
-  field(VAL,  "1")
+  field(VAL,  "0")
   field(OUT,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_FILTER_MODE")
   field(FLNK, "$(P)MCU-RTLog-FilterMode-RB.PROC")
 }

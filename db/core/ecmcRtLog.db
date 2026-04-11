@@ -82,12 +82,14 @@ record(longout,"$(P)MCU-RTLog-FilterMode") {
   field(DTYP, "asynInt32")
   field(VAL,  "1")
   field(OUT,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_FILTER_MODE")
+  field(FLNK, "$(P)MCU-RTLog-FilterMode-RB.PROC")
 }
 
 record(longin,"$(P)MCU-RTLog-FilterMode-RB") {
   field(DESC, "Realtime log filter mode rb")
   field(DTYP, "asynInt32")
   field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_FILTER_MODE")
+  field(PINI, "YES")
   field(SCAN, "I/O Intr")
 }
 
@@ -97,12 +99,14 @@ record(longout,"$(P)MCU-RTLog-FilterMask") {
   field(DTYP, "asynInt32")
   field(VAL,  "2147483647")
   field(OUT,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_FILTER_TYPE_MASK")
+  field(FLNK, "$(P)MCU-RTLog-FilterMask-RB.PROC")
 }
 
 record(longin,"$(P)MCU-RTLog-FilterMask-RB") {
   field(DESC, "Realtime log filter type mask rb")
   field(DTYP, "asynInt32")
   field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_FILTER_TYPE_MASK")
+  field(PINI, "YES")
   field(SCAN, "I/O Intr")
 }
 
@@ -112,12 +116,14 @@ record(longout,"$(P)MCU-RTLog-FilterIndex") {
   field(DTYP, "asynInt32")
   field(VAL,  "-1")
   field(OUT,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_FILTER_INDEX")
+  field(FLNK, "$(P)MCU-RTLog-FilterIndex-RB.PROC")
 }
 
 record(longin,"$(P)MCU-RTLog-FilterIndex-RB") {
   field(DESC, "Realtime log filter index rb")
   field(DTYP, "asynInt32")
   field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_FILTER_INDEX")
+  field(PINI, "YES")
   field(SCAN, "I/O Intr")
 }
 
@@ -125,6 +131,7 @@ record(longin,"$(P)MCU-RTLog-SrcType") {
   field(DESC, "Realtime log last source type")
   field(DTYP, "asynInt32")
   field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_LAST_SOURCE_TYPE")
+  field(PINI, "YES")
   field(SCAN, "I/O Intr")
 }
 
@@ -132,6 +139,7 @@ record(longin,"$(P)MCU-RTLog-SrcIndex") {
   field(DESC, "Realtime log last source index")
   field(DTYP, "asynInt32")
   field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_LAST_SOURCE_INDEX")
+  field(PINI, "YES")
   field(SCAN, "I/O Intr")
 }
 

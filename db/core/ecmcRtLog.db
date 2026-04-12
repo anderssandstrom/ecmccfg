@@ -17,6 +17,8 @@ record(mbbi,"$(P)MCU-RTLog-Level") {
   field(ONST, "WARNING")
   field(TWVL, "2")
   field(TWST, "ERROR")
+  field(THVL, "3")
+  field(THST, "DEBUG")
   field(SCAN, "I/O Intr")
 }
 
@@ -45,7 +47,7 @@ record(longout,"$(P)MCU-RTLog-Ctrl") {
   info(asyn:READBACK,"1")
   field(DESC, "Realtime log control word")
   field(DTYP, "asynInt32")
-  field(VAL,  "7")
+  field(VAL,  "15")
   field(OUT,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_CONTROL")
 }
 
@@ -82,6 +84,14 @@ record(bi,"$(P)MCU-RTLog-WarnEna") {
 record(bi,"$(P)MCU-RTLog-ErrEna") {
   field(DESC, "Realtime log error enabled")
   field(INP,  "$(P)MCU-RTLog-Ctrl_.B2")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+  field(FLNK, "$(P)MCU-RTLog-DbgEna.PROC")
+}
+
+record(bi,"$(P)MCU-RTLog-DbgEna") {
+  field(DESC, "Realtime log debug enabled")
+  field(INP,  "$(P)MCU-RTLog-Ctrl_.B3")
   field(ZNAM, "Disabled")
   field(ONAM, "Enabled")
 }

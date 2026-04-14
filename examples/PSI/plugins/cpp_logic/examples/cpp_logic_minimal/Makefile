@@ -17,7 +17,7 @@ IOC_SUBS_FILE := $(IOC_NAME)_cpp_logic.subs
 .PHONY: pvs ui
 
 pvs:
-	$(MAKE) -C src stage STAGE_SUBS=../$(IOC_SUBS_FILE)
+	$(MAKE) -C src stage
 
 ui: pvs
 	if [ "$(GENERATE_QT)" = "1" ]; then $(PYTHON) $(IOC_QTGEN) --input $(IOC_SUBS_FILE) --output $(IOC_QT_PANEL) --pv-prefix "$(IOC_NAME):" --title "$(IOC_NAME) cpp_logic PVs"; fi

@@ -22,6 +22,7 @@ For the IOC loading and runtime model, start with
 The current helper headers are:
 
 - `ecmcCppLogic.hpp`
+  Includes `ecmcCpp::getMacrosText()` for reading the free-form `MACROS` startup string.
 - `ecmcCppMotion.hpp`
 - `ecmcCppControl.hpp`
 - `ecmcCppUtils.hpp`

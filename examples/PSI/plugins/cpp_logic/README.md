@@ -51,6 +51,7 @@ Notes:
 - `make` also generates `qt/<IOC>_cpp_logic.ui` by default. Disable with
   `make GENERATE_QT=0`.
 - `loadCppLogic.cmd` also publishes a soft PV for the app panel path:
+- `loadCppLogic.cmd` accepts `MACROS=...` and passes that free-form text into the logic module. User code can read it through `ecmcCpp::getMacrosText()`.
   - `$(IOC):CppLogic$(CPP_ID)-AppPnlPath`
   - default value: `qt/<IOC>_cpp_logic.ui`
   - override with `APP_PANEL=...`

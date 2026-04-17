@@ -64,7 +64,9 @@ class CppLogicHostServices(ctypes.Structure):
         ("set_axis_enc_source", ctypes.c_void_p),
         ("set_axis_ext_set_pos", ctypes.c_void_p),
         ("set_axis_ext_act_pos", ctypes.c_void_p),
+        ("set_enable_dbg", ctypes.c_void_p),
         ("get_ioc_state", ctypes.c_void_p),
+        ("get_macros_text", ctypes.c_void_p),
         ("publish_debug_text", ctypes.c_void_p),
     ]
 

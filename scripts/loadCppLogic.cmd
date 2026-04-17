@@ -16,7 +16,7 @@
 #-d   \param ASYN_PORT Optional dedicated asyn port, default CPP.LOGIC<LOGIC_ID>.
 #-d   \param SAMPLE_RATE_MS Optional execution rate in milliseconds.
 #-d   \param UPDATE_RATE_MS Optional EPICS/asyn publish rate in milliseconds.
-#-d   \param MACROS    Optional free-form text string passed through to the C++ logic and available in user code through `ecmcCpp::getMacrosText()`.
+#-d   \param MACROS    Optional free-form text string passed through to the C++ logic and available in user code through `ecmcCpp::getMacrosString()`.
 #-d   \param APP_PANEL Optional IOC-local application panel path shown in the
 #-d                  generic panel, default `qt/${IOC}_cpp_logic.ui`.
 #-d   \param LOAD_DEFAULT_PVS Load built-in control/status PVs, default 1.

@@ -31,7 +31,7 @@ Important defaults in `loadCppLogic.cmd`:
 - `LOGIC_ID`: defaults to the next free id
 - `ASYN_PORT`: defaults to `CPP.LOGIC<LOGIC_ID>`
 - `APP_PANEL`: defaults to `qt/${IOC}_cpp_logic.ui`
-- `MACROS`: optional free-form text passed into user code through `ecmcCpp::getMacrosText()`
+- `MACROS`: optional free-form text passed into user code through `ecmcCpp::getMacrosString()`
 - `LOAD_DEFAULT_PVS`: defaults to `1`
 - `EPICS_SUBST`: optional custom substitutions file for exported `epics.*` PVs
 - `DB_PREFIX`: defaults to `$(IOC):`

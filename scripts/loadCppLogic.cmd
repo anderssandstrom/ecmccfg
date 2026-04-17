@@ -1,6 +1,6 @@
 #==============================================================================
 # loadCppLogic.cmd
-#- Arguments: [FILE], [LOGIC_ID], [ASYN_PORT], [SAMPLE_RATE_MS], [UPDATE_RATE_MS], [MACROS], [APP_PANEL], [LOAD_DEFAULT_PVS], [EPICS_SUBST], [DB_PREFIX], [DB_MACROS], [REPORT]
+#- Arguments: [FILE], [DIR], [LOGIC_ID], [ASYN_PORT], [SAMPLE_RATE_MS], [UPDATE_RATE_MS], [MACROS], [APP_PANEL], [LOAD_DEFAULT_PVS], [EPICS_SUBST], [DB_PREFIX], [DB_MACROS], [REPORT]
 
 #-d /**
 #-d   \brief Script for loading a native C/C++ logic shared library in ecmc.
@@ -9,8 +9,9 @@
 #-d            for the user-defined `epics.*` exports.
 #-d   \author Anders Sandström, OpenAI Codex
 #-d   \file
-#-d   \param FILE      Shared library implementing ecmc_cpp_logic_get_api(),
-#-d                  default `bin/libmain.so`.
+#-d   \param FILE      Shared library basename implementing ecmc_cpp_logic_get_api(),
+#-d                  default `libmain.so`. Use `DIR` for the directory path.
+#-d   \param DIR       Directory prefix for `FILE`, default `./bin/`.
 #-d   \param LOGIC_ID  C++ logic instance index, default 0. Incremented for
 #-d                  the next call after a successful load.
 #-d   \param ASYN_PORT Optional dedicated asyn port, default CPP.LOGIC<LOGIC_ID>.
@@ -20,14 +21,14 @@
 #-d   \param APP_PANEL Optional IOC-local application panel path shown in the
 #-d                  generic panel, default `qt/${IOC}_cpp_logic.ui`.
 #-d   \param LOAD_DEFAULT_PVS Load built-in control/status PVs, default 1.
-#-d   \param EPICS_SUBST Optional custom substitutions file for `epics.*` exports.
+#-d   \param EPICS_SUBST Optional custom substitutions file for `epics.*` exports. Defaults to `cfg/<FILE>_cpp_logic.subs`. Set to `EMPTY` to not load.
 #-d   \param DB_PREFIX Optional record prefix, default ${IOC}:.
 #-d   \param DB_MACROS Optional extra dbLoadTemplate macros.
 #-d   \param REPORT    Print loaded C++ logic report if >0, default 1.
 #-d */
 
 epicsEnvSet("ECMC_CPP_LOGIC_ID", "${LOGIC_ID=0}")
-epicsEnvSet("ECMC_CPP_LOGIC_FILE", "${FILE=bin/libmain.so}")
+epicsEnvSet("ECMC_CPP_LOGIC_FILE", "${DIR=./bin/}${FILE=libmain.so}")
 
 ecmcIf("'${ASYN_PORT=EMPTY}'='EMPTY'",ECMC_CPP_LOGIC_PORT_EMPTY_TRUE,ECMC_CPP_LOGIC_PORT_EMPTY_FALSE)
 ${ECMC_CPP_LOGIC_PORT_EMPTY_TRUE}epicsEnvSet("ECMC_CPP_LOGIC_PORT", "CPP.LOGIC${ECMC_CPP_LOGIC_ID}")
@@ -62,6 +63,9 @@ ecmcIf("'${LOAD_DEFAULT_PVS=1}'='0'",CPP_LOGIC_CORE_SKIP_TRUE,CPP_LOGIC_CORE_SKI
   ${CPP_LOGIC_CORE_SKIP_FALSE}ecmcEndIf(CPP_LOGIC_CORE_DB_EMPTY_TRUE,CPP_LOGIC_CORE_DB_EMPTY_FALSE)
 ecmcEndIf(CPP_LOGIC_CORE_SKIP_TRUE,CPP_LOGIC_CORE_SKIP_FALSE)
 
+# Default to generated `epics.*` substitutions for the library basename
+epicsEnvSet(EPICS_SUBST,${EPICS_SUBST=cfg/${FILE=libmain.so}_cpp_logic.subs} )
+
 ecmcIf("'${EPICS_SUBST=EMPTY}'='EMPTY'",CPP_LOGIC_APP_SKIP_TRUE,CPP_LOGIC_APP_SKIP_FALSE)
 # skip generated app PVs
 #else
@@ -75,3 +79,4 @@ ecmcEndIf(CPP_LOGIC_APP_SKIP_TRUE,CPP_LOGIC_APP_SKIP_FALSE)
 
 ecmcEpicsEnvSetCalc(ECMC_CPP_LOGIC_COUNT, "$(ECMC_CPP_LOGIC_COUNT=0)+1")
 ecmcEpicsEnvSetCalc(LOGIC_ID, "${ECMC_CPP_LOGIC_ID}+1", "%d")
+

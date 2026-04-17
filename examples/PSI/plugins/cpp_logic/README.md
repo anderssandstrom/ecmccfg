@@ -46,8 +46,9 @@ Notes:
 - IOC startup is intended to use:
   - `$(ecmccfg_DIR)scripts/loadCppLogic.cmd`
 - Built-in cpp_logic PVs load by default through that script.
-- With `LOAD_APP_PVS=1`, generated custom `epics.*` substitutions default to
-  `bin/main.so.substitutions`.
+- For the default app substitutions path to stay predictable, keep `FILE` as the library basename and use `DIR` for the directory path.
+- Generated custom `epics.*` substitutions load automatically by default from
+  `cfg/libmain.so_cpp_logic.subs`. Set `EPICS_SUBST=EMPTY` to skip them.
 - `make` also generates `qt/<IOC>_cpp_logic.ui` by default. Disable with
   `make GENERATE_QT=0`.
 - `loadCppLogic.cmd` also publishes a soft PV for the app panel path:

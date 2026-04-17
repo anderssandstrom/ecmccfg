@@ -21,13 +21,13 @@ Expected flow:
 The build stages:
 
 - `bin/main.so`
-- `MTEST04-MTN-CPP-LOGIC_cpp_logic.subs`
+- `cfg/libmain.so_cpp_logic.subs`
 - `qt/MTEST04-MTN-CPP-LOGIC_cpp_logic.ui`
 
 The startup script loads the built-in core PVs by default. To load the
 generated `epics.*` PVs too, pass the substitutions file explicitly:
 
-- `EPICS_SUBST=MTEST04-MTN-CPP-LOGIC_cpp_logic.subs`
+- `EPICS_SUBST=cfg/libmain.so_cpp_logic.subs`
 
 `make ui` generates a simple IOC-local caQtDM panel:
 

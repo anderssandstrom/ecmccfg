@@ -27,13 +27,14 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}scripts/loadCppLogic.cmd, "FILE=/path/to/main.so,REP
 
 Important defaults in `loadCppLogic.cmd`:
 
-- `FILE`: defaults to `bin/main.so`
+- `FILE`: defaults to `libmain.so`
+- `DIR`: defaults to `./bin/`
 - `LOGIC_ID`: defaults to the next free id
 - `ASYN_PORT`: defaults to `CPP.LOGIC<LOGIC_ID>`
 - `APP_PANEL`: defaults to `qt/${IOC}_cpp_logic.ui`
 - `MACROS`: optional free-form text passed into user code through `ecmcCpp::getMacrosString()`
 - `LOAD_DEFAULT_PVS`: defaults to `1`
-- `EPICS_SUBST`: optional custom substitutions file for exported `epics.*` PVs
+- `EPICS_SUBST`: optional custom substitutions file for exported `epics.*` PVs, default `cfg/<FILE>_cpp_logic.subs`
 - `DB_PREFIX`: defaults to `$(IOC):`
 
 The wrapper:
@@ -41,7 +42,7 @@ The wrapper:
 1. loads one compiled C++ logic shared library
 2. optionally reports the loaded object
 3. loads the built-in control/status PVs
-4. optionally loads a custom substitutions file for user-defined `epics.*` exports
+4. automatically loads the generated `epics.*` substitutions by default, unless `EPICS_SUBST=EMPTY`
 
 ## Underlying ecmc Commands
 
@@ -220,16 +221,17 @@ python3 examples/PSI/plugins/cpp_logic/utils/ecmcCppLogicSourceSubstGen.py \
   --output cpp_logic.subs
 ```
 
-The `loadCppLogic.cmd` wrapper can then load:
+The `loadCppLogic.cmd` wrapper then loads:
 
 - built-in core substitutions automatically
-- the generated custom substitutions when `EPICS_SUBST=...` is provided
+- generated custom substitutions automatically from `cfg/<FILE>_cpp_logic.subs` by default
+- no custom substitutions when `EPICS_SUBST=EMPTY`
 
 In the IOC-style `cpp_logic` examples, the custom substitutions are normally
-generated in the example root as:
+generated as:
 
 ```text
-<IOC>_cpp_logic.subs
+cfg/libmain.so_cpp_logic.subs
 ```
 
 The IOC-style examples generate a simple local caQtDM panel with:
@@ -261,11 +263,11 @@ for:
 - `ecmcCppLogic.ui`
 - the IOC-local generated app panel
 
-To load the generated application PVs, pass the substitutions file explicitly:
+If you override `FILE`, keep it as a basename and move the directory into `DIR` so the default substitutions path stays predictable. Example:
 
 ```bash
 ${SCRIPTEXEC} ${ecmccfg_DIR}scripts/loadCppLogic.cmd, \
-  "FILE=bin/main.so,EPICS_SUBST=<IOC>_cpp_logic.subs,REPORT=1"
+  "DIR=bin/,FILE=libmain.so,REPORT=1"
 ```
 
 ## Execution Order

@@ -30,9 +30,9 @@ struct NativeBounceLogic : public ecmcCpp::LogicBase {
     const std::string drive_control_item = item_base + "driveControl01";
     const std::string velocity_setpoint_item = item_base + "velocitySetpoint01";
 
-    ecmc.input(actual_position_item.c_str(), actual_position)
-        .output(drive_control_item.c_str(), drive_control)
-        .output(velocity_setpoint_item.c_str(), velocity_setpoint);
+    ecmc.input(actual_position_item, actual_position)
+        .output(drive_control_item, drive_control)
+        .output(velocity_setpoint_item, velocity_setpoint);
 
     ecmcCpp::setEnableDbg(true);
 

@@ -51,10 +51,21 @@ The underlying parser commands are:
 Cfg.LoadCppLogic(<id>,<file>)
 Cfg.LoadCppLogic(<id>,<file>,<config>)
 Cfg.ReportCppLogic(<id>)
+Cfg.AppendCppLogicMacros(<id>)=<text>
 ```
 
 The IOC wrapper script mainly fills in defaults and handles the EPICS record
 loading around those commands.
+
+For long startup macro strings, use the companion helper script:
+
+```bash
+${SCRIPTEXEC} ${ecmccfg_DIR}scripts/loadCppLogic.cmd, "MACROS='A=1,B=2'"
+${SCRIPTEXEC} ${ecmccfg_DIR}scripts/appendCppLogicMacros.cmd, "MACROS='C=3,D=4'"
+```
+
+If `LOGIC_ID` is omitted, `appendCppLogicMacros.cmd` targets the current
+`ECMC_CPP_LOGIC_ID` set by `loadCppLogic.cmd`.
 
 ## C++ Programming Model
 

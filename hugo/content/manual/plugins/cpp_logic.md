@@ -31,7 +31,6 @@ Important defaults in `loadCppLogic.cmd`:
 - `DIR`: defaults to `./bin/`
 - `LOGIC_ID`: defaults to the next free id
 - `ASYN_PORT`: defaults to `CPP.LOGIC<LOGIC_ID>`
-- `APP_PANEL`: defaults to `qt/${IOC}_cpp_logic.ui`
 - `MACROS`: optional free-form text passed into user code through `ecmcCpp::getMacrosString()`
 - `LOAD_DEFAULT_PVS`: defaults to `1`
 - `EPICS_SUBST`: optional custom substitutions file for exported `epics.*` PVs, default `cfg/<FILE>_cpp_logic.subs`
@@ -196,15 +195,6 @@ The built-in runtime names currently include:
 - `logic.stat.count`
 - `logic.stat.dbg_txt`
 
-The generic core substitutions also add one soft EPICS record for the
-application panel path:
-
-- `$(IOC):CppLogic$(CPP_ID)-AppPnlPath`
-
-That defaults to `qt/<IOC>_cpp_logic.ui` and is used by the `Open app panel`
-button in the generic `ecmcCppLogic.ui` panel. Override it with
-`APP_PANEL=...` in `loadCppLogic.cmd` if needed.
-
 Current control word bits are:
 
 - bit 0: enable execution
@@ -261,7 +251,6 @@ for:
 
 - `ecmcCppLogicOverview.ui`
 - `ecmcCppLogic.ui`
-- the IOC-local generated app panel
 
 If you override `FILE`, keep it as a basename and move the directory into `DIR` so the default substitutions path stays predictable. Example:
 

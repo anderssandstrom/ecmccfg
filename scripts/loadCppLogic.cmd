@@ -1,6 +1,6 @@
 #==============================================================================
 # loadCppLogic.cmd
-#- Arguments: [FILE], [DIR], [LOGIC_ID], [ASYN_PORT], [SAMPLE_RATE_MS], [UPDATE_RATE_MS], [MACROS], [APP_PANEL], [LOAD_DEFAULT_PVS], [EPICS_SUBST], [DB_PREFIX], [DB_MACROS], [REPORT]
+#- Arguments: [FILE], [DIR], [LOGIC_ID], [ASYN_PORT], [SAMPLE_RATE_MS], [UPDATE_RATE_MS], [MACROS], [LOAD_DEFAULT_PVS], [EPICS_SUBST], [DB_PREFIX], [DB_MACROS], [REPORT]
 
 #-d /**
 #-d   \brief Script for loading a native C/C++ logic shared library in ecmc.
@@ -18,8 +18,6 @@
 #-d   \param SAMPLE_RATE_MS Optional execution rate in milliseconds.
 #-d   \param UPDATE_RATE_MS Optional EPICS/asyn publish rate in milliseconds.
 #-d   \param MACROS    Optional free-form text string passed through to the C++ logic and available in user code through `ecmcCpp::getMacrosString()`.
-#-d   \param APP_PANEL Optional IOC-local application panel path shown in the
-#-d                  generic panel, default `qt/${IOC}_cpp_logic.ui`.
 #-d   \param LOAD_DEFAULT_PVS Load built-in control/status PVs, default 1.
 #-d   \param EPICS_SUBST Optional custom substitutions file for `epics.*` exports. Defaults to `cfg/<FILE>_cpp_logic.subs`. Set to `EMPTY` to not load.
 #-d   \param DB_PREFIX Optional record prefix, default ${IOC}:.
@@ -36,15 +34,9 @@ ${ECMC_CPP_LOGIC_PORT_EMPTY_TRUE}epicsEnvSet("ECMC_CPP_LOGIC_PORT", "CPP.LOGIC${
 ${ECMC_CPP_LOGIC_PORT_EMPTY_FALSE}epicsEnvSet("ECMC_CPP_LOGIC_PORT", "${ASYN_PORT=''}")
 ecmcEndIf(ECMC_CPP_LOGIC_PORT_EMPTY_TRUE,ECMC_CPP_LOGIC_PORT_EMPTY_FALSE)
 
-ecmcIf("'${APP_PANEL=EMPTY}'='EMPTY'",ECMC_CPP_LOGIC_PANEL_EMPTY_TRUE,ECMC_CPP_LOGIC_PANEL_EMPTY_FALSE)
-${ECMC_CPP_LOGIC_PANEL_EMPTY_TRUE}epicsEnvSet("ECMC_CPP_LOGIC_APP_PANEL", "qt/${IOC}_cpp_logic.ui")
-#else
-${ECMC_CPP_LOGIC_PANEL_EMPTY_FALSE}epicsEnvSet("ECMC_CPP_LOGIC_APP_PANEL", "${APP_PANEL=''}")
-ecmcEndIf(ECMC_CPP_LOGIC_PANEL_EMPTY_TRUE,ECMC_CPP_LOGIC_PANEL_EMPTY_FALSE)
-
 epicsEnvSet("ECMC_CPP_LOGIC_CONFIG", "asyn_port=${ECMC_CPP_LOGIC_PORT};sample_rate_ms=${SAMPLE_RATE_MS=};update_rate_ms=${UPDATE_RATE_MS=};macros=${MACROS=}")
 epicsEnvSet("ECMC_CPP_LOGIC_CORE_EPICS_SUBST", "ecmcCppLogicCore.substitutions")
-epicsEnvSet("ECMC_CPP_LOGIC_DB_MACROS_BASE", "P=${DB_PREFIX=$(IOC):},PORT=${ECMC_CPP_LOGIC_PORT},CPP_ID=${ECMC_CPP_LOGIC_ID},APP_PANEL=${ECMC_CPP_LOGIC_APP_PANEL}")
+epicsEnvSet("ECMC_CPP_LOGIC_DB_MACROS_BASE", "P=${DB_PREFIX=$(IOC):},PORT=${ECMC_CPP_LOGIC_PORT},CPP_ID=${ECMC_CPP_LOGIC_ID}")
 
 ecmcFileExist("${ECMC_CPP_LOGIC_FILE}",1)
 ecmcConfigOrDie "Cfg.LoadCppLogic(${ECMC_CPP_LOGIC_ID},${ECMC_CPP_LOGIC_FILE},${ECMC_CPP_LOGIC_CONFIG})"

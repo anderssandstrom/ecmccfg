@@ -33,5 +33,4 @@ file ecmcCppLogicStringIn.template {
 
 file ecmcCppLogicStringVal.template {
   pattern { REC, VAL, DESC }
-  { "CppLogic$(CPP_ID=0)-AppPnlPath", "$(APP_PANEL=)", "App panel path" }
 }

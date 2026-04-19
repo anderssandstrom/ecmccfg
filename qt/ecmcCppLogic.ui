@@ -179,25 +179,6 @@
    <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
    <property name="unitsEnabled"><bool>true</bool></property>
   </widget>
-  <widget class="caLabel" name="caLabelAppPanel">
-   <property name="geometry"><rect><x>340</x><y>236</y><width>120</width><height>18</height></rect></property>
-   <property name="text"><string>App panel path</string></property>
-  </widget>
-  <widget class="caLineEdit" name="caLineEditAppPanel">
-   <property name="geometry"><rect><x>340</x><y>258</y><width>230</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):CppLogic$(CPP_ID=0)-AppPnlPath</string></property>
-   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
-   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="unitsEnabled"><bool>true</bool></property>
-  </widget>
-  <widget class="caShellCommand" name="caShellCommandOpenAppPanel">
-   <property name="geometry"><rect><x>430</x><y>302</y><width>140</width><height>24</height></rect></property>
-   <property name="label"><string notr="true">Open app panel</string></property>
-   <property name="labels"><string>Open generated cpp_logic app panel</string></property>
-   <property name="files"><string>bash /ioc/modules/ecmccfg/qt/ecmcOpenObject.sh</string></property>
-   <property name="args"><string>CPP_LOGIC_APP_PANEL $(IOC) $(IOC):CppLogic$(CPP_ID=0)-AppPnlPath IOC=$(IOC),CPP_ID=$(CPP_ID=0)</string></property>
-  </widget>
  </widget>
  <customwidgets>
   <customwidget>

@@ -32,9 +32,6 @@ Generic UI:
 
 - `$(ecmccfg_DIR)qt/ecmcCppLogic.ui`: generic runtime panel for one cpp logic instance
   - uses macros `IOC=<ioc-name>,CPP_ID=<logic-id>`
-  - includes an `Open app panel` button
-  - that button resolves the IOC-local app panel path from
-    `$(IOC):CppLogic$(CPP_ID)-AppPnlPath`
 - `$(ecmccfg_DIR)qt/ecmcCppLogicOverview.ui`: compact overview for logic ids `0..7`
   - uses macro `IOC=<ioc-name>`
   - each row opens one instance in `ecmcCppLogic.ui`
@@ -51,12 +48,8 @@ Notes:
   `cfg/libmain.so_cpp_logic.subs`. Set `EPICS_SUBST=EMPTY` to skip them.
 - `make` also generates `qt/<IOC>_cpp_logic.ui` by default. Disable with
   `make GENERATE_QT=0`.
-- `loadCppLogic.cmd` also publishes a soft PV for the app panel path:
 - `loadCppLogic.cmd` accepts `MACROS=...` and passes that free-form text into the logic module. User code can read it through `ecmcCpp::getMacrosString()`.
-  - `$(IOC):CppLogic$(CPP_ID)-AppPnlPath`
-  - default value: `qt/<IOC>_cpp_logic.ui`
-  - override with `APP_PANEL=...`
 - checked-in and generated startup scripts include exact `caqtdm` commands for:
   - `ecmcCppLogicOverview.ui`
   - `ecmcCppLogic.ui`
-  - the IOC-local generated app panel
+  

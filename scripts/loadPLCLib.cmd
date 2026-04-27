@@ -1,6 +1,6 @@
 #==============================================================================
 # loadPLCLib.cmd
-#- Arguments: FILE, [PLC_ID], [SAMPLE_RATE_MS], [PLC_MACROS]
+#- Arguments: FILE, [PLC_ID], [SAMPLE_RATE_MS], [PLC_MACROS], [START_AFTER_EPICS]
 
 #-d /**
 #-d   \brief Script for loading a PLC library from file.
@@ -17,6 +17,7 @@
 #-d   \param INC (optional) List of directories for include files to pass to MSI (if several paths then divide with ':').
 #-d   \param TMP_PATH (optional) directory to dump the temporary plc file after macro substitution
 #-d   \param PRINT_PLC_FILE (optional) 1/0, printout msi parsed plc file (default enable(1)).
+#-d   \param START_AFTER_EPICS (optional) 1/0, delay PLC execution until EPICS reaches IocRunning (default 0).
 #-d   \note Example call:
 #-d   \code
 #-d     ${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCLib.cmd, "PLC_ID=0, FILE=./plc/homeSlit.plc, SAMPLE_RATE_MS=100"
@@ -51,6 +52,7 @@ epicsEnvUnset(ECMC_EXE_CMD)
 
 #- Now load the file to ecmc
 ecmcFileExist("${ECMC_TMP_FILE}",1)
+ecmcConfigOrDie "Cfg.SetPLCStartAfterEpics(${ECMC_PLC_ID},${START_AFTER_EPICS=0})"
 ecmcConfigOrDie "Cfg.LoadPLCLibFile(${ECMC_PLC_ID},${ECMC_TMP_FILE})"
 
 #- Remove parsed file after load

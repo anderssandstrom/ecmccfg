@@ -1,6 +1,6 @@
 #==============================================================================
 # loadCppLogic.cmd
-#- Arguments: [FILE], [LOGIC_ID], [ASYN_PORT], [SAMPLE_RATE_MS], [UPDATE_RATE_MS], [APP_PANEL], [LOAD_DEFAULT_PVS], [EPICS_SUBST], [DB_PREFIX], [DB_MACROS], [REPORT]
+#- Arguments: [FILE], [DIR], [LOGIC_ID], [ASYN_PORT], [SAMPLE_RATE_MS], [UPDATE_RATE_MS], [MACROS], [LOAD_DEFAULT_PVS], [EPICS_SUBST], [DB_PREFIX], [DB_MACROS], [REPORT]
 
 #-d /**
 #-d   \brief Script for loading a native C/C++ logic shared library in ecmc.
@@ -9,18 +9,17 @@
 #-d            for the user-defined `epics.*` exports.
 #-d   \author Anders Sandström, OpenAI Codex
 #-d   \file
-#-d   \param FILE      Shared library implementing ecmc_cpp_logic_get_api(),
-#-d                  default `libmain.so`.
-#-d   \param DIR     default ./bin/
+#-d   \param FILE      Shared library basename implementing ecmc_cpp_logic_get_api(),
+#-d                  default `libmain.so`. Use `DIR` for the directory path.
+#-d   \param DIR       Directory prefix for `FILE`, default `./bin/`.
 #-d   \param LOGIC_ID  C++ logic instance index, default 0. Incremented for
 #-d                  the next call after a successful load.
 #-d   \param ASYN_PORT Optional dedicated asyn port, default CPP.LOGIC<LOGIC_ID>.
 #-d   \param SAMPLE_RATE_MS Optional execution rate in milliseconds.
 #-d   \param UPDATE_RATE_MS Optional EPICS/asyn publish rate in milliseconds.
-#-d   \param APP_PANEL Optional IOC-local application panel path shown in the
-#-d                  generic panel, default `qt/${IOC}_cpp_logic.ui`.
+#-d   \param MACROS    Optional free-form text string passed through to the C++ logic and available in user code through `ecmcCpp::getMacrosString()`.
 #-d   \param LOAD_DEFAULT_PVS Load built-in control/status PVs, default 1.
-#-d   \param EPICS_SUBST Optional custom substitutions file for `epics.*` exports. Defaults to generated subs file in cfg dir. Set to 'EMPTY' to not load
+#-d   \param EPICS_SUBST Optional custom substitutions file for `epics.*` exports. Defaults to `cfg/<FILE>_cpp_logic.subs`. Set to `EMPTY` to not load.
 #-d   \param DB_PREFIX Optional record prefix, default ${IOC}:.
 #-d   \param DB_MACROS Optional extra dbLoadTemplate macros.
 #-d   \param REPORT    Print loaded C++ logic report if >0, default 1.
@@ -35,15 +34,9 @@ ${ECMC_CPP_LOGIC_PORT_EMPTY_TRUE}epicsEnvSet("ECMC_CPP_LOGIC_PORT", "CPP.LOGIC${
 ${ECMC_CPP_LOGIC_PORT_EMPTY_FALSE}epicsEnvSet("ECMC_CPP_LOGIC_PORT", "${ASYN_PORT=''}")
 ecmcEndIf(ECMC_CPP_LOGIC_PORT_EMPTY_TRUE,ECMC_CPP_LOGIC_PORT_EMPTY_FALSE)
 
-ecmcIf("'${APP_PANEL=EMPTY}'='EMPTY'",ECMC_CPP_LOGIC_PANEL_EMPTY_TRUE,ECMC_CPP_LOGIC_PANEL_EMPTY_FALSE)
-${ECMC_CPP_LOGIC_PANEL_EMPTY_TRUE}epicsEnvSet("ECMC_CPP_LOGIC_APP_PANEL", "qt/${IOC}_cpp_logic.ui")
-#else
-${ECMC_CPP_LOGIC_PANEL_EMPTY_FALSE}epicsEnvSet("ECMC_CPP_LOGIC_APP_PANEL", "${APP_PANEL=''}")
-ecmcEndIf(ECMC_CPP_LOGIC_PANEL_EMPTY_TRUE,ECMC_CPP_LOGIC_PANEL_EMPTY_FALSE)
-
-epicsEnvSet("ECMC_CPP_LOGIC_CONFIG", "asyn_port=${ECMC_CPP_LOGIC_PORT};sample_rate_ms=${SAMPLE_RATE_MS=};update_rate_ms=${UPDATE_RATE_MS=}")
+epicsEnvSet("ECMC_CPP_LOGIC_CONFIG", "asyn_port=${ECMC_CPP_LOGIC_PORT};sample_rate_ms=${SAMPLE_RATE_MS=};update_rate_ms=${UPDATE_RATE_MS=};macros=${MACROS=}")
 epicsEnvSet("ECMC_CPP_LOGIC_CORE_EPICS_SUBST", "ecmcCppLogicCore.substitutions")
-epicsEnvSet("ECMC_CPP_LOGIC_DB_MACROS_BASE", "P=${DB_PREFIX=$(IOC):},PORT=${ECMC_CPP_LOGIC_PORT},CPP_ID=${ECMC_CPP_LOGIC_ID},APP_PANEL=${ECMC_CPP_LOGIC_APP_PANEL}")
+epicsEnvSet("ECMC_CPP_LOGIC_DB_MACROS_BASE", "P=${DB_PREFIX=$(IOC):},PORT=${ECMC_CPP_LOGIC_PORT},CPP_ID=${ECMC_CPP_LOGIC_ID}")
 
 ecmcFileExist("${ECMC_CPP_LOGIC_FILE}",1)
 ecmcConfigOrDie "Cfg.LoadCppLogic(${ECMC_CPP_LOGIC_ID},${ECMC_CPP_LOGIC_FILE},${ECMC_CPP_LOGIC_CONFIG})"
@@ -62,7 +55,7 @@ ecmcIf("'${LOAD_DEFAULT_PVS=1}'='0'",CPP_LOGIC_CORE_SKIP_TRUE,CPP_LOGIC_CORE_SKI
   ${CPP_LOGIC_CORE_SKIP_FALSE}ecmcEndIf(CPP_LOGIC_CORE_DB_EMPTY_TRUE,CPP_LOGIC_CORE_DB_EMPTY_FALSE)
 ecmcEndIf(CPP_LOGIC_CORE_SKIP_TRUE,CPP_LOGIC_CORE_SKIP_FALSE)
 
-#- Deafult to 'epics.' auto generated file
+# Default to generated `epics.*` substitutions for the library basename
 epicsEnvSet(EPICS_SUBST,${EPICS_SUBST=cfg/${FILE=libmain.so}_cpp_logic.subs} )
 
 ecmcIf("'${EPICS_SUBST=EMPTY}'='EMPTY'",CPP_LOGIC_APP_SKIP_TRUE,CPP_LOGIC_APP_SKIP_FALSE)
@@ -79,4 +72,3 @@ ecmcEndIf(CPP_LOGIC_APP_SKIP_TRUE,CPP_LOGIC_APP_SKIP_FALSE)
 ecmcEpicsEnvSetCalc(ECMC_CPP_LOGIC_COUNT, "$(ECMC_CPP_LOGIC_COUNT=0)+1")
 ecmcEpicsEnvSetCalc(LOGIC_ID, "${ECMC_CPP_LOGIC_ID}+1", "%d")
 
-#dbLoadTemplate("cfg/${FILE=libmain.so}_cpp_logic.subs", "P=${DB_PREFIX=$(IOC):},PORT=CPP.LOGIC${ECMC_CPP_LOGIC_ID},${DB_MACROS=}")

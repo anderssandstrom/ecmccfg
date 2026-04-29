@@ -27,12 +27,13 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}scripts/loadCppLogic.cmd, "FILE=/path/to/main.so,REP
 
 Important defaults in `loadCppLogic.cmd`:
 
-- `FILE`: defaults to `bin/main.so`
+- `FILE`: defaults to `libmain.so`
+- `DIR`: defaults to `./bin/`
 - `LOGIC_ID`: defaults to the next free id
 - `ASYN_PORT`: defaults to `CPP.LOGIC<LOGIC_ID>`
-- `APP_PANEL`: defaults to `qt/${IOC}_cpp_logic.ui`
+- `MACROS`: optional free-form text passed into user code through `ecmcCpp::getMacrosString()`
 - `LOAD_DEFAULT_PVS`: defaults to `1`
-- `EPICS_SUBST`: optional custom substitutions file for exported `epics.*` PVs
+- `EPICS_SUBST`: optional custom substitutions file for exported `epics.*` PVs, default `cfg/<FILE>_cpp_logic.subs`
 - `DB_PREFIX`: defaults to `$(IOC):`
 
 The wrapper:
@@ -40,7 +41,7 @@ The wrapper:
 1. loads one compiled C++ logic shared library
 2. optionally reports the loaded object
 3. loads the built-in control/status PVs
-4. optionally loads a custom substitutions file for user-defined `epics.*` exports
+4. automatically loads the generated `epics.*` substitutions by default, unless `EPICS_SUBST=EMPTY`
 
 ## Underlying ecmc Commands
 
@@ -50,10 +51,21 @@ The underlying parser commands are:
 Cfg.LoadCppLogic(<id>,<file>)
 Cfg.LoadCppLogic(<id>,<file>,<config>)
 Cfg.ReportCppLogic(<id>)
+Cfg.AppendCppLogicMacros(<id>)=<text>
 ```
 
 The IOC wrapper script mainly fills in defaults and handles the EPICS record
 loading around those commands.
+
+For long startup macro strings, use the companion helper script:
+
+```bash
+${SCRIPTEXEC} ${ecmccfg_DIR}scripts/loadCppLogic.cmd, "MACROS='A=1,B=2'"
+${SCRIPTEXEC} ${ecmccfg_DIR}scripts/appendCppLogicMacros.cmd, "MACROS='C=3,D=4'"
+```
+
+If `LOGIC_ID` is omitted, `appendCppLogicMacros.cmd` targets the current
+`ECMC_CPP_LOGIC_ID` set by `loadCppLogic.cmd`.
 
 ## C++ Programming Model
 
@@ -183,15 +195,6 @@ The built-in runtime names currently include:
 - `logic.stat.count`
 - `logic.stat.dbg_txt`
 
-The generic core substitutions also add one soft EPICS record for the
-application panel path:
-
-- `$(IOC):CppLogic$(CPP_ID)-AppPnlPath`
-
-That defaults to `qt/<IOC>_cpp_logic.ui` and is used by the `Open app panel`
-button in the generic `ecmcCppLogic.ui` panel. Override it with
-`APP_PANEL=...` in `loadCppLogic.cmd` if needed.
-
 Current control word bits are:
 
 - bit 0: enable execution
@@ -208,16 +211,17 @@ python3 examples/PSI/plugins/cpp_logic/utils/ecmcCppLogicSourceSubstGen.py \
   --output cpp_logic.subs
 ```
 
-The `loadCppLogic.cmd` wrapper can then load:
+The `loadCppLogic.cmd` wrapper then loads:
 
 - built-in core substitutions automatically
-- the generated custom substitutions when `EPICS_SUBST=...` is provided
+- generated custom substitutions automatically from `cfg/<FILE>_cpp_logic.subs` by default
+- no custom substitutions when `EPICS_SUBST=EMPTY`
 
 In the IOC-style `cpp_logic` examples, the custom substitutions are normally
-generated in the example root as:
+generated as:
 
 ```text
-<IOC>_cpp_logic.subs
+cfg/libmain.so_cpp_logic.subs
 ```
 
 The IOC-style examples generate a simple local caQtDM panel with:
@@ -247,13 +251,12 @@ for:
 
 - `ecmcCppLogicOverview.ui`
 - `ecmcCppLogic.ui`
-- the IOC-local generated app panel
 
-To load the generated application PVs, pass the substitutions file explicitly:
+If you override `FILE`, keep it as a basename and move the directory into `DIR` so the default substitutions path stays predictable. Example:
 
 ```bash
 ${SCRIPTEXEC} ${ecmccfg_DIR}scripts/loadCppLogic.cmd, \
-  "FILE=bin/main.so,EPICS_SUBST=<IOC>_cpp_logic.subs,REPORT=1"
+  "DIR=bin/,FILE=libmain.so,REPORT=1"
 ```
 
 ## Execution Order

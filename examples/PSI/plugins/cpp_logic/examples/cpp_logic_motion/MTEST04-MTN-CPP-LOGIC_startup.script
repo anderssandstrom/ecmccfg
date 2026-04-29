@@ -2,7 +2,7 @@
 #
 # The staged cpp logic library lives in the IOC-local bin directory:
 #   bin/main.so
-#   bin/main.so.substitutions
+#   cfg/libmain.so_cpp_logic.subs
 #
 # This sample expects the EL7041 slave and axis setup below to provide axis 1.
 #

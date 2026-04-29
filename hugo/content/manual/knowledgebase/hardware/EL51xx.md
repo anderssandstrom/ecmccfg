@@ -13,9 +13,10 @@ The EL51xx series covers incremental encoder interfaces:
 1. EL5101: 1 ch, diff rs422, ttl, 1MHz
 2. EL5101-0010: 1 ch, diff rs422, 5MHz
 3. EL5101-0011: 1 ch, diff rs422, 5MHz, oversampling 100kHz
-4. EL5112: 2 ch ABC or 1 ch AB, rs422, 5MHz, **PSI standard**
-5. EL5131: 1 ch, diff rs422, 5MHz, 2 digital outputs for cam/trigger
-6. [Diagnostics](#diagnostics)
+4. EL5102: 2ch diff rs422, 5MHz, **PSI standard**
+5. EL5112: 2 ch ABC or 1 ch AB, rs422, 5MHz
+6. EL5131: 1 ch, diff rs422, 5MHz, 2 digital outputs for cam/trigger
+7. [Diagnostics](#diagnostics)
 
 ## General
 Normally, incremental encoder interfaces do not require any SDO configuration.
@@ -61,6 +62,21 @@ EtherCAT rate is `1 kHz`, the incremental data is therefore sampled at
 `NELM` cannot be freely defined; depending on the EtherCAT rate, different `NELM` values will be accepted. Consult the EL5101-0011 manual for more information.
 Normally, `NELM` needs to be an integer value, like 10, 20, 50, 100.
 {{% /notice %}}
+
+## EL5102
+EL5102 is PSI standard.
+Issues with Firmware version Rev 1 has been identified. If the card is freshly power cycled it does not accept writing to SDOs. After bringing it to OP mode and then back to PREOP it works:
+``` 
+ethercat -m1 -p1 download 0x8001 0x1D 5 --type uint8
+SDO transfer aborted with code 0x08000021: Data cannot be transferred or stored to the application because of local control
+ethercat -m1 -p1 state OP
+ethercat -m1 -p1 state PREOP
+ethercat -m1 -p1 download 0x8001 0x1D 5 --type uint8
+# Works
+```
+Upgrading firmware, (currently to Rev 4), fixes the issue.
+
+In most situations, no SDO writes are needed when using EL5102.
 
 ## EL5112
 This is the PSI standard incremental encoder terminal. It can be used in

@@ -32,6 +32,8 @@
 #- EC_TOOL_PATH      = Path to ethercat tool defaults to ethercat tool in ECmasterECMC_DIR, 
 #- otherwise            "/opt/etherlab/bin/ethercat"
 #- MAX_PARAM_COUNT   = Maximum asyn param count, defaults to 1650
+#- ECMC_REQUIRE_ECMC = Command used to load ecmc. Defaults to "require ecmc".
+#-                    Set to "#-" when ecmc is already registered by a classic IOC.
 #-
 #- [set by module]
 #- ECMC_CONFIG_ROOT       = root directory of ${MODULE}
@@ -55,7 +57,8 @@ on error halt
 #-------------------------------------------------------------------------------
 #- load required modules
 epicsEnvSet(ECMC_VER,${ECMC_VER=11.0.6})
-require ecmc "${ECMC_VER}"
+epicsEnvSet("ECMC_REQUIRE_ECMC", "${ECMC_REQUIRE_ECMC=require ecmc}")
+${ECMC_REQUIRE_ECMC} "${ECMC_VER}"
 
 #- Require EthercatMC if used.
 ecmcEpicsEnvSetCalcTernary(ECMC_EXE_CMD, "'${ECMC_MR_MODULE=ecmcMotorRecord}'='EthercatMC'", "require  EthercatMC ${EthercatMC_VER=3.0.2} # Using EthercatMC motor record support.","# Using ecmcMotorRecord motor record support.")

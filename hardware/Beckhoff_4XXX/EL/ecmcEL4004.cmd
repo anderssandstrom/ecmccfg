@@ -31,3 +31,6 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}ecmcAnalogOutput_16bit.cmd "CH_ID=03,ECMC_PDO=0x1602
 
 #- ############ Config PDOS: Channel 4
 ${SCRIPTEXEC} ${ecmccfg_DIR}ecmcAnalogOutput_16bit.cmd "CH_ID=04,ECMC_PDO=0x1603,ECMC_ENTRY=0x7030,ECMC_ENTRY_OFFSET=0x1"
+
+#- Default panel
+epicsEnvSet("ECMC_HW_PANEL"              "Ex4xx4")

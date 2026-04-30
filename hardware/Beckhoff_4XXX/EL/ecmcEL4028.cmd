@@ -40,3 +40,6 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}ecmcAnalogOutput_16bit.cmd "CH_ID=07,ECMC_PDO=0x1606
 
 #- ############ Config PDOS: Channel 8
 ${SCRIPTEXEC} ${ecmccfg_DIR}ecmcAnalogOutput_16bit.cmd "CH_ID=08,ECMC_PDO=0x1607,ECMC_ENTRY=0x7070,ECMC_ENTRY_OFFSET=0x11"
+
+#- Default panel
+epicsEnvSet("ECMC_HW_PANEL"              "Ex4xx8")

@@ -37,6 +37,8 @@
 #  PLG_PREV            : CMD, PREFIX, THIS_PLG_ID
 #  PLG_SAFETY_GRP      : CMD, PREFIX, GRP_ID
 #  PLG_SAFETY_GRP_AXIS : CMD, PREFIX, DEV,        AX_NAME
+#  CPP_LOGIC          : CMD, IOC,    CPP_ID
+#  CPP_LOGIC_OVERVIEW : CMD, IOC
 #  PVT_MAIN            : CMD, PREFIX
 #  SM_FIRST            : CMD, PREFIX
 #  SM_NEXT             : CMD, PREFIX, THIS_PLC_ID
@@ -571,6 +573,21 @@ function openEcToolReadHwDiagMain() {
   caput $PREFIX:m$MID-EcTool.PROC 1
 }
 
+function openCppLogic() {
+  IOC=$1
+  CPP_ID=$2
+  MACROS="IOC=$IOC,CPP_ID=$CPP_ID"
+  echo "MACROS=$MACROS"
+  caqtdm -macro "$MACROS" ecmcCppLogic.ui
+}
+
+function openCppLogicOverview() {
+  IOC=$1
+  MACROS="IOC=$IOC"
+  echo "MACROS=$MACROS"
+  caqtdm -macro "$MACROS" ecmcCppLogicOverview.ui
+}
+
 # Parse commands
 case $CMD in
   "EC_EXP")
@@ -680,6 +697,12 @@ case $CMD in
   ;;
   "PLG_SAFETY_GRP_AXIS")
   openPLGSafetyGrpAxis $2 $3 $4
+  ;;
+  "CPP_LOGIC")
+  openCppLogic $2 $3
+  ;;
+  "CPP_LOGIC_OVERVIEW")
+  openCppLogicOverview $2
   ;;
   "PVT_MAIN")
   openPVTMain $2

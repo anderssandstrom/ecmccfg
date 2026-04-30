@@ -223,6 +223,7 @@ optional
   * `enable`: set to false to disable motor record
   * `description`: DESC field; default ''
   * `fieldInit`: string with additional field initial values; default ''
+  * `syncSoftLimits`: sync motor record and ecmc soft limits; default false. When false, motor record `HLM`/`LLM` and ecmc soft limits can differ. When changed from false to true at runtime, the current ecmc soft limits are copied to the motor record. While enabled, later motor record soft-limit changes are written back to ecmc.
   * `pvt`
     * `npoints`: max number of target points for PVT/profile move
     * `nreadback`: max number of readback points for PVT/profile move
@@ -236,6 +237,7 @@ epics:
   #   enable: false
   #   fieldInit: 'RRES=1.0,RTRY=2,RMOD=1,UEIP=0,RDBD=0.1,URIP=1,RDBL=$(IOC):$(ECMC_MOTOR_NAME)-PosActSim'
   #   fieldInit: 'NTM=1'
+  #   syncSoftLimits: false
   #   description: AM8111 CSV
   #   pvt:
   #     npoints: 20
@@ -663,7 +665,9 @@ epics:
     enable: true
     description: This is MR
     fieldInit: 'RRES=1.0,RTRY=2,RMOD=1,UEIP=0,RDBD=0.1,URIP=1,RDBL=$(IOC):$(ECMC_MOTOR_NAME)-PosActSim' # Extra config for Motor record
-    syncSoftLimits: false                             # Optional: Sync softlimits between motor and ecmc (default false)
+    syncSoftLimits: false                             # Optional: Sync softlimits between motor and ecmc (default false).
+                                                      # On false->true, ecmc soft limits are copied to the motor record.
+                                                      # While true, later motor record soft-limit changes are written back to ecmc.
 
 drive:
   numerator: 360                                      # Fastest speed in engineering units

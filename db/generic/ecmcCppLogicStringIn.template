@@ -1,0 +1,6 @@
+record(stringin, "$(P)$(REC)") {
+  field(DESC, "$(DESC=)")
+  field(DTYP, "$(DTYP=asynOctetRead)")
+  field(SCAN, "$(SCAN=1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)$(PARAM)")
+}

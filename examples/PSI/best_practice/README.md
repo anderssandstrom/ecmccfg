@@ -7,6 +7,11 @@
 * PLC-generated signal buffered with `addDataStorage.cmd`
 * Push to EPICS on demand through an exposed PLC trigger PV
 
+### Heat control
+* EL2535 PWM output used as heater output
+* ELM3504 scalar input used as temperature feedback
+* ecmc motion axis reused as a simple heat controller
+
 ## Motion
 
 ### stepper and BISS-C

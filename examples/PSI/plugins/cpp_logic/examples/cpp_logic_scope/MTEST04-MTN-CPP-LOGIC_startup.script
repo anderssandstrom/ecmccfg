@@ -1,0 +1,23 @@
+# Native scope IOC example using EL3702 oversampling data and EL1252 timestamps.
+#
+# The staged cpp logic library lives in the IOC-local bin directory:
+#   bin/main.so
+#   cfg/libmain.so_cpp_logic.subs
+#
+# This sample expects:
+#   ec0.s20.mm.analogInputArray01
+#   ec0.s20.mm.analogInputArray02
+#   ec0.s20.nextSyncTime
+#   ec0.s21.binaryInput01
+#   ec0.s21.timestampLatchPositive01
+#
+# Useful panels after startup:
+#   caqtdm -macro "IOC=MTEST04-MTN-CPP-LOGIC" ecmcCppLogicOverview.ui
+#   caqtdm -macro "IOC=MTEST04-MTN-CPP-LOGIC,CPP_ID=0" ecmcCppLogic.ui
+#   caqtdm MTEST04-MTN-CPP-LOGIC_cpp_logic.ui
+
+require ecmccfg "ECMC_VER=struc"
+epicsEnvSet("ECMC_OVER_SMP", "100")
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=20,HW_DESC=EL3702,NELM=${ECMC_OVER_SMP}"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=21,HW_DESC=EL1252"
+${SCRIPTEXEC} ${ecmccfg_DIR}loadCppLogic.cmd, "REPORT=1"

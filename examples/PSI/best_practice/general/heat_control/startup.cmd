@@ -1,0 +1,24 @@
+##############################################################################
+## Example config for EL2535-0002 PWM heat control using an ecmc motion axis
+## * PWM output connected to heater (drive)
+## * ELM3504 with PT1000 as feedback (encoder)
+
+require ecmccfg v11.0.7_RC1, "ECMC_VER=v11.0.7_RC1"
+
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=20, HW_DESC=EL2535-0002"
+epicsEnvSet(DRV_ID, $(ECMC_EC_SLAVE_NUM))
+
+# For integer input instead of F32, use `HW_DESC=ELM3504_Scalar` here and
+# update the encoder scaling in `cfg/axis.yaml` to match the integer format.
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=ELM3504_F32_Scalar"
+epicsEnvSet(ENC_ID, $(ECMC_EC_SLAVE_NUM))
+
+# Temperature sensor
+ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8000,0x1,44,2)"    # Interface 1K PT1000 4 wires
+ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8000,0x2E,6,2)"    # 0 Extended Range,1 linear, 6 Scalling Celsius,7 Kelvin
+ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8000,0x16,1,2)"    # Filter 1 FIR Notch 50 Hz
+ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8000,0x1C,1,0)"    # Enable True RMS
+ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8000,0x1B,10,2)"   # True RMS No. of Samples
+ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8000,0x18,1,2)"    # Decimation Factor
+
+${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd, "FILE=./cfg/axis.yaml, DRV_ID=$(DRV_ID), ENC_ID=$(ENC_ID), AX_NAME=H1, AX_ID=1"

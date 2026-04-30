@@ -40,6 +40,7 @@ These are the scripts most users should start from.
 | `addPlcVarBinary.cmd` | Link one PLC boolean variable to an EPICS `bo` named `DEV:NAME`. | Simple EPICS exposure of `static` or `global` PLC variables. |
 | `addAsynVarAnalog.cmd` | Link one asyn variable to an EPICS `ao` named `DEV:NAME`. | Simple EPICS exposure of plugin or other runtime asyn values. |
 | `addAsynVarBinary.cmd` | Link one asyn variable to an EPICS `bo` named `DEV:NAME`. | Simple EPICS exposure of plugin or other runtime asyn values. |
+| `loadCppLogic.cmd` | Load one additive C++ logic module and optionally its built-in/custom PVs. | User-defined cyclic C/C++ logic with dedicated asyn interface. |
 | `configureAxis.cmd` | Legacy classic axis configuration from `.ax`/`.pax` style files. | Older classic axis setups. |
 | `configureVirtualAxis.cmd` | Legacy classic virtual-axis configuration. | Older classic virtual-axis setups. |
 | `applyAxisSynchronization.cmd` | Attach synchronization logic to the most recently configured axis. | Classic synchronization setups. |
@@ -159,7 +160,8 @@ For new configurations, the normal order is:
 2. `addSlave.cmd` and `applyComponent.cmd`
 3. `loadYamlAxis.cmd` / `loadYamlEnc.cmd` / `loadYamlPlc.cmd`
 4. `addDataStorage.cmd` and `loadPlugin.cmd` if needed
-5. `setAppMode.cmd` or `finalize.cmd`
+5. `loadCppLogic.cmd` if user-defined C++ logic is part of the IOC
+6. `setAppMode.cmd` or `finalize.cmd`
 
 For older classic configurations, `configureAxis.cmd`, `configureVirtualAxis.cmd`,
 `configureSlave.cmd`, and `applyAxisSynchronization.cmd` are still valid, but they

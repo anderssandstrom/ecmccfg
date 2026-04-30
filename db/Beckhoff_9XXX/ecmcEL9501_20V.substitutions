@@ -11,7 +11,12 @@ file "ecmc_analogOutput-chX.template"
 # for some strange reason the max voltage for AI is 21.44V?!
 file "ecmc_analogInput-chX.template"{
   pattern {CH_ID, EGU,  PREC, ESLO      }
-          {01,    "V",  3   , 6.5445E-4 }
+          {01,    "V",  3   , 6.5445E-4 }          
+}
+
+file "ecmc_analogInputFloat-chX.template"{
+  pattern {CH_ID, EGU,  PREC, sourceName,    suffix     }
+          {01,    "A",  3,    currentActual, -CurrAct   }          
 }
 
 # device status

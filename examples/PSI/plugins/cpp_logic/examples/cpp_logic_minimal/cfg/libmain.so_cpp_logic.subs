@@ -1,0 +1,14 @@
+# Auto-generated C++ logic substitutions
+# Logic: cpp_logic_minimal
+global { P = "$(P)" PORT = "$(PORT)" }
+
+file ecmcCppLogicLongIn.template {
+  pattern { REC, PARAM, DESC }
+  { "main-actual-position", "main.actual_position", "main.actual_position" }
+  { "main-cycle-counter", "main.cycle_counter", "main.cycle_counter" }
+}
+
+file ecmcCppLogicLongOut.template {
+  pattern { REC, PARAM, DESC }
+  { "main-velocity-setpoint", "main.velocity_setpoint", "main.velocity_setpoint" }
+}

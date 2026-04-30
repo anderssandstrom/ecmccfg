@@ -1,0 +1,1007 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>125</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="caInclude" name="cainclude">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>128</width>
+     <height>500</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;OPERATIONAL status of the slave&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="macro">
+    <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string>
+   </property>
+   <property name="filename" stdset="0">
+    <string notr="true">ecmcE_slave_frame.ui</string>
+   </property>
+  </widget>
+  <widget class="caFrame" name="caframe_7">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>40</y>
+     <width>120</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string notr="true">CH=1,IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),HWType=$(HWType)</string>
+   </property>
+   <widget class="caTextEntry" name="catextentry_12">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>0</y>
+      <width>76</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)</string>
+    </property>
+    <property name="keepFocus">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="calineedit_15">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB</string>
+    </property>
+    <property name="background">
+     <color alpha="0">
+      <red>160</red>
+      <green>160</green>
+      <blue>164</blue>
+     </color>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+   </widget>
+   <widget class="caRelatedDisplay" name="carelateddisplay_5">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>20</y>
+      <width>15</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="labels">
+     <string>&gt;</string>
+    </property>
+    <property name="files">
+     <string>ecmcGraph_v1.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),TITLE=$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB: Raw Value: ,PV=$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="calabel">
+    <property name="geometry">
+     <rect>
+      <x>-30</x>
+      <y>-5</y>
+      <width>61</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>$(CH)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="caframe_8">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>80</y>
+     <width>120</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string notr="true">CH=2,IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),HWType=$(HWType)</string>
+   </property>
+   <widget class="caTextEntry" name="catextentry_13">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>0</y>
+      <width>76</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)</string>
+    </property>
+    <property name="keepFocus">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="calineedit_16">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB</string>
+    </property>
+    <property name="background">
+     <color alpha="0">
+      <red>160</red>
+      <green>160</green>
+      <blue>164</blue>
+     </color>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+   </widget>
+   <widget class="caRelatedDisplay" name="carelateddisplay_6">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>20</y>
+      <width>15</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="labels">
+     <string>&gt;</string>
+    </property>
+    <property name="files">
+     <string>ecmcGraph_v1.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),TITLE=$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB: Raw Value: ,PV=$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="calabel_2">
+    <property name="geometry">
+     <rect>
+      <x>-30</x>
+      <y>-5</y>
+      <width>61</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>$(CH)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="caframe_9">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>120</y>
+     <width>120</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string notr="true">CH=3,IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),HWType=$(HWType)</string>
+   </property>
+   <widget class="caTextEntry" name="catextentry_15">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>0</y>
+      <width>76</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)</string>
+    </property>
+    <property name="keepFocus">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="calineedit_18">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB</string>
+    </property>
+    <property name="background">
+     <color alpha="0">
+      <red>160</red>
+      <green>160</green>
+      <blue>164</blue>
+     </color>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+   </widget>
+   <widget class="caRelatedDisplay" name="carelateddisplay_8">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>20</y>
+      <width>15</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="labels">
+     <string>&gt;</string>
+    </property>
+    <property name="files">
+     <string>ecmcGraph_v1.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),TITLE=$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB: Raw Value: ,PV=$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="calabel_4">
+    <property name="geometry">
+     <rect>
+      <x>-30</x>
+      <y>-5</y>
+      <width>61</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>$(CH)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="caframe_10">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>160</y>
+     <width>120</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string notr="true">CH=4,IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),HWType=$(HWType)</string>
+   </property>
+   <widget class="caTextEntry" name="catextentry_16">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>0</y>
+      <width>76</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)</string>
+    </property>
+    <property name="keepFocus">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="calineedit_19">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB</string>
+    </property>
+    <property name="background">
+     <color alpha="0">
+      <red>160</red>
+      <green>160</green>
+      <blue>164</blue>
+     </color>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+   </widget>
+   <widget class="caRelatedDisplay" name="carelateddisplay_9">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>20</y>
+      <width>15</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="labels">
+     <string>&gt;</string>
+    </property>
+    <property name="files">
+     <string>ecmcGraph_v1.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),TITLE=$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB: Raw Value: ,PV=$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="calabel_5">
+    <property name="geometry">
+     <rect>
+      <x>-30</x>
+      <y>-5</y>
+      <width>61</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>$(CH)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="caframe_11">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>200</y>
+     <width>120</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string notr="true">CH=5,IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),HWType=$(HWType)</string>
+   </property>
+   <widget class="caTextEntry" name="catextentry_17">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>0</y>
+      <width>76</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)</string>
+    </property>
+    <property name="keepFocus">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="calineedit_20">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB</string>
+    </property>
+    <property name="background">
+     <color alpha="0">
+      <red>160</red>
+      <green>160</green>
+      <blue>164</blue>
+     </color>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+   </widget>
+   <widget class="caRelatedDisplay" name="carelateddisplay_10">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>20</y>
+      <width>15</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="labels">
+     <string>&gt;</string>
+    </property>
+    <property name="files">
+     <string>ecmcGraph_v1.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),TITLE=$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB: Raw Value: ,PV=$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="calabel_6">
+    <property name="geometry">
+     <rect>
+      <x>-30</x>
+      <y>-5</y>
+      <width>61</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>$(CH)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="caframe_12">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>240</y>
+     <width>120</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string notr="true">CH=6,IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),HWType=$(HWType)</string>
+   </property>
+   <widget class="caTextEntry" name="catextentry_18">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>0</y>
+      <width>76</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)</string>
+    </property>
+    <property name="keepFocus">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="calineedit_21">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB</string>
+    </property>
+    <property name="background">
+     <color alpha="0">
+      <red>160</red>
+      <green>160</green>
+      <blue>164</blue>
+     </color>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+   </widget>
+   <widget class="caRelatedDisplay" name="carelateddisplay_11">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>20</y>
+      <width>15</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="labels">
+     <string>&gt;</string>
+    </property>
+    <property name="files">
+     <string>ecmcGraph_v1.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),TITLE=$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB: Raw Value: ,PV=$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="calabel_7">
+    <property name="geometry">
+     <rect>
+      <x>-30</x>
+      <y>-5</y>
+      <width>61</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>$(CH)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="caframe_13">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>280</y>
+     <width>120</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string notr="true">CH=7,IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),HWType=$(HWType)</string>
+   </property>
+   <widget class="caTextEntry" name="catextentry_19">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>0</y>
+      <width>76</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)</string>
+    </property>
+    <property name="keepFocus">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="calineedit_22">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB</string>
+    </property>
+    <property name="background">
+     <color alpha="0">
+      <red>160</red>
+      <green>160</green>
+      <blue>164</blue>
+     </color>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+   </widget>
+   <widget class="caRelatedDisplay" name="carelateddisplay_12">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>20</y>
+      <width>15</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="labels">
+     <string>&gt;</string>
+    </property>
+    <property name="files">
+     <string>ecmcGraph_v1.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),TITLE=$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB: Raw Value: ,PV=$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="calabel_8">
+    <property name="geometry">
+     <rect>
+      <x>-30</x>
+      <y>-5</y>
+      <width>61</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>$(CH)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="caframe_14">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>320</y>
+     <width>120</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string notr="true">CH=8,IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),HWType=$(HWType)</string>
+   </property>
+   <widget class="caTextEntry" name="catextentry_20">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>0</y>
+      <width>76</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)</string>
+    </property>
+    <property name="keepFocus">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="calineedit_23">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB</string>
+    </property>
+    <property name="background">
+     <color alpha="0">
+      <red>160</red>
+      <green>160</green>
+      <blue>164</blue>
+     </color>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+   </widget>
+   <widget class="caRelatedDisplay" name="carelateddisplay_13">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>20</y>
+      <width>15</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="labels">
+     <string>&gt;</string>
+    </property>
+    <property name="files">
+     <string>ecmcGraph_v1.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),TITLE=$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB: Raw Value: ,PV=$(IOC):m$(MasterID)s$(SlaveID)-AO0$(CH)-RB</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="calabel_9">
+    <property name="geometry">
+     <rect>
+      <x>-30</x>
+      <y>-5</y>
+      <width>61</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>$(CH)</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caRelatedDisplay</class>
+   <extends>QWidget</extends>
+   <header>caRelatedDisplay</header>
+  </customwidget>
+  <customwidget>
+   <class>caTextEntry</class>
+   <extends>caLineEdit</extends>
+   <header>caTextEntry</header>
+  </customwidget>
+  <customwidget>
+   <class>caFrame</class>
+   <extends>QFrame</extends>
+   <header>caFrame</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>caLabel</class>
+   <extends>QLabel</extends>
+   <header>caLabel</header>
+  </customwidget>
+  <customwidget>
+   <class>caInclude</class>
+   <extends>QWidget</extends>
+   <header>caInclude</header>
+  </customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

@@ -60,7 +60,7 @@ Notes:
 | epics.motorRecord.enable | Enable motor record | No |
 | epics.motorRecord.description | This is MR | No |
 | epics.motorRecord.fieldInit | Extra config for motor record | No |
-| epics.motorRecord.syncSoftLimits | Sync softlimits between motor and ecmc (default false) | No |
+| epics.motorRecord.syncSoftLimits | Sync softlimits between motor and ecmc (default false). When false, motor record HLM/LLM and ecmc soft limits may differ. On false->true, ecmc soft limits are copied to the motor record; while true, later motor record soft-limit changes are written back to ecmc. | No |
 | epics.motorRecord.pvt.npoints | Max number of target points for PVT/profile move | No |
 | epics.motorRecord.pvt.nreadback | Max number of readback points for PVT/profile move | No |
 | drive.numerator | Fastest speed in engineering units | No |

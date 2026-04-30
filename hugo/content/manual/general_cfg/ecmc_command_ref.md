@@ -20,6 +20,9 @@ chapter = false
 |---|---|
 | `GetBlockCfgCmdsInRuntime()` | Get whether `Cfg.` parser commands are blocked while ecmc is in runtime. |
 | `Cfg.LinkEcEntryToObject(<str>,<str>)` | Links an EtherCAT entry to an object. |
+| `Cfg.LoadCppLogic(<int>,<str>)` | Load one additive C++ logic shared library. |
+| `Cfg.LoadCppLogic(<int>,<str>,<str>)` | Load one additive C++ logic shared library with config string (`asyn_port=...;sample_rate_ms=...;update_rate_ms=...`). |
+| `Cfg.ReportCppLogic(<int>)` | Print a report for one loaded C++ logic object. |
 | `Cfg.SetBlockCfgCmdsInRuntime(<int>)` | Enable or disable blocking of most `Cfg.` parser commands during runtime. Must be set before entering runtime. |
 | `Cfg.SetEnableFuncCallDiag(<int>)` | Enable printouts of which functions in hw_motor.cpp are being called. |
 | `Cfg.SetEnableTimeDiag(<int>)` | Enable printouts of timing information related to the realtime thread. |

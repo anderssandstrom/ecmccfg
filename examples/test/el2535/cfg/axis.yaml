@@ -36,12 +36,18 @@ encoder:
   absOffset: 0
 
 controller:
-  Kp: 1
-  Ki: 0.0000001
-  Kd: 0.0
+  Kp: 3
+  Ki: 0.005
+  Kd: 0.01
+  Kff: 1
   deadband:
     tol: 0
-    time: 1
+    time: 100
+  limits:
+    minOutput: 0                          # Important for heaters: do not allow negative output
+    maxOutput: 100
+    minIntegral: 0
+    maxIntegral: 1
 
 trajectory:
   source: 0

@@ -67,6 +67,50 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}scripts/appendCppLogicMacros.cmd, "MACROS='C=3,D=4'"
 If `LOGIC_ID` is omitted, `appendCppLogicMacros.cmd` targets the current
 `ECMC_CPP_LOGIC_ID` set by `loadCppLogic.cmd`.
 
+## Startup Macro Handling
+
+The `MACROS` argument is passed as plain text to the C++ logic instance. It is
+not applied by `msi` to the C++ source code. User code reads it at runtime with
+the helper functions in `ecmcCppLogic.hpp`.
+
+Example startup:
+
+```bash
+${SCRIPTEXEC} ${ecmccfg_DIR}scripts/loadCppLogic.cmd, \
+  "FILE=libmain.so,MACROS='S_ID=14,AXIS_ID=1,DBG=1,GAIN=2.5'"
+```
+
+Example C++ use:
+
+```cpp
+const std::string macros = ecmcCpp::getMacrosString();
+const int slave_id = ecmcCpp::getMacroValueInt(macros, "S_ID", 14);
+const int axis_id = ecmcCpp::getMacroValueInt(macros, "AXIS_ID", 1);
+const bool dbg = ecmcCpp::getMacroValueInt(macros, "DBG", 0) != 0;
+const double gain = ecmcCpp::getMacroValueDouble(macros, "GAIN", 1.0);
+const std::string mode = ecmcCpp::getMacroValueString(macros, "MODE", "normal");
+
+ecmcCpp::setEnableDbg(dbg);
+```
+
+Available macro helper functions:
+
+- `ecmcCpp::getMacrosString()`
+- `ecmcCpp::getMacroValue(macros, key)`
+- `ecmcCpp::getMacroValueString(macros, key, defaultValue)`
+- `ecmcCpp::getMacroValueInt(macros, key, defaultValue)`
+- `ecmcCpp::getMacroValueDouble(macros, key, defaultValue)`
+
+`getMacroValue(...)` returns an empty string when a key is missing.
+`getMacroValueString(...)` returns the caller-provided default when a key is
+missing. The numeric helpers return the caller-provided default when the key is
+missing or cannot be parsed. Macro text is split on commas outside quotes, and
+optional single or double quotes around values are stripped.
+
+Use `appendCppLogicMacros.cmd` when a startup file should add more macro text
+after the initial load. The appended text is visible through the same
+`ecmcCpp::getMacrosString()` helper.
+
 ## C++ Programming Model
 
 The public C++ headers are:

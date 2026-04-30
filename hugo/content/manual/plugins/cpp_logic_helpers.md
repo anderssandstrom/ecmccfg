@@ -22,7 +22,8 @@ For the IOC loading and runtime model, start with
 The current helper headers are:
 
 - `ecmcCppLogic.hpp`
-  Includes `ecmcCpp::getMacrosString()` for reading the free-form `MACROS` startup string.
+  Includes the core binding/export API, host-service helpers, and startup
+  macro helpers.
 - `ecmcCppMotion.hpp`
 - `ecmcCppControl.hpp`
 - `ecmcCppUtils.hpp`
@@ -97,6 +98,7 @@ services:
 - `ecmcCpp::getCycleTimeS()`
 - `ecmcCpp::getEcMasterStateWord(...)`
 - `ecmcCpp::getEcSlaveStateWord(...)`
+- `ecmcCpp::getIocState()`
 - `ecmcCpp::setEnableDbg(...)`
 - `ecmcCpp::publishDebugText(...)`
 
@@ -106,6 +108,40 @@ Typical use cases:
 - inspect EtherCAT master/slave state words from logic code
 - enable cpp-logic debug publishing from code
 - publish one-line runtime debug/status messages to the built-in debug text path
+
+### Startup macro helpers
+
+The IOC `loadCppLogic.cmd` `MACROS` argument is available to user code as a
+plain text string. It is intended for small configuration values such as slave
+ids, axis ids, feature flags, and simple numeric tuning constants.
+
+Available helpers:
+
+- `ecmcCpp::getMacrosString()`
+- `ecmcCpp::getMacroValue(macros, key)`
+- `ecmcCpp::getMacroValueString(macros, key, defaultValue)`
+- `ecmcCpp::getMacroValueInt(macros, key, defaultValue)`
+- `ecmcCpp::getMacroValueDouble(macros, key, defaultValue)`
+
+Typical use:
+
+```cpp
+const std::string macros = ecmcCpp::getMacrosString();
+const int slave_id = ecmcCpp::getMacroValueInt(macros, "S_ID", 14);
+const int axis_id = ecmcCpp::getMacroValueInt(macros, "AXIS_ID", 1);
+const bool dbg = ecmcCpp::getMacroValueInt(macros, "DBG", 0) != 0;
+const double gain = ecmcCpp::getMacroValueDouble(macros, "GAIN", 1.0);
+const std::string mode = ecmcCpp::getMacroValueString(macros, "MODE", "normal");
+
+ecmcCpp::setEnableDbg(dbg);
+```
+
+`getMacroValue(...)` returns an empty string when the key is missing.
+`getMacroValueString(...)` returns the default value when the key is missing.
+The numeric helpers return the default value when the key is missing or when
+parsing fails. The parser accepts comma-separated `KEY=VALUE` text and ignores
+commas inside single or double quoted values. Optional matching quotes around a
+value are removed.
 
 ### Axis host-service helpers
 
@@ -224,6 +260,29 @@ These are intended to feel familiar to users coming from IEC/ST helper blocks.
 - `ecmcCpp::applyDeadband(...)`
 - `ecmcCpp::clampValue(...)`
 - `ecmcCpp::inWindow(...)`
+- `ecmcCpp::readBit(...)`
+- `ecmcCpp::writeBit(...)`
+- `ecmcCpp::setBit(...)`
+- `ecmcCpp::clearBit(...)`
+- `ecmcCpp::toggleBit(...)`
+
+The bit helpers work on integer word types such as `uint8_t`, `uint16_t`,
+`int32_t`, and `uint64_t`. They return a value and do not modify the input by
+reference.
+
+Example:
+
+```cpp
+uint16_t drive_control {0};
+
+drive_control = ecmcCpp::setBit(drive_control, 0);
+drive_control = ecmcCpp::writeBit(drive_control, 3, enable_brake);
+const bool brake_enabled = ecmcCpp::readBit(drive_control, 3);
+```
+
+Out-of-range bit indexes are handled without undefined shifts:
+`readBit(...)` returns `false`, while the write-style helpers return the
+unchanged input value.
 
 ### EtherCAT status wrappers
 

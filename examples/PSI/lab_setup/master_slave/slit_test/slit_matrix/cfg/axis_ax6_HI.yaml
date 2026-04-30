@@ -40,7 +40,7 @@ encoder:
 
 controller:
   Kp: 2.000
-  Ki: 0.001
+  Ki: 0.000
   Kd: 0.000
   Kff: 1.00
 

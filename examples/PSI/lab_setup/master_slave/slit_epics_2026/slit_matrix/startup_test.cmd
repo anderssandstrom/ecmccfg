@@ -1,6 +1,7 @@
 #- Configuration scripts
-#require ecmccfg "MASTER_ID=0,ENG_MODE=1,EC_RATE=500,ECMC_VER=sandst_a"
+#require ecmccfg "MASTER_ID=0,ENG_MODE=1,EC_RATE=500"
 require ecmccfg v11.0.7_RC1 "MASTER_ID=0,ENG_MODE=1,EC_RATE=500,ECMC_VER=v11.0.7_RC1"
+#require ecmccfg 11.0.3 "MASTER_ID=0,ENG_MODE=1,EC_RATE=500,ECMC_VER=11.0.3"
 
 #- Only output errors
 asynSetTraceMask(${ECMC_ASYN_PORT}, -1, 0x01)
@@ -33,7 +34,8 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd,      "FILE=./cfg/axis_vax6_YGAP.ya
 #- #################################################################
 #- PLCs with kinematics (note the INC var including dirs to search for include files)
 #- The group ID:s configured in yaml are stored in GRP_<axis.group>_ID
-${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd,    "FILE=./cfg/axis_main.plc, PLC_ID=1, INC=.:${ecmccfg_DIR}, PLC_MACROS='PLC_ID=1, AX_M1=12, AX_M2=13, AX_S1=5, AX_S2=6, GRP_ID_SA=${GRP_realAxes_ID}, GRP_ID_MA=${GRP_virtualAxes_ID},DBG='"
+${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}loadPLCFile.cmd,  "FILE=cfg/axis_main.plc, INC=./cfg/:${ecmccfg_DIR}, PLC_MACROS='AX_CEN=12, AX_GAP=13,  AX_LO=5, AX_HI=6'"
+#${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd,    "FILE=./cfg/axis_main.plc, PLC_ID=1, INC=.:${ecmccfg_DIR}, PLC_MACROS='PLC_ID=1, AX_M1=12, AX_M2=13, AX_S1=5, AX_S2=6, GRP_ID_SA=${GRP_realAxes_ID}, GRP_ID_MA=${GRP_virtualAxes_ID},DBG='"
 
 #- Add state machine to sync the virtual and physical axes (the groups are defined in the yaml axis-cfg files) 
 ${SCRIPTEXEC} ${ecmccfg_DIR}addMasterSlaveSM.cmd "NAME=Slit_SM, MST_GRP_NAME=virtualAxes, SLV_GRP_NAME=realAxes"

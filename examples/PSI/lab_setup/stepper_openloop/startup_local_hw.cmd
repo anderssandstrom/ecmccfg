@@ -1,7 +1,7 @@
 ##############################################################################
 ## Example config for open loop only
 
-require ecmccfg v11.0.0_RC1 "ENG_MODE=1,MASTER_ID=0,ECMC_VER=v11.0.0_RC1"
+require ecmccfg v11.0.7_RC1 "ENG_MODE=1,MASTER_ID=0,ECMC_VER=v11.0.7_RC1"
 
 # 0:11 - EL7031    1Ch Stepper
 

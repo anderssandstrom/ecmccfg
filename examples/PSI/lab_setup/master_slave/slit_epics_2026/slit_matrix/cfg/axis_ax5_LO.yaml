@@ -7,6 +7,7 @@ axis:
   features:
     allowSrcChangeWhenEnabled: true
   autoEnable:
+    disableTimeout: 2.0
     enableTimeout: 5.0
 
 epics:
@@ -28,6 +29,7 @@ drive:
   reduceTorqueEnable: True                            # Enable reduce torque functionality
 
 encoder:
+  desc: Openloop
   numerator: 1          # 1egu = 1mm
   denominator: 12800    # Number of ticks when motor moves numerator (=1mm): 1 mm / 50 nm = 20000
   type: 0               # Type: 0=Incremental, 1=Absolute
@@ -58,11 +60,11 @@ input:
   interlock: ec${M_ID=0}.s-1.ONE.0                   # unused
 
 softlimits:
-  enable: false
+  enable: true
   backwardEnable: true
   forwardEnable: true
-  forward: 55.8
-  backward: 5.1
+  forward: 10
+  backward: -10
 
 monitoring:
   lag:

@@ -1,0 +1,6 @@
+##############################################################################
+## Example config for EL1144
+
+require ecmccfg sandst_a, "ECMC_VER=v11.0.7_RC1"
+
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=22,HW_DESC=EL1889"

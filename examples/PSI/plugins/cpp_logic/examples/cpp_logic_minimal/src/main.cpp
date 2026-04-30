@@ -17,15 +17,15 @@ struct NativeBounceLogic : public ecmcCpp::LogicBase {
   static constexpr uint16_t lower_turnaround_position {100};
   static constexpr uint16_t upper_turnaround_position {12800};
 
-  int slave_id {14};
+  std::string slave_id {"14"};
   uint16_t actual_position {0};
   uint16_t drive_control {0};
   int16_t velocity_setpoint {1000};
   int32_t cycle_counter {0};
 
   NativeBounceLogic() {
-    slave_id = ecmcCpp::getMacroValueInt(ecmcCpp::getMacrosString(), "S_ID", 14);
-    const std::string item_base = "ec.s" + std::to_string(slave_id) + ".";
+    slave_id = ecmcCpp::getMacroValueString(ecmcCpp::getMacrosString(), "S_ID", "14");
+    const std::string item_base = "ec.s" + slave_id + ".";
     const std::string actual_position_item = item_base + "positionActual01";
     const std::string drive_control_item = item_base + "driveControl01";
     const std::string velocity_setpoint_item = item_base + "velocitySetpoint01";

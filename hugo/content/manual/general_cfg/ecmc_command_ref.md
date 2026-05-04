@@ -45,6 +45,7 @@ chapter = false
 | `Cfg.CreateAxis(<int>,<int>,<int>,<int>)` | Creates an axis object at index axisIndex. |
 | `Cfg.CreateDefaultAxis(<int>)` | Creates an axis object at index axisIndex. |
 | `Cfg.CreateMasterSlaveSM(<int>,<str>,<str>,<str>,<int>,<int>)` | Create a new master/slave state machine object. See [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}}). |
+| `Cfg.SetMstSlvAtTgtTimeout(<int>,<float>)` | Set master/slave timeout after all master axes reached target. |
 | `GetAxisAcc(<int>)` | Get axis acceleration setpoint. |
 | `GetAxisAllowCommandsFromPLC(<int>)` | Get axis allow command from PLC. |
 | `GetAxisBlockCom(<int>)` | Get whether active command-parser set commands are blocked for an axis. |
@@ -95,6 +96,7 @@ chapter = false
 | `GetAxisTrajSourceType(<int>)` | Get axis trajectory data source. |
 | `GetAxisType(<int>)` | Get axis type. |
 | `GetAxisVel(<int>)` | Get axis target velocity setpoint. |
+| `GetMstSlvAtTgtTimeout(<int>)` | Get master/slave timeout after all master axes reached target. |
 | `Cfg.LinkEcEntryToAxisDrive(<int>,,<int>,<int>,<int>)` | Links an EtherCAT entry to the drive object of the axis at axisIndex. |
 | `Cfg.LinkEcEntryToAxisDrive(<int>,<str>,<int>,<int>,<int>)` | Links an EtherCAT entry to the drive object of the axis at axisIndex. |
 | `Cfg.LinkEcEntryToAxisEncoder(<int>,<str>,<int>,<int>,<int>)` | Links an EtherCAT entry to the encoder object of the axis at axisIndex. |

@@ -1,6 +1,6 @@
 #==============================================================================
 # addMasterSlaveSM.cmd
-#- Arguments: NAME, MST_GRP_NAME, SLV_GRP_NAME, [MST_DISABLE], [SLV_DISABLE]
+#- Arguments: NAME, MST_GRP_NAME, SLV_GRP_NAME, [MST_DISABLE], [SLV_DISABLE], [MST_AT_TARGET_TIMEOUT]
 #-d /**
 #-d   \brief Script for creating and adding a master/slave state machine.
 #-d   \author Anders Sandström
@@ -12,6 +12,7 @@
 #-d          when running scans it can be good to allow the master axes to be enabled.   
 #-d   \param SLV_DISABLE (optional) Disable all slave axes when they are not busy (will override auto-disable in yaml), default 0 (axes will not disable)
 #-d    To have full control, both SLV_DISABLE and MST_DISABLE can be set to 0, and then the required timeouts can be configured in axis.autoEnable.
+#-d   \param MST_AT_TARGET_TIMEOUT (optional) Timeout in seconds after all master axes reached target before forcing disable and IDLE, default 10. Set negative to disable.
 #-d */
 
 epicsEnvSet("ECMC_SM_ID",              "${SM_ID=0}")
@@ -19,6 +20,7 @@ epicsEnvSet("ECMC_SM_ID",              "${SM_ID=0}")
 ecmcEpicsEnvSetCalc("ECMC_SM_ID_2_CHAR", "${ECMC_SM_ID}","%02d")
 
 ecmcConfigOrDie "Cfg.CreateMasterSlaveSM(${ECMC_SM_ID},${NAME=empty},${MST_GRP_NAME},${SLV_GRP_NAME},${MST_DISABLE=0},${SLV_DISABLE=0})"
+ecmcConfigOrDie "Cfg.SetMstSlvAtTgtTimeout(${ECMC_SM_ID},${MST_AT_TARGET_TIMEOUT=10})"
 ecmcFileExist("ecmcSM.db",1,1)
 dbLoadRecords("ecmcSM.db", "P=$(ECMC_PREFIX),ID_2CH=${ECMC_SM_ID_2_CHAR},Index=${ECMC_SM_ID},PORT=${ECMC_ASYN_PORT},T_SMP_MS=${ECMC_EC_SAMPLE_RATE_MS},NAME=${NAME=empty},SLV_NAME=${SLV_GRP_NAME},MST_NAME=${MST_GRP_NAME},PREV_OBJ_ID=${ECMC_PREV_SM_OBJ_ID=-1}")
 

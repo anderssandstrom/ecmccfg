@@ -22,7 +22,7 @@ Use the wrapper script:
 
 ```bash
 ${SCRIPTEXEC} ${ecmccfg_DIR}addMasterSlaveSM.cmd \
-  "NAME=Slit_SM, MST_GRP_NAME=virtualAxes, SLV_GRP_NAME=realAxes"
+  "NAME=Slit_SM, MST_GRP_NAME=virtualAxes, SLV_GRP_NAME=realAxes, MST_AT_TARGET_TIMEOUT=10"
 ```
 
 Arguments:
@@ -32,8 +32,24 @@ Arguments:
 - `SLV_GRP_NAME`: slave-group name, normally the physical axes
 - `MST_DISABLE` (optional): auto-disable master axes when not busy
 - `SLV_DISABLE` (optional): auto-disable slave axes when not busy
+- `MST_AT_TARGET_TIMEOUT` (optional): timeout in seconds after all master axes have reached target before the state machine forces disable and returns to `IDLE`; default `10`, set negative to disable
 
 If you want full control from each axis YAML instead, leave `MST_DISABLE` and `SLV_DISABLE` at `0` and configure `axis.autoEnable` per axis.
+
+## Master AtTarget Timeout
+
+When the state machine is in `MASTER`, all master axes must first reach `atTarget` after the last master-group motion. Once this has happened, the state machine keeps master auto-disable allowed even if an axis later drops out of `atTarget` during the disable sequence.
+
+The `MST_AT_TARGET_TIMEOUT` setting limits how long master axes may remain enabled after that first all-master `atTarget` condition. If the timeout expires, the state machine sets an error on all master axes, disables the master and slave groups, restores the slave trajectory source to internal, and returns to `IDLE`.
+
+The raw commands are:
+
+```bash
+Cfg.SetMstSlvAtTgtTimeout(<smIndex>,<seconds>)
+GetMstSlvAtTgtTimeout(<smIndex>)
+```
+
+The default is `10` seconds. Use a negative value to disable this timeout.
 
 ## Runtime PVs
 

@@ -29,6 +29,7 @@
 #- PVA               = YES / NO
 #- TMP_DIR           = directory for temporary files
 #- ENG_MODE          = 1/0. If ENG_MODE is set then PVs used for commissioning will be avaialble
+#- BEC_MODE          = 1/0. If BEC_MODE is set the all PVs will be throttled to a maximum of 10Hz  
 #- EC_TOOL_PATH      = Path to ethercat tool defaults to ethercat tool in ECmasterECMC_DIR, 
 #- otherwise            "/opt/etherlab/bin/ethercat"
 #- MAX_PARAM_COUNT   = Maximum asyn param count, defaults to 1650
@@ -49,6 +50,7 @@
 #- ECMC_EC_TOOL_PATH      = path to ethercat tool
 #- ECMC_SAMPLE_RATE_MS    = current record update rate in milli seconds
 #- ECMC_SAMPLE_RATE_MS_ORIGINAL = ECMC_SAMPLE_RATE_MS (used for restore to default if ECMC_SAMPLE_RATE_MS is changed)
+#- ECMC_BEC_MODE          = Limit PV update rate to 10Hz if in BEC_MODE
 #-
 #-------------------------------------------------------------------------------
 #- Halt on error (dbLoad*)
@@ -83,6 +85,9 @@ epicsEnvSet("SM_PREFIX",            "${IOC}:")    # colon added since IOC is _no
 epicsEnvSet("ECMC_PROC_HOOK",       "${PROC_HOOK=''}")
 #-
 
+#- Set BEC_MODE for use in later scripts
+epicsEnvSet(ECMC_BEC_MODE,${BEC_MODE=0})
+
 #-------------------------------------------------------------------------------
 #- Set max asyn param count ECMC_ASYN_PORT_MAX_PARAMS can override
 epicsEnvSet("ECMC_ASYN_PORT_MAX_PARAMS",${ECMC_ASYN_PORT_MAX_PARAMS=${MAX_PARAM_COUNT=1650}})
@@ -115,6 +120,10 @@ ecmcEpicsEnvSetCalc("ECMC_EC_SAMPLE_RATE_MS" ,1000/${ECMC_EC_SAMPLE_RATE=1000})
 
 # Update records in 10ms (100Hz) for FULL MODE and in EC_RATE for DAQ mode
 ecmcEpicsEnvSetCalcTernary(ECMC_SAMPLE_RATE_MS, "'${ECMC_MODE=FULL}'=='DAQ'","${ECMC_EC_SAMPLE_RATE_MS}","10")
+
+#- BEC_MODE: Throttle PV updates to 10Hz
+ecmcEpicsEnvSetCalcTernary(BEC_MODE_EXE, "${ECMC_BEC_MODE=0}=1","","#-")
+${BEC_MODE_EXE=#}${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}setRecordUpdateRate.cmd "RATE_MS=100"  # Throttling update rate to 10Hz
 epicsEnvSet(ECMC_SAMPLE_RATE_MS_ORIGINAL,${ECMC_SAMPLE_RATE_MS})
 
 #-

@@ -1,0 +1,3 @@
+# Auto-generated C++ logic substitutions
+# Logic: cpp_logic_waveform
+global { P = "$(P)" PORT = "$(PORT)" }

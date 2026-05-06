@@ -1,0 +1,20 @@
+# Minimal cpp logic IOC example using direct EL7041 item bindings.
+#
+# The staged cpp logic library lives in the IOC-local bin directory:
+#   bin/main.so
+#   cfg/libmain.so_cpp_logic.subs
+#
+# This sample expects direct EL7041 PDO items on slave ${S_ID=14}:
+#   ec0.s${S_ID=14}.positionActual01
+#   ec0.s${S_ID=14}.driveControl01
+#   ec0.s${S_ID=14}.velocitySetpoint01
+#
+# Useful panels after startup:
+#   caqtdm -macro "IOC=MTEST04-MTN-CPP-LOGIC" ecmcCppLogicOverview.ui
+#   caqtdm -macro "IOC=MTEST04-MTN-CPP-LOGIC,CPP_ID=0" ecmcCppLogic.ui
+#   caqtdm MTEST04-MTN-CPP-LOGIC_cpp_logic.ui
+
+require ecmccfg v11.0.7_RC1 "ECMC_VER=v11.0.7_RC1"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=${S_ID=23},HW_DESC=EL4732"
+${SCRIPTEXEC} ${ecmccfg_DIR}loadCppLogic.cmd, "MACROS='S_ID=${S_ID=23}',REPORT=1"
+

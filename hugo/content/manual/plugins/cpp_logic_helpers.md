@@ -98,7 +98,10 @@ services:
 - `ecmcCpp::getCycleTimeS()`
 - `ecmcCpp::getEcMasterStateWord(...)`
 - `ecmcCpp::getEcSlaveStateWord(...)`
+- `ecmcCpp::lutExists(...)`
+- `ecmcCpp::lutGetValue(...)`
 - `ecmcCpp::getIocState()`
+- `ecmcCpp::requestIocExit(...)`
 - `ecmcCpp::setEnableDbg(...)`
 - `ecmcCpp::publishDebugText(...)`
 
@@ -106,8 +109,39 @@ Typical use cases:
 
 - read the configured realtime cycle time without hard-coding it
 - inspect EtherCAT master/slave state words from logic code
+- read values from ecmc lookup tables loaded during IOC startup
+- request IOC shutdown when logic detects an unrecoverable condition
 - enable cpp-logic debug publishing from code
 - publish one-line runtime debug/status messages to the built-in debug text path
+
+Lookup table access uses the same LUT objects as the PLC `lut_get_value(...)`
+helper:
+
+```cpp
+double correction = 0.0;
+if (ecmcCpp::lutExists(0)) {
+  correction = ecmcCpp::lutGetValue(0, position);
+}
+```
+
+The first argument is the LUT id. The second argument is the input/index value.
+The helper returns `0.0` if the LUT id is out of range or if the LUT object has
+not been loaded. Use `ecmcCpp::lutExists(...)` when logic should check for an
+optional LUT without logging an error. See [Lookup Tables]({{< relref "/manual/general_cfg/lut.md" >}})
+for loading and file format details.
+
+IOC exit requests are deferred through the main realtime loop. The helper only
+sets an exit request flag:
+
+```cpp
+if (fatal_condition) {
+  ecmcCpp::requestIocExit(1);
+}
+```
+
+Do not call `exit()` or `epicsExit()` directly from `run()`. Use
+`requestIocExit(...)` for fatal conditions where the whole IOC should stop. The
+main realtime loop observes the request and leaves through the ecmc cleanup path.
 
 ### Startup macro helpers
 

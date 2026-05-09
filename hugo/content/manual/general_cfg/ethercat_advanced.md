@@ -35,6 +35,39 @@ Important behavior:
 
 Use extra domains only when you have a clear reason. For most systems, the default single-domain setup is simpler and safer.
 
+## Simulation Entries
+
+Simulation entries are local `ecmc` memory-backed EtherCAT entries. They are useful when an axis object needs an EtherCAT-style link, but the value is produced locally rather than by a real slave.
+
+Two entries, `ZERO` and `ONE`, are created by default on the internal simulation slave. Additional entries can be added with `Cfg.EcAddSimEntry(...)`.
+
+Global simulation entries:
+
+```bash
+ecmcConfigOrDie "Cfg.EcAddSimEntry(SIM_LIMIT,U32,0)"
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject(SIM_LIMIT,ax1.mon.lowlim)"
+ecmcConfigOrDie "Cfg.WriteEcEntryEcPath(SIM_LIMIT,1)"
+```
+
+The global form stores the entry on the internal simulation slave (`-1`), but the entry can be addressed by name without an `ec<master>.s<slave>.` prefix. This is the preferred form for local dummy values and PLC-produced values.
+
+Slave-scoped simulation entries are still supported:
+
+```bash
+ecmcConfigOrDie "Cfg.EcAddSimEntry(5,SIM_LIMIT,U32,0)"
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject(ec0.s5.SIM_LIMIT,ax1.mon.lowlim)"
+```
+
+Use the scoped form only when it is helpful to keep the simulated value visually associated with a specific slave in configuration.
+
+Notes:
+
+- global simulation entries do not require an EtherCAT master to be initialized
+- they use the same data types as normal EtherCAT entries, for example `B1`, `U16`, `S32`, `U64`, `F32`, and `F64`
+- they can be linked to motion objects with `Cfg.LinkEcEntryToObject(...)`
+- they can be read and written with `ReadEcEntryIDString(<name>)` and `Cfg.WriteEcEntryEcPath(<name>,<value>)`
+- entries are held in the internal simulation slave and share the normal ecmc entry-list limit
+
 ## Custom EtherCAT Data Items
 
 `addEcDataItem.cmd` exposes a value directly from already configured process-image data.

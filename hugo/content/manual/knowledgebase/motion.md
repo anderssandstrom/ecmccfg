@@ -148,14 +148,42 @@ Note that in PLC code, bits must be accessed with the `ec_chk_bit()` command.
 ## double limit switches legacy (still an option)
 Sometimes two limit switches are needed, but only one can be linked in the YAML configuration. One use case is overlapping axis ranges where a switch is used to prevent collisions.
 
-To configure this, add a PLC where the two limit switches are combined with an `and` (for normally closed switches) into one bit by using the simulation entries (`ec<mid>.s<sid>.ONE` or `ec<mid>.s<sid>.ZERO`).
+To configure this, add a PLC where the two limit switches are combined with an `and` (for normally closed switches) into one bit by using a simulation entry. For new configurations, prefer a named global simulation entry. Legacy configurations can still use scoped simulation entries such as `ec<mid>.s<sid>.ZERO`.
 
 1. Add a plc
-2. Choose an unused bit in the simulation entry `ec<mid>.s<sid>.ZERO` (dummy 32-bit memory area in ecmc initialized to 0). Any slave can be chosen, but it probably makes sense to use the drive slave.
-3. Add code to combine the two switches into one bit ("and"). Use ec_wrt_bit to set the value.
-4. Use the selected simulation bit in the YAML config.
+2. Add a global simulation entry, for example `Cfg.EcAddSimEntry(SIM_LIMITS,U32,0)`.
+3. Choose an unused bit in the simulation entry.
+4. Add code to combine the two switches into one bit ("and"). Use ec_wrt_bit to set the value.
+5. Use the selected simulation bit in the YAML config.
 
-Example (use ec0.s2.ZERO.31 as combined limit switch):
+Example (use `SIM_LIMITS.31` as combined limit switch):
+
+```txt
+ecmcConfigOrDie "Cfg.EcAddSimEntry(SIM_LIMITS,U32,0)"
+```
+
+```txt
+# Bit 31
+# Switch 1: ec0.s5.binaryInput01
+# Switch 2: ec0.s5.binaryInput02
+SIM_LIMITS:=ec_wrt_bit(SIM_LIMITS,ec0.s5.binaryInput01 and ec0.s5.binaryInput02,31);
+```
+
+Then use it as a forward or backward bit in YAML:
+
+```yaml
+input:
+  limit:
+    forward: SIM_LIMITS.31     # In PLC "ec0.s5.binaryInput01 and ec0.s5.binaryInput02"
+    backward: ....
+```
+
+Legacy example (use `ec0.s2.ZERO.31` as combined limit switch):
+
+1. Choose an unused bit in the simulation entry `ec<mid>.s<sid>.ZERO` (dummy 32-bit memory area in ecmc initialized to 0). Any slave can be chosen, but it probably makes sense to use the drive slave.
+2. Add code to combine the two switches into one bit ("and"). Use ec_wrt_bit to set the value.
+3. Use the selected simulation bit in the YAML config.
+
 ```txt
 # Master 0
 # Drive slave  3 (can be any slave)

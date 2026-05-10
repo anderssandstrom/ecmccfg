@@ -157,6 +157,26 @@ The main split is:
 - `ecmc...`: live realtime bindings to `ecmc` item names
 - `epics...`: values exported on the C++ logic instance's dedicated asyn port
 
+Creation can fail cleanly before realtime starts. With the default registration
+macro, add `validateCreation(std::string* errorMessage)` when validation needs the
+constructed object:
+
+```cpp
+int32_t validateCreation(std::string* errorMessage) {
+  if (bad_config) {
+    if (errorMessage) {
+      *errorMessage = "bad config: missing AXIS_ID";
+    }
+    return ECMC_CPP_LOGIC_CREATE_INSTANCE_FAIL;
+  }
+  return 0;
+}
+```
+
+If this hook returns an error, `Cfg.LoadCppLogic(...)` returns the error code and
+message. Use `ecmcConfigOrDie` around `Cfg.LoadCppLogic(...)` when startup
+should stop on a fatal C++ logic creation error.
+
 ## Supported Binding Styles
 
 For normal scalars, the C++ value type is inferred from the bound variable type.

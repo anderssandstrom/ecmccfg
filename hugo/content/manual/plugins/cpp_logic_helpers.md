@@ -65,6 +65,46 @@ struct MyLogic : public ecmcCpp::LogicBase {
 ECMC_CPP_LOGIC_REGISTER_DEFAULT(MyLogic)
 ```
 
+### Creation error handling
+
+`ECMC_CPP_LOGIC_REGISTER_DEFAULT(...)` uses the C++ logic ABI create callback:
+
+```c
+int32_t createInstance(void** instance);
+```
+
+The callback returns `0` on success and an ecmc error code on failure. On
+success, `*instance` contains the created logic object. On failure, the instance
+is `nullptr` and `Cfg.LoadCppLogic(...)` returns the error.
+
+For checks that need the constructed object, add an optional `validateCreation(...)`
+member function:
+
+```cpp
+struct MyLogic : public ecmcCpp::LogicBase {
+  MyLogic() {
+    // Build bindings and local state.
+  }
+
+  int32_t validateCreation(std::string* errorMessage) {
+    if (bad_config) {
+      if (errorMessage) {
+        *errorMessage = "bad config: missing AXIS_ID";
+      }
+      return ECMC_CPP_LOGIC_CREATE_INSTANCE_FAIL;
+    }
+    return 0;
+  }
+};
+```
+
+If `validateCreation(...)` returns an error, the default adapter deletes the object,
+returns the error code over the ABI, and passes the message to
+`Cfg.LoadCppLogic(...)`.
+
+Use `ecmcConfigOrDie "Cfg.LoadCppLogic(...)"` in startup scripts when a failed
+creation should stop IOC startup.
+
 ### Binding/export helpers
 
 For scalar values:

@@ -368,7 +368,8 @@ Use homing sequence `11` for low-limit plus index homing and `12` for high-limit
 
 See also:
 - [EL7047 + EL5102 best-practice example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_incremental/el7047_el5102)
-- [EL7062 best-practice example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_incremental/el7062)
+- [EX7062 CSV best-practice example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_incremental/ex7062_CSV)
+- [EL7062 CSP best-practice example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/stepper_incremental/ex7062_CSP)
 - [EL7062 hardware notes]({{< relref "/manual/knowledgebase/hardware/EL7062.md" >}})
 
 ### ECMC_SEQ_HOME_SET_POS = 15, (setPosition)

@@ -1757,7 +1757,7 @@
       </rect>
      </property>
      <property name="title">
-      <string>TP01</string>
+      <string/>
      </property>
      <widget class="caByte" name="cabyte_5">
       <property name="geometry">
@@ -1777,7 +1777,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 0: Ready to switch on &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 1: Switched on &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 2: Operation enabled &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 3: Fault &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 4: reserved &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 5: Quick stop (inverse) &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 6: Switch on disabled &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 7: Warning &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 8 + 9: reserved &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 10: TxPDOToggle (selection/deselection via 0x8010:01) &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 11: Internal limit active &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 12: (Target value ignored) &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 13 - 15: reserved&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="channel" stdset="0">
-       <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Tp01-Stat</string>
+       <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ID)-Stat</string>
       </property>
       <property name="endBit">
        <number>7</number>
@@ -2058,7 +2058,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 0: Ready to switch on &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 1: Switched on &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 2: Operation enabled &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 3: Fault &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 4: reserved &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 5: Quick stop (inverse) &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 6: Switch on disabled &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 7: Warning &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 8 + 9: reserved &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 10: TxPDOToggle (selection/deselection via 0x8010:01) &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 11: Internal limit active &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 12: (Target value ignored) &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 13 - 15: reserved&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="channel" stdset="0">
-       <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Tp01-Cmd-RB</string>
+       <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ID)-Cmd-RB</string>
       </property>
       <property name="endBit">
        <number>7</number>
@@ -2074,7 +2074,7 @@
        </rect>
       </property>
       <property name="channel" stdset="0">
-       <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Tp01-Cmd</string>
+       <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ID)-Cmd</string>
       </property>
       <property name="endBit">
        <number>7</number>
@@ -2280,6 +2280,19 @@
        <string>Cont.</string>
       </property>
      </widget>
+     <widget class="caLabel" name="calabel_4">
+      <property name="geometry">
+       <rect>
+        <x>-10</x>
+        <y>10</y>
+        <width>90</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>TP$(ID)_1</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QGroupBox" name="groupBox_7">
      <property name="geometry">
@@ -2291,7 +2304,7 @@
       </rect>
      </property>
      <property name="title">
-      <string>TP02</string>
+      <string/>
      </property>
      <widget class="caByte" name="cabyte_7">
       <property name="geometry">
@@ -2311,7 +2324,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 0: Ready to switch on &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 1: Switched on &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 2: Operation enabled &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 3: Fault &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 4: reserved &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 5: Quick stop (inverse) &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 6: Switch on disabled &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 7: Warning &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 8 + 9: reserved &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 10: TxPDOToggle (selection/deselection via 0x8010:01) &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 11: Internal limit active &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 12: (Target value ignored) &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 13 - 15: reserved&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="channel" stdset="0">
-       <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Tp02-Stat</string>
+       <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ID)-Stat</string>
       </property>
       <property name="startBit">
        <number>8</number>
@@ -2473,109 +2486,6 @@
         <string>BI</string>
        </property>
       </widget>
-     </widget>
-     <widget class="caLabel" name="calabel_90">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>210</y>
-        <width>96</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Pos. latch position</string>
-      </property>
-     </widget>
-     <widget class="caLineEdit" name="calineedit_11">
-      <property name="geometry">
-       <rect>
-        <x>115</x>
-        <y>210</y>
-        <width>60</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="channel" stdset="0">
-       <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Tp02-PosLtchPosAct01</string>
-      </property>
-      <property name="background">
-       <color alpha="0">
-        <red>160</red>
-        <green>160</green>
-        <blue>164</blue>
-       </color>
-      </property>
-      <property name="colorMode">
-       <enum>caLineEdit::Static</enum>
-      </property>
-      <property name="precisionMode">
-       <enum>caLineEdit::User</enum>
-      </property>
-     </widget>
-     <widget class="caLabel" name="calabel_91">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>230</y>
-        <width>96</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Neg. latch position</string>
-      </property>
-     </widget>
-     <widget class="caLineEdit" name="calineedit_12">
-      <property name="geometry">
-       <rect>
-        <x>115</x>
-        <y>230</y>
-        <width>60</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="channel" stdset="0">
-       <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Tp02-NegLtchPosAct01</string>
-      </property>
-      <property name="background">
-       <color alpha="0">
-        <red>160</red>
-        <green>160</green>
-        <blue>164</blue>
-       </color>
-      </property>
-      <property name="colorMode">
-       <enum>caLineEdit::Static</enum>
-      </property>
-      <property name="precisionMode">
-       <enum>caLineEdit::User</enum>
-      </property>
      </widget>
      <widget class="QSplitter" name="splitter_7">
       <property name="geometry">
@@ -2749,7 +2659,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 0: Ready to switch on &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 1: Switched on &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 2: Operation enabled &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 3: Fault &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 4: reserved &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 5: Quick stop (inverse) &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 6: Switch on disabled &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 7: Warning &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 8 + 9: reserved &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 10: TxPDOToggle (selection/deselection via 0x8010:01) &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 11: Internal limit active &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 12: (Target value ignored) &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'sans-serif';&quot;&gt;Bit 13 - 15: reserved&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="channel" stdset="0">
-       <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Tp02-Cmd-RB</string>
+       <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ID)-Cmd-RB</string>
       </property>
       <property name="startBit">
        <number>8</number>
@@ -2768,13 +2678,26 @@
        </rect>
       </property>
       <property name="channel" stdset="0">
-       <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Tp02-Cmd</string>
+       <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ID)-Cmd</string>
       </property>
       <property name="startBit">
        <number>8</number>
       </property>
       <property name="endBit">
        <number>15</number>
+      </property>
+     </widget>
+     <widget class="caLabel" name="calabel_5">
+      <property name="geometry">
+       <rect>
+        <x>-10</x>
+        <y>10</y>
+        <width>90</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>TP$(ID)_2</string>
       </property>
      </widget>
     </widget>

@@ -34,6 +34,8 @@ The most common homing cases are:
   sequence `11` or `12`
 - drive-internal homing triggered by ecmc:
   sequence `26`
+- custom homing implemented in PLC code:
+  sequence `27`
 - absolute encoder with one overflow in range:
   see the dedicated section later on this page
 
@@ -67,6 +69,7 @@ ECMC_SEQ_HOME_LOW_LIM_SINGLE_TURN_ABS  = 21,
 ECMC_SEQ_HOME_HIGH_LIM_SINGLE_TURN_ABS = 22,
 ECMC_SEQ_HOME_SET_POS_2                = 25,
 ECMC_SEQ_HOME_TRIGG_EXTERN             = 26,
+ECMC_SEQ_HOME_PLC                      = 27,
 ```
 
 Additionally, for homing of absolute encoder with **ONE** overflow in the range, please check [here](#homing-of-absolute-encoder-with-one-overflow-in-the-range).
@@ -480,6 +483,96 @@ Notes:
 Example:
 
 - [SmarAct MCS2 best-practice example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/smaract/mcs2)
+
+### ECMC_SEQ_HOME_PLC = 27
+
+Sequence 27 lets PLC code implement the actual homing procedure while ecmc keeps
+the normal homing command, encoder referencing, and optional post-home move
+handling.
+
+The sequencer and PLC use these PLC variables:
+
+| Variable | Direction | Meaning |
+| --- | --- | --- |
+| `ax<id>.homing.request` | read-only | Set to `1` by ecmc while PLC homing shall run. |
+| `ax<id>.homing.state` | read/write | PLC progress state. PLC writes `0..999`; ecmc publishes `1000` when homing is finalized. |
+| `ax<id>.homing.done` | read/write | PLC sets this to `1` when the custom homing procedure succeeded. |
+| `ax<id>.homing.error` | read/write | PLC sets this to `1` when the custom homing procedure failed. |
+
+When sequence 27 starts, ecmc sets `homing.request=1`, `homing.state=1`,
+`homing.done=0`, and `homing.error=0`. The PLC can then move the axis or execute
+any required device-specific logic. The PLC owns the reference position for this
+sequence. When the PLC sets `homing.done=1`, ecmc does not write encoder
+positions. It marks the configured homing encoders as homed, aligns the internal
+trajectory/controller setpoints to the current primary encoder position, sets
+`homing.state=1000`, and then runs the configured post-home move if enabled. If
+the PLC sets `homing.error=1`, the homing sequence fails.
+
+PLC writes to `homing.state` are clamped to `0..999`; completion is reported
+with `homing.done`, not by writing a large state value.
+
+If the PLC homing logic needs to adjust a specific encoder position before
+reporting done, use `mc_set_act_pos(axIndex, encIndex, actpos)`. For sequence
+27, ecmc does not force any encoder to `ECMC_HOME_POS` when `homing.done` is
+set, so the PLC can set one or several encoder positions as needed.
+
+Minimal PLC pattern:
+
+```text
+if(plc0.firstscan) {
+  static.plcHomeActive := 0;
+  static.plcHomeExecute := 0;
+};
+
+static.plcHomeExecute := 0;
+
+if(ax1.homing.request and not(static.plcHomeActive)) {
+  static.plcHomeActive := 1;
+  ax1.homing.state := 10;
+  ax1.homing.done := 0;
+  ax1.homing.error := 0;
+};
+
+if(static.plcHomeActive) {
+  # Example placeholder for custom homing logic.
+  # Replace this with sensor checks, drive commands, or move commands as needed.
+  ax1.homing.state := 100;
+
+  if(<custom homing condition is fulfilled>) {
+    # Optional: set an encoder position explicitly before reporting done.
+    # mc_set_act_pos(1, 1, 0.0);
+    ax1.homing.done := 1;
+    static.plcHomeActive := 0;
+  };
+
+  if(<custom homing failure condition>) {
+    ax1.homing.error := 1;
+    static.plcHomeActive := 0;
+  };
+};
+```
+
+To start this homing sequence from PLC code, trigger normal homing with sequence
+`27`:
+
+```text
+if(plc0.firstscan) {
+  static.homeReq := 0;
+  static.homeExecute := 0;
+};
+
+static.homeExecute := 0;
+
+if(static.homeReq and not(mc_get_busy(1))) {
+  static.homeExecute := 1;
+  static.homeReq := 0;
+};
+
+mc_home(1, static.homeExecute, 27, 1.0, 1.0);
+```
+
+In this example, the PLC logic decides the reference position. Set it with
+`mc_set_act_pos()` before writing `ax1.homing.done=1`.
 
 ## Setting polarity of the home sensor
 

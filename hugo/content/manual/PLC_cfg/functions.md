@@ -341,6 +341,22 @@ A shared memory buffer of 120 doubles can be accessed for read and write operati
  Motion is triggered with a positive edge on <execute> input.
  returns 0 if success or error code.
 
+ 6a. Custom homing sequence 27 helper moves:
+      retvalue = mc_home_move_abs(<axIndex>, <execute>, <pos>, <vel>, <acc>, <dec>);
+      retvalue = mc_home_move_rel(<axIndex>, <execute>, <distance>, <vel>, <acc>, <dec>);
+      retvalue = mc_home_move_vel(<axIndex>, <execute>, <vel>, <acc>, <dec>);
+      retvalue = mc_home_halt(<axIndex>, <execute>);
+      busy     = mc_home_get_busy(<axIndex>);
+      busy     = mc_home_move_busy(<axIndex>);
+    These functions are only valid while custom homing sequence 27 is active.
+    mc_home_get_busy() returns only the custom homing active state and does not
+    include the global axis busy bit.
+    The move functions are triggered with a positive edge on <execute>.
+    Setting <execute>=0 resets the edge state; use mc_home_halt() to stop an
+    active helper move.
+    They use the active homing sequence trajectory generator instead of the
+    normal motion command channel.
+
  7. retvalue = mc_halt(
                          <axIndex>,       : Axis index
                          <execute>,       : Trigger

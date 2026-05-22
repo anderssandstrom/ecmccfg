@@ -295,6 +295,45 @@ Current wrappers include:
 Use it when you want PLCopen-style motion patterns from native C++ logic
 without writing the lower-level axis API calls directly.
 
+## Axis host-service helpers
+
+`ecmcCppLogic.hpp` also provides direct axis helper functions:
+
+- `ecmcCpp::axisUseInternalTraj(axisIndex)`
+- `ecmcCpp::axisUseExternalTraj(axisIndex)`
+- `ecmcCpp::axisUseInternalEnc(axisIndex)`
+- `ecmcCpp::axisUseExternalEnc(axisIndex)`
+- `ecmcCpp::axisGetActualPos(axisIndex)`
+- `ecmcCpp::axisGetSetpointPos(axisIndex)`
+- `ecmcCpp::axisGetActualVel(axisIndex)`
+- `ecmcCpp::axisGetSetpointVel(axisIndex)`
+- `ecmcCpp::axisIsEnabled(axisIndex)`
+- `ecmcCpp::axisIsBusy(axisIndex)`
+- `ecmcCpp::axisHasError(axisIndex)`
+- `ecmcCpp::axisGetErrorId(axisIndex)`
+- `ecmcCpp::axisSetExternalSetpointPos(axisIndex, value)`
+- `ecmcCpp::axisSetExternalEncoderPos(axisIndex, value)`
+- `ecmcCpp::axisSetEncoderActualPos(axisIndex, encoderIndex, value)`
+- `ecmcCpp::axisHomeMoveAbs(axisIndex, execute, targetPosition, velocity, acceleration, deceleration)`
+- `ecmcCpp::axisHomeMoveRel(axisIndex, execute, distance, velocity, acceleration, deceleration)`
+- `ecmcCpp::axisHomeMoveVel(axisIndex, execute, velocity, acceleration, deceleration)`
+- `ecmcCpp::axisHomeHalt(axisIndex, execute)`
+- `ecmcCpp::axisHomeBusy(axisIndex)`
+- `ecmcCpp::axisHomeMoveBusy(axisIndex)`
+
+`axisSetEncoderActualPos()` directly sets one encoder actual position. The
+`encoderIndex` argument is 1-based, matching the PLC `mc_set_act_pos()` helper.
+This is useful when a C++ logic module implements custom homing sequence `27` and
+needs to set the referenced encoder position before reporting
+`ax<id>.homing.done`.
+
+The `axisHome*()` motion helpers are only valid while custom homing sequence
+`27` is active. They use the active homing sequence trajectory generator instead
+of the normal motion command channel. The move and halt helpers are edge
+triggered on `execute`; use `axisHomeHalt()` to stop an active helper move.
+`axisHomeBusy()` returns only the custom homing active state and does not include
+the global axis busy bit.
+
 ## ecmcCppUtils.hpp
 
 This header contains the small reusable helpers that are most often used in

@@ -34,7 +34,7 @@ The most common homing cases are:
   sequence `11` or `12`
 - drive-internal homing triggered by ecmc:
   sequence `26`
-- custom homing implemented in PLC code:
+- custom homing implemented in PLC or C++ logic:
   sequence `27`
 - absolute encoder with one overflow in range:
   see the dedicated section later on this page
@@ -486,35 +486,66 @@ Example:
 
 ### ECMC_SEQ_HOME_PLC = 27
 
-Sequence 27 lets PLC code implement the actual homing procedure while ecmc keeps
-the normal homing command, encoder referencing, and optional post-home move
-handling.
+Sequence 27 lets PLC code or C++ logic plugins implement the actual homing
+procedure. ecmc keeps the request/done/error handshake and homed-state
+bookkeeping, but the custom logic owns the motion.
 
-The sequencer and PLC use these PLC variables:
+The sequencer and the custom homing logic use these axis variables:
 
 | Variable | Direction | Meaning |
 | --- | --- | --- |
-| `ax<id>.homing.request` | read-only | Set to `1` by ecmc while PLC homing shall run. |
-| `ax<id>.homing.state` | read/write | PLC progress state. PLC writes `0..999`; ecmc publishes `1000` when homing is finalized. |
-| `ax<id>.homing.done` | read/write | PLC sets this to `1` when the custom homing procedure succeeded. |
-| `ax<id>.homing.error` | read/write | PLC sets this to `1` when the custom homing procedure failed. |
+| `ax<id>.homing.request` | read-only | Set to `1` by ecmc while custom homing shall run. |
+| `ax<id>.homing.state` | read/write | Custom homing progress state. Logic writes `0..999`; ecmc publishes `1000` when homing is finalized. |
+| `ax<id>.homing.done` | read/write | Logic sets this to `1` when the custom homing procedure succeeded. |
+| `ax<id>.homing.error` | read/write | Logic sets this to `1` when the custom homing procedure failed. |
 
 When sequence 27 starts, ecmc sets `homing.request=1`, `homing.state=1`,
-`homing.done=0`, and `homing.error=0`. The PLC can then move the axis or execute
-any required device-specific logic. The PLC owns the reference position for this
-sequence. When the PLC sets `homing.done=1`, ecmc does not write encoder
-positions. It marks the configured homing encoders as homed, aligns the internal
-trajectory/controller setpoints to the current primary encoder position, sets
-`homing.state=1000`, and then runs the configured post-home move if enabled. If
-the PLC sets `homing.error=1`, the homing sequence fails.
+`homing.done=0`, and `homing.error=0`. The sequence remains active like the
+other homing sequences, so the normal axis busy flag stays high until custom
+homing finishes. PLC code or C++ logic must not use the ordinary motion commands
+for homing moves while sequence 27 is active. Use the dedicated custom-homing
+motion helpers instead.
+
+The custom logic owns the reference position for this sequence. When the logic
+sets `homing.done=1`, ecmc does not write encoder positions. It waits until any
+custom-homing helper move is no longer busy, marks the configured homing encoders
+as homed, aligns the internal trajectory/controller setpoints to the current
+primary encoder position, and sets `homing.state=1000`. If the logic sets
+`homing.error=1`, the homing sequence fails.
+
+Sequence 27 does not run the configured ecmc post-home move. If a final
+post-home move is needed, perform it in the PLC or C++ logic before setting
+`homing.done=1`.
 
 PLC writes to `homing.state` are clamped to `0..999`; completion is reported
 with `homing.done`, not by writing a large state value.
 
-If the PLC homing logic needs to adjust a specific encoder position before
-reporting done, use `mc_set_act_pos(axIndex, encIndex, actpos)`. For sequence
-27, ecmc does not force any encoder to `ECMC_HOME_POS` when `homing.done` is
-set, so the PLC can set one or several encoder positions as needed.
+The PLC custom-homing motion helpers are only valid while sequence 27 is active:
+
+| Function | Meaning |
+| --- | --- |
+| `mc_home_move_abs(axIndex, execute, pos, vel, acc, dec)` | Trigger an absolute move through the active homing sequence. |
+| `mc_home_move_rel(axIndex, execute, distance, vel, acc, dec)` | Trigger a relative move through the active homing sequence. |
+| `mc_home_move_vel(axIndex, execute, vel, acc, dec)` | Trigger a constant-velocity move through the active homing sequence. |
+| `mc_home_halt(axIndex, execute)` | Stop the active custom-homing helper move. |
+| `mc_home_get_busy(axIndex)` | Returns `1` while custom homing sequence 27 is active, without including global axis busy. |
+| `mc_home_move_busy(axIndex)` | Returns `1` while a custom-homing helper move is busy. |
+
+C++ logic plugins can use the equivalent helpers
+`ecmcCpp::axisHomeMoveAbs()`, `ecmcCpp::axisHomeMoveRel()`,
+`ecmcCpp::axisHomeMoveVel()`, `ecmcCpp::axisHomeHalt()`,
+`ecmcCpp::axisHomeBusy()`, and `ecmcCpp::axisHomeMoveBusy()`.
+
+The move and halt helpers are edge triggered on `execute`. Setting `execute=0`
+resets the edge state; it does not stop an active helper move. Use
+`mc_home_halt()` or `ecmcCpp::axisHomeHalt()` to stop a helper move explicitly.
+
+If PLC homing logic needs to adjust a specific encoder position before reporting
+done, use `mc_set_act_pos(axIndex, encIndex, actpos)`. From C++ logic, use
+`ecmcCpp::axisSetEncoderActualPos(axisIndex, encoderIndex, value)`. In both
+helpers, `encoderIndex` is 1-based. For sequence 27, ecmc does not force any
+encoder to `ECMC_HOME_POS` when `homing.done` is set, so the custom logic can
+set one or several encoder positions as needed.
 
 Minimal PLC pattern:
 
@@ -522,6 +553,7 @@ Minimal PLC pattern:
 if(plc0.firstscan) {
   static.plcHomeActive := 0;
   static.plcHomeExecute := 0;
+  static.plcHomeMoveExecute := 0;
 };
 
 static.plcHomeExecute := 0;
@@ -535,8 +567,19 @@ if(ax1.homing.request and not(static.plcHomeActive)) {
 
 if(static.plcHomeActive) {
   # Example placeholder for custom homing logic.
-  # Replace this with sensor checks, drive commands, or move commands as needed.
+  # Replace this with sensor checks and homing helper moves as needed.
+  # If a post-home move is needed, run that move here before setting done.
   ax1.homing.state := 100;
+
+  if(<move shall start>) {
+    static.plcHomeMoveExecute := 1;
+  };
+
+  mc_home_move_abs(1, static.plcHomeMoveExecute, 10.0, 2.0, 10.0, 10.0);
+
+  if(not(mc_home_move_busy(1))) {
+    static.plcHomeMoveExecute := 0;
+  };
 
   if(<custom homing condition is fulfilled>) {
     # Optional: set an encoder position explicitly before reporting done.

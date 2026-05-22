@@ -96,7 +96,7 @@ are shared between PLCs. Both can also be exposed as EPICS PVs; see
                                                (via high limit).
                                                ref at abs bits.
                                                over/under-flow..
-                                  cmddata=27 : PLC implemented homing
+                                  cmddata=27 : custom PLC/C++ homing
  23. ax<id>.traj.source           internal source or expressions   (rw)
                                   source = 0: internal traj
                                   source > 0: setpoints from expr
@@ -113,12 +113,12 @@ are shared between PLCs. Both can also be exposed as EPICS PVs; see
  31. ax<id>.drv.enable            enable drive command             (rw)
  32. ax<id>.drv.enabled           drive enabled                    (ro)
  33. ax<id>.seq.state             sequence state (homing)          (ro)
-     ax<id>.homing.request        PLC homing request for seq 27    (ro)
-     ax<id>.homing.state          PLC homing progress for seq 27   (rw)
-                                  PLC writes 0..999 progress states.
+     ax<id>.homing.request        custom homing request for seq 27 (ro)
+     ax<id>.homing.state          custom homing progress for seq 27 (rw)
+                                  Logic writes 0..999 progress states.
                                   ecmc sets state=1000 when done.
-     ax<id>.homing.done           PLC homing done for seq 27       (rw)
-     ax<id>.homing.error          PLC homing error for seq 27      (rw)
+     ax<id>.homing.done           custom homing done for seq 27    (rw)
+     ax<id>.homing.error          custom homing error for seq 27   (rw)
  34. ax<id>.mon.ilock             motion interlock (both dir)      (rw)
                                   ax<id>.mon.ilock=1: motion allowed
                                   ax<id>.mon.ilock=0: motion not allowed

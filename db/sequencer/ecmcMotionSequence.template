@@ -1,0 +1,410 @@
+# Motion sequence records.
+# Macros:
+#   P       Record prefix, for example IOC:
+#   R       Sequence record prefix, for example Seq0-
+#   PORT    Dedicated sequence asyn port, for example ECMC_SEQ0
+#   SCAN    Poll rate for status/readback records
+#   PREC    Floating-point precision
+#   SOFT_TRG_FLNK Optional forward link from the soft-trigger counter
+
+record(longout, "$(P)$(R)Edit-Index") {
+  field(DESC, "Sequence edit step index")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)edit.index")
+}
+
+record(bo, "$(P)$(R)Edit-Enable") {
+  field(DESC, "Enable edited step")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)edit.enabled")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(longout, "$(P)$(R)Edit-Action") {
+  field(DESC, "Sequence action ID")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)edit.action")
+}
+
+record(longout, "$(P)$(R)Edit-Axis") {
+  field(DESC, "Sequence step axis")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)edit.axis")
+}
+
+record(ao, "$(P)$(R)Edit-Position") {
+  field(DESC, "Step position or distance")
+  field(DTYP, "asynFloat64")
+  field(PREC, "$(PREC=3)")
+  field(OUT,  "@asyn($(PORT),0,1000)edit.position")
+}
+
+record(ao, "$(P)$(R)Edit-Velocity") {
+  field(DESC, "Step velocity or period")
+  field(DTYP, "asynFloat64")
+  field(PREC, "$(PREC=3)")
+  field(OUT,  "@asyn($(PORT),0,1000)edit.velocity")
+}
+
+record(ao, "$(P)$(R)Edit-Acceleration") {
+  field(DESC, "Step acceleration or count")
+  field(DTYP, "asynFloat64")
+  field(PREC, "$(PREC=3)")
+  field(OUT,  "@asyn($(PORT),0,1000)edit.acceleration")
+}
+
+record(ao, "$(P)$(R)Edit-Deceleration") {
+  field(DESC, "Step deceleration or pulse ms")
+  field(DTYP, "asynFloat64")
+  field(PREC, "$(PREC=3)")
+  field(OUT,  "@asyn($(PORT),0,1000)edit.deceleration")
+}
+
+record(ao, "$(P)$(R)Edit-TimeoutMs") {
+  field(DESC, "Step timeout in milliseconds")
+  field(DTYP, "asynFloat64")
+  field(PREC, "$(PREC=3)")
+  field(OUT,  "@asyn($(PORT),0,1000)edit.timeout_ms")
+}
+
+record(waveform, "$(P)$(R)Edit-Name") {
+  field(DESC, "Sequence step name")
+  field(DTYP, "asynInt8ArrayOut")
+  field(INP,  "@asyn($(PORT),0,1000)edit.name")
+  field(FTVL, "CHAR")
+  field(NELM, "128")
+}
+
+record(waveform, "$(P)$(R)Edit-Transition") {
+  field(DESC, "Sequence transition text")
+  field(DTYP, "asynInt8ArrayOut")
+  field(INP,  "@asyn($(PORT),0,1000)edit.transition")
+  field(FTVL, "CHAR")
+  field(NELM, "128")
+}
+
+record(waveform, "$(P)$(R)Edit-OnError") {
+  field(DESC, "Sequence error transition text")
+  field(DTYP, "asynInt8ArrayOut")
+  field(INP,  "@asyn($(PORT),0,1000)edit.onerror")
+  field(FTVL, "CHAR")
+  field(NELM, "128")
+}
+
+record(waveform, "$(P)$(R)Edit-Args") {
+  field(DESC, "Sequence action arguments")
+  field(DTYP, "asynInt8ArrayOut")
+  field(INP,  "@asyn($(PORT),0,1000)edit.args")
+  field(FTVL, "CHAR")
+  field(NELM, "128")
+}
+
+record(bo, "$(P)$(R)Edit-Apply") {
+  field(DESC, "Apply edited sequence step")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)cmd.apply")
+  field(ZNAM, "Idle")
+  field(ONAM, "Apply")
+}
+
+record(longout, "$(P)$(R)Read-Index") {
+  field(DESC, "Sequence readback step index")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)read.index")
+}
+
+record(bo, "$(P)$(R)Read-Cmd") {
+  field(DESC, "Read selected sequence step")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)cmd.read")
+  field(ZNAM, "Idle")
+  field(ONAM, "Read")
+}
+
+record(bo, "$(P)$(R)Read-Prev") {
+  field(DESC, "Read previous sequence step")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)cmd.read_prev")
+  field(ZNAM, "Idle")
+  field(ONAM, "Previous")
+}
+
+record(bo, "$(P)$(R)Read-Next") {
+  field(DESC, "Read next sequence step")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)cmd.read_next")
+  field(ZNAM, "Idle")
+  field(ONAM, "Next")
+}
+
+record(longin, "$(P)$(R)Read-Enable") {
+  field(DESC, "Selected step enabled")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)read.enabled")
+}
+
+record(longin, "$(P)$(R)Read-Action") {
+  field(DESC, "Selected step action ID")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)read.action")
+}
+
+record(longin, "$(P)$(R)Read-Axis") {
+  field(DESC, "Selected step axis")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)read.axis")
+}
+
+record(ai, "$(P)$(R)Read-Position") {
+  field(DESC, "Selected step position")
+  field(DTYP, "asynFloat64")
+  field(PREC, "$(PREC=3)")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)read.position")
+}
+
+record(ai, "$(P)$(R)Read-Velocity") {
+  field(DESC, "Selected step velocity")
+  field(DTYP, "asynFloat64")
+  field(PREC, "$(PREC=3)")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)read.velocity")
+}
+
+record(ai, "$(P)$(R)Read-Acceleration") {
+  field(DESC, "Selected step acceleration")
+  field(DTYP, "asynFloat64")
+  field(PREC, "$(PREC=3)")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)read.acceleration")
+}
+
+record(ai, "$(P)$(R)Read-Deceleration") {
+  field(DESC, "Selected step deceleration")
+  field(DTYP, "asynFloat64")
+  field(PREC, "$(PREC=3)")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)read.deceleration")
+}
+
+record(ai, "$(P)$(R)Read-TimeoutMs") {
+  field(DESC, "Selected step timeout ms")
+  field(DTYP, "asynFloat64")
+  field(PREC, "$(PREC=3)")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)read.timeout_ms")
+}
+
+record(waveform, "$(P)$(R)Read-Name") {
+  field(DESC, "Selected step name")
+  field(DTYP, "asynInt8ArrayIn")
+  field(INP,  "@asyn($(PORT),0,1000)read.name")
+  field(FTVL, "CHAR")
+  field(NELM, "128")
+  field(SCAN, "$(SCAN=.1 second)")
+}
+
+record(waveform, "$(P)$(R)Read-Transition") {
+  field(DESC, "Selected step transition")
+  field(DTYP, "asynInt8ArrayIn")
+  field(INP,  "@asyn($(PORT),0,1000)read.transition")
+  field(FTVL, "CHAR")
+  field(NELM, "128")
+  field(SCAN, "$(SCAN=.1 second)")
+}
+
+record(waveform, "$(P)$(R)Read-OnError") {
+  field(DESC, "Selected step error transition")
+  field(DTYP, "asynInt8ArrayIn")
+  field(INP,  "@asyn($(PORT),0,1000)read.onerror")
+  field(FTVL, "CHAR")
+  field(NELM, "128")
+  field(SCAN, "$(SCAN=.1 second)")
+}
+
+record(waveform, "$(P)$(R)Read-Args") {
+  field(DESC, "Selected step arguments")
+  field(DTYP, "asynInt8ArrayIn")
+  field(INP,  "@asyn($(PORT),0,1000)read.args")
+  field(FTVL, "CHAR")
+  field(NELM, "128")
+  field(SCAN, "$(SCAN=.1 second)")
+}
+
+record(bo, "$(P)$(R)Cmd-Compile") {
+  field(DESC, "Compile sequence")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)cmd.compile")
+  field(ZNAM, "Idle")
+  field(ONAM, "Compile")
+}
+
+record(bo, "$(P)$(R)Cmd-Arm") {
+  field(DESC, "Arm sequence")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)cmd.arm")
+  field(ZNAM, "Idle")
+  field(ONAM, "Arm")
+}
+
+record(bo, "$(P)$(R)Cmd-Start") {
+  field(DESC, "Start sequence")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)cmd.start")
+  field(ZNAM, "Idle")
+  field(ONAM, "Start")
+}
+
+record(bo, "$(P)$(R)Cmd-Stop") {
+  field(DESC, "Stop sequence")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)cmd.stop")
+  field(ZNAM, "Idle")
+  field(ONAM, "Stop")
+}
+
+record(bo, "$(P)$(R)Cmd-Reset") {
+  field(DESC, "Reset sequence")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)cmd.reset")
+  field(ZNAM, "Idle")
+  field(ONAM, "Reset")
+}
+
+record(mbbi, "$(P)$(R)State") {
+  field(DESC, "Sequence state")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.state")
+  field(ZRST, "Idle")
+  field(ONST, "Armed")
+  field(TWST, "Running")
+  field(THST, "Done")
+  field(FRST, "Error")
+  field(FVST, "Stopped")
+}
+
+record(bi, "$(P)$(R)Valid") {
+  field(DESC, "Sequence compile valid")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.valid")
+  field(ZNAM, "Invalid")
+  field(ONAM, "Valid")
+}
+
+record(bi, "$(P)$(R)Armed") {
+  field(DESC, "Sequence armed")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.armed")
+  field(ZNAM, "Not armed")
+  field(ONAM, "Armed")
+}
+
+record(bi, "$(P)$(R)Running") {
+  field(DESC, "Sequence running")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.running")
+  field(ZNAM, "Stopped")
+  field(ONAM, "Running")
+}
+
+record(bi, "$(P)$(R)CompileBusy") {
+  field(DESC, "Sequence compile busy")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.compile_busy")
+  field(ZNAM, "Idle")
+  field(ONAM, "Busy")
+}
+
+record(longin, "$(P)$(R)StepIndex") {
+  field(DESC, "Current sequence step")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.step_index")
+}
+
+record(longin, "$(P)$(R)Action") {
+  field(DESC, "Current sequence action")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.action")
+}
+
+record(longin, "$(P)$(R)ErrorId") {
+  field(DESC, "Sequence error ID")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.error_id")
+}
+
+record(longin, "$(P)$(R)StepCount") {
+  field(DESC, "Compiled sequence step count")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.step_count")
+}
+
+record(ai, "$(P)$(R)ElapsedMs") {
+  field(DESC, "Current step elapsed ms")
+  field(DTYP, "asynFloat64")
+  field(PREC, "$(PREC=3)")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.elapsed_ms")
+}
+
+record(waveform, "$(P)$(R)StepName") {
+  field(DESC, "Current sequence step name")
+  field(DTYP, "asynInt8ArrayIn")
+  field(INP,  "@asyn($(PORT),0,1000)stat.step_name")
+  field(FTVL, "CHAR")
+  field(NELM, "128")
+  field(SCAN, "$(SCAN=.1 second)")
+}
+
+record(waveform, "$(P)$(R)ErrorText") {
+  field(DESC, "Sequence error text")
+  field(DTYP, "asynInt8ArrayIn")
+  field(INP,  "@asyn($(PORT),0,1000)stat.error_text")
+  field(FTVL, "CHAR")
+  field(NELM, "128")
+  field(SCAN, "$(SCAN=.1 second)")
+}
+
+record(waveform, "$(P)$(R)ValidationText") {
+  field(DESC, "Sequence validation text")
+  field(DTYP, "asynInt8ArrayIn")
+  field(INP,  "@asyn($(PORT),0,1000)stat.validation_text")
+  field(FTVL, "CHAR")
+  field(NELM, "128")
+  field(SCAN, "$(SCAN=.1 second)")
+}
+
+record(longin, "$(P)$(R)SoftTriggerId") {
+  field(DESC, "Last soft trigger ID")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger_id")
+}
+
+record(longin, "$(P)$(R)SoftTriggerCount") {
+  field(DESC, "Soft trigger event counter")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger_count")
+  field(MDEL, "0")
+}
+
+record(calc, "$(P)$(R)SoftTriggerEvent") {
+  field(DESC, "Soft trigger counter event")
+  field(INPA, "$(P)$(R)SoftTriggerCount CP")
+  field(CALC, "A")
+  field(FLNK, "$(SOFT_TRG_FLNK=)")
+}

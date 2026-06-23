@@ -1,7 +1,7 @@
 # Motion sequencer lab test
 
-This example reuses the EL7041 and EL5042 BiSS-C axis configuration from
-`../stepper_bissc`.
+This example contains a local copy of the EL7041 and EL5042 BiSS-C axis
+configuration under `cfg/`.
 
 `startup_local_hw.cmd` creates axis 1 and sequence 0. The sequence is compiled
 and armed but deliberately not started during IOC startup.

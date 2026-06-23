@@ -114,13 +114,19 @@ Motion and waits:
 Cfg.SeqNop(seq,step)
 Cfg.SeqWaitTime(seq,step,waitMs)
 Cfg.SeqReset(seq,step,axis,timeoutMs)
+Cfg.SeqReset(seq,step,axis,timeoutMs,wait)
 Cfg.SeqPower(seq,step,axis,enable,timeoutMs)
+Cfg.SeqPower(seq,step,axis,enable,timeoutMs,wait)
 Cfg.SeqHome(seq,step,axis,homeSeq,homePos,velToCam,velOffCam,acc,dec,timeoutMs)
+Cfg.SeqHome(seq,step,axis,homeSeq,homePos,velToCam,velOffCam,acc,dec,timeoutMs,wait)
 Cfg.SeqMoveAbs(seq,step,axis,pos,vel,acc,dec,timeoutMs)
+Cfg.SeqMoveAbs(seq,step,axis,pos,vel,acc,dec,timeoutMs,wait)
 Cfg.SeqMoveRel(seq,step,axis,distance,vel,acc,dec,timeoutMs)
+Cfg.SeqMoveRel(seq,step,axis,distance,vel,acc,dec,timeoutMs,wait)
 Cfg.SeqMoveVel(seq,step,axis,vel,acc,dec,timeoutMs)
 Cfg.SeqMoveVel(seq,step,axis,vel,acc,dec,timeoutMs,wait,tolerance)
 Cfg.SeqHalt(seq,step,axis,timeoutMs)
+Cfg.SeqHalt(seq,step,axis,timeoutMs,wait)
 Cfg.SeqWaitInPos(seq,step,axis,timeoutMs)
 ```
 
@@ -184,6 +190,33 @@ wait=1;tol=0.1
 ```
 
 This representation is also available through the `Edit-Args` record.
+
+## Blocking and Nonblocking Motion
+
+All motion helpers support an optional final `wait` argument. The short forms
+keep their existing defaults:
+
+- reset, power, home, absolute move, relative move, and halt default to `wait=1`
+- velocity move defaults to `wait=0`
+
+With `wait=0`, the command is issued and the sequence advances immediately. This
+allows multiple axes to be started in consecutive realtime cycles:
+
+```text
+Cfg.SeqMoveAbs(0,0,1,100.0,10.0,20.0,20.0,1000,0)
+Cfg.SeqMoveAbs(0,1,2,50.0,5.0,10.0,10.0,1000,0)
+Cfg.SeqWaitInPos(0,2,1,15000)
+Cfg.SeqWaitInPos(0,3,2,15000)
+```
+
+The generic step representation stores this as:
+
+```text
+wait=0
+```
+
+It can therefore also be configured through `Edit-Args`. A later wait step
+should be used when completion must be synchronized.
 
 ## Nested Sequences
 

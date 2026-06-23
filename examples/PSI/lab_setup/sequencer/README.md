@@ -10,10 +10,11 @@ The test sequence:
 
 1. resets axis 1
 2. powers axis 1
-3. starts a nonblocking +0.2 mm relative move
-4. waits until axis 1 is in position
-5. waits 500 ms
-6. executes a blocking -0.2 mm relative move
+3. executes an explicitly blocking absolute move to 10 mm
+4. starts a nonblocking +0.2 mm relative move
+5. waits until axis 1 is in position
+6. waits 500 ms
+7. executes a blocking -0.2 mm relative move
 
 The explicit `SeqWaitInPos` after the nonblocking move tests that command issue
 and motion completion can be separated into different sequence steps.

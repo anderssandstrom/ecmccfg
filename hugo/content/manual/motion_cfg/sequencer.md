@@ -100,6 +100,92 @@ or the `Seq0-Cmd-Start` record.
 Compile validates steps and resolves data-item bindings in a low-priority EPICS
 thread. Arm copies the compiled plan into the active realtime plan.
 
+## Runtime PV Editing
+
+Steps can also be inspected and changed through records. Select a step for
+readback with `Read-Index` and process `Read-Cmd`, or use `Read-Prev` and
+`Read-Next`:
+
+```sh
+caput IOC:Seq0-Read-Index 3
+caput IOC:Seq0-Read-Cmd 1
+caget IOC:Seq0-Read-Action IOC:Seq0-Read-Axis IOC:Seq0-Read-Name
+```
+
+`Read-CmdLine` exposes the selected step as a one-line text row. It is a
+read-only waveform so navigating with `Read-Prev` and `Read-Next` does not
+overwrite the editable command buffer. Process `Read-ToCmdLine` to copy the
+selected row into `CmdLine` for editing:
+
+```sh
+caget -S IOC:Seq0-Read-CmdLine
+caput IOC:Seq0-Read-ToCmdLine 1
+```
+
+To edit a step, write the `Edit-*` fields and then process `Edit-Apply`.
+Recompile and arm the sequence before starting it:
+
+```sh
+caput IOC:Seq0-Edit-Index 3
+caput IOC:Seq0-Edit-Enable 1
+caput IOC:Seq0-Edit-Action 5
+caput IOC:Seq0-Edit-Axis 1
+caput IOC:Seq0-Edit-Position 0.2
+caput IOC:Seq0-Edit-Velocity 0.5
+caput IOC:Seq0-Edit-Acceleration 2
+caput IOC:Seq0-Edit-Deceleration 2
+caput IOC:Seq0-Edit-TimeoutMs 5000
+caput -S IOC:Seq0-Edit-Name "rel +0.2"
+caput IOC:Seq0-Edit-Apply 1
+caput IOC:Seq0-Cmd-Compile 1
+caput IOC:Seq0-Cmd-Arm 1
+```
+
+The caQtDM sequence detail panel exposes the same readback and edit records.
+`Edit-Action`, `Read-Action`, and the runtime `Action` record are numeric
+action IDs. Use `Read-CmdLine` or `CmdLine` when a decoded text representation
+is more useful.
+
+For common edits, use the one-line command waveform instead of writing every
+field manually:
+
+```sh
+caput -S IOC:Seq0-CmdLine "4: wait_item ec.s2.ai01 gt 10.5 timeout=5000 name='wait ai01'"
+caput IOC:Seq0-CmdLine-Apply 1
+caget IOC:Seq0-CmdLine-Result
+```
+
+The command line syntax is:
+
+```text
+<step>: <action> key=value key=value ...
+```
+
+Use `enabled=0` to define a disabled step. For `power`, `enable=0|1`
+controls the axis power state.
+
+Supported initial actions include:
+
+```text
+nop
+reset axis=<id> timeout=<ms> wait=<0|1>
+power axis=<id> enable=<0|1> timeout=<ms> wait=<0|1>
+home axis=<id> timeout=<ms> wait=<0|1>
+move_abs axis=<id> pos=<pos> vel=<vel> acc=<acc> dec=<dec> timeout=<ms> wait=<0|1>
+move_rel axis=<id> dist=<dist> vel=<vel> acc=<acc> dec=<dec> timeout=<ms> wait=<0|1>
+move_vel axis=<id> vel=<vel> acc=<acc> dec=<dec>
+halt axis=<id> timeout=<ms> wait=<0|1>
+wait_inpos axis=<id> timeout=<ms>
+set_enc_homed axis=<id> homed=<0|1>
+wait_time ms=<ms>
+run_seq seq=<childSeq> timeout=<ms>
+set_item item=<dataItem> value=<value>
+wait_item item=<dataItem> op=<eq|ne|gt|gte|lt|lte> value=<value> timeout=<ms>
+exit_item item=<dataItem> op=<eq|ne|gt|gte|lt|lte> value=<value> timeout=<ms>
+branch_item item=<dataItem> op=<eq|ne|gt|gte|lt|lte> value=<value> true_step=<step> [false_step=<step>]
+goto_step target=<step>
+```
+
 ## Supported Actions
 
 | ID | Action |
@@ -120,6 +206,10 @@ thread. Arm copies the compiled plan into the active realtime plan.
 | 13 | ArmTimeTrigger |
 | 14 | MC_MoveVelocity |
 | 15 | MC_Halt |
+| 16 | ExitItem |
+| 17 | SetEncHomed |
+| 18 | BranchItem |
+| 19 | GotoStep |
 
 Prefer the action-specific `Cfg.Seq*` commands when defining sequences in a
 startup script.
@@ -146,16 +236,34 @@ Cfg.SeqMoveVel(seq,step,axis,vel,acc,dec,timeoutMs,wait,tolerance)
 Cfg.SeqHalt(seq,step,axis,timeoutMs)
 Cfg.SeqHalt(seq,step,axis,timeoutMs,wait)
 Cfg.SeqWaitInPos(seq,step,axis,timeoutMs)
+Cfg.SeqSetEncHomed(seq,step,axis,homed)
 ```
+
+`SeqSetEncHomed` sets the homed flag on the axis primary/current encoder and
+then advances immediately.
 
 Data items:
 
 ```text
 Cfg.SeqSetItem(seq,step,item,value,timeoutMs)
 Cfg.SeqWaitItem(seq,step,item,op,value,timeoutMs)
+Cfg.SeqExitItem(seq,step,item,op,value,timeoutMs)
+Cfg.SeqBranchItem(seq,step,item,op,value,trueStep)
+Cfg.SeqBranchItem(seq,step,item,op,value,trueStep,falseStep)
+Cfg.SeqGotoStep(seq,step,targetStep)
 ```
 
-`SeqWaitItem` supports `==`, `!=`, `>`, `>=`, `<`, `<=`, `eq`, and `ne`.
+`SeqWaitItem` and `SeqExitItem` support `==`, `!=`, `>`, `>=`, `<`, `<=`,
+`eq`, and `ne`. `SeqExitItem` exits the current sequence as `Done` when the
+condition is fulfilled; if the condition is false, the sequence continues with
+the next step.
+
+`SeqBranchItem` uses the same operators. It jumps to `trueStep` when the
+condition is fulfilled. In one-line commands these targets are named
+`true_step` and `false_step`. If `falseStep`/`false_step` is omitted, a false
+condition continues with the next enabled step; otherwise it jumps to the false
+target. Branch and goto targets are configured step IDs and must point to
+enabled steps.
 
 Nested sequences:
 
@@ -324,6 +432,9 @@ Edit-Transition
 Edit-OnError
 Edit-Args
 Edit-Apply
+CmdLine
+CmdLine-Apply
+CmdLine-Result
 ```
 
 Readback navigation:

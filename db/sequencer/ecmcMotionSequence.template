@@ -100,6 +100,31 @@ record(waveform, "$(P)$(R)Edit-Args") {
   field(NELM, "128")
 }
 
+record(waveform, "$(P)$(R)CmdLine") {
+  field(DESC, "One-line sequence step command")
+  field(DTYP, "asynInt8ArrayOut")
+  field(INP,  "@asyn($(PORT),0,1000)cmdline")
+  field(FTVL, "CHAR")
+  field(NELM, "256")
+}
+
+record(bo, "$(P)$(R)CmdLine-Apply") {
+  field(DESC, "Apply one-line step command")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)cmd.cmdline_apply")
+  field(ZNAM, "Idle")
+  field(ONAM, "Apply")
+}
+
+record(waveform, "$(P)$(R)CmdLine-Result") {
+  field(DESC, "One-line command result")
+  field(DTYP, "asynInt8ArrayIn")
+  field(INP,  "@asyn($(PORT),0,1000)cmdline.result")
+  field(FTVL, "CHAR")
+  field(NELM, "128")
+  field(SCAN, "$(SCAN=.1 second)")
+}
+
 record(bo, "$(P)$(R)Edit-Apply") {
   field(DESC, "Apply edited sequence step")
   field(DTYP, "asynInt32")
@@ -235,6 +260,23 @@ record(waveform, "$(P)$(R)Read-Args") {
   field(SCAN, "$(SCAN=.1 second)")
 }
 
+record(waveform, "$(P)$(R)Read-CmdLine") {
+  field(DESC, "Selected step as command line")
+  field(DTYP, "asynInt8ArrayIn")
+  field(INP,  "@asyn($(PORT),0,1000)read.cmdline")
+  field(FTVL, "CHAR")
+  field(NELM, "256")
+  field(SCAN, "$(SCAN=.1 second)")
+}
+
+record(bo, "$(P)$(R)Read-ToCmdLine") {
+  field(DESC, "Copy readback to command line")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)cmd.read_to_cmdline")
+  field(ZNAM, "Idle")
+  field(ONAM, "Copy")
+}
+
 record(bo, "$(P)$(R)Cmd-Compile") {
   field(DESC, "Compile sequence")
   field(DTYP, "asynInt32")
@@ -286,6 +328,14 @@ record(mbbi, "$(P)$(R)State") {
   field(THST, "Done")
   field(FRST, "Error")
   field(FVST, "Stopped")
+  field(ZRVL, "0")
+  field(ONVL, "1")
+  field(TWVL, "2")
+  field(THVL, "3")
+  field(FRVL, "4")
+  field(FVVL, "5")
+  field(FFST, "Unknown")
+  field(FFVL, "65535")
 }
 
 record(bi, "$(P)$(R)Valid") {

@@ -449,6 +449,22 @@
    <property name="pressMessage"><string notr="true">1</string></property>
    <property name="colorMode"><enum>caMessageButton::Default</enum></property>
   </widget>
+  <widget class="caMessageButton" name="insertEdit">
+   <property name="geometry"><rect><x>350</x><y>542</y><width>70</width><height>28</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Insert</string></property>
+   <property name="label"><string notr="true">Insert</string></property>
+   <property name="releaseMessage"><string notr="true">0</string></property>
+   <property name="pressMessage"><string notr="true">1</string></property>
+   <property name="colorMode"><enum>caMessageButton::Default</enum></property>
+  </widget>
+  <widget class="caMessageButton" name="deleteEdit">
+   <property name="geometry"><rect><x>430</x><y>542</y><width>70</width><height>28</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Delete</string></property>
+   <property name="label"><string notr="true">Delete</string></property>
+   <property name="releaseMessage"><string notr="true">0</string></property>
+   <property name="pressMessage"><string notr="true">1</string></property>
+   <property name="colorMode"><enum>caMessageButton::Default</enum></property>
+  </widget>
   <widget class="caLabel" name="editEnabledLabel">
    <property name="geometry"><rect><x>10</x><y>583</y><width>35</width><height>18</height></rect></property>
    <property name="text"><string>En</string></property>

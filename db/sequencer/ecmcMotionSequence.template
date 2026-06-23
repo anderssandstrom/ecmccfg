@@ -133,6 +133,22 @@ record(bo, "$(P)$(R)Edit-Apply") {
   field(ONAM, "Apply")
 }
 
+record(bo, "$(P)$(R)Edit-Insert") {
+  field(DESC, "Insert step at edit index")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)cmd.insert")
+  field(ZNAM, "Idle")
+  field(ONAM, "Insert")
+}
+
+record(bo, "$(P)$(R)Edit-Delete") {
+  field(DESC, "Delete step at edit index")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0,1000)cmd.delete")
+  field(ZNAM, "Idle")
+  field(ONAM, "Delete")
+}
+
 record(longout, "$(P)$(R)Read-Index") {
   field(DESC, "Sequence readback step index")
   field(DTYP, "asynInt32")

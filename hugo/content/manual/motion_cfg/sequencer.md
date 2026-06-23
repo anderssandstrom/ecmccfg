@@ -141,6 +141,20 @@ caput IOC:Seq0-Cmd-Compile 1
 caput IOC:Seq0-Cmd-Arm 1
 ```
 
+To insert or delete a configured step at `Edit-Index`, process `Edit-Insert`
+or `Edit-Delete`:
+
+```sh
+caput IOC:Seq0-Edit-Index 4
+caput IOC:Seq0-Edit-Insert 1
+caput IOC:Seq0-Edit-Delete 1
+```
+
+Insert shifts steps at and after the index up by one and clears the inserted
+step. Delete shifts later steps down by one. Both operations invalidate the
+compiled/armed plan. Branch and goto targets are updated automatically when
+they are shifted. Delete fails if another step targets the deleted step.
+
 The caQtDM sequence detail panel exposes the same readback and edit records.
 `Edit-Action`, `Read-Action`, and the runtime `Action` record are numeric
 action IDs. Use `Read-CmdLine` or `CmdLine` when a decoded text representation
@@ -251,6 +265,8 @@ Cfg.SeqExitItem(seq,step,item,op,value,timeoutMs)
 Cfg.SeqBranchItem(seq,step,item,op,value,trueStep)
 Cfg.SeqBranchItem(seq,step,item,op,value,trueStep,falseStep)
 Cfg.SeqGotoStep(seq,step,targetStep)
+Cfg.InsertMotionSeqStep(seq,step)
+Cfg.DeleteMotionSeqStep(seq,step)
 ```
 
 `SeqWaitItem` and `SeqExitItem` support `==`, `!=`, `>`, `>=`, `<`, `<=`,

@@ -41,6 +41,15 @@ ROW = """
        </item>
 """
 
+EMPTY_ROW = """
+       <item>
+        <widget class="caLabel" name="emptyMessage">
+         <property name="minimumSize"><size><width>900</width><height>30</height></size></property>
+         <property name="text"><string>No configured motion sequences found. Restart the IOC after loading the sequence registry records.</string></property>
+        </widget>
+       </item>
+"""
+
 FOOTER = """
        <item><spacer name="verticalSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>40</height></size></property></spacer></item>
       </layout>
@@ -63,23 +72,50 @@ def get_sequences(ioc):
     import ca  # noqa: F401
     import epicsPV
 
+    def read(pv_name):
+        return epicsPV.epicsPV(pv_name).getw()
+
     sequences = []
     seen = set()
-    seq_id = int(epicsPV.epicsPV(f"{ioc}:MCU-Cfg-SEQ-FrstObjId").getw())
+    try:
+        seq_id = int(read(f"{ioc}:MCU-Cfg-SEQ-FrstObjId"))
+    except Exception:
+        seq_id = -1
 
     while seq_id >= 0:
         if seq_id in seen:
             raise RuntimeError(f"Cycle in motion sequence configuration at ID {seq_id}")
         seen.add(seq_id)
 
-        pv_prefix = epicsPV.epicsPV(
-            f"{ioc}:MCU-Cfg-SEQ{seq_id}-Pfx"
-        ).getw()
+        pv_prefix = read(f"{ioc}:MCU-Cfg-SEQ{seq_id}-Pfx")
         sequences.append({"id": seq_id, "pv_prefix": str(pv_prefix)})
 
-        seq_id = int(epicsPV.epicsPV(
-            f"{ioc}:MCU-Cfg-SEQ{seq_id}-NxtObjId"
-        ).getw())
+        seq_id = int(read(f"{ioc}:MCU-Cfg-SEQ{seq_id}-NxtObjId"))
+
+    if sequences:
+        return sequences
+
+    # Recover from an uninitialized first pointer by probing the bounded
+    # sequencer ID range. Only IDs with configuration prefix PVs are included.
+    try:
+        count = int(read(f"{ioc}:MCU-Cfg-SEQ-Cnt"))
+    except Exception:
+        count = 0
+    if count <= 0:
+        return sequences
+
+    for candidate in range(16):
+        try:
+            pv_prefix = read(f"{ioc}:MCU-Cfg-SEQ{candidate}-Pfx")
+        except Exception:
+            continue
+        if pv_prefix:
+            sequences.append({
+                "id": candidate,
+                "pv_prefix": str(pv_prefix),
+            })
+            if len(sequences) >= count:
+                break
 
     return sequences
 
@@ -94,6 +130,8 @@ def create_ui_file(filename, ioc, sequences):
                 seq_id=sequence["id"],
                 pv_prefix=html.escape(sequence["pv_prefix"]),
             ))
+        if not sequences:
+            output.write(EMPTY_ROW)
         output.write(FOOTER)
 
     os.chmod(

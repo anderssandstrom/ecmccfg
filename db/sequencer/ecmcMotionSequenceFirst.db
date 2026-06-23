@@ -1,0 +1,4 @@
+record(ai,"$(P)MCU-Cfg-SEQ-FrstObjId") {
+  field(DESC, "First motion sequence ID")
+  field(VAL,  "$(FIRST_OBJ_ID=-1)")
+}

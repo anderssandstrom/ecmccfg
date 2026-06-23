@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>720</width><height>440</height></rect></property>
+  <property name="windowTitle"><string>Motion Sequence $(SEQ_ID=0)</string></property>
+  <widget class="caLabel" name="title">
+   <property name="geometry"><rect><x>10</x><y>10</y><width>330</width><height>24</height></rect></property>
+   <property name="font"><font><pointsize>12</pointsize><bold>true</bold></font></property>
+   <property name="text"><string>Motion Sequence $(SEQ_ID=0)</string></property>
+  </widget>
+  <widget class="caShellCommand" name="overview">
+   <property name="geometry"><rect><x>600</x><y>10</y><width>100</width><height>22</height></rect></property>
+   <property name="label"><string notr="true">Overview</string></property>
+   <property name="labels"><string>Open motion sequence overview</string></property>
+   <property name="files"><string>bash /ioc/modules/qt/ecmcOpenObject.sh</string></property>
+   <property name="args"><string>MOTION_SEQ_OVERVIEW $(IOC)</string></property>
+  </widget>
+  <widget class="caMessageButton" name="compile">
+   <property name="geometry"><rect><x>10</x><y>52</y><width>100</width><height>28</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Cmd-Compile</string></property>
+   <property name="label"><string notr="true">Compile</string></property>
+   <property name="releaseMessage"><string notr="true">0</string></property>
+   <property name="pressMessage"><string notr="true">1</string></property>
+   <property name="colorMode"><enum>caMessageButton::Default</enum></property>
+  </widget>
+  <widget class="caMessageButton" name="arm">
+   <property name="geometry"><rect><x>120</x><y>52</y><width>100</width><height>28</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Cmd-Arm</string></property>
+   <property name="label"><string notr="true">Arm</string></property>
+   <property name="releaseMessage"><string notr="true">0</string></property>
+   <property name="pressMessage"><string notr="true">1</string></property>
+   <property name="colorMode"><enum>caMessageButton::Default</enum></property>
+  </widget>
+  <widget class="caMessageButton" name="start">
+   <property name="geometry"><rect><x>230</x><y>52</y><width>100</width><height>28</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Cmd-Start</string></property>
+   <property name="label"><string notr="true">Start</string></property>
+   <property name="releaseMessage"><string notr="true">0</string></property>
+   <property name="pressMessage"><string notr="true">1</string></property>
+   <property name="colorMode"><enum>caMessageButton::Default</enum></property>
+  </widget>
+  <widget class="caMessageButton" name="stop">
+   <property name="geometry"><rect><x>340</x><y>52</y><width>100</width><height>28</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Cmd-Stop</string></property>
+   <property name="label"><string notr="true">Stop</string></property>
+   <property name="releaseMessage"><string notr="true">0</string></property>
+   <property name="pressMessage"><string notr="true">1</string></property>
+   <property name="colorMode"><enum>caMessageButton::Default</enum></property>
+  </widget>
+  <widget class="caMessageButton" name="reset">
+   <property name="geometry"><rect><x>450</x><y>52</y><width>100</width><height>28</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Cmd-Reset</string></property>
+   <property name="label"><string notr="true">Reset</string></property>
+   <property name="releaseMessage"><string notr="true">0</string></property>
+   <property name="pressMessage"><string notr="true">1</string></property>
+   <property name="colorMode"><enum>caMessageButton::Default</enum></property>
+  </widget>
+  <widget class="caLabel" name="stateLabel">
+   <property name="geometry"><rect><x>10</x><y>105</y><width>105</width><height>18</height></rect></property>
+   <property name="text"><string>State</string></property>
+  </widget>
+  <widget class="caLineEdit" name="state">
+   <property name="geometry"><rect><x>120</x><y>101</y><width>190</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)State</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="unitsEnabled"><bool>true</bool></property>
+  </widget>
+  <widget class="caLabel" name="validLabel">
+   <property name="geometry"><rect><x>10</x><y>137</y><width>105</width><height>18</height></rect></property>
+   <property name="text"><string>Valid</string></property>
+  </widget>
+  <widget class="caLineEdit" name="valid">
+   <property name="geometry"><rect><x>120</x><y>133</y><width>190</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Valid</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="unitsEnabled"><bool>true</bool></property>
+  </widget>
+  <widget class="caLabel" name="armedLabel">
+   <property name="geometry"><rect><x>10</x><y>169</y><width>105</width><height>18</height></rect></property>
+   <property name="text"><string>Armed</string></property>
+  </widget>
+  <widget class="caLineEdit" name="armed">
+   <property name="geometry"><rect><x>120</x><y>165</y><width>190</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Armed</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="unitsEnabled"><bool>true</bool></property>
+  </widget>
+  <widget class="caLabel" name="runningLabel">
+   <property name="geometry"><rect><x>10</x><y>201</y><width>105</width><height>18</height></rect></property>
+   <property name="text"><string>Running</string></property>
+  </widget>
+  <widget class="caLineEdit" name="running">
+   <property name="geometry"><rect><x>120</x><y>197</y><width>190</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Running</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="unitsEnabled"><bool>true</bool></property>
+  </widget>
+  <widget class="caLabel" name="compileBusyLabel">
+   <property name="geometry"><rect><x>10</x><y>233</y><width>105</width><height>18</height></rect></property>
+   <property name="text"><string>Compile busy</string></property>
+  </widget>
+  <widget class="caLineEdit" name="compileBusy">
+   <property name="geometry"><rect><x>120</x><y>229</y><width>190</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)CompileBusy</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="unitsEnabled"><bool>true</bool></property>
+  </widget>
+  <widget class="caLabel" name="stepLabel">
+   <property name="geometry"><rect><x>10</x><y>265</y><width>105</width><height>18</height></rect></property>
+   <property name="text"><string>Step</string></property>
+  </widget>
+  <widget class="caLineEdit" name="step">
+   <property name="geometry"><rect><x>120</x><y>261</y><width>190</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)StepIndex</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="unitsEnabled"><bool>true</bool></property>
+  </widget>
+  <widget class="caLabel" name="actionLabel">
+   <property name="geometry"><rect><x>10</x><y>297</y><width>105</width><height>18</height></rect></property>
+   <property name="text"><string>Action</string></property>
+  </widget>
+  <widget class="caLineEdit" name="action">
+   <property name="geometry"><rect><x>120</x><y>293</y><width>190</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Action</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="unitsEnabled"><bool>true</bool></property>
+  </widget>
+  <widget class="caLabel" name="elapsedLabel">
+   <property name="geometry"><rect><x>10</x><y>329</y><width>105</width><height>18</height></rect></property>
+   <property name="text"><string>Elapsed [ms]</string></property>
+  </widget>
+  <widget class="caLineEdit" name="elapsed">
+   <property name="geometry"><rect><x>120</x><y>325</y><width>190</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)ElapsedMs</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="unitsEnabled"><bool>true</bool></property>
+  </widget>
+  <widget class="caLabel" name="countLabel">
+   <property name="geometry"><rect><x>370</x><y>105</y><width>105</width><height>18</height></rect></property>
+   <property name="text"><string>Step count</string></property>
+  </widget>
+  <widget class="caLineEdit" name="count">
+   <property name="geometry"><rect><x>480</x><y>101</y><width>220</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)StepCount</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="unitsEnabled"><bool>true</bool></property>
+  </widget>
+  <widget class="caLabel" name="errorIdLabel">
+   <property name="geometry"><rect><x>370</x><y>137</y><width>105</width><height>18</height></rect></property>
+   <property name="text"><string>Error ID</string></property>
+  </widget>
+  <widget class="caLineEdit" name="errorId">
+   <property name="geometry"><rect><x>480</x><y>133</y><width>220</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)ErrorId</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="unitsEnabled"><bool>true</bool></property>
+  </widget>
+  <widget class="caLabel" name="triggerIdLabel">
+   <property name="geometry"><rect><x>370</x><y>169</y><width>105</width><height>18</height></rect></property>
+   <property name="text"><string>Soft trigger ID</string></property>
+  </widget>
+  <widget class="caLineEdit" name="triggerId">
+   <property name="geometry"><rect><x>480</x><y>165</y><width>220</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)SoftTriggerId</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="unitsEnabled"><bool>true</bool></property>
+  </widget>
+  <widget class="caLabel" name="triggerCountLabel">
+   <property name="geometry"><rect><x>370</x><y>201</y><width>105</width><height>18</height></rect></property>
+   <property name="text"><string>Trigger count</string></property>
+  </widget>
+  <widget class="caLineEdit" name="triggerCount">
+   <property name="geometry"><rect><x>480</x><y>197</y><width>220</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)SoftTriggerCount</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="unitsEnabled"><bool>true</bool></property>
+  </widget>
+  <widget class="caLabel" name="stepNameLabel">
+   <property name="geometry"><rect><x>370</x><y>233</y><width>105</width><height>18</height></rect></property>
+   <property name="text"><string>Step name</string></property>
+  </widget>
+  <widget class="caLineEdit" name="stepName">
+   <property name="geometry"><rect><x>480</x><y>229</y><width>220</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)StepName</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="unitsEnabled"><bool>true</bool></property>
+  </widget>
+  <widget class="caLabel" name="errorTextLabel">
+   <property name="geometry"><rect><x>370</x><y>265</y><width>105</width><height>18</height></rect></property>
+   <property name="text"><string>Error text</string></property>
+  </widget>
+  <widget class="caLineEdit" name="errorText">
+   <property name="geometry"><rect><x>480</x><y>261</y><width>220</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)ErrorText</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="unitsEnabled"><bool>true</bool></property>
+  </widget>
+  <widget class="caLabel" name="validationLabel">
+   <property name="geometry"><rect><x>370</x><y>297</y><width>105</width><height>18</height></rect></property>
+   <property name="text"><string>Validation</string></property>
+  </widget>
+  <widget class="caLineEdit" name="validation">
+   <property name="geometry"><rect><x>480</x><y>293</y><width>220</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)ValidationText</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="unitsEnabled"><bool>true</bool></property>
+  </widget>
+  <widget class="caLabel" name="readbackTitle">
+   <property name="geometry"><rect><x>10</x><y>370</y><width>170</width><height>18</height></rect></property>
+   <property name="font"><font><bold>true</bold></font></property>
+   <property name="text"><string>Selected step readback</string></property>
+  </widget>
+  <widget class="caTextEntry" name="readIndex">
+   <property name="geometry"><rect><x>190</x><y>366</y><width>70</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Read-Index</string></property>
+  </widget>
+  <widget class="caMessageButton" name="readPrev">
+   <property name="geometry"><rect><x>270</x><y>366</y><width>70</width><height>24</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Read-Prev</string></property>
+   <property name="label"><string notr="true">Previous</string></property>
+   <property name="releaseMessage"><string notr="true">0</string></property>
+   <property name="pressMessage"><string notr="true">1</string></property>
+  </widget>
+  <widget class="caMessageButton" name="readNext">
+   <property name="geometry"><rect><x>350</x><y>366</y><width>70</width><height>24</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Read-Next</string></property>
+   <property name="label"><string notr="true">Next</string></property>
+   <property name="releaseMessage"><string notr="true">0</string></property>
+   <property name="pressMessage"><string notr="true">1</string></property>
+  </widget>
+  <widget class="caLineEdit" name="readName">
+   <property name="geometry"><rect><x>430</x><y>366</y><width>270</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Read-Name</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+  </widget>
+  <widget class="caLabel" name="readHint">
+   <property name="geometry"><rect><x>190</x><y>397</y><width>510</width><height>18</height></rect></property>
+   <property name="text"><string>Enter an index or use Previous/Next to inspect the compiled steps.</string></property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget><class>caLabel</class><extends>QLabel</extends><header>caLabel</header></customwidget>
+  <customwidget><class>caLineEdit</class><extends>QLineEdit</extends><header>caLineEdit</header></customwidget>
+  <customwidget><class>caTextEntry</class><extends>caLineEdit</extends><header>caTextEntry</header></customwidget>
+  <customwidget><class>caMessageButton</class><extends>QPushButton</extends><header>caMessageButton</header></customwidget>
+  <customwidget><class>caShellCommand</class><extends>QWidget</extends><header>caShellCommand</header></customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

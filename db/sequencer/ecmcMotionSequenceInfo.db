@@ -1,0 +1,14 @@
+record(stringout,"$(P)MCU-Cfg-SEQ$(SEQ_ID)-Pfx") {
+  field(DESC, "Motion sequence PV prefix")
+  field(VAL,  "$(PV_PREFIX)")
+}
+
+record(ai,"$(P)MCU-Cfg-SEQ$(SEQ_ID)-NxtObjId") {
+  field(DESC, "Next motion sequence ID")
+  field(VAL,  "$(NEXT_OBJ_ID=-1)")
+}
+
+record(ai,"$(P)MCU-Cfg-SEQ$(SEQ_ID)-PrvObjId") {
+  field(DESC, "Previous motion sequence ID")
+  field(VAL,  "$(PREV_OBJ_ID=-1)")
+}

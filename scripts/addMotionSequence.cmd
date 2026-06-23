@@ -24,6 +24,26 @@ epicsEnvSet("ECMC_MOTION_SEQ_PORT", "${ASYN_PORT=ECMC_SEQ${ECMC_MOTION_SEQ_ID}}"
 
 ecmcConfigOrDie "Cfg.CreateMotionSeq(${ECMC_MOTION_SEQ_ID},${MAX_STEPS=32},${ECMC_MOTION_SEQ_PORT})"
 
+#- Add configuration metadata used by automatic UI generation.
+ecmcFileExist("ecmcMotionSequenceInfo.db",1,1)
+dbLoadRecords("ecmcMotionSequenceInfo.db","P=${IOC}:,SEQ_ID=${ECMC_MOTION_SEQ_ID},PV_PREFIX=${DB_PREFIX=$(IOC):}${RECORD_PREFIX=Seq${ECMC_MOTION_SEQ_ID}-},PREV_OBJ_ID=${ECMC_PREV_MOTION_SEQ_OBJ_ID=-1}")
+
+#- Link the previously added sequence to this sequence.
+ecmcEpicsEnvSetCalcTernary(ECMC_EXE_NEXT_MOTION_SEQ,"${ECMC_PREV_MOTION_SEQ_OBJ_ID=-1}>=0", "","#- ")
+${ECMC_EXE_NEXT_MOTION_SEQ}ecmcFileExist(ecmcMotionSequencePrev.db,1,1)
+${ECMC_EXE_NEXT_MOTION_SEQ}dbLoadRecords(ecmcMotionSequencePrev.db,"NEXT_OBJ_ID=${ECMC_MOTION_SEQ_ID},PREV_ECMC_P=${ECMC_PREV_MOTION_SEQ_P=""}")
+epicsEnvUnset(ECMC_EXE_NEXT_MOTION_SEQ)
+
+#- Store the first configured sequence ID.
+ecmcEpicsEnvSetCalcTernary(ECMC_EXE_FIRST_MOTION_SEQ,"${ECMC_PREV_MOTION_SEQ_OBJ_ID=-1}<0", "","#- ")
+${ECMC_EXE_FIRST_MOTION_SEQ}ecmcFileExist(ecmcMotionSequenceFirst.db,1,1)
+${ECMC_EXE_FIRST_MOTION_SEQ}dbLoadRecords(ecmcMotionSequenceFirst.db,"P=${IOC}:,FIRST_OBJ_ID=${ECMC_MOTION_SEQ_ID}")
+epicsEnvUnset(ECMC_EXE_FIRST_MOTION_SEQ)
+
+epicsEnvSet(ECMC_PREV_MOTION_SEQ_P,"$(IOC):MCU-Cfg-SEQ${ECMC_MOTION_SEQ_ID}-")
+epicsEnvSet(ECMC_PREV_MOTION_SEQ_OBJ_ID,${ECMC_MOTION_SEQ_ID})
+ecmcEpicsEnvSetCalc(ECMC_MOTION_SEQ_COUNT, "$(ECMC_MOTION_SEQ_COUNT=0)+1")
+
 ecmcIf("'${LOAD_PVS=1}'='0'",MOTION_SEQ_PVS_SKIP_TRUE,MOTION_SEQ_PVS_SKIP_FALSE)
 # skip motion sequence PVs
 #else
@@ -34,4 +54,3 @@ ecmcEndIf(MOTION_SEQ_PVS_SKIP_TRUE,MOTION_SEQ_PVS_SKIP_FALSE)
 ecmcEpicsEnvSetCalcTernary("ECMC_MOTION_SEQ_REPORT", "${REPORT=0}>0", "", "#")
 ${ECMC_MOTION_SEQ_REPORT}ecmcConfigOrDie "Cfg.ReportMotionSeq(${ECMC_MOTION_SEQ_ID})"
 epicsEnvUnset(ECMC_MOTION_SEQ_REPORT)
-

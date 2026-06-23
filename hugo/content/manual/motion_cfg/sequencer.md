@@ -54,6 +54,24 @@ Cfg.CreateMotionSeq(seqIndex,maxSteps,portName)
 and then loads `ecmcMotionSequence.template`. Creation must happen before the
 records connect to the dedicated sequence port.
 
+Each call also registers the sequence in the IOC configuration namespace:
+
+```text
+$(IOC):MCU-Cfg-SEQ-Cnt
+$(IOC):MCU-Cfg-SEQ-FrstObjId
+$(IOC):MCU-Cfg-SEQ<ID>-Pfx
+$(IOC):MCU-Cfg-SEQ<ID>-NxtObjId
+$(IOC):MCU-Cfg-SEQ<ID>-PrvObjId
+```
+
+The linked list preserves creation order and supports sparse sequence IDs.
+The caQtDM overview follows this list, so it only includes configured
+sequences. Open it through `ecmcMain.ui` or directly with:
+
+```sh
+python3 /ioc/modules/qt/ecmc_start_motion_sequence_overview.py <IOC>
+```
+
 ## Lifecycle
 
 A sequence follows this lifecycle:

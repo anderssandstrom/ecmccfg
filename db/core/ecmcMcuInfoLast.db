@@ -18,6 +18,11 @@ record(ai,"$(P)MCU-Cfg-DS-Cnt") {
   field(VAL,  "$(DS_COUNT=0)")
 }
 
+record(ai,"$(P)MCU-Cfg-SEQ-Cnt") {
+  field(DESC, "Motion sequence count")
+  field(VAL,  "$(MOTION_SEQ_COUNT=0)")
+}
+
 record(ai,"$(P)MCU-Cfg-EC-Dom-Cnt") {
   field(DESC, "EC-Domain count")
   field(VAL,  "$(ECDOMAIN_COUNT=0)")

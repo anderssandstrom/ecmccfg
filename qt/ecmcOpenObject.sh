@@ -39,6 +39,8 @@
 #  PLG_SAFETY_GRP_AXIS : CMD, PREFIX, DEV,        AX_NAME
 #  CPP_LOGIC          : CMD, IOC,    CPP_ID
 #  CPP_LOGIC_OVERVIEW : CMD, IOC
+#  MOTION_SEQ         : CMD, IOC,    SEQ_ID
+#  MOTION_SEQ_OVERVIEW: CMD, IOC
 #  PVT_MAIN            : CMD, PREFIX
 #  SM_FIRST            : CMD, PREFIX
 #  SM_NEXT             : CMD, PREFIX, THIS_PLC_ID
@@ -612,6 +614,23 @@ function openCppLogicOverview() {
   caqtdm -macro "$MACROS" ecmcCppLogicOverview.ui
 }
 
+function openMotionSequence() {
+  IOC=$1
+  SEQ_ID=$2
+  SEQ_PFX=$( caget -noname -nostat -nounit "$IOC:MCU-Cfg-SEQ$SEQ_ID-Pfx" | tr -d '"' )
+  if [ -z "$SEQ_PFX" ]; then
+    SEQ_PFX="$IOC:Seq$SEQ_ID-"
+  fi
+  MACROS="IOC=$IOC,SEQ_ID=$SEQ_ID,SEQ_PFX=$SEQ_PFX"
+  echo "MACROS=$MACROS"
+  caqtdm -macro "$MACROS" ecmcMotionSequence.ui
+}
+
+function openMotionSequenceOverview() {
+  IOC=$1
+  python3 /ioc/modules/qt/ecmc_start_motion_sequence_overview.py "$IOC"
+}
+
 # Parse commands
 case $CMD in
   "EC_EXP")
@@ -727,6 +746,12 @@ case $CMD in
   ;;
   "CPP_LOGIC_OVERVIEW")
   openCppLogicOverview $2
+  ;;
+  "MOTION_SEQ")
+  openMotionSequence $2 $3
+  ;;
+  "MOTION_SEQ_OVERVIEW")
+  openMotionSequenceOverview $2
   ;;
   "PVT_MAIN")
   openPVTMain $2

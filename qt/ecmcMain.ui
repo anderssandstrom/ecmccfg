@@ -955,6 +955,66 @@
          <string>AXIS_OVERVIEW $(IOC) mini</string>
         </property>
        </widget>
+       <widget class="caLabel" name="caLabelMotionSequences">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>155</y>
+          <width>105</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Motion sequences:</string>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="motionSequenceCount">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>155</y>
+          <width>35</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="channel" stdset="0">
+         <string notr="true">$(IOC):MCU-Cfg-SEQ-Cnt</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+        <property name="precisionMode">
+         <enum>caLineEdit::Channel</enum>
+        </property>
+        <property name="limitsMode">
+         <enum>caLineEdit::Channel</enum>
+        </property>
+        <property name="unitsEnabled">
+         <bool>false</bool>
+        </property>
+       </widget>
+       <widget class="caShellCommand" name="openMotionSequenceOverview">
+        <property name="geometry">
+         <rect>
+          <x>155</x>
+          <y>155</y>
+          <width>56</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="label">
+         <string notr="true">Open</string>
+        </property>
+        <property name="labels">
+         <string>Open motion sequence overview</string>
+        </property>
+        <property name="files">
+         <string>bash /ioc/modules/qt/ecmcOpenObject.sh</string>
+        </property>
+        <property name="args">
+         <string>MOTION_SEQ_OVERVIEW $(IOC)</string>
+        </property>
+       </widget>
       </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_5">

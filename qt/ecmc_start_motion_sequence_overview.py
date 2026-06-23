@@ -28,6 +28,7 @@ HEADER = """<?xml version="1.0" encoding="UTF-8"?>
      <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
      <property name="widgetResizable"><bool>true</bool></property>
      <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry"><rect><x>0</x><y>0</y><width>900</width><height>{content_height}</height></rect></property>
       <layout class="QVBoxLayout" name="sequenceLayout">
        <property name="margin"><number>0</number></property>
 """
@@ -35,6 +36,8 @@ HEADER = """<?xml version="1.0" encoding="UTF-8"?>
 ROW = """
        <item>
         <widget class="caInclude" name="sequence{seq_id}">
+         <property name="minimumSize"><size><width>900</width><height>30</height></size></property>
+         <property name="maximumSize"><size><width>16777215</width><height>30</height></size></property>
          <property name="macro"><string>IOC={ioc},SEQ_ID={seq_id},SEQ_PFX={pv_prefix}</string></property>
          <property name="filename" stdset="0"><string notr="true">ecmcMotionSequenceRow.ui</string></property>
         </widget>
@@ -121,9 +124,15 @@ def get_sequences(ioc):
 
 
 def create_ui_file(filename, ioc, sequences):
-    height = min(620, max(100, 62 + len(sequences) * 32))
+    row_count = max(1, len(sequences))
+    content_height = row_count * 34
+    height = min(620, max(150, 62 + content_height))
     with open(filename, "w", encoding="utf-8") as output:
-        output.write(HEADER.format(height=height, ioc=html.escape(ioc)))
+        output.write(HEADER.format(
+            height=height,
+            content_height=content_height,
+            ioc=html.escape(ioc),
+        ))
         for sequence in sequences:
             output.write(ROW.format(
                 ioc=html.escape(ioc),

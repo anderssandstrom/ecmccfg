@@ -18,9 +18,49 @@ HEADER = """<?xml version="1.0" encoding="UTF-8"?>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="margin"><number>4</number></property>
    <item>
-    <widget class="caLabel" name="headers">
+    <widget class="QWidget" name="headers">
      <property name="minimumSize"><size><width>900</width><height>22</height></size></property>
-     <property name="text"><string>Open          ID      State             Running        Step       Count      Error      Step name</string></property>
+     <property name="maximumSize"><size><width>16777215</width><height>22</height></size></property>
+     <widget class="caLabel" name="headerOpen">
+      <property name="geometry"><rect><x>0</x><y>2</y><width>46</width><height>18</height></rect></property>
+      <property name="alignment"><set>Qt::AlignCenter</set></property>
+      <property name="text"><string>Open</string></property>
+     </widget>
+     <widget class="caLabel" name="headerId">
+      <property name="geometry"><rect><x>64</x><y>2</y><width>34</width><height>18</height></rect></property>
+      <property name="alignment"><set>Qt::AlignCenter</set></property>
+      <property name="text"><string>ID</string></property>
+     </widget>
+     <widget class="caLabel" name="headerState">
+      <property name="geometry"><rect><x>106</x><y>2</y><width>110</width><height>18</height></rect></property>
+      <property name="alignment"><set>Qt::AlignCenter</set></property>
+      <property name="text"><string>State</string></property>
+     </widget>
+     <widget class="caLabel" name="headerRunning">
+      <property name="geometry"><rect><x>226</x><y>2</y><width>90</width><height>18</height></rect></property>
+      <property name="alignment"><set>Qt::AlignCenter</set></property>
+      <property name="text"><string>Running</string></property>
+     </widget>
+     <widget class="caLabel" name="headerStep">
+      <property name="geometry"><rect><x>326</x><y>2</y><width>70</width><height>18</height></rect></property>
+      <property name="alignment"><set>Qt::AlignCenter</set></property>
+      <property name="text"><string>Step</string></property>
+     </widget>
+     <widget class="caLabel" name="headerCount">
+      <property name="geometry"><rect><x>406</x><y>2</y><width>70</width><height>18</height></rect></property>
+      <property name="alignment"><set>Qt::AlignCenter</set></property>
+      <property name="text"><string>Count</string></property>
+     </widget>
+     <widget class="caLabel" name="headerError">
+      <property name="geometry"><rect><x>486</x><y>2</y><width>70</width><height>18</height></rect></property>
+      <property name="alignment"><set>Qt::AlignCenter</set></property>
+      <property name="text"><string>Error</string></property>
+     </widget>
+     <widget class="caLabel" name="headerStepName">
+      <property name="geometry"><rect><x>566</x><y>2</y><width>324</width><height>18</height></rect></property>
+      <property name="alignment"><set>Qt::AlignCenter</set></property>
+      <property name="text"><string>Step name</string></property>
+     </widget>
     </widget>
    </item>
    <item>

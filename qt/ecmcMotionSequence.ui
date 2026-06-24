@@ -545,19 +545,19 @@
    <property name="geometry"><rect><x>670</x><y>636</y><width>80</width><height>18</height></rect></property>
    <property name="text"><string>Args</string></property>
   </widget>
-  <widget class="caTextEntry" name="editName">
+  <widget class="caLineEdit" name="editName">
    <property name="geometry"><rect><x>10</x><y>657</y><width>200</width><height>22</height></rect></property>
    <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Name</string></property>
   </widget>
-  <widget class="caTextEntry" name="editTransition">
+  <widget class="caLineEdit" name="editTransition">
    <property name="geometry"><rect><x>230</x><y>657</y><width>200</width><height>22</height></rect></property>
    <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Transition</string></property>
   </widget>
-  <widget class="caTextEntry" name="editOnError">
+  <widget class="caLineEdit" name="editOnError">
    <property name="geometry"><rect><x>450</x><y>657</y><width>200</width><height>22</height></rect></property>
    <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-OnError</string></property>
   </widget>
-  <widget class="caTextEntry" name="editArgs">
+  <widget class="caLineEdit" name="editArgs">
    <property name="geometry"><rect><x>670</x><y>657</y><width>230</width><height>22</height></rect></property>
    <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Args</string></property>
   </widget>
@@ -566,7 +566,7 @@
    <property name="font"><font><bold>true</bold></font></property>
    <property name="text"><string>Command line</string></property>
   </widget>
-  <widget class="caTextEntry" name="cmdLine">
+  <widget class="caLineEdit" name="cmdLine">
    <property name="geometry"><rect><x>130</x><y>702</y><width>620</width><height>22</height></rect></property>
    <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)CmdLine</string></property>
   </widget>

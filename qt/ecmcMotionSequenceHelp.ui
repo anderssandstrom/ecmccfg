@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>920</width><height>720</height></rect></property>
+  <property name="windowTitle"><string>Motion Sequence Help</string></property>
+  <widget class="QLabel" name="title">
+   <property name="geometry"><rect><x>12</x><y>10</y><width>600</width><height>26</height></rect></property>
+   <property name="font"><font><pointsize>12</pointsize><bold>true</bold></font></property>
+   <property name="text"><string>Motion Sequence Actions and Parameters</string></property>
+  </widget>
+  <widget class="QPlainTextEdit" name="helpText">
+   <property name="geometry"><rect><x>12</x><y>45</y><width>896</width><height>663</height></rect></property>
+   <property name="font"><font><family>Monospace</family><pointsize>10</pointsize></font></property>
+   <property name="readOnly"><bool>true</bool></property>
+   <property name="plainText"><string>Action IDs
+---------
+ 0  NOP
+ 1  Reset
+ 2  Power
+ 3  Home
+ 4  MoveAbs
+ 5  MoveRel
+ 6  WaitInPos
+ 7  SetItem
+ 8  WaitItem
+ 9  WaitTime
+10  RunSequence
+11  ArmPosTrigger
+12  WaitTriggerDone
+13  ArmTimeTrigger
+14  MoveVelocity
+15  Halt
+16  ExitItem
+17  SetEncHomed
+18  BranchItem
+19  GotoStep
+
+Common fields
+-------------
+Edit-Index       Configured step ID. Sparse IDs are OK, for example 10,20,30.
+Edit-Enable      1 = configured/enabled, 0 = disabled/unconfigured.
+Edit-Action      Numeric action ID from the list above.
+Edit-Axis        Axis index for motion/axis actions.
+Edit-Position    Position, distance, value, trigger start, or homed flag.
+Edit-Velocity    Velocity, trigger period, or wait value depending on action.
+Edit-Acceleration Acceleration or trigger count depending on action.
+Edit-Deceleration Deceleration or trigger pulse ms depending on action.
+Edit-TimeoutMs   Timeout in ms. For WaitTime this is the wait time.
+Edit-Name        Optional step name.
+Edit-Transition  Optional transition text.
+Edit-OnError     Optional error transition text.
+Edit-Args        Extra action-specific arguments.
+
+One-line command format
+-----------------------
+&lt;step_id&gt;: &lt;action&gt; &lt;arguments...&gt; [name='text'] [enabled=0|1]
+
+Examples:
+  10: move_abs axis=1 pos=10 vel=5 acc=20 dec=20 timeout=10000 wait=1
+  20: move_rel axis=1 pos=1 vel=5 acc=20 dec=20 timeout=5000 wait=0
+  30: wait_item ec.s2.ai01 gt 10.5 timeout=5000 name='wait ai01'
+  40: set_item ec.s2.bo01 1
+  50: wait_time 250
+  60: halt axis=1 timeout=2000
+  70: goto step=10
+  80: branch_item ec.s2.ai01 gt 5 true_step=100 false_step=90
+
+Aliases:
+  nop
+  reset
+  power
+  home
+  move_abs
+  move_rel
+  wait_inpos
+  set_item
+  wait_item
+  wait_time
+  run_seq
+  arm_pos_trigger
+  wait_trigger_done
+  arm_time_trigger
+  move_vel
+  halt
+  exit_item
+  set_enc_homed
+  branch_item
+  goto
+
+Motion actions
+--------------
+move_abs / move_rel:
+  axis=&lt;axis&gt; pos=&lt;pos_or_distance&gt; vel=&lt;velocity&gt;
+  acc=&lt;acceleration&gt; dec=&lt;deceleration&gt; timeout=&lt;ms&gt; wait=0|1
+
+  wait=1 blocks the sequence until the motion function is done.
+  wait=0 advances immediately, useful for starting multiple axes.
+
+move_vel:
+  axis=&lt;axis&gt; vel=&lt;velocity&gt; acc=&lt;acceleration&gt; dec=&lt;deceleration&gt;
+  timeout=&lt;ms&gt; wait=0|1 tol=&lt;velocity_tolerance&gt;
+
+  wait=0 is nonblocking. With wait=1 the step waits until actual velocity is
+  within vel +/- tol, or until timeout expires.
+
+halt:
+  axis=&lt;axis&gt; timeout=&lt;ms&gt;
+
+home:
+  axis=&lt;axis&gt; pos=&lt;home_position&gt; vel=&lt;velocity&gt; acc=&lt;acc&gt; dec=&lt;dec&gt;
+  timeout=&lt;ms&gt; mode=&lt;home_mode&gt; latch=&lt;latch_position&gt;
+
+set_enc_homed:
+  axis=&lt;axis&gt; value=0|1
+
+Item actions
+------------
+set_item:
+  &lt;item_name&gt; &lt;value&gt;
+
+wait_item / exit_item:
+  &lt;item_name&gt; &lt;op&gt; &lt;value&gt; timeout=&lt;ms&gt;
+
+branch_item:
+  &lt;item_name&gt; &lt;op&gt; &lt;value&gt; true_step=&lt;step_id&gt; [false_step=&lt;step_id&gt;]
+
+Operators:
+  eq, ne, gt, ge, gte, lt, le, lte
+
+If false_step is omitted in branch_item, false continues with the next
+configured step.
+
+Sequence flow
+-------------
+run_seq:
+  child=&lt;sequence_id&gt; timeout=&lt;ms&gt;
+
+goto:
+  step=&lt;target_step_id&gt;
+
+wait_time:
+  &lt;milliseconds&gt;
+
+Trigger actions
+---------------
+arm_pos_trigger:
+  id=&lt;trigger_id&gt; axis=&lt;axis&gt; item=&lt;item_or_soft&gt; start=&lt;position&gt;
+  period=&lt;position_period&gt; count=&lt;count&gt; value=&lt;write_value&gt; pulse=&lt;ms&gt;
+
+arm_time_trigger:
+  id=&lt;trigger_id&gt; item=&lt;item_or_soft&gt; delay=&lt;ms&gt; period=&lt;ms&gt;
+  count=&lt;count&gt; value=&lt;write_value&gt; pulse=&lt;ms&gt;
+
+wait_trigger_done:
+  id=&lt;trigger_id&gt; timeout=&lt;ms&gt;
+
+Use item=soft for software triggers. Soft triggers increment SoftTriggerCount
+and update SoftTriggerId instead of writing a data item.
+
+Startup script command examples
+-------------------------------
+Cfg.CreateMotionSeq(0,64)
+Cfg.SeqMoveAbs(0,10,1,10.0,5.0,20.0,20.0,10000)
+Cfg.SeqWaitItem(0,20,ec.s2.ai01,gt,10.5,5000)
+Cfg.SeqMoveRel(0,30,1,1.0,5.0,20.0,20.0,5000)
+Cfg.CompileMotionSeq(0)
+Cfg.ArmMotionSeq(0)
+Cfg.StartMotionSeq(0)
+
+PLC helper examples
+-------------------
+seq_arm(seq, execute)
+seq_set_step(seq, execute, step_id)
+seq_get_state(seq)
+seq_get_running(seq)
+seq_get_step(seq)
+seq_get_error(seq)
+</string></property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

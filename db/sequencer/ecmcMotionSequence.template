@@ -8,12 +8,14 @@
 #   SOFT_TRG_FLNK Optional forward link from the soft-trigger counter
 
 record(longout, "$(P)$(R)Edit-Index") {
+  info(asyn:READBACK,"1")
   field(DESC, "Sequence edit step index")
   field(DTYP, "asynInt32")
   field(OUT,  "@asyn($(PORT),0,1000)edit.index")
 }
 
 record(bo, "$(P)$(R)Edit-Enable") {
+  info(asyn:READBACK,"1")
   field(DESC, "Enable edited step")
   field(DTYP, "asynInt32")
   field(OUT,  "@asyn($(PORT),0,1000)edit.enabled")
@@ -22,18 +24,21 @@ record(bo, "$(P)$(R)Edit-Enable") {
 }
 
 record(longout, "$(P)$(R)Edit-Action") {
+  info(asyn:READBACK,"1")
   field(DESC, "Sequence action ID")
   field(DTYP, "asynInt32")
   field(OUT,  "@asyn($(PORT),0,1000)edit.action")
 }
 
 record(longout, "$(P)$(R)Edit-Axis") {
+  info(asyn:READBACK,"1")
   field(DESC, "Sequence step axis")
   field(DTYP, "asynInt32")
   field(OUT,  "@asyn($(PORT),0,1000)edit.axis")
 }
 
 record(ao, "$(P)$(R)Edit-Position") {
+  info(asyn:READBACK,"1")
   field(DESC, "Step position or distance")
   field(DTYP, "asynFloat64")
   field(PREC, "$(PREC=3)")
@@ -41,6 +46,7 @@ record(ao, "$(P)$(R)Edit-Position") {
 }
 
 record(ao, "$(P)$(R)Edit-Velocity") {
+  info(asyn:READBACK,"1")
   field(DESC, "Step velocity or period")
   field(DTYP, "asynFloat64")
   field(PREC, "$(PREC=3)")
@@ -48,6 +54,7 @@ record(ao, "$(P)$(R)Edit-Velocity") {
 }
 
 record(ao, "$(P)$(R)Edit-Acceleration") {
+  info(asyn:READBACK,"1")
   field(DESC, "Step acceleration or count")
   field(DTYP, "asynFloat64")
   field(PREC, "$(PREC=3)")
@@ -55,6 +62,7 @@ record(ao, "$(P)$(R)Edit-Acceleration") {
 }
 
 record(ao, "$(P)$(R)Edit-Deceleration") {
+  info(asyn:READBACK,"1")
   field(DESC, "Step deceleration or pulse ms")
   field(DTYP, "asynFloat64")
   field(PREC, "$(PREC=3)")
@@ -62,6 +70,7 @@ record(ao, "$(P)$(R)Edit-Deceleration") {
 }
 
 record(ao, "$(P)$(R)Edit-TimeoutMs") {
+  info(asyn:READBACK,"1")
   field(DESC, "Step timeout in milliseconds")
   field(DTYP, "asynFloat64")
   field(PREC, "$(PREC=3)")
@@ -69,6 +78,7 @@ record(ao, "$(P)$(R)Edit-TimeoutMs") {
 }
 
 record(waveform, "$(P)$(R)Edit-Name") {
+  info(asyn:READBACK,"1")
   field(DESC, "Sequence step name")
   field(DTYP, "asynInt8ArrayOut")
   field(INP,  "@asyn($(PORT),0,1000)edit.name")
@@ -77,6 +87,7 @@ record(waveform, "$(P)$(R)Edit-Name") {
 }
 
 record(waveform, "$(P)$(R)Edit-Transition") {
+  info(asyn:READBACK,"1")
   field(DESC, "Sequence transition text")
   field(DTYP, "asynInt8ArrayOut")
   field(INP,  "@asyn($(PORT),0,1000)edit.transition")
@@ -85,6 +96,7 @@ record(waveform, "$(P)$(R)Edit-Transition") {
 }
 
 record(waveform, "$(P)$(R)Edit-OnError") {
+  info(asyn:READBACK,"1")
   field(DESC, "Sequence error transition text")
   field(DTYP, "asynInt8ArrayOut")
   field(INP,  "@asyn($(PORT),0,1000)edit.onerror")
@@ -93,6 +105,7 @@ record(waveform, "$(P)$(R)Edit-OnError") {
 }
 
 record(waveform, "$(P)$(R)Edit-Args") {
+  info(asyn:READBACK,"1")
   field(DESC, "Sequence action arguments")
   field(DTYP, "asynInt8ArrayOut")
   field(INP,  "@asyn($(PORT),0,1000)edit.args")
@@ -101,6 +114,7 @@ record(waveform, "$(P)$(R)Edit-Args") {
 }
 
 record(waveform, "$(P)$(R)CmdLine") {
+  info(asyn:READBACK,"1")
   field(DESC, "One-line sequence step command")
   field(DTYP, "asynInt8ArrayOut")
   field(INP,  "@asyn($(PORT),0,1000)cmdline")
@@ -150,6 +164,7 @@ record(bo, "$(P)$(R)Edit-Delete") {
 }
 
 record(longout, "$(P)$(R)Read-Index") {
+  info(asyn:READBACK,"1")
   field(DESC, "Sequence readback step index")
   field(DTYP, "asynInt32")
   field(OUT,  "@asyn($(PORT),0,1000)read.index")

@@ -112,10 +112,14 @@ caput IOC:Seq0-Read-Cmd 1
 caget IOC:Seq0-Read-Action IOC:Seq0-Read-Axis IOC:Seq0-Read-Name
 ```
 
+`Read-Prev` and `Read-Next` skip disabled/unconfigured step slots. Direct
+`Read-Index` plus `Read-Cmd` can still inspect any slot, including empty gaps
+left for sparse step numbering.
+
 `Read-CmdLine` exposes the selected step as a one-line text row. It is a
 read-only waveform so navigating with `Read-Prev` and `Read-Next` does not
 overwrite the editable command buffer. Process `Read-ToCmdLine` to copy the
-selected row into `CmdLine` for editing:
+selected row into `CmdLine` and the editable step fields:
 
 ```sh
 caget -S IOC:Seq0-Read-CmdLine

@@ -16,6 +16,13 @@
    <property name="files"><string>bash /ioc/modules/qt/ecmcOpenObject.sh</string></property>
    <property name="args"><string>MOTION_SEQ_OVERVIEW $(IOC)</string></property>
   </widget>
+  <widget class="caRelatedDisplay" name="help">
+   <property name="geometry"><rect><x>690</x><y>10</y><width>100</width><height>22</height></rect></property>
+   <property name="label"><string notr="true">Help</string></property>
+   <property name="labels"><string>Actions</string></property>
+   <property name="files"><string>ecmcMotionSequenceHelp.ui</string></property>
+   <property name="args"><string>IOC=$(IOC)</string></property>
+  </widget>
   <widget class="caMessageButton" name="compile">
    <property name="geometry"><rect><x>10</x><y>52</y><width>100</width><height>28</height></rect></property>
    <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Cmd-Compile</string></property>
@@ -596,6 +603,7 @@
   <customwidget><class>caLineEdit</class><extends>QLineEdit</extends><header>caLineEdit</header></customwidget>
   <customwidget><class>caTextEntry</class><extends>caLineEdit</extends><header>caTextEntry</header></customwidget>
   <customwidget><class>caMessageButton</class><extends>QPushButton</extends><header>caMessageButton</header></customwidget>
+  <customwidget><class>caRelatedDisplay</class><extends>QPushButton</extends><header>caRelatedDisplay</header></customwidget>
   <customwidget><class>caShellCommand</class><extends>QWidget</extends><header>caShellCommand</header></customwidget>
  </customwidgets>
  <resources/>

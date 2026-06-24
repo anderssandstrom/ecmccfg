@@ -23,6 +23,13 @@
    <property name="files"><string>ecmcMotionSequenceHelp.ui</string></property>
    <property name="args"><string>IOC=$(IOC)</string></property>
   </widget>
+  <widget class="caRelatedDisplay" name="softTriggers">
+   <property name="geometry"><rect><x>570</x><y>10</y><width>110</width><height>22</height></rect></property>
+   <property name="label"><string notr="true">Soft triggers</string></property>
+   <property name="labels"><string>Soft triggers</string></property>
+   <property name="files"><string>ecmcMotionSequenceSoftTriggers.ui</string></property>
+   <property name="args"><string>SEQ_ID=$(SEQ_ID),SEQ_PFX=$(SEQ_PFX)</string></property>
+  </widget>
   <widget class="caMessageButton" name="compile">
    <property name="geometry"><rect><x>10</x><y>52</y><width>100</width><height>28</height></rect></property>
    <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Cmd-Compile</string></property>

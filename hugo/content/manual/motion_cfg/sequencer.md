@@ -166,8 +166,13 @@ field manually:
 ```sh
 caput -S IOC:Seq0-CmdLine "4: wait_item ec.s2.ai01 gt 10.5 timeout=5000 name='wait ai01'"
 caput IOC:Seq0-CmdLine-Apply 1
+caget -S IOC:Seq0-CmdLine-RB
 caget IOC:Seq0-CmdLine-Result
 ```
+
+`CmdLine-RB` is the monitored readback of the editable command-line buffer.
+It updates when text is entered into `CmdLine` and when `Read-ToCmdLine` copies
+the selected readback row into the command-line buffer.
 
 The command line syntax is:
 

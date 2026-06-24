@@ -108,6 +108,15 @@ record(waveform, "$(P)$(R)CmdLine") {
   field(NELM, "256")
 }
 
+record(waveform, "$(P)$(R)CmdLine-RB") {
+  field(DESC, "One-line command readback")
+  field(DTYP, "asynInt8ArrayIn")
+  field(INP,  "@asyn($(PORT),0,1000)cmdline.rb")
+  field(FTVL, "CHAR")
+  field(NELM, "256")
+  field(SCAN, "$(SCAN=.1 second)")
+}
+
 record(bo, "$(P)$(R)CmdLine-Apply") {
   field(DESC, "Apply one-line step command")
   field(DTYP, "asynInt32")

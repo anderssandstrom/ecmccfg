@@ -162,3 +162,63 @@ record(longin,"$(P)MCU-RTLog-SrcIndex") {
   field(PINI, "YES")
   field(SCAN, "I/O Intr")
 }
+
+record(longout,"$(P)MCU-RTLog-DiagLevel") {
+  info(asyn:READBACK,"1")
+  field(DESC, "RTLog diag dump level")
+  field(DTYP, "asynInt32")
+  field(VAL,  "1")
+  field(OUT,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_DIAG_LEVEL")
+}
+
+record(bo,"$(P)MCU-RTLog-DiagDump") {
+  field(DESC, "RTLog write diag dump")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_DIAG_DUMP")
+  field(ZNAM, "Idle")
+  field(ONAM, "Dump")
+  field(DOL,  "0")
+  field(VAL,  "0")
+}
+
+record(bi,"$(P)MCU-RTLog-DiagBusy") {
+  field(DESC, "RTLog diag dump busy")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_DIAG_BUSY")
+  field(SCAN, "I/O Intr")
+  field(ZNAM, "Idle")
+  field(ONAM, "Busy")
+}
+
+record(longin,"$(P)MCU-RTLog-DiagStatus") {
+  field(DESC, "RTLog diag dump status")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_DIAG_STATUS")
+  field(SCAN, "I/O Intr")
+}
+
+record(waveform,"$(P)MCU-RTLog-DiagFile") {
+  field(DESC, "RTLog last diag dump file")
+  field(DTYP, "asynOctetRead")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_DIAG_FILE")
+  field(FTVL, "CHAR")
+  field(NELM, "512")
+  field(SCAN, "I/O Intr")
+}
+
+record(longout,"$(P)MCU-RTLog-DiagAxis") {
+  info(asyn:READBACK,"1")
+  field(DESC, "RTLog diagnostic axis")
+  field(DTYP, "asynInt32")
+  field(VAL,  "0")
+  field(OUT,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_DIAG_AXIS")
+}
+
+record(waveform,"$(P)MCU-RTLog-DiagAxisRpt") {
+  field(DESC, "RTLog axis motion diagnosis")
+  field(DTYP, "asynOctetRead")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_DIAG_AXIS_REPORT")
+  field(FTVL, "CHAR")
+  field(NELM, "1024")
+  field(SCAN, "I/O Intr")
+}

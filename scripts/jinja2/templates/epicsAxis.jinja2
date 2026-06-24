@@ -34,6 +34,8 @@ ecmcEpicsEnvSetCalcTernary(V_DRVH,"{{ monitoring.velocity.enable|default(0)|int 
 {%- endif %}
 
 dbLoadRecords("ecmcAxis.db","P=${ECMC_PREFIX},AXIS_NAME='{{ epicsName }}',EGU='{{ epicsUnit }}',PREC={{ epicsPrecision }},AXIS_NO=${ECMC_AXIS_NO},HOMEPROC={{ homingType }},PORT=${ECMC_ASYN_PORT},ADDR=0,TIMEOUT=1,T_SMP_MS=${ECMC_SAMPLE_RATE_MS},TSE=${ECMC_TSE},VELO={{ trajectory.axis.velocity }},V_DRVL=${V_DRVL=0},V_DRVH=${V_DRVH=0},TWKDST={{ axis.tweakDist|default(0.0)|float }}, GRP_NAME={{ axis.group|default("No group")}}, GRP_ID=${ECMC_AXIS_GRP_ID=-1}")
+ecmcFileExist("ecmcRtLogAxis.db",1,1)
+dbLoadRecords("ecmcRtLogAxis.db","P=${ECMC_PREFIX},AXIS_NAME='{{ epicsName }}',AXIS_NO=${ECMC_AXIS_NO}")
 
 #- save PREC for use if encoder is added
 epicsEnvSet(ECMC_AXIS_PREC,{{ epicsPrecision }})
@@ -126,4 +128,3 @@ epicsEnvSet(ECMC_MOTOR_${ECMC_AXIS_NO}_FULL_NAME, ${ECMC_PREFIX}{{ epicsName }})
 {%- if axis.tweakDist is defined %}
     ecmcConfigOrDie "Cfg.SetAxisTweakDist(${ECMC_AXIS_NO},{{ axis.tweakDist|default(0.0)|float }})"
 {%- endif %}
-

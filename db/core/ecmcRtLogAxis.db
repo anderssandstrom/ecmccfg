@@ -1,0 +1,20 @@
+record(longin,"${P}${AXIS_NAME}-MtnCmdMrReqCnt") {
+  field(DESC, "Axis motor record motion command request counter")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_CMD_MR_REQUEST_COUNT")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin,"${P}${AXIS_NAME}-MtnCmdReqCnt") {
+  field(DESC, "Axis motion command request counter")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_CMD_REQUEST_COUNT")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin,"${P}${AXIS_NAME}-MtnCmdExecCnt") {
+  field(DESC, "Axis motion command execute counter")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_CMD_EXECUTE_COUNT")
+  field(SCAN, "I/O Intr")
+}

@@ -19,6 +19,8 @@ ecmcEpicsEnvSetCalcTernary(V_DRVL,"${ECMC_MON_VELO_MAX_ENA}>0",-${ECMC_MON_VELO_
 ecmcEpicsEnvSetCalcTernary(V_DRVH,"${ECMC_MON_VELO_MAX_ENA}>0",${ECMC_MON_VELO_MAX=0} ,0)
 ecmcFileExist("ecmcAxis.db",1,1)
 dbLoadRecords("ecmcAxis.db","P=${ECMC_PREFIX},AXIS_NAME=${ECMC_MOTOR_NAME},AXIS_NO=${ECMC_AXIS_NO},HOMEPROC=${ECMC_HOME_PROC=0},PORT=${ECMC_ASYN_PORT},ADDR=0,TIMEOUT=1,T_SMP_MS=${ECMC_SAMPLE_RATE_MS},TSE=${ECMC_TSE},EGU=${ECMC_EGU},PREC=${ECMC_PREC},V_DRVL=${V_DRVL},V_DRVH=${V_DRVH}")
+ecmcFileExist("ecmcRtLogAxis.db",1,1)
+dbLoadRecords("ecmcRtLogAxis.db","P=${ECMC_PREFIX},AXIS_NAME=${ECMC_MOTOR_NAME},AXIS_NO=${ECMC_AXIS_NO}")
 epicsEnvUnset(V_DRVL)
 epicsEnvUnset(V_DRVH)
 

@@ -578,19 +578,8 @@
    <property name="pressMessage"><string notr="true">1</string></property>
    <property name="colorMode"><enum>caMessageButton::Default</enum></property>
   </widget>
-  <widget class="caLabel" name="cmdLineReadbackLabel">
-   <property name="geometry"><rect><x>10</x><y>736</y><width>110</width><height>18</height></rect></property>
-   <property name="text"><string>Command rb</string></property>
-  </widget>
-  <widget class="caLineEdit" name="cmdLineReadback">
-   <property name="geometry"><rect><x>130</x><y>732</y><width>720</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)CmdLine-RB</string></property>
-   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
-   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
-  </widget>
   <widget class="caLineEdit" name="cmdLineResult">
-   <property name="geometry"><rect><x>130</x><y>760</y><width>720</width><height>22</height></rect></property>
+   <property name="geometry"><rect><x>130</x><y>732</y><width>720</width><height>22</height></rect></property>
    <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)CmdLine-Result</string></property>
    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
    <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>

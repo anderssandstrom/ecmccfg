@@ -146,7 +146,7 @@ Trigger actions
 ---------------
 arm_pos_trigger:
   id=&lt;trigger_id&gt; axis=&lt;axis&gt; item=&lt;item_or_soft&gt; start=&lt;position&gt;
-  period=&lt;position_period&gt; count=&lt;count&gt; value=&lt;write_value&gt; pulse=&lt;ms&gt;
+  interval=&lt;position_step&gt; end=&lt;end_position&gt; value=&lt;write_value&gt; pulse=&lt;ms&gt;
 
 arm_time_trigger:
   id=&lt;trigger_id&gt; item=&lt;item_or_soft&gt; delay=&lt;ms&gt; period=&lt;ms&gt;

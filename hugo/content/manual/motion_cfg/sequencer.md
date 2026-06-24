@@ -298,7 +298,7 @@ Cfg.SeqRunSeq(parentSeq,step,childSeq,timeoutMs)
 Triggers:
 
 ```text
-Cfg.SeqArmPosTrigger(seq,step,id,axis,item,startPos,period,count,value,pulseMs)
+Cfg.SeqArmPosTrigger(seq,step,id,axis,item,startPos,interval,endPos,value,pulseMs)
 Cfg.SeqArmTimeTrigger(seq,step,id,item,delayMs,periodMs,count,value,pulseMs)
 Cfg.SeqWaitTriggerDone(seq,step,id,timeoutMs)
 ```
@@ -390,13 +390,12 @@ Position triggers are armed before a later motion step and execute in the
 background:
 
 ```text
-Cfg.SeqArmPosTrigger(0,0,0,1,ec0.s1.output01,10.0,1.0,20,1,5)
+Cfg.SeqArmPosTrigger(0,0,0,1,ec0.s1.output01,10.0,1.0,29.0,1,5)
 Cfg.SeqMoveAbs(0,1,1,50.0,10.0,20.0,20.0,10000)
 Cfg.SeqWaitTriggerDone(0,2,0,1000)
 ```
 
-This pulses the output at positions `10`, `11`, through `29`. A negative period
-supports reverse motion.
+This pulses the output at positions `10`, `11`, through `29`. The range is `startPos:interval:endPos`; negative intervals support reverse motion, for example `80,-1,20` fires at `80,79,...,20`.
 
 ## Time Triggers
 
@@ -414,7 +413,7 @@ high for 1 ms.
 Use `soft` instead of a data-item name:
 
 ```text
-Cfg.SeqArmPosTrigger(0,0,0,1,soft,10.0,1.0,20,1,0)
+Cfg.SeqArmPosTrigger(0,0,0,1,soft,10.0,1.0,29.0,1,0)
 Cfg.SeqArmTimeTrigger(0,1,1,soft,10,5,100,1,0)
 ```
 
@@ -557,7 +556,7 @@ seq_step := seq_get_step(0);
 Define sequence 0 as one X scan line:
 
 ```text
-Cfg.SeqArmPosTrigger(0,0,0,1,soft,10.0,1.0,100,1,0)
+Cfg.SeqArmPosTrigger(0,0,0,1,soft,10.0,1.0,109.0,1,0)
 Cfg.SeqMoveAbs(0,1,1,110.0,20.0,50.0,50.0,20000)
 Cfg.SeqWaitTriggerDone(0,2,0,2000)
 Cfg.CompileMotionSeq(0)

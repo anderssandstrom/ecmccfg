@@ -417,23 +417,33 @@ Cfg.SeqArmPosTrigger(0,0,0,1,soft,10.0,1.0,29.0,1,0)
 Cfg.SeqArmTimeTrigger(0,1,1,soft,10,5,100,1,0)
 ```
 
-Each event increments:
+Each soft trigger event increments:
 
 ```text
 stat.soft_trigger_count
 ```
 
-Trigger IDs `0..7` also expose dedicated counters and pulse-active status:
+All trigger events, both hard and soft, also update:
+
+```text
+stat.trigger_count
+stat.trigger_id
+```
+
+Trigger IDs `0..7` expose dedicated counters and pulse-active status:
 
 ```text
 stat.soft_trigger.<id>.count
 stat.soft_trigger.<id>.pulse
 ```
 
-The ecmccfg database maps these to `SoftTrig0Count`/`SoftTrig0Pulse` through
-`SoftTrig7Count`/`SoftTrig7Pulse`. Use the counters as the reliable EPICS event
-source. The pulse flags are only high while a soft trigger pulse is active and
-therefore require a nonzero `pulseMs`.
+The internal asyn names keep the original `soft_trigger` prefix for
+compatibility, but these per-ID counters now count both hard and soft trigger
+IDs. The ecmccfg database maps them to `Trigger0Count`/`Trigger0Pulse` through
+`Trigger7Count`/`Trigger7Pulse`, and keeps the old
+`SoftTrig0Count`/`SoftTrig0Pulse` aliases for compatibility. Use the counters as
+the reliable EPICS event source. The pulse flags are only high while a trigger
+pulse is active and therefore require a nonzero `pulseMs`.
 
 and updates:
 
@@ -441,7 +451,7 @@ and updates:
 stat.soft_trigger_id
 ```
 
-The corresponding records are `SoftTriggerCount` and `SoftTriggerId`.
+The corresponding soft-only records are `SoftTriggerCount` and `SoftTriggerId`.
 `SoftTriggerEvent` is processed through a `CP` link when the counter posts a
 changed value. `SOFT_TRG_FLNK` can forward-link that event to another record.
 The counter value should still be used to detect the number of new events.
@@ -514,9 +524,18 @@ ElapsedMs
 StepName
 ErrorText
 ValidationText
+TriggerId
+TriggerCount
+TriggerEvent
+Trigger0Count..Trigger7Count
+Trigger0Pulse..Trigger7Pulse
+Trigger0Event..Trigger7Event
 SoftTriggerId
 SoftTriggerCount
 SoftTriggerEvent
+SoftTrig0Count..SoftTrig7Count
+SoftTrig0Pulse..SoftTrig7Pulse
+SoftTrig0Event..SoftTrig7Event
 ```
 
 Status and readback records poll at `SCAN` because realtime sequence updates do

@@ -155,9 +155,10 @@ arm_time_trigger:
 wait_trigger_done:
   id=&lt;trigger_id&gt; timeout=&lt;ms&gt;
 
-Use item=soft for software triggers. Soft triggers increment SoftTriggerCount
-and update SoftTriggerId instead of writing a data item. IDs 0..7 also
-update SoftTrig0Count/SoftTrig0Pulse through SoftTrig7Count/SoftTrig7Pulse.
+Use item=soft for software triggers. All triggers update TriggerCount and
+TriggerId. Soft triggers also increment SoftTriggerCount and update
+SoftTriggerId instead of writing a data item. IDs 0..7 update
+Trigger0Count/Trigger0Pulse through Trigger7Count/Trigger7Pulse.
 
 Startup script command examples
 -------------------------------

@@ -22,9 +22,9 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlEnc.cmd,    "FILE=./cfg/enc_open_loop.yaml,D
 # Create sequence 0 and load its records on port ECMC_SEQ0.
 ${SCRIPTEXEC} ${ecmccfg_DIR}addMotionSequence.cmd, "SEQ_ID=0,MAX_STEPS=16,DB_PREFIX=$(IOC):,RECORD_PREFIX=Seq0-,REPORT=1"
 
-# Safe manual test: reset/power, move to absolute position 10 mm, start a
-# nonblocking +0.2 mm move, wait for in-position, delay, then return -0.2 mm
-# with a blocking move.
+# Safe manual test: reset/power, move to absolute position 10 mm, arm a
+# position trigger range, start a nonblocking scan move to 40 mm, then wait for
+# triggers and final in-position.
 # The sequence is compiled and armed, but is not started automatically.
 
 # SeqReset(seqIndex,stepIndex,axis,timeoutMs)
@@ -40,23 +40,26 @@ ecmcConfigOrDie "Cfg.SeqPower(0,1,1,1,5000)"
 # wait=1 explicitly makes this a blocking move with a 30000 ms timeout.
 ecmcConfigOrDie "Cfg.SeqMoveAbs(0,2,1,10.0,0.5,2.0,2.0,30000,1)"
 
-# SeqMoveRel(seqIndex,stepIndex,axis,distance,velocity,acceleration,deceleration,timeoutMs,wait)
-# Sequence 0, step 3: start a +0.2 mm move on axis 1 at 0.5 mm/s.
-# wait=0 makes this step advance immediately after issuing the command.
-ecmcConfigOrDie "Cfg.SeqMoveRel(0,3,1,0.2,0.5,2.0,2.0,1000,0)"
+# SeqArmPosTrigger(seqIndex,stepIndex,triggerId,axis,item,startPos,interval,endPos,value,pulseMs)
+# Sequence 0, step 3: arm position trigger ID 0 on axis 1.
+# The output item ec0.s14.ZERO is written high for 5 ms at each integer mm
+# from 15 mm through 35 mm while the following move executes.
+ecmcConfigOrDie "Cfg.SeqArmPosTrigger(0,3,0,1,ec0.s14.ZERO,15.0,1.0,35.0,1,5)"
+
+# SeqMoveAbs(seqIndex,stepIndex,axis,position,velocity,acceleration,deceleration,timeoutMs,wait)
+# Sequence 0, step 4: start a move to 40 mm at 0.5 mm/s.
+# wait=0 makes this step advance immediately so trigger completion can be
+# handled explicitly by later steps.
+ecmcConfigOrDie "Cfg.SeqMoveAbs(0,4,1,40.0,0.5,2.0,2.0,70000,0)"
+
+# SeqWaitTriggerDone(seqIndex,stepIndex,triggerId,timeoutMs)
+# Sequence 0, step 5: wait until trigger ID 0 has fired at all points
+# 15,16,...,35. Timeout is long enough for the slow scan move.
+ecmcConfigOrDie "Cfg.SeqWaitTriggerDone(0,5,0,70000)"
 
 # SeqWaitInPos(seqIndex,stepIndex,axis,timeoutMs)
-# Sequence 0, step 4: wait up to 5000 ms for axis 1 to reach its target.
-ecmcConfigOrDie "Cfg.SeqWaitInPos(0,4,1,5000)"
-
-# SeqWaitTime(seqIndex,stepIndex,waitMs)
-# Sequence 0, step 5: remain at the outward position for 500 ms.
-ecmcConfigOrDie "Cfg.SeqWaitTime(0,5,500)"
-
-# SeqMoveRel(seqIndex,stepIndex,axis,distance,velocity,acceleration,deceleration,timeoutMs)
-# Sequence 0, step 6: move axis 1 by -0.2 mm and wait up to 5000 ms.
-# The short command form defaults to blocking behavior.
-ecmcConfigOrDie "Cfg.SeqMoveRel(0,6,1,-0.2,0.5,2.0,2.0,5000)"
+# Sequence 0, step 6: wait up to 30000 ms for axis 1 to reach 40 mm.
+ecmcConfigOrDie "Cfg.SeqWaitInPos(0,6,1,30000)"
 
 # CompileMotionSeq(seqIndex): validate and compile sequence 0.
 ecmcConfigOrDie "Cfg.CompileMotionSeq(0)"

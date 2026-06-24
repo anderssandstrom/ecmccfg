@@ -11,13 +11,14 @@ The test sequence:
 1. resets axis 1
 2. powers axis 1
 3. executes an explicitly blocking absolute move to 10 mm
-4. starts a nonblocking +0.2 mm relative move
-5. waits until axis 1 is in position
-6. waits 500 ms
-7. executes a blocking -0.2 mm relative move
+4. arms trigger ID 0 on `ec0.s14.ZERO` for positions `15:1:35`
+5. starts a nonblocking absolute move to 40 mm
+6. waits until trigger ID 0 has fired at all trigger points
+7. waits until axis 1 is in position
 
-The explicit `SeqWaitInPos` after the nonblocking move tests that command issue
-and motion completion can be separated into different sequence steps.
+The explicit trigger wait and final `SeqWaitInPos` after the nonblocking move
+test that command issue, trigger completion, and motion completion can be
+separated into different sequence steps.
 
 After verifying that the stage has sufficient travel in both directions, start
 the sequence with:
@@ -39,6 +40,10 @@ caget "$(IOC):Seq0-State"
 caget "$(IOC):Seq0-StepIndex"
 caget "$(IOC):Seq0-ErrorId"
 ```
+
+This example writes the hard trigger item `ec0.s14.ZERO`; it does not increment
+the sequencer soft-trigger counters. To test soft trigger PVs instead, replace
+`ec0.s14.ZERO` with `soft` in the `SeqArmPosTrigger` command.
 
 Before another run, arm the sequence again:
 

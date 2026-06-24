@@ -18,3 +18,89 @@ record(longin,"${P}${AXIS_NAME}-MtnCmdExecCnt") {
   field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_CMD_EXECUTE_COUNT")
   field(SCAN, "I/O Intr")
 }
+
+record(mbbi,"${P}${AXIS_NAME}-MtnCmdMrLastType") {
+  field(DESC, "Last motor record motion command type")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_MR_CMD_TYPE")
+  field(ZRVL, "0")
+  field(ZRST, "NONE")
+  field(ONVL, "1")
+  field(ONST, "ABS")
+  field(TWVL, "2")
+  field(TWST, "REL")
+  field(THVL, "3")
+  field(THST, "VEL")
+  field(FRVL, "4")
+  field(FRST, "HOME")
+  field(FVVL, "5")
+  field(FVST, "STOP")
+  field(SCAN, "I/O Intr")
+}
+
+record(mbbi,"${P}${AXIS_NAME}-MtnCmdMrLastRslt") {
+  field(DESC, "Last motor record motion command result")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_MR_CMD_RESULT")
+  field(ZRVL, "0")
+  field(ZRST, "NONE")
+  field(ONVL, "1")
+  field(ONST, "ACCEPTED")
+  field(TWVL, "2")
+  field(TWST, "REJECTED")
+  field(THVL, "3")
+  field(THST, "IGNORED")
+  field(FRVL, "4")
+  field(FRST, "DEFERRED")
+  field(SCAN, "I/O Intr")
+}
+
+record(mbbi,"${P}${AXIS_NAME}-MtnCmdMrLastRsn") {
+  field(DESC, "Last motor record motion command reason")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_MR_CMD_REASON")
+  field(ZRVL, "0")
+  field(ZRST, "NONE")
+  field(ONVL, "1")
+  field(ONST, "OK")
+  field(TWVL, "2")
+  field(TWST, "ZERO_VEL")
+  field(THVL, "3")
+  field(THST, "BLOCK_COM")
+  field(FRVL, "4")
+  field(FRST, "AX_BLOCK")
+  field(FVVL, "5")
+  field(FVST, "ECMC_ERR")
+  field(SXVL, "6")
+  field(SXST, "AUTO_ENA")
+  field(SVVL, "7")
+  field(SVST, "RETARGET")
+  field(EIVL, "8")
+  field(EIST, "NO_EDGE")
+  field(NIVL, "9")
+  field(NIST, "PARAM")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin,"${P}${AXIS_NAME}-MtnCmdMrLastErr") {
+  field(DESC, "Last motor record motion command error")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_MR_CMD_ERROR")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin,"${P}${AXIS_NAME}-MtnCmdMrLastCyc") {
+  field(DESC, "Last motor record motion command cycle")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_MR_CMD_CYCLE")
+  field(SCAN, "I/O Intr")
+}
+
+record(waveform,"${P}${AXIS_NAME}-MtnCmdMrLastTxt") {
+  field(DESC, "Last motor record motion command text")
+  field(DTYP, "asynOctetRead")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_MR_CMD_TEXT")
+  field(FTVL, "CHAR")
+  field(NELM, "160")
+  field(SCAN, "I/O Intr")
+}

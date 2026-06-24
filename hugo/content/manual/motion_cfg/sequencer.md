@@ -423,6 +423,18 @@ Each event increments:
 stat.soft_trigger_count
 ```
 
+Trigger IDs `0..7` also expose dedicated counters and pulse-active status:
+
+```text
+stat.soft_trigger.<id>.count
+stat.soft_trigger.<id>.pulse
+```
+
+The ecmccfg database maps these to `SoftTrig0Count`/`SoftTrig0Pulse` through
+`SoftTrig7Count`/`SoftTrig7Pulse`. Use the counters as the reliable EPICS event
+source. The pulse flags are only high while a soft trigger pulse is active and
+therefore require a nonzero `pulseMs`.
+
 and updates:
 
 ```text

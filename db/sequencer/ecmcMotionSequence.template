@@ -489,3 +489,195 @@ record(calc, "$(P)$(R)SoftTriggerEvent") {
   field(CALC, "A")
   field(FLNK, "$(SOFT_TRG_FLNK=)")
 }
+
+record(longin, "$(P)$(R)SoftTrig0Count") {
+  field(DESC, "Soft trigger 0 event counter")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger.0.count")
+  field(MDEL, "0")
+}
+
+record(bi, "$(P)$(R)SoftTrig0Pulse") {
+  field(DESC, "Soft trigger 0 pulse active")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger.0.pulse")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(calc, "$(P)$(R)SoftTrig0Event") {
+  field(DESC, "Soft trigger 0 counter event")
+  field(INPA, "$(P)$(R)SoftTrig0Count CP")
+  field(CALC, "A")
+  field(FLNK, "$(SOFT_TRG0_FLNK=)")
+}
+
+record(longin, "$(P)$(R)SoftTrig1Count") {
+  field(DESC, "Soft trigger 1 event counter")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger.1.count")
+  field(MDEL, "0")
+}
+
+record(bi, "$(P)$(R)SoftTrig1Pulse") {
+  field(DESC, "Soft trigger 1 pulse active")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger.1.pulse")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(calc, "$(P)$(R)SoftTrig1Event") {
+  field(DESC, "Soft trigger 1 counter event")
+  field(INPA, "$(P)$(R)SoftTrig1Count CP")
+  field(CALC, "A")
+  field(FLNK, "$(SOFT_TRG1_FLNK=)")
+}
+
+record(longin, "$(P)$(R)SoftTrig2Count") {
+  field(DESC, "Soft trigger 2 event counter")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger.2.count")
+  field(MDEL, "0")
+}
+
+record(bi, "$(P)$(R)SoftTrig2Pulse") {
+  field(DESC, "Soft trigger 2 pulse active")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger.2.pulse")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(calc, "$(P)$(R)SoftTrig2Event") {
+  field(DESC, "Soft trigger 2 counter event")
+  field(INPA, "$(P)$(R)SoftTrig2Count CP")
+  field(CALC, "A")
+  field(FLNK, "$(SOFT_TRG2_FLNK=)")
+}
+
+record(longin, "$(P)$(R)SoftTrig3Count") {
+  field(DESC, "Soft trigger 3 event counter")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger.3.count")
+  field(MDEL, "0")
+}
+
+record(bi, "$(P)$(R)SoftTrig3Pulse") {
+  field(DESC, "Soft trigger 3 pulse active")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger.3.pulse")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(calc, "$(P)$(R)SoftTrig3Event") {
+  field(DESC, "Soft trigger 3 counter event")
+  field(INPA, "$(P)$(R)SoftTrig3Count CP")
+  field(CALC, "A")
+  field(FLNK, "$(SOFT_TRG3_FLNK=)")
+}
+
+record(longin, "$(P)$(R)SoftTrig4Count") {
+  field(DESC, "Soft trigger 4 event counter")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger.4.count")
+  field(MDEL, "0")
+}
+
+record(bi, "$(P)$(R)SoftTrig4Pulse") {
+  field(DESC, "Soft trigger 4 pulse active")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger.4.pulse")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(calc, "$(P)$(R)SoftTrig4Event") {
+  field(DESC, "Soft trigger 4 counter event")
+  field(INPA, "$(P)$(R)SoftTrig4Count CP")
+  field(CALC, "A")
+  field(FLNK, "$(SOFT_TRG4_FLNK=)")
+}
+
+record(longin, "$(P)$(R)SoftTrig5Count") {
+  field(DESC, "Soft trigger 5 event counter")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger.5.count")
+  field(MDEL, "0")
+}
+
+record(bi, "$(P)$(R)SoftTrig5Pulse") {
+  field(DESC, "Soft trigger 5 pulse active")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger.5.pulse")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(calc, "$(P)$(R)SoftTrig5Event") {
+  field(DESC, "Soft trigger 5 counter event")
+  field(INPA, "$(P)$(R)SoftTrig5Count CP")
+  field(CALC, "A")
+  field(FLNK, "$(SOFT_TRG5_FLNK=)")
+}
+
+record(longin, "$(P)$(R)SoftTrig6Count") {
+  field(DESC, "Soft trigger 6 event counter")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger.6.count")
+  field(MDEL, "0")
+}
+
+record(bi, "$(P)$(R)SoftTrig6Pulse") {
+  field(DESC, "Soft trigger 6 pulse active")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger.6.pulse")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(calc, "$(P)$(R)SoftTrig6Event") {
+  field(DESC, "Soft trigger 6 counter event")
+  field(INPA, "$(P)$(R)SoftTrig6Count CP")
+  field(CALC, "A")
+  field(FLNK, "$(SOFT_TRG6_FLNK=)")
+}
+
+record(longin, "$(P)$(R)SoftTrig7Count") {
+  field(DESC, "Soft trigger 7 event counter")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger.7.count")
+  field(MDEL, "0")
+}
+
+record(bi, "$(P)$(R)SoftTrig7Pulse") {
+  field(DESC, "Soft trigger 7 pulse active")
+  field(DTYP, "asynInt32")
+  field(SCAN, "$(SCAN=.1 second)")
+  field(INP,  "@asyn($(PORT),0,1000)stat.soft_trigger.7.pulse")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(calc, "$(P)$(R)SoftTrig7Event") {
+  field(DESC, "Soft trigger 7 counter event")
+  field(INPA, "$(P)$(R)SoftTrig7Count CP")
+  field(CALC, "A")
+  field(FLNK, "$(SOFT_TRG7_FLNK=)")
+}

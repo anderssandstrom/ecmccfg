@@ -30,6 +30,26 @@ record(bo,"${P}${AXIS_NAME}-MtnCmdClr") {
   field(ONAM, "Clear")
 }
 
+record(bo,"${P}${AXIS_NAME}-MtnCmdCntMrStop") {
+  info(asyn:READBACK,"1")
+  field(DESC, "Count motor record stop commands")
+  field(DTYP, "asynInt32")
+  field(VAL,  "1")
+  field(OUT,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_CMD_COUNT_MR_STOP")
+  field(ZNAM, "No")
+  field(ONAM, "Yes")
+}
+
+record(bo,"${P}${AXIS_NAME}-MtnCmdCntEna") {
+  info(asyn:READBACK,"1")
+  field(DESC, "Count enable commands")
+  field(DTYP, "asynInt32")
+  field(VAL,  "0")
+  field(OUT,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_CMD_COUNT_ENABLE")
+  field(ZNAM, "No")
+  field(ONAM, "Yes")
+}
+
 record(mbbi,"${P}${AXIS_NAME}-MtnCmdMrLastType") {
   field(DESC, "Last motor record motion command type")
   field(DTYP, "asynInt32")

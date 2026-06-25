@@ -96,26 +96,6 @@ record(bi,"$(P)MCU-RTLog-DbgEna") {
   field(ONAM, "Enabled")
 }
 
-record(bo,"$(P)MCU-RTLog-CntMrStop") {
-  info(asyn:READBACK,"1")
-  field(DESC, "Count motor record stop commands")
-  field(DTYP, "asynInt32")
-  field(VAL,  "1")
-  field(OUT,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_AXIS_CMD_COUNT_MR_STOP")
-  field(ZNAM, "No")
-  field(ONAM, "Yes")
-}
-
-record(bo,"$(P)MCU-RTLog-CntEnaCmd") {
-  info(asyn:READBACK,"1")
-  field(DESC, "Count enable commands")
-  field(DTYP, "asynInt32")
-  field(VAL,  "0")
-  field(OUT,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_AXIS_CMD_COUNT_ENABLE")
-  field(ZNAM, "No")
-  field(ONAM, "Yes")
-}
-
 record(longout,"$(P)MCU-RTLog-FilterMode") {
   info(asyn:READBACK,"1")
   field(DESC, "Realtime log filter mode")

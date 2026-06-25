@@ -22,6 +22,14 @@ record(longin,"${P}${AXIS_NAME}-MtnCmdExecCnt") {
   field(SCAN, "I/O Intr")
 }
 
+record(bo,"${P}${AXIS_NAME}-MtnCmdClr") {
+  field(DESC, "Clear axis motion command counters")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_CMD_CLEAR")
+  field(ZNAM, "Done")
+  field(ONAM, "Clear")
+}
+
 record(mbbi,"${P}${AXIS_NAME}-MtnCmdMrLastType") {
   field(DESC, "Last motor record motion command type")
   field(DTYP, "asynInt32")

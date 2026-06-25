@@ -34,7 +34,7 @@ record(bo,"${P}${AXIS_NAME}-MtnCmdCntMrStop") {
   info(asyn:READBACK,"1")
   field(DESC, "Count motor record stop commands")
   field(DTYP, "asynInt32")
-  field(VAL,  "1")
+  field(VAL,  "0")
   field(OUT,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_CMD_COUNT_MR_STOP")
   field(ZNAM, "No")
   field(ONAM, "Yes")

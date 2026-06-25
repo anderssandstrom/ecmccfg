@@ -50,6 +50,42 @@ record(bo,"${P}${AXIS_NAME}-MtnCmdCntEna") {
   field(ONAM, "Yes")
 }
 
+record(bi,"${P}${AXIS_NAME}-MtnMsBlk") {
+  field(DESC, "Master/slave command blocked")
+  field(DTYP, "asynInt32")
+  field(PINI, "$(PINI=1)")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_MS_BLOCKED")
+  field(ZNAM, "No")
+  field(ONAM, "Yes")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin,"${P}${AXIS_NAME}-MtnMsBlkCnt") {
+  field(DESC, "Master/slave block transition count")
+  field(DTYP, "asynInt32")
+  field(PINI, "$(PINI=1)")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_MS_BLOCK_COUNT")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin,"${P}${AXIS_NAME}-MtnMsBlkCyc") {
+  field(DESC, "Master/slave block transition cycle")
+  field(DTYP, "asynInt32")
+  field(PINI, "$(PINI=1)")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_MS_BLOCK_CYCLE")
+  field(SCAN, "I/O Intr")
+}
+
+record(waveform,"${P}${AXIS_NAME}-MtnMsBlkTxt") {
+  field(DESC, "Master/slave block transition text")
+  field(DTYP, "asynOctetRead")
+  field(PINI, "$(PINI=1)")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_MS_BLOCK_TEXT")
+  field(FTVL, "CHAR")
+  field(NELM, "160")
+  field(SCAN, "I/O Intr")
+}
+
 record(mbbi,"${P}${AXIS_NAME}-MtnCmdMrLastType") {
   field(DESC, "Last motor record motion command type")
   field(DTYP, "asynInt32")

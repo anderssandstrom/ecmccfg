@@ -1,28 +1,32 @@
 record(longin,"${P}${AXIS_NAME}-MtnCmdMrReqCnt") {
   field(DESC, "Axis motor record motion command request counter")
   field(DTYP, "asynInt32")
-  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_CMD_MR_REQUEST_COUNT")
+  field(PINI, "$(PINI=1)")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_CMD_MR_REQUEST_COUNT")
   field(SCAN, "I/O Intr")
 }
 
 record(longin,"${P}${AXIS_NAME}-MtnCmdReqCnt") {
   field(DESC, "Axis motion command request counter")
   field(DTYP, "asynInt32")
-  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_CMD_REQUEST_COUNT")
+  field(PINI, "$(PINI=1)")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_CMD_REQUEST_COUNT")
   field(SCAN, "I/O Intr")
 }
 
 record(longin,"${P}${AXIS_NAME}-MtnCmdExecCnt") {
   field(DESC, "Axis motion command execute counter")
   field(DTYP, "asynInt32")
-  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_CMD_EXECUTE_COUNT")
+  field(PINI, "$(PINI=1)")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_CMD_EXECUTE_COUNT")
   field(SCAN, "I/O Intr")
 }
 
 record(mbbi,"${P}${AXIS_NAME}-MtnCmdMrLastType") {
   field(DESC, "Last motor record motion command type")
   field(DTYP, "asynInt32")
-  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_MR_CMD_TYPE")
+  field(PINI, "$(PINI=1)")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_MR_CMD_TYPE")
   field(ZRVL, "0")
   field(ZRST, "NONE")
   field(ONVL, "1")
@@ -41,7 +45,8 @@ record(mbbi,"${P}${AXIS_NAME}-MtnCmdMrLastType") {
 record(mbbi,"${P}${AXIS_NAME}-MtnCmdMrLastRslt") {
   field(DESC, "Last motor record motion command result")
   field(DTYP, "asynInt32")
-  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_MR_CMD_RESULT")
+  field(PINI, "$(PINI=1)")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_MR_CMD_RESULT")
   field(ZRVL, "0")
   field(ZRST, "NONE")
   field(ONVL, "1")
@@ -58,7 +63,8 @@ record(mbbi,"${P}${AXIS_NAME}-MtnCmdMrLastRslt") {
 record(mbbi,"${P}${AXIS_NAME}-MtnCmdMrLastRsn") {
   field(DESC, "Last motor record motion command reason")
   field(DTYP, "asynInt32")
-  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_MR_CMD_REASON")
+  field(PINI, "$(PINI=1)")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_MR_CMD_REASON")
   field(ZRVL, "0")
   field(ZRST, "NONE")
   field(ONVL, "1")
@@ -85,21 +91,24 @@ record(mbbi,"${P}${AXIS_NAME}-MtnCmdMrLastRsn") {
 record(longin,"${P}${AXIS_NAME}-MtnCmdMrLastErr") {
   field(DESC, "Last motor record motion command error")
   field(DTYP, "asynInt32")
-  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_MR_CMD_ERROR")
+  field(PINI, "$(PINI=1)")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_MR_CMD_ERROR")
   field(SCAN, "I/O Intr")
 }
 
 record(longin,"${P}${AXIS_NAME}-MtnCmdMrLastCyc") {
   field(DESC, "Last motor record motion command cycle")
   field(DTYP, "asynInt32")
-  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_MR_CMD_CYCLE")
+  field(PINI, "$(PINI=1)")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_MR_CMD_CYCLE")
   field(SCAN, "I/O Intr")
 }
 
 record(waveform,"${P}${AXIS_NAME}-MtnCmdMrLastTxt") {
   field(DESC, "Last motor record motion command text")
   field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)))RTLOG_AXIS_MR_CMD_TEXT")
+  field(PINI, "$(PINI=1)")
+  field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_MR_CMD_TEXT")
   field(FTVL, "CHAR")
   field(NELM, "160")
   field(SCAN, "I/O Intr")

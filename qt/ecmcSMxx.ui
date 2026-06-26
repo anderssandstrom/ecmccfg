@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>243</width>
-    <height>457</height>
+    <height>587</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -424,11 +424,112 @@
     <enum>caLineEdit::string</enum>
    </property>
   </widget>
-  <widget class="QGroupBox" name="groupBox">
+  <widget class="QGroupBox" name="statusBitsBox">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>355</y>
+     <width>226</width>
+     <height>126</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Status bits:</string>
+   </property>
+   <widget class="caLabel" name="statTxtLabel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>45</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Phase:</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="statTxt">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>20</y>
+      <width>150</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):SM$(ID_2)-StatTxt</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="caLed" name="statSlvActLed">
+    <property name="geometry"><rect><x>10</x><y>48</y><width>16</width><height>16</height></rect></property>
+    <property name="channel" stdset="0"><string notr="true">$(IOC):SM$(ID_2)-StatSlvAct</string></property>
+   </widget>
+   <widget class="caLabel" name="statSlvActLabel">
+    <property name="geometry"><rect><x>30</x><y>48</y><width>75</width><height>16</height></rect></property>
+    <property name="text"><string>slave act</string></property>
+   </widget>
+   <widget class="caLed" name="statPrepMstLed">
+    <property name="geometry"><rect><x>115</x><y>48</y><width>16</width><height>16</height></rect></property>
+    <property name="channel" stdset="0"><string notr="true">$(IOC):SM$(ID_2)-StatPrepMst</string></property>
+   </widget>
+   <widget class="caLabel" name="statPrepMstLabel">
+    <property name="geometry"><rect><x>135</x><y>48</y><width>80</width><height>16</height></rect></property>
+    <property name="text"><string>prep mst</string></property>
+   </widget>
+   <widget class="caLed" name="statWaitSlvExtLed">
+    <property name="geometry"><rect><x>10</x><y>68</y><width>16</width><height>16</height></rect></property>
+    <property name="channel" stdset="0"><string notr="true">$(IOC):SM$(ID_2)-StatWaitSlvExt</string></property>
+   </widget>
+   <widget class="caLabel" name="statWaitSlvExtLabel">
+    <property name="geometry"><rect><x>30</x><y>68</y><width>75</width><height>16</height></rect></property>
+    <property name="text"><string>wait ext</string></property>
+   </widget>
+   <widget class="caLed" name="statMstMovLed">
+    <property name="geometry"><rect><x>115</x><y>68</y><width>16</width><height>16</height></rect></property>
+    <property name="channel" stdset="0"><string notr="true">$(IOC):SM$(ID_2)-StatMstMov</string></property>
+   </widget>
+   <widget class="caLabel" name="statMstMovLabel">
+    <property name="geometry"><rect><x>135</x><y>68</y><width>80</width><height>16</height></rect></property>
+    <property name="text"><string>mst moving</string></property>
+   </widget>
+   <widget class="caLed" name="statWaitMstAtLed">
+    <property name="geometry"><rect><x>10</x><y>88</y><width>16</width><height>16</height></rect></property>
+    <property name="channel" stdset="0"><string notr="true">$(IOC):SM$(ID_2)-StatWaitMstAt</string></property>
+   </widget>
+   <widget class="caLabel" name="statWaitMstAtLabel">
+    <property name="geometry"><rect><x>30</x><y>88</y><width>75</width><height>16</height></rect></property>
+    <property name="text"><string>wait at</string></property>
+   </widget>
+   <widget class="caLed" name="statWaitMstDisLed">
+    <property name="geometry"><rect><x>115</x><y>88</y><width>16</width><height>16</height></rect></property>
+    <property name="channel" stdset="0"><string notr="true">$(IOC):SM$(ID_2)-StatWaitMstDis</string></property>
+   </widget>
+   <widget class="caLabel" name="statWaitMstDisLabel">
+    <property name="geometry"><rect><x>135</x><y>88</y><width>80</width><height>16</height></rect></property>
+    <property name="text"><string>wait dis</string></property>
+   </widget>
+   <widget class="caLed" name="statTimeoutLed">
+    <property name="geometry"><rect><x>10</x><y>108</y><width>16</width><height>16</height></rect></property>
+    <property name="channel" stdset="0"><string notr="true">$(IOC):SM$(ID_2)-StatTimeout</string></property>
+    <property name="trueColor">
+     <color><red>255</red><green>0</green><blue>0</blue></color>
+    </property>
+   </widget>
+   <widget class="caLabel" name="statTimeoutLabel">
+    <property name="geometry"><rect><x>30</x><y>108</y><width>120</width><height>16</height></rect></property>
+    <property name="text"><string>timeout recovery</string></property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>485</y>
      <width>226</width>
      <height>96</height>
     </rect>

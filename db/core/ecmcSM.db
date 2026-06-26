@@ -78,7 +78,77 @@ record(mbbiDirect,"${P}SM${ID_2CH}-Stat_"){
   field(TSE,  "$(TSE=-2)")
 }
 
-# TODO bits of status word
+record(mbbi,"${P}SM${ID_2CH}-StatTxt"){
+  field(DESC, "Status decoded")
+  field(PINI, "$(PINI=1)")
+  field(INP,  "${P}SM${ID_2CH}-Stat CP")
+  field(ZRVL, "0")
+  field(ZRST, "IDLE")
+  field(ONVL, "1")
+  field(ONST, "SLV_ACT")
+  field(TWVL, "2")
+  field(TWST, "PREP_MST")
+  field(THVL, "4")
+  field(THST, "WAIT_EXT")
+  field(FRVL, "8")
+  field(FRST, "MST_MOV")
+  field(FVVL, "16")
+  field(FVST, "WAIT_AT")
+  field(SXVL, "32")
+  field(SXST, "WAIT_DIS")
+  field(SVVL, "32768")
+  field(SVST, "TIMEOUT")
+  field(TSE,  "$(TSE=-2)")
+}
+
+record(calc,"${P}SM${ID_2CH}-StatSlvAct"){
+  field(DESC, "Status slave active")
+  field(INPA, "${P}SM${ID_2CH}-Stat CP")
+  field(CALC, "A&1?1:0")
+  field(TSE,  "$(TSE=-2)")
+}
+
+record(calc,"${P}SM${ID_2CH}-StatPrepMst"){
+  field(DESC, "Status preparing master")
+  field(INPA, "${P}SM${ID_2CH}-Stat CP")
+  field(CALC, "A&2?1:0")
+  field(TSE,  "$(TSE=-2)")
+}
+
+record(calc,"${P}SM${ID_2CH}-StatWaitSlvExt"){
+  field(DESC, "Status wait slave ext")
+  field(INPA, "${P}SM${ID_2CH}-Stat CP")
+  field(CALC, "A&4?1:0")
+  field(TSE,  "$(TSE=-2)")
+}
+
+record(calc,"${P}SM${ID_2CH}-StatMstMov"){
+  field(DESC, "Status master moving")
+  field(INPA, "${P}SM${ID_2CH}-Stat CP")
+  field(CALC, "A&8?1:0")
+  field(TSE,  "$(TSE=-2)")
+}
+
+record(calc,"${P}SM${ID_2CH}-StatWaitMstAt"){
+  field(DESC, "Status wait master at target")
+  field(INPA, "${P}SM${ID_2CH}-Stat CP")
+  field(CALC, "A&16?1:0")
+  field(TSE,  "$(TSE=-2)")
+}
+
+record(calc,"${P}SM${ID_2CH}-StatWaitMstDis"){
+  field(DESC, "Status wait master disable")
+  field(INPA, "${P}SM${ID_2CH}-Stat CP")
+  field(CALC, "A&32?1:0")
+  field(TSE,  "$(TSE=-2)")
+}
+
+record(calc,"${P}SM${ID_2CH}-StatTimeout"){
+  field(DESC, "Status timeout recovery")
+  field(INPA, "${P}SM${ID_2CH}-Stat CP")
+  field(CALC, "A&32768?1:0")
+  field(TSE,  "$(TSE=-2)")
+}
 
 record(stringin,"${P}SM${ID_2CH}-Nam"){
   field(DESC, "Name")

@@ -78,10 +78,17 @@ record(mbbiDirect,"${P}SM${ID_2CH}-Stat_"){
   field(TSE,  "$(TSE=-2)")
 }
 
+record(calc,"${P}SM${ID_2CH}-StatPhase"){
+  field(DESC, "Current status phase")
+  field(INPA, "${P}SM${ID_2CH}-Stat CP")
+  field(CALC, "A&65535")
+  field(TSE,  "$(TSE=-2)")
+}
+
 record(mbbi,"${P}SM${ID_2CH}-StatTxt"){
   field(DESC, "Status decoded")
   field(PINI, "$(PINI=1)")
-  field(INP,  "${P}SM${ID_2CH}-Stat CP")
+  field(INP,  "${P}SM${ID_2CH}-StatPhase CP")
   field(ZRVL, "0")
   field(ZRST, "IDLE")
   field(ONVL, "1")
@@ -98,6 +105,71 @@ record(mbbi,"${P}SM${ID_2CH}-StatTxt"){
   field(SXST, "WAIT_DIS")
   field(SVVL, "32768")
   field(SVST, "TIMEOUT")
+  field(TSE,  "$(TSE=-2)")
+}
+
+record(calc,"${P}SM${ID_2CH}-StatPrvState"){
+  field(DESC, "Previous state value")
+  field(INPA, "${P}SM${ID_2CH}-Stat CP")
+  field(CALC, "(A>>16)&3")
+  field(TSE,  "$(TSE=-2)")
+}
+
+record(mbbi,"${P}SM${ID_2CH}-StatPrvStateTxt"){
+  field(DESC, "Previous state decoded")
+  field(INP,  "${P}SM${ID_2CH}-StatPrvState CP")
+  field(ZRVL, "0")
+  field(ZRST, "IDLE")
+  field(ONVL, "1")
+  field(ONST, "SLAVE")
+  field(TWVL, "2")
+  field(TWST, "MASTER")
+  field(THVL, "3")
+  field(THST, "RESET")
+  field(TSE,  "$(TSE=-2)")
+}
+
+record(calc,"${P}SM${ID_2CH}-StatTrRsn"){
+  field(DESC, "Last transition reason")
+  field(INPA, "${P}SM${ID_2CH}-Stat CP")
+  field(CALC, "(A>>18)&15")
+  field(TSE,  "$(TSE=-2)")
+}
+
+record(mbbi,"${P}SM${ID_2CH}-StatTrRsnTxt"){
+  field(DESC, "Transition reason decoded")
+  field(INP,  "${P}SM${ID_2CH}-StatTrRsn CP")
+  field(ZRVL, "0")
+  field(ZRST, "NONE")
+  field(ONVL, "1")
+  field(ONST, "EXT_WRITE")
+  field(TWVL, "2")
+  field(TWST, "CTRL_DISABLED")
+  field(THVL, "3")
+  field(THST, "SLAVE_CMD")
+  field(FRVL, "4")
+  field(FRST, "MASTER_CMD")
+  field(FVVL, "5")
+  field(FVST, "SLAVE_DONE")
+  field(SXVL, "6")
+  field(SXST, "MASTER_DONE")
+  field(SVVL, "7")
+  field(SVST, "LOST_EN_OR_ERR")
+  field(EIVL, "8")
+  field(EIST, "SLV_SRC_FAIL")
+  field(NIVL, "9")
+  field(NIST, "RESET_DONE")
+  field(TEVL, "10")
+  field(TEST, "PREP_TIMEOUT")
+  field(ELVL, "11")
+  field(ELST, "DISABLE_TIMEOUT")
+  field(TSE,  "$(TSE=-2)")
+}
+
+record(calc,"${P}SM${ID_2CH}-StatHistFault"){
+  field(DESC, "Historical fault present")
+  field(INPA, "${P}SM${ID_2CH}-Stat CP")
+  field(CALC, "A&4194304?1:0")
   field(TSE,  "$(TSE=-2)")
 }
 

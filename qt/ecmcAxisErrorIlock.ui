@@ -279,6 +279,25 @@
     <string>Axis:</string>
    </property>
   </widget>
+  <widget class="caRelatedDisplay" name="axisTroubleshootingDisplay">
+   <property name="geometry">
+    <rect>
+     <x>155</x>
+     <y>65</y>
+     <width>260</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="labels">
+    <string>Troubleshooting</string>
+   </property>
+   <property name="files">
+    <string>ecmcAxisTroubleshooting.ui</string>
+   </property>
+   <property name="args">
+    <string>DEV=$(DEV),Axis=$(Axis)</string>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -295,6 +314,11 @@
    <class>caLineEdit</class>
    <extends>QLineEdit</extends>
    <header>caLineEdit</header>
+  </customwidget>
+  <customwidget>
+   <class>caRelatedDisplay</class>
+   <extends>QPushButton</extends>
+   <header>caRelatedDisplay</header>
   </customwidget>
  </customwidgets>
  <resources/>

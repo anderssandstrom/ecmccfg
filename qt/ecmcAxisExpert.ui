@@ -215,6 +215,25 @@
      <enum>caMessageButton::Default</enum>
     </property>
    </widget>
+   <widget class="caRelatedDisplay" name="axisTroubleshootingDisplay">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>50</y>
+      <width>160</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="labels">
+     <string>Troubleshooting</string>
+    </property>
+    <property name="files">
+     <string>ecmcAxisTroubleshooting.ui</string>
+    </property>
+    <property name="args">
+     <string>DEV=$(DEV),Axis=$(Axis)</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox_3">
    <property name="geometry">

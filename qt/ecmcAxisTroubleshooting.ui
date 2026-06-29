@@ -151,10 +151,6 @@
     </property>
    </widget>
    <widget class="caLabel" name="blockCmdLabel">
-<<<<<<< HEAD
-    <property name="geometry"><rect><x>15</x><y>62</y><width>125</width><height>18</height></rect></property>
-    <property name="text"><string>manual cmd block</string></property>
-=======
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -164,9 +160,8 @@
      </rect>
     </property>
     <property name="text">
-     <string>axis block command</string>
+     <string>manual cmd block</string>
     </property>
->>>>>>> 58027d5e24c4c25646ea8f7176ecbf19816108c1
    </widget>
    <widget class="caLineEdit" name="blockCmd">
     <property name="geometry">

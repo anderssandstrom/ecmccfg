@@ -294,7 +294,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>prep mst</string>
+     <string>mst prep</string>
     </property>
    </widget>
    <widget class="caLed" name="statWaitMstDisLed">
@@ -360,7 +360,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>wait mst at trg</string>
+     <string>mst wait at trg</string>
     </property>
    </widget>
    <widget class="caLabel" name="statWaitMstDisLabel">
@@ -373,7 +373,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>wait mst dis</string>
+     <string>mst wait disable</string>
     </property>
    </widget>
    <widget class="caLabel" name="statSlvActLabel_2">

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>243</width>
-    <height>587</height>
+    <height>470</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,55 +41,17 @@
      <x>10</x>
      <y>160</y>
      <width>226</width>
-     <height>196</height>
+     <height>301</height>
     </rect>
    </property>
    <property name="title">
     <string>Status/Control:</string>
    </property>
-   <widget class="caLineEdit" name="calineedit_63">
-    <property name="geometry">
-     <rect>
-      <x>105</x>
-      <y>135</y>
-      <width>96</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>18</height>
-     </size>
-    </property>
-    <property name="channel" stdset="0">
-     <string notr="true">$(IOC):SM$(ID_2)-StateCmd</string>
-    </property>
-    <property name="background">
-     <color alpha="222">
-      <red>192</red>
-      <green>192</green>
-      <blue>192</blue>
-     </color>
-    </property>
-    <property name="colorMode">
-     <enum>caLineEdit::Static</enum>
-    </property>
-    <property name="precisionMode">
-     <enum>caLineEdit::Channel</enum>
-    </property>
-    <property name="limitsMode">
-     <enum>caLineEdit::User</enum>
-    </property>
-    <property name="unitsEnabled">
-     <bool>true</bool>
-    </property>
-   </widget>
    <widget class="caLabel" name="calabel_104">
     <property name="geometry">
      <rect>
-      <x>25</x>
-      <y>135</y>
+      <x>0</x>
+      <y>140</y>
       <width>61</width>
       <height>16</height>
      </rect>
@@ -163,7 +125,7 @@
     <property name="geometry">
      <rect>
       <x>24</x>
-      <y>165</y>
+      <y>270</y>
       <width>181</width>
       <height>22</height>
      </rect>
@@ -322,6 +284,326 @@
      </color>
     </property>
    </widget>
+   <widget class="caLabel" name="statPrepMstLabel">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>190</y>
+      <width>80</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>prep mst</string>
+    </property>
+   </widget>
+   <widget class="caLed" name="statWaitMstDisLed">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>250</y>
+      <width>16</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):SM$(ID_2)-StatWaitMstDis</string>
+    </property>
+    <property name="trueColor">
+     <color>
+      <red>0</red>
+      <green>0</green>
+      <blue>255</blue>
+     </color>
+    </property>
+   </widget>
+   <widget class="caLabel" name="statTimeoutLabel_2">
+    <property name="geometry">
+     <rect>
+      <x>-40</x>
+      <y>232</y>
+      <width>120</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>timeout recvry</string>
+    </property>
+   </widget>
+   <widget class="caLed" name="statWaitMstAtLed">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>230</y>
+      <width>16</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):SM$(ID_2)-StatWaitMstAt</string>
+    </property>
+    <property name="trueColor">
+     <color>
+      <red>0</red>
+      <green>0</green>
+      <blue>255</blue>
+     </color>
+    </property>
+   </widget>
+   <widget class="caLabel" name="statWaitMstAtLabel_2">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>232</y>
+      <width>75</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>wait mst at trg</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="statWaitMstDisLabel">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>250</y>
+      <width>80</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>wait mst dis</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="statSlvActLabel_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>192</y>
+      <width>75</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>slv act</string>
+    </property>
+   </widget>
+   <widget class="caLed" name="statWaitSlvExtLed">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>210</y>
+      <width>16</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):SM$(ID_2)-StatWaitSlvExt</string>
+    </property>
+    <property name="trueColor">
+     <color>
+      <red>0</red>
+      <green>0</green>
+      <blue>255</blue>
+     </color>
+    </property>
+   </widget>
+   <widget class="caLed" name="statPrepMstLed">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>190</y>
+      <width>16</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):SM$(ID_2)-StatPrepMst</string>
+    </property>
+    <property name="trueColor">
+     <color>
+      <red>0</red>
+      <green>0</green>
+      <blue>255</blue>
+     </color>
+    </property>
+   </widget>
+   <widget class="caLed" name="statMstMovLed">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>210</y>
+      <width>16</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):SM$(ID_2)-StatMstMov</string>
+    </property>
+    <property name="trueColor">
+     <color>
+      <red>0</red>
+      <green>0</green>
+      <blue>255</blue>
+     </color>
+    </property>
+   </widget>
+   <widget class="caLabel" name="statWaitSlvExtLabel_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>212</y>
+      <width>75</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>wait ext src</string>
+    </property>
+   </widget>
+   <widget class="caLed" name="statSlvActLed">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>190</y>
+      <width>16</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):SM$(ID_2)-StatSlvAct</string>
+    </property>
+    <property name="trueColor">
+     <color>
+      <red>0</red>
+      <green>0</green>
+      <blue>255</blue>
+     </color>
+    </property>
+   </widget>
+   <widget class="caLed" name="statTimeoutLed">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>230</y>
+      <width>16</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):SM$(ID_2)-StatTimeout</string>
+    </property>
+    <property name="trueColor">
+     <color>
+      <red>255</red>
+      <green>0</green>
+      <blue>0</blue>
+     </color>
+    </property>
+   </widget>
+   <widget class="caLabel" name="statMstMovLabel">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>210</y>
+      <width>80</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>mst moving</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="calineedit_64">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>160</y>
+      <width>131</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>18</height>
+     </size>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):SM$(ID_2)-StatTxt</string>
+    </property>
+    <property name="background">
+     <color alpha="222">
+      <red>192</red>
+      <green>192</green>
+      <blue>192</blue>
+     </color>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="limitsMode">
+     <enum>caLineEdit::User</enum>
+    </property>
+    <property name="unitsEnabled">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="calineedit_65">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>140</y>
+      <width>131</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>18</height>
+     </size>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):SM$(ID_2)-StateCmd</string>
+    </property>
+    <property name="background">
+     <color alpha="222">
+      <red>192</red>
+      <green>192</green>
+      <blue>192</blue>
+     </color>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="limitsMode">
+     <enum>caLineEdit::User</enum>
+    </property>
+    <property name="unitsEnabled">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caLabel" name="statTxtLabel_2">
+    <property name="geometry">
+     <rect>
+      <x>1</x>
+      <y>160</y>
+      <width>61</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Phase:</string>
+    </property>
+   </widget>
   </widget>
   <widget class="caLabel" name="calabel">
    <property name="geometry">
@@ -424,363 +706,6 @@
     <enum>caLineEdit::string</enum>
    </property>
   </widget>
-  <widget class="QGroupBox" name="statusBitsBox">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>355</y>
-     <width>226</width>
-     <height>126</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>Status bits:</string>
-   </property>
-   <widget class="caLabel" name="statTxtLabel">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>45</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Phase:</string>
-    </property>
-   </widget>
-   <widget class="caLineEdit" name="statTxt">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>20</y>
-      <width>150</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="channel" stdset="0">
-     <string notr="true">$(IOC):SM$(ID_2)-StatTxt</string>
-    </property>
-    <property name="colorMode">
-     <enum>caLineEdit::Static</enum>
-    </property>
-   </widget>
-   <widget class="caLed" name="statSlvActLed">
-    <property name="geometry"><rect><x>10</x><y>48</y><width>16</width><height>16</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):SM$(ID_2)-StatSlvAct</string></property>
-   </widget>
-   <widget class="caLabel" name="statSlvActLabel">
-    <property name="geometry"><rect><x>30</x><y>48</y><width>75</width><height>16</height></rect></property>
-    <property name="text"><string>slave act</string></property>
-   </widget>
-   <widget class="caLed" name="statPrepMstLed">
-    <property name="geometry"><rect><x>115</x><y>48</y><width>16</width><height>16</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):SM$(ID_2)-StatPrepMst</string></property>
-   </widget>
-   <widget class="caLabel" name="statPrepMstLabel">
-    <property name="geometry"><rect><x>135</x><y>48</y><width>80</width><height>16</height></rect></property>
-    <property name="text"><string>prep mst</string></property>
-   </widget>
-   <widget class="caLed" name="statWaitSlvExtLed">
-    <property name="geometry"><rect><x>10</x><y>68</y><width>16</width><height>16</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):SM$(ID_2)-StatWaitSlvExt</string></property>
-   </widget>
-   <widget class="caLabel" name="statWaitSlvExtLabel">
-    <property name="geometry"><rect><x>30</x><y>68</y><width>75</width><height>16</height></rect></property>
-    <property name="text"><string>wait ext</string></property>
-   </widget>
-   <widget class="caLed" name="statMstMovLed">
-    <property name="geometry"><rect><x>115</x><y>68</y><width>16</width><height>16</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):SM$(ID_2)-StatMstMov</string></property>
-   </widget>
-   <widget class="caLabel" name="statMstMovLabel">
-    <property name="geometry"><rect><x>135</x><y>68</y><width>80</width><height>16</height></rect></property>
-    <property name="text"><string>mst moving</string></property>
-   </widget>
-   <widget class="caLed" name="statWaitMstAtLed">
-    <property name="geometry"><rect><x>10</x><y>88</y><width>16</width><height>16</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):SM$(ID_2)-StatWaitMstAt</string></property>
-   </widget>
-   <widget class="caLabel" name="statWaitMstAtLabel">
-    <property name="geometry"><rect><x>30</x><y>88</y><width>75</width><height>16</height></rect></property>
-    <property name="text"><string>wait at</string></property>
-   </widget>
-   <widget class="caLed" name="statWaitMstDisLed">
-    <property name="geometry"><rect><x>115</x><y>88</y><width>16</width><height>16</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):SM$(ID_2)-StatWaitMstDis</string></property>
-   </widget>
-   <widget class="caLabel" name="statWaitMstDisLabel">
-    <property name="geometry"><rect><x>135</x><y>88</y><width>80</width><height>16</height></rect></property>
-    <property name="text"><string>wait dis</string></property>
-   </widget>
-   <widget class="caLed" name="statTimeoutLed">
-    <property name="geometry"><rect><x>10</x><y>108</y><width>16</width><height>16</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):SM$(ID_2)-StatTimeout</string></property>
-    <property name="trueColor">
-     <color><red>255</red><green>0</green><blue>0</blue></color>
-    </property>
-   </widget>
-   <widget class="caLabel" name="statTimeoutLabel">
-    <property name="geometry"><rect><x>30</x><y>108</y><width>120</width><height>16</height></rect></property>
-    <property name="text"><string>timeout recovery</string></property>
-   </widget>
-  </widget>
-  <widget class="QGroupBox" name="groupBox">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>485</y>
-     <width>226</width>
-     <height>96</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>Navigation:</string>
-   </property>
-   <widget class="caFrame" name="caframe">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>45</y>
-      <width>51</width>
-      <height>46</height>
-     </rect>
-    </property>
-    <property name="macro">
-     <string notr="true">SYS=$(SYS),IOC=$(IOC),ID_1=$(ID_1),ID_2=$(ID_2)</string>
-    </property>
-    <property name="visibility">
-     <enum>caFrame::Calc</enum>
-    </property>
-    <property name="visibilityCalc">
-     <string notr="true">A&gt;-1</string>
-    </property>
-    <property name="channel" stdset="0">
-     <string notr="true">$(IOC):MCU-Cfg-SM$(ID_1)-PrvObjId</string>
-    </property>
-    <widget class="caShellCommand" name="cashellcommand_2">
-     <property name="geometry">
-      <rect>
-       <x>5</x>
-       <y>2</y>
-       <width>41</width>
-       <height>18</height>
-      </rect>
-     </property>
-     <property name="label">
-      <string notr="true">&lt;&lt;</string>
-     </property>
-     <property name="labels">
-      <string>Open first axis</string>
-     </property>
-     <property name="files">
-      <string>bash /ioc/modules/qt/ecmcOpenObject.sh</string>
-     </property>
-     <property name="args">
-      <string>SM_PREV $(SYS) $(ID_1)</string>
-     </property>
-    </widget>
-    <widget class="caLineEdit" name="calineedit_53">
-     <property name="geometry">
-      <rect>
-       <x>5</x>
-       <y>25</y>
-       <width>41</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="channel" stdset="0">
-      <string notr="true">$(IOC):MCU-Cfg-SM$(ID_1)-PrvObjId</string>
-     </property>
-     <property name="background">
-      <color alpha="222">
-       <red>192</red>
-       <green>192</green>
-       <blue>192</blue>
-      </color>
-     </property>
-     <property name="colorMode">
-      <enum>caLineEdit::Static</enum>
-     </property>
-     <property name="precisionMode">
-      <enum>caLineEdit::Channel</enum>
-     </property>
-     <property name="limitsMode">
-      <enum>caLineEdit::User</enum>
-     </property>
-     <property name="unitsEnabled">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </widget>
-   <widget class="caLabel" name="calabel_98">
-    <property name="geometry">
-     <rect>
-      <x>-15</x>
-      <y>30</y>
-      <width>100</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>16</height>
-     </size>
-    </property>
-    <property name="text">
-     <string>Prev:</string>
-    </property>
-   </widget>
-   <widget class="caLabel" name="calabel_97">
-    <property name="geometry">
-     <rect>
-      <x>65</x>
-      <y>30</y>
-      <width>100</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>16</height>
-     </size>
-    </property>
-    <property name="text">
-     <string>Next:</string>
-    </property>
-   </widget>
-   <widget class="caFrame" name="caframe_2">
-    <property name="geometry">
-     <rect>
-      <x>125</x>
-      <y>45</y>
-      <width>56</width>
-      <height>46</height>
-     </rect>
-    </property>
-    <property name="macro">
-     <string notr="true">SYS=$(SYS),IOC=$(IOC),ID_1=$(ID_1),ID_2=$(ID_2)</string>
-    </property>
-    <property name="visibility">
-     <enum>caFrame::Calc</enum>
-    </property>
-    <property name="visibilityCalc">
-     <string notr="true">A&gt;-1</string>
-    </property>
-    <property name="channel" stdset="0">
-     <string notr="true">$(IOC):MCU-Cfg-SM$(ID_1)-NxtObjId</string>
-    </property>
-    <widget class="caShellCommand" name="cashellcommand_3">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>2</y>
-       <width>41</width>
-       <height>18</height>
-      </rect>
-     </property>
-     <property name="label">
-      <string notr="true">&gt;&gt;</string>
-     </property>
-     <property name="labels">
-      <string>Open first axis</string>
-     </property>
-     <property name="files">
-      <string>bash /ioc/modules/qt/ecmcOpenObject.sh</string>
-     </property>
-     <property name="args">
-      <string>SM_NEXT $(SYS) $(ID_1)</string>
-     </property>
-    </widget>
-    <widget class="caLineEdit" name="calineedit_54">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>25</y>
-       <width>41</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="channel" stdset="0">
-      <string notr="true">$(IOC):MCU-Cfg-SM$(ID_1)-NxtObjId</string>
-     </property>
-     <property name="background">
-      <color alpha="222">
-       <red>192</red>
-       <green>192</green>
-       <blue>192</blue>
-      </color>
-     </property>
-     <property name="colorMode">
-      <enum>caLineEdit::Static</enum>
-     </property>
-     <property name="precisionMode">
-      <enum>caLineEdit::Channel</enum>
-     </property>
-     <property name="limitsMode">
-      <enum>caLineEdit::User</enum>
-     </property>
-     <property name="unitsEnabled">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </widget>
-   <widget class="caLineEdit" name="calineedit_52">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>45</y>
-      <width>31</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>18</height>
-     </size>
-    </property>
-    <property name="text">
-     <string>$(ID_1)</string>
-    </property>
-    <property name="channel" stdset="0">
-     <string notr="true"/>
-    </property>
-    <property name="background">
-     <color alpha="222">
-      <red>192</red>
-      <green>192</green>
-      <blue>192</blue>
-     </color>
-    </property>
-    <property name="colorMode">
-     <enum>caLineEdit::Static</enum>
-    </property>
-    <property name="precisionMode">
-     <enum>caLineEdit::Channel</enum>
-    </property>
-    <property name="limitsMode">
-     <enum>caLineEdit::User</enum>
-    </property>
-    <property name="unitsEnabled">
-     <bool>true</bool>
-    </property>
-   </widget>
-  </widget>
   <widget class="caShellCommand" name="cashellcommand_10">
    <property name="geometry">
     <rect>
@@ -880,12 +805,6 @@
    <class>caToggleButton</class>
    <extends>QCheckBox</extends>
    <header>caToggleButton</header>
-  </customwidget>
-  <customwidget>
-   <class>caFrame</class>
-   <extends>QFrame</extends>
-   <header>caFrame</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>caLabel</class>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>560</width><height>315</height></rect></property>
+  <property name="windowTitle"><string>Select sequence action</string></property>
+  <widget class="caLabel" name="title">
+   <property name="geometry"><rect><x>15</x><y>12</y><width>300</width><height>24</height></rect></property>
+   <property name="font"><font><pointsize>12</pointsize><bold>true</bold></font></property>
+   <property name="text"><string>Select sequence action</string></property>
+  </widget>
+  <widget class="caLabel" name="currentLabel">
+   <property name="geometry"><rect><x>380</x><y>16</y><width>85</width><height>18</height></rect></property>
+   <property name="text"><string>Current ID</string></property>
+  </widget>
+  <widget class="caLineEdit" name="currentAction">
+   <property name="geometry"><rect><x>470</x><y>12</y><width>70</width><height>22</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+  </widget>
+  <widget class="caLabel" name="motionGroup">
+   <property name="geometry"><rect><x>15</x><y>48</y><width>520</width><height>18</height></rect></property>
+   <property name="text"><string>Click an action; the main editor will show only its applicable parameters.</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action0">
+   <property name="geometry"><rect><x>15</x><y>75</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">0 NOP</string></property>
+   <property name="pressMessage"><string notr="true">0</string></property>
+   <property name="releaseMessage"><string notr="true">0</string></property>
+   <property name="toolTip"><string>No operation</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action1">
+   <property name="geometry"><rect><x>150</x><y>75</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">1 Reset</string></property>
+   <property name="pressMessage"><string notr="true">1</string></property>
+   <property name="releaseMessage"><string notr="true">1</string></property>
+   <property name="toolTip"><string>Reset axis</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action2">
+   <property name="geometry"><rect><x>285</x><y>75</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">2 Power</string></property>
+   <property name="pressMessage"><string notr="true">2</string></property>
+   <property name="releaseMessage"><string notr="true">2</string></property>
+   <property name="toolTip"><string>Enable or disable axis</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action3">
+   <property name="geometry"><rect><x>420</x><y>75</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">3 Home</string></property>
+   <property name="pressMessage"><string notr="true">3</string></property>
+   <property name="releaseMessage"><string notr="true">3</string></property>
+   <property name="toolTip"><string>Home axis</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action4">
+   <property name="geometry"><rect><x>15</x><y>120</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">4 Move abs</string></property>
+   <property name="pressMessage"><string notr="true">4</string></property>
+   <property name="releaseMessage"><string notr="true">4</string></property>
+   <property name="toolTip"><string>Absolute position move</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action5">
+   <property name="geometry"><rect><x>150</x><y>120</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">5 Move rel</string></property>
+   <property name="pressMessage"><string notr="true">5</string></property>
+   <property name="releaseMessage"><string notr="true">5</string></property>
+   <property name="toolTip"><string>Relative position move</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action6">
+   <property name="geometry"><rect><x>285</x><y>120</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">6 Wait in pos</string></property>
+   <property name="pressMessage"><string notr="true">6</string></property>
+   <property name="releaseMessage"><string notr="true">6</string></property>
+   <property name="toolTip"><string>Wait until axis is in position</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action7">
+   <property name="geometry"><rect><x>420</x><y>120</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">7 Set item</string></property>
+   <property name="pressMessage"><string notr="true">7</string></property>
+   <property name="releaseMessage"><string notr="true">7</string></property>
+   <property name="toolTip"><string>Write scalar data item</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action8">
+   <property name="geometry"><rect><x>15</x><y>165</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">8 Wait item</string></property>
+   <property name="pressMessage"><string notr="true">8</string></property>
+   <property name="releaseMessage"><string notr="true">8</string></property>
+   <property name="toolTip"><string>Wait for item condition</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action9">
+   <property name="geometry"><rect><x>150</x><y>165</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">9 Wait time</string></property>
+   <property name="pressMessage"><string notr="true">9</string></property>
+   <property name="releaseMessage"><string notr="true">9</string></property>
+   <property name="toolTip"><string>Wait for a duration</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action10">
+   <property name="geometry"><rect><x>285</x><y>165</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">10 Run seq</string></property>
+   <property name="pressMessage"><string notr="true">10</string></property>
+   <property name="releaseMessage"><string notr="true">10</string></property>
+   <property name="toolTip"><string>Run child sequence</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action11">
+   <property name="geometry"><rect><x>420</x><y>165</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">11 Arm pos trg</string></property>
+   <property name="pressMessage"><string notr="true">11</string></property>
+   <property name="releaseMessage"><string notr="true">11</string></property>
+   <property name="toolTip"><string>Arm position trigger</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action12">
+   <property name="geometry"><rect><x>15</x><y>210</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">12 Wait trigger</string></property>
+   <property name="pressMessage"><string notr="true">12</string></property>
+   <property name="releaseMessage"><string notr="true">12</string></property>
+   <property name="toolTip"><string>Wait for trigger completion</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action13">
+   <property name="geometry"><rect><x>150</x><y>210</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">13 Arm time trg</string></property>
+   <property name="pressMessage"><string notr="true">13</string></property>
+   <property name="releaseMessage"><string notr="true">13</string></property>
+   <property name="toolTip"><string>Arm time trigger</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action14">
+   <property name="geometry"><rect><x>285</x><y>210</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">14 Move velocity</string></property>
+   <property name="pressMessage"><string notr="true">14</string></property>
+   <property name="releaseMessage"><string notr="true">14</string></property>
+   <property name="toolTip"><string>Start velocity move</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action15">
+   <property name="geometry"><rect><x>420</x><y>210</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">15 Halt</string></property>
+   <property name="pressMessage"><string notr="true">15</string></property>
+   <property name="releaseMessage"><string notr="true">15</string></property>
+   <property name="toolTip"><string>Halt axis</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action16">
+   <property name="geometry"><rect><x>15</x><y>255</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">16 Exit item</string></property>
+   <property name="pressMessage"><string notr="true">16</string></property>
+   <property name="releaseMessage"><string notr="true">16</string></property>
+   <property name="toolTip"><string>Exit when item condition is true</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action17">
+   <property name="geometry"><rect><x>150</x><y>255</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">17 Set homed</string></property>
+   <property name="pressMessage"><string notr="true">17</string></property>
+   <property name="releaseMessage"><string notr="true">17</string></property>
+   <property name="toolTip"><string>Set current encoder homed flag</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action18">
+   <property name="geometry"><rect><x>285</x><y>255</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">18 Branch item</string></property>
+   <property name="pressMessage"><string notr="true">18</string></property>
+   <property name="releaseMessage"><string notr="true">18</string></property>
+   <property name="toolTip"><string>Conditional branch</string></property>
+  </widget>
+  <widget class="caMessageButton" name="action19">
+   <property name="geometry"><rect><x>420</x><y>255</y><width>125</width><height>32</height></rect></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <property name="label"><string notr="true">19 Goto step</string></property>
+   <property name="pressMessage"><string notr="true">19</string></property>
+   <property name="releaseMessage"><string notr="true">19</string></property>
+   <property name="toolTip"><string>Unconditional branch</string></property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget><class>caLabel</class><extends>QLabel</extends><header>caLabel</header></customwidget>
+  <customwidget><class>caLineEdit</class><extends>QLineEdit</extends><header>caLineEdit</header></customwidget>
+  <customwidget><class>caMessageButton</class><extends>QPushButton</extends><header>caMessageButton</header></customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
+

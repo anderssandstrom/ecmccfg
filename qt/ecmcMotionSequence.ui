@@ -485,31 +485,7 @@
   </widget>
   <widget class="caLabel" name="editActionLabel">
    <property name="geometry"><rect><x>55</x><y>583</y><width>60</width><height>18</height></rect></property>
-   <property name="text"><string>Action</string></property>
-  </widget>
-  <widget class="caLabel" name="editAxisLabel">
-   <property name="geometry"><rect><x>125</x><y>583</y><width>45</width><height>18</height></rect></property>
-   <property name="text"><string>Axis</string></property>
-  </widget>
-  <widget class="caLabel" name="editPositionLabel">
-   <property name="geometry"><rect><x>180</x><y>583</y><width>80</width><height>18</height></rect></property>
-   <property name="text"><string>Position</string></property>
-  </widget>
-  <widget class="caLabel" name="editVelocityLabel">
-   <property name="geometry"><rect><x>270</x><y>583</y><width>80</width><height>18</height></rect></property>
-   <property name="text"><string>Velocity</string></property>
-  </widget>
-  <widget class="caLabel" name="editAccLabel">
-   <property name="geometry"><rect><x>360</x><y>583</y><width>80</width><height>18</height></rect></property>
-   <property name="text"><string>Accel</string></property>
-  </widget>
-  <widget class="caLabel" name="editDecLabel">
-   <property name="geometry"><rect><x>450</x><y>583</y><width>80</width><height>18</height></rect></property>
-   <property name="text"><string>Decel</string></property>
-  </widget>
-  <widget class="caLabel" name="editTimeoutLabel">
-   <property name="geometry"><rect><x>540</x><y>583</y><width>80</width><height>18</height></rect></property>
-   <property name="text"><string>Timeout</string></property>
+   <property name="text"><string>Action ID</string></property>
   </widget>
   <widget class="caTextEntry" name="editEnabled">
    <property name="geometry"><rect><x>10</x><y>604</y><width>35</width><height>22</height></rect></property>
@@ -519,29 +495,389 @@
    <property name="geometry"><rect><x>55</x><y>604</y><width>60</width><height>22</height></rect></property>
    <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
   </widget>
-  <widget class="caTextEntry" name="editAxis">
-   <property name="geometry"><rect><x>125</x><y>604</y><width>45</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Axis</string></property>
+  <widget class="caRelatedDisplay" name="selectEditAction">
+   <property name="geometry"><rect><x>120</x><y>602</y><width>50</width><height>26</height></rect></property>
+   <property name="label"><string notr="true">Select</string></property>
+   <property name="labels"><string>Select action</string></property>
+   <property name="files"><string>ecmcMotionSequenceActionSelect.ui</string></property>
+   <property name="args"><string>SEQ_PFX=$(SEQ_PFX)</string></property>
   </widget>
-  <widget class="caTextEntry" name="editPosition">
-   <property name="geometry"><rect><x>180</x><y>604</y><width>80</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Position</string></property>
+  <widget class="caFrame" name="editActionFrame0">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==0</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName0">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>0 NOP</string></property>
+   </widget>
+   <widget class="caLabel" name="editNoParams0"><property name="geometry"><rect><x>110</x><y>20</y><width>200</width><height>18</height></rect></property><property name="text"><string>No action parameters</string></property></widget>
   </widget>
-  <widget class="caTextEntry" name="editVelocity">
-   <property name="geometry"><rect><x>270</x><y>604</y><width>80</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Velocity</string></property>
+  <widget class="caFrame" name="editActionFrame1">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==1</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName1">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>1 Reset</string></property>
+   </widget>
+   <widget class="caLabel" name="editAxisLabelA1_0"><property name="geometry"><rect><x>110</x><y>0</y><width>193</width><height>18</height></rect></property><property name="text"><string>Axis</string></property></widget>
+   <widget class="caTextEntry" name="editAxisA1_0"><property name="geometry"><rect><x>110</x><y>21</y><width>193</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Axis</string></property></widget>
+   <widget class="caLabel" name="editTimeoutMsLabelA1_1"><property name="geometry"><rect><x>311</x><y>0</y><width>193</width><height>18</height></rect></property><property name="text"><string>Timeout ms</string></property></widget>
+   <widget class="caTextEntry" name="editTimeoutMsA1_1"><property name="geometry"><rect><x>311</x><y>21</y><width>193</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-TimeoutMs</string></property></widget>
+   <widget class="caLabel" name="editArgsLabelA1_2"><property name="geometry"><rect><x>512</x><y>0</y><width>193</width><height>18</height></rect></property><property name="text"><string>Args (wait)</string></property></widget>
+   <widget class="caTextEntry" name="editArgsA1_2"><property name="geometry"><rect><x>512</x><y>21</y><width>193</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Args</string></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
   </widget>
-  <widget class="caTextEntry" name="editAcceleration">
-   <property name="geometry"><rect><x>360</x><y>604</y><width>80</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Acceleration</string></property>
+  <widget class="caFrame" name="editActionFrame2">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==2</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName2">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>2 Power</string></property>
+   </widget>
+   <widget class="caLabel" name="editAxisLabelA2_0"><property name="geometry"><rect><x>110</x><y>0</y><width>143</width><height>18</height></rect></property><property name="text"><string>Axis</string></property></widget>
+   <widget class="caTextEntry" name="editAxisA2_0"><property name="geometry"><rect><x>110</x><y>21</y><width>143</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Axis</string></property></widget>
+   <widget class="caLabel" name="editPositionLabelA2_1"><property name="geometry"><rect><x>261</x><y>0</y><width>143</width><height>18</height></rect></property><property name="text"><string>Enable 0/1</string></property></widget>
+   <widget class="caTextEntry" name="editPositionA2_1"><property name="geometry"><rect><x>261</x><y>21</y><width>143</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Position</string></property></widget>
+   <widget class="caLabel" name="editTimeoutMsLabelA2_2"><property name="geometry"><rect><x>412</x><y>0</y><width>143</width><height>18</height></rect></property><property name="text"><string>Timeout ms</string></property></widget>
+   <widget class="caTextEntry" name="editTimeoutMsA2_2"><property name="geometry"><rect><x>412</x><y>21</y><width>143</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-TimeoutMs</string></property></widget>
+   <widget class="caLabel" name="editArgsLabelA2_3"><property name="geometry"><rect><x>563</x><y>0</y><width>143</width><height>18</height></rect></property><property name="text"><string>Args (wait)</string></property></widget>
+   <widget class="caTextEntry" name="editArgsA2_3"><property name="geometry"><rect><x>563</x><y>21</y><width>143</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Args</string></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
   </widget>
-  <widget class="caTextEntry" name="editDeceleration">
-   <property name="geometry"><rect><x>450</x><y>604</y><width>80</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Deceleration</string></property>
+  <widget class="caFrame" name="editActionFrame3">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==3</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName3">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>3 Home</string></property>
+   </widget>
+   <widget class="caLabel" name="editAxisLabelA3_0"><property name="geometry"><rect><x>110</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Axis</string></property></widget>
+   <widget class="caTextEntry" name="editAxisA3_0"><property name="geometry"><rect><x>110</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Axis</string></property></widget>
+   <widget class="caLabel" name="editPositionLabelA3_1"><property name="geometry"><rect><x>196</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Home pos</string></property></widget>
+   <widget class="caTextEntry" name="editPositionA3_1"><property name="geometry"><rect><x>196</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Position</string></property></widget>
+   <widget class="caLabel" name="editVelocityLabelA3_2"><property name="geometry"><rect><x>282</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Velocity</string></property></widget>
+   <widget class="caTextEntry" name="editVelocityA3_2"><property name="geometry"><rect><x>282</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Velocity</string></property></widget>
+   <widget class="caLabel" name="editAccelerationLabelA3_3"><property name="geometry"><rect><x>368</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Accel</string></property></widget>
+   <widget class="caTextEntry" name="editAccelerationA3_3"><property name="geometry"><rect><x>368</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Acceleration</string></property></widget>
+   <widget class="caLabel" name="editDecelerationLabelA3_4"><property name="geometry"><rect><x>454</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Decel</string></property></widget>
+   <widget class="caTextEntry" name="editDecelerationA3_4"><property name="geometry"><rect><x>454</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Deceleration</string></property></widget>
+   <widget class="caLabel" name="editTimeoutMsLabelA3_5"><property name="geometry"><rect><x>540</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Timeout ms</string></property></widget>
+   <widget class="caTextEntry" name="editTimeoutMsA3_5"><property name="geometry"><rect><x>540</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-TimeoutMs</string></property></widget>
+   <widget class="caLabel" name="editArgsLabelA3_6"><property name="geometry"><rect><x>626</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Args</string></property></widget>
+   <widget class="caTextEntry" name="editArgsA3_6"><property name="geometry"><rect><x>626</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Args</string></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
   </widget>
-  <widget class="caTextEntry" name="editTimeout">
-   <property name="geometry"><rect><x>540</x><y>604</y><width>80</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-TimeoutMs</string></property>
+  <widget class="caFrame" name="editActionFrame4">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==4</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName4">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>4 Move absolute</string></property>
+   </widget>
+   <widget class="caLabel" name="editAxisLabelA4_0"><property name="geometry"><rect><x>110</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Axis</string></property></widget>
+   <widget class="caTextEntry" name="editAxisA4_0"><property name="geometry"><rect><x>110</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Axis</string></property></widget>
+   <widget class="caLabel" name="editPositionLabelA4_1"><property name="geometry"><rect><x>196</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Position</string></property></widget>
+   <widget class="caTextEntry" name="editPositionA4_1"><property name="geometry"><rect><x>196</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Position</string></property></widget>
+   <widget class="caLabel" name="editVelocityLabelA4_2"><property name="geometry"><rect><x>282</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Velocity</string></property></widget>
+   <widget class="caTextEntry" name="editVelocityA4_2"><property name="geometry"><rect><x>282</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Velocity</string></property></widget>
+   <widget class="caLabel" name="editAccelerationLabelA4_3"><property name="geometry"><rect><x>368</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Accel</string></property></widget>
+   <widget class="caTextEntry" name="editAccelerationA4_3"><property name="geometry"><rect><x>368</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Acceleration</string></property></widget>
+   <widget class="caLabel" name="editDecelerationLabelA4_4"><property name="geometry"><rect><x>454</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Decel</string></property></widget>
+   <widget class="caTextEntry" name="editDecelerationA4_4"><property name="geometry"><rect><x>454</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Deceleration</string></property></widget>
+   <widget class="caLabel" name="editTimeoutMsLabelA4_5"><property name="geometry"><rect><x>540</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Timeout ms</string></property></widget>
+   <widget class="caTextEntry" name="editTimeoutMsA4_5"><property name="geometry"><rect><x>540</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-TimeoutMs</string></property></widget>
+   <widget class="caLabel" name="editArgsLabelA4_6"><property name="geometry"><rect><x>626</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Args (wait)</string></property></widget>
+   <widget class="caTextEntry" name="editArgsA4_6"><property name="geometry"><rect><x>626</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Args</string></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
+  </widget>
+  <widget class="caFrame" name="editActionFrame5">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==5</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName5">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>5 Move relative</string></property>
+   </widget>
+   <widget class="caLabel" name="editAxisLabelA5_0"><property name="geometry"><rect><x>110</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Axis</string></property></widget>
+   <widget class="caTextEntry" name="editAxisA5_0"><property name="geometry"><rect><x>110</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Axis</string></property></widget>
+   <widget class="caLabel" name="editPositionLabelA5_1"><property name="geometry"><rect><x>196</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Distance</string></property></widget>
+   <widget class="caTextEntry" name="editPositionA5_1"><property name="geometry"><rect><x>196</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Position</string></property></widget>
+   <widget class="caLabel" name="editVelocityLabelA5_2"><property name="geometry"><rect><x>282</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Velocity</string></property></widget>
+   <widget class="caTextEntry" name="editVelocityA5_2"><property name="geometry"><rect><x>282</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Velocity</string></property></widget>
+   <widget class="caLabel" name="editAccelerationLabelA5_3"><property name="geometry"><rect><x>368</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Accel</string></property></widget>
+   <widget class="caTextEntry" name="editAccelerationA5_3"><property name="geometry"><rect><x>368</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Acceleration</string></property></widget>
+   <widget class="caLabel" name="editDecelerationLabelA5_4"><property name="geometry"><rect><x>454</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Decel</string></property></widget>
+   <widget class="caTextEntry" name="editDecelerationA5_4"><property name="geometry"><rect><x>454</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Deceleration</string></property></widget>
+   <widget class="caLabel" name="editTimeoutMsLabelA5_5"><property name="geometry"><rect><x>540</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Timeout ms</string></property></widget>
+   <widget class="caTextEntry" name="editTimeoutMsA5_5"><property name="geometry"><rect><x>540</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-TimeoutMs</string></property></widget>
+   <widget class="caLabel" name="editArgsLabelA5_6"><property name="geometry"><rect><x>626</x><y>0</y><width>78</width><height>18</height></rect></property><property name="text"><string>Args (wait)</string></property></widget>
+   <widget class="caTextEntry" name="editArgsA5_6"><property name="geometry"><rect><x>626</x><y>21</y><width>78</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Args</string></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
+  </widget>
+  <widget class="caFrame" name="editActionFrame6">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==6</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName6">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>6 Wait in position</string></property>
+   </widget>
+   <widget class="caLabel" name="editAxisLabelA6_0"><property name="geometry"><rect><x>110</x><y>0</y><width>294</width><height>18</height></rect></property><property name="text"><string>Axis</string></property></widget>
+   <widget class="caTextEntry" name="editAxisA6_0"><property name="geometry"><rect><x>110</x><y>21</y><width>294</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Axis</string></property></widget>
+   <widget class="caLabel" name="editTimeoutMsLabelA6_1"><property name="geometry"><rect><x>412</x><y>0</y><width>294</width><height>18</height></rect></property><property name="text"><string>Timeout ms</string></property></widget>
+   <widget class="caTextEntry" name="editTimeoutMsA6_1"><property name="geometry"><rect><x>412</x><y>21</y><width>294</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-TimeoutMs</string></property></widget>
+  </widget>
+  <widget class="caFrame" name="editActionFrame7">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==7</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName7">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>7 Set item</string></property>
+   </widget>
+   <widget class="caLabel" name="editPositionLabelA7_0"><property name="geometry"><rect><x>110</x><y>0</y><width>294</width><height>18</height></rect></property><property name="text"><string>Value</string></property></widget>
+   <widget class="caTextEntry" name="editPositionA7_0"><property name="geometry"><rect><x>110</x><y>21</y><width>294</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Position</string></property></widget>
+   <widget class="caLabel" name="editArgsLabelA7_1"><property name="geometry"><rect><x>412</x><y>0</y><width>294</width><height>18</height></rect></property><property name="text"><string>Args (item)</string></property></widget>
+   <widget class="caTextEntry" name="editArgsA7_1"><property name="geometry"><rect><x>412</x><y>21</y><width>294</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Args</string></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
+  </widget>
+  <widget class="caFrame" name="editActionFrame8">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==8</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName8">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>8 Wait item</string></property>
+   </widget>
+   <widget class="caLabel" name="editPositionLabelA8_0"><property name="geometry"><rect><x>110</x><y>0</y><width>193</width><height>18</height></rect></property><property name="text"><string>Value</string></property></widget>
+   <widget class="caTextEntry" name="editPositionA8_0"><property name="geometry"><rect><x>110</x><y>21</y><width>193</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Position</string></property></widget>
+   <widget class="caLabel" name="editTimeoutMsLabelA8_1"><property name="geometry"><rect><x>311</x><y>0</y><width>193</width><height>18</height></rect></property><property name="text"><string>Timeout ms</string></property></widget>
+   <widget class="caTextEntry" name="editTimeoutMsA8_1"><property name="geometry"><rect><x>311</x><y>21</y><width>193</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-TimeoutMs</string></property></widget>
+   <widget class="caLabel" name="editArgsLabelA8_2"><property name="geometry"><rect><x>512</x><y>0</y><width>193</width><height>18</height></rect></property><property name="text"><string>Args item/op</string></property></widget>
+   <widget class="caTextEntry" name="editArgsA8_2"><property name="geometry"><rect><x>512</x><y>21</y><width>193</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Args</string></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
+  </widget>
+  <widget class="caFrame" name="editActionFrame9">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==9</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName9">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>9 Wait time</string></property>
+   </widget>
+   <widget class="caLabel" name="editTimeoutMsLabelA9_0"><property name="geometry"><rect><x>110</x><y>0</y><width>597</width><height>18</height></rect></property><property name="text"><string>Wait ms</string></property></widget>
+   <widget class="caTextEntry" name="editTimeoutMsA9_0"><property name="geometry"><rect><x>110</x><y>21</y><width>597</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-TimeoutMs</string></property></widget>
+  </widget>
+  <widget class="caFrame" name="editActionFrame10">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==10</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName10">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>10 Run sequence</string></property>
+   </widget>
+   <widget class="caLabel" name="editAxisLabelA10_0"><property name="geometry"><rect><x>110</x><y>0</y><width>294</width><height>18</height></rect></property><property name="text"><string>Child seq</string></property></widget>
+   <widget class="caTextEntry" name="editAxisA10_0"><property name="geometry"><rect><x>110</x><y>21</y><width>294</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Axis</string></property></widget>
+   <widget class="caLabel" name="editTimeoutMsLabelA10_1"><property name="geometry"><rect><x>412</x><y>0</y><width>294</width><height>18</height></rect></property><property name="text"><string>Timeout ms</string></property></widget>
+   <widget class="caTextEntry" name="editTimeoutMsA10_1"><property name="geometry"><rect><x>412</x><y>21</y><width>294</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-TimeoutMs</string></property></widget>
+  </widget>
+  <widget class="caFrame" name="editActionFrame11">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==11</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName11">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>11 Arm pos trigger</string></property>
+   </widget>
+   <widget class="caLabel" name="editAxisLabelA11_0"><property name="geometry"><rect><x>110</x><y>0</y><width>92</width><height>18</height></rect></property><property name="text"><string>Axis</string></property></widget>
+   <widget class="caTextEntry" name="editAxisA11_0"><property name="geometry"><rect><x>110</x><y>21</y><width>92</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Axis</string></property></widget>
+   <widget class="caLabel" name="editPositionLabelA11_1"><property name="geometry"><rect><x>210</x><y>0</y><width>92</width><height>18</height></rect></property><property name="text"><string>Start pos</string></property></widget>
+   <widget class="caTextEntry" name="editPositionA11_1"><property name="geometry"><rect><x>210</x><y>21</y><width>92</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Position</string></property></widget>
+   <widget class="caLabel" name="editVelocityLabelA11_2"><property name="geometry"><rect><x>310</x><y>0</y><width>92</width><height>18</height></rect></property><property name="text"><string>Interval</string></property></widget>
+   <widget class="caTextEntry" name="editVelocityA11_2"><property name="geometry"><rect><x>310</x><y>21</y><width>92</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Velocity</string></property></widget>
+   <widget class="caLabel" name="editAccelerationLabelA11_3"><property name="geometry"><rect><x>410</x><y>0</y><width>92</width><height>18</height></rect></property><property name="text"><string>End pos</string></property></widget>
+   <widget class="caTextEntry" name="editAccelerationA11_3"><property name="geometry"><rect><x>410</x><y>21</y><width>92</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Acceleration</string></property></widget>
+   <widget class="caLabel" name="editDecelerationLabelA11_4"><property name="geometry"><rect><x>510</x><y>0</y><width>92</width><height>18</height></rect></property><property name="text"><string>Pulse ms</string></property></widget>
+   <widget class="caTextEntry" name="editDecelerationA11_4"><property name="geometry"><rect><x>510</x><y>21</y><width>92</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Deceleration</string></property></widget>
+   <widget class="caLabel" name="editArgsLabelA11_5"><property name="geometry"><rect><x>610</x><y>0</y><width>92</width><height>18</height></rect></property><property name="text"><string>Args id/item/value</string></property></widget>
+   <widget class="caTextEntry" name="editArgsA11_5"><property name="geometry"><rect><x>610</x><y>21</y><width>92</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Args</string></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
+  </widget>
+  <widget class="caFrame" name="editActionFrame12">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==12</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName12">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>12 Wait trigger</string></property>
+   </widget>
+   <widget class="caLabel" name="editTimeoutMsLabelA12_0"><property name="geometry"><rect><x>110</x><y>0</y><width>294</width><height>18</height></rect></property><property name="text"><string>Timeout ms</string></property></widget>
+   <widget class="caTextEntry" name="editTimeoutMsA12_0"><property name="geometry"><rect><x>110</x><y>21</y><width>294</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-TimeoutMs</string></property></widget>
+   <widget class="caLabel" name="editArgsLabelA12_1"><property name="geometry"><rect><x>412</x><y>0</y><width>294</width><height>18</height></rect></property><property name="text"><string>Args (id)</string></property></widget>
+   <widget class="caTextEntry" name="editArgsA12_1"><property name="geometry"><rect><x>412</x><y>21</y><width>294</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Args</string></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
+  </widget>
+  <widget class="caFrame" name="editActionFrame13">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==13</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName13">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>13 Arm time trigger</string></property>
+   </widget>
+   <widget class="caLabel" name="editPositionLabelA13_0"><property name="geometry"><rect><x>110</x><y>0</y><width>113</width><height>18</height></rect></property><property name="text"><string>Delay ms</string></property></widget>
+   <widget class="caTextEntry" name="editPositionA13_0"><property name="geometry"><rect><x>110</x><y>21</y><width>113</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Position</string></property></widget>
+   <widget class="caLabel" name="editVelocityLabelA13_1"><property name="geometry"><rect><x>231</x><y>0</y><width>113</width><height>18</height></rect></property><property name="text"><string>Period ms</string></property></widget>
+   <widget class="caTextEntry" name="editVelocityA13_1"><property name="geometry"><rect><x>231</x><y>21</y><width>113</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Velocity</string></property></widget>
+   <widget class="caLabel" name="editAccelerationLabelA13_2"><property name="geometry"><rect><x>352</x><y>0</y><width>113</width><height>18</height></rect></property><property name="text"><string>Count</string></property></widget>
+   <widget class="caTextEntry" name="editAccelerationA13_2"><property name="geometry"><rect><x>352</x><y>21</y><width>113</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Acceleration</string></property></widget>
+   <widget class="caLabel" name="editDecelerationLabelA13_3"><property name="geometry"><rect><x>473</x><y>0</y><width>113</width><height>18</height></rect></property><property name="text"><string>Pulse ms</string></property></widget>
+   <widget class="caTextEntry" name="editDecelerationA13_3"><property name="geometry"><rect><x>473</x><y>21</y><width>113</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Deceleration</string></property></widget>
+   <widget class="caLabel" name="editArgsLabelA13_4"><property name="geometry"><rect><x>594</x><y>0</y><width>113</width><height>18</height></rect></property><property name="text"><string>Args id/item/value</string></property></widget>
+   <widget class="caTextEntry" name="editArgsA13_4"><property name="geometry"><rect><x>594</x><y>21</y><width>113</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Args</string></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
+  </widget>
+  <widget class="caFrame" name="editActionFrame14">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==14</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName14">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>14 Move velocity</string></property>
+   </widget>
+   <widget class="caLabel" name="editAxisLabelA14_0"><property name="geometry"><rect><x>110</x><y>0</y><width>92</width><height>18</height></rect></property><property name="text"><string>Axis</string></property></widget>
+   <widget class="caTextEntry" name="editAxisA14_0"><property name="geometry"><rect><x>110</x><y>21</y><width>92</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Axis</string></property></widget>
+   <widget class="caLabel" name="editVelocityLabelA14_1"><property name="geometry"><rect><x>210</x><y>0</y><width>92</width><height>18</height></rect></property><property name="text"><string>Velocity</string></property></widget>
+   <widget class="caTextEntry" name="editVelocityA14_1"><property name="geometry"><rect><x>210</x><y>21</y><width>92</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Velocity</string></property></widget>
+   <widget class="caLabel" name="editAccelerationLabelA14_2"><property name="geometry"><rect><x>310</x><y>0</y><width>92</width><height>18</height></rect></property><property name="text"><string>Accel</string></property></widget>
+   <widget class="caTextEntry" name="editAccelerationA14_2"><property name="geometry"><rect><x>310</x><y>21</y><width>92</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Acceleration</string></property></widget>
+   <widget class="caLabel" name="editDecelerationLabelA14_3"><property name="geometry"><rect><x>410</x><y>0</y><width>92</width><height>18</height></rect></property><property name="text"><string>Decel</string></property></widget>
+   <widget class="caTextEntry" name="editDecelerationA14_3"><property name="geometry"><rect><x>410</x><y>21</y><width>92</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Deceleration</string></property></widget>
+   <widget class="caLabel" name="editTimeoutMsLabelA14_4"><property name="geometry"><rect><x>510</x><y>0</y><width>92</width><height>18</height></rect></property><property name="text"><string>Timeout ms</string></property></widget>
+   <widget class="caTextEntry" name="editTimeoutMsA14_4"><property name="geometry"><rect><x>510</x><y>21</y><width>92</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-TimeoutMs</string></property></widget>
+   <widget class="caLabel" name="editArgsLabelA14_5"><property name="geometry"><rect><x>610</x><y>0</y><width>92</width><height>18</height></rect></property><property name="text"><string>Args wait/tol</string></property></widget>
+   <widget class="caTextEntry" name="editArgsA14_5"><property name="geometry"><rect><x>610</x><y>21</y><width>92</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Args</string></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
+  </widget>
+  <widget class="caFrame" name="editActionFrame15">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==15</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName15">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>15 Halt</string></property>
+   </widget>
+   <widget class="caLabel" name="editAxisLabelA15_0"><property name="geometry"><rect><x>110</x><y>0</y><width>193</width><height>18</height></rect></property><property name="text"><string>Axis</string></property></widget>
+   <widget class="caTextEntry" name="editAxisA15_0"><property name="geometry"><rect><x>110</x><y>21</y><width>193</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Axis</string></property></widget>
+   <widget class="caLabel" name="editTimeoutMsLabelA15_1"><property name="geometry"><rect><x>311</x><y>0</y><width>193</width><height>18</height></rect></property><property name="text"><string>Timeout ms</string></property></widget>
+   <widget class="caTextEntry" name="editTimeoutMsA15_1"><property name="geometry"><rect><x>311</x><y>21</y><width>193</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-TimeoutMs</string></property></widget>
+   <widget class="caLabel" name="editArgsLabelA15_2"><property name="geometry"><rect><x>512</x><y>0</y><width>193</width><height>18</height></rect></property><property name="text"><string>Args (wait)</string></property></widget>
+   <widget class="caTextEntry" name="editArgsA15_2"><property name="geometry"><rect><x>512</x><y>21</y><width>193</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Args</string></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
+  </widget>
+  <widget class="caFrame" name="editActionFrame16">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==16</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName16">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>16 Exit item</string></property>
+   </widget>
+   <widget class="caLabel" name="editPositionLabelA16_0"><property name="geometry"><rect><x>110</x><y>0</y><width>193</width><height>18</height></rect></property><property name="text"><string>Value</string></property></widget>
+   <widget class="caTextEntry" name="editPositionA16_0"><property name="geometry"><rect><x>110</x><y>21</y><width>193</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Position</string></property></widget>
+   <widget class="caLabel" name="editTimeoutMsLabelA16_1"><property name="geometry"><rect><x>311</x><y>0</y><width>193</width><height>18</height></rect></property><property name="text"><string>Timeout ms</string></property></widget>
+   <widget class="caTextEntry" name="editTimeoutMsA16_1"><property name="geometry"><rect><x>311</x><y>21</y><width>193</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-TimeoutMs</string></property></widget>
+   <widget class="caLabel" name="editArgsLabelA16_2"><property name="geometry"><rect><x>512</x><y>0</y><width>193</width><height>18</height></rect></property><property name="text"><string>Args item/op</string></property></widget>
+   <widget class="caTextEntry" name="editArgsA16_2"><property name="geometry"><rect><x>512</x><y>21</y><width>193</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Args</string></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
+  </widget>
+  <widget class="caFrame" name="editActionFrame17">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==17</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName17">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>17 Set encoder homed</string></property>
+   </widget>
+   <widget class="caLabel" name="editAxisLabelA17_0"><property name="geometry"><rect><x>110</x><y>0</y><width>294</width><height>18</height></rect></property><property name="text"><string>Axis</string></property></widget>
+   <widget class="caTextEntry" name="editAxisA17_0"><property name="geometry"><rect><x>110</x><y>21</y><width>294</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Axis</string></property></widget>
+   <widget class="caLabel" name="editPositionLabelA17_1"><property name="geometry"><rect><x>412</x><y>0</y><width>294</width><height>18</height></rect></property><property name="text"><string>Homed 0/1</string></property></widget>
+   <widget class="caTextEntry" name="editPositionA17_1"><property name="geometry"><rect><x>412</x><y>21</y><width>294</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Position</string></property></widget>
+  </widget>
+  <widget class="caFrame" name="editActionFrame18">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==18</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName18">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>18 Branch item</string></property>
+   </widget>
+   <widget class="caLabel" name="editPositionLabelA18_0"><property name="geometry"><rect><x>110</x><y>0</y><width>294</width><height>18</height></rect></property><property name="text"><string>Value</string></property></widget>
+   <widget class="caTextEntry" name="editPositionA18_0"><property name="geometry"><rect><x>110</x><y>21</y><width>294</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Position</string></property></widget>
+   <widget class="caLabel" name="editArgsLabelA18_1"><property name="geometry"><rect><x>412</x><y>0</y><width>294</width><height>18</height></rect></property><property name="text"><string>Args item/op/steps</string></property></widget>
+   <widget class="caTextEntry" name="editArgsA18_1"><property name="geometry"><rect><x>412</x><y>21</y><width>294</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Args</string></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
+  </widget>
+  <widget class="caFrame" name="editActionFrame19">
+   <property name="geometry"><rect><x>180</x><y>578</y><width>720</width><height>52</height></rect></property>
+   <property name="visibility"><enum>caFrame::Calc</enum></property>
+   <property name="visibilityCalc"><string notr="true">A==19</string></property>
+   <property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Action</string></property>
+   <widget class="caLabel" name="editActionName19">
+    <property name="geometry"><rect><x>0</x><y>2</y><width>105</width><height>43</height></rect></property>
+    <property name="font"><font><bold>true</bold></font></property>
+    <property name="wordWrap"><bool>true</bool></property>
+    <property name="text"><string>19 Goto step</string></property>
+   </widget>
+   <widget class="caLabel" name="editArgsLabelA19_0"><property name="geometry"><rect><x>110</x><y>0</y><width>597</width><height>18</height></rect></property><property name="text"><string>Args (target)</string></property></widget>
+   <widget class="caTextEntry" name="editArgsA19_0"><property name="geometry"><rect><x>110</x><y>21</y><width>597</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(SEQ_PFX)Edit-Args</string></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
   </widget>
   <widget class="caLabel" name="editNameLabel">
    <property name="geometry"><rect><x>10</x><y>636</y><width>80</width><height>18</height></rect></property>
@@ -612,6 +948,7 @@
   <customwidget><class>caMessageButton</class><extends>QPushButton</extends><header>caMessageButton</header></customwidget>
   <customwidget><class>caRelatedDisplay</class><extends>QPushButton</extends><header>caRelatedDisplay</header></customwidget>
   <customwidget><class>caShellCommand</class><extends>QWidget</extends><header>caShellCommand</header></customwidget>
+  <customwidget><class>caFrame</class><extends>QFrame</extends><header>caFrame</header><container>1</container></customwidget>
  </customwidgets>
  <resources/>
  <connections/>

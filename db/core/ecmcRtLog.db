@@ -96,12 +96,18 @@ record(bi,"$(P)MCU-RTLog-DbgEna") {
   field(ONAM, "Enabled")
 }
 
-record(longout,"$(P)MCU-RTLog-FilterMode") {
+record(mbbo,"$(P)MCU-RTLog-FilterMode") {
   info(asyn:READBACK,"1")
   field(DESC, "Realtime log filter mode")
   field(DTYP, "asynInt32")
   field(VAL,  "0")
   field(OUT,  "@asyn($(PORT=ecmcRTLog),$(ADDR=0))RTLOG_FILTER_MODE")
+  field(ZRVL, "0")
+  field(ZRST, "Off")
+  field(ONVL, "1")
+  field(ONST, "All sources")
+  field(TWVL, "2")
+  field(TWST, "Selected")
   field(FLNK, "$(P)MCU-RTLog-FilterMode-RB.PROC")
 }
 

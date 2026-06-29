@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>762</width>
-    <height>400</height>
+    <height>425</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -84,31 +84,15 @@
     </rect>
    </property>
    <property name="text">
-    <string>Level</string>
-   </property>
-  </widget>
-  <widget class="caLineEdit" name="levelTxt">
-   <property name="geometry">
-    <rect>
-     <x>110</x>
-     <y>78</y>
-     <width>100</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="channel" stdset="0">
-    <string notr="true">$(IOC):MCU-RTLog-LevelTxt</string>
-   </property>
-   <property name="colorMode">
-    <enum>caLineEdit::Static</enum>
+    <string>Last level</string>
    </property>
   </widget>
   <widget class="caLineEdit" name="level">
    <property name="geometry">
     <rect>
-     <x>220</x>
+     <x>110</x>
      <y>78</y>
-     <width>60</width>
+     <width>100</width>
      <height>22</height>
     </rect>
    </property>
@@ -183,7 +167,7 @@
      <x>10</x>
      <y>118</y>
      <width>730</width>
-     <height>130</height>
+     <height>155</height>
     </rect>
    </property>
    <property name="title">
@@ -194,57 +178,76 @@
      <rect>
       <x>15</x>
       <y>25</y>
-      <width>105</width>
+     <width>100</width>
       <height>18</height>
      </rect>
     </property>
     <property name="toolTip">
-     <string>Level mask bits: 0=Info, 1=Warning, 2=Error, 3=Debug</string>
+     <string>Click the four bits to enable Info, Warning, Error and Debug messages.</string>
     </property>
     <property name="text">
-     <string>Levels I/W/E/D</string>
-    </property>
-   </widget>
-   <widget class="caTextEntry" name="ctrl">
+     <string>Enabled levels</string>
+   </property>
+  </widget>
+   <widget class="caByteController" name="ctrl">
     <property name="geometry">
      <rect>
       <x>120</x>
       <y>22</y>
-      <width>55</width>
+      <width>120</width>
       <height>22</height>
      </rect>
     </property>
     <property name="toolTip">
-     <string>Bit mask: 1=Info, 2=Warning, 4=Error, 8=Debug</string>
+     <string>Bits: 0=Info, 1=Warning, 2=Error, 3=Debug</string>
     </property>
     <property name="channel" stdset="0">
      <string notr="true">$(IOC):MCU-RTLog-Ctrl</string>
+    </property>
+    <property name="direction">
+     <enum>caByteController::Right</enum>
+    </property>
+    <property name="endBit">
+     <number>3</number>
+    </property>
+   </widget>
+   <widget class="caLabel" name="ctrlBitLabels">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>25</y>
+      <width>260</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0 Info | 1 Warning | 2 Error | 3 Debug</string>
     </property>
    </widget>
    <widget class="caLabel" name="filterModeLabel">
     <property name="geometry">
      <rect>
-      <x>190</x>
+      <x>520</x>
       <y>25</y>
-      <width>150</width>
+      <width>80</width>
       <height>18</height>
      </rect>
     </property>
     <property name="text">
-     <string>Mode 0=Off 1=All 2=Sel</string>
+     <string>Source filter</string>
     </property>
    </widget>
-   <widget class="caTextEntry" name="filterMode">
+   <widget class="caMenu" name="filterMode">
     <property name="geometry">
      <rect>
-      <x>340</x>
+      <x>600</x>
       <y>22</y>
-      <width>45</width>
+      <width>114</width>
       <height>22</height>
      </rect>
     </property>
     <property name="toolTip">
-     <string>Mode 0 rejects all, mode 1 accepts all and ignores mask/index, mode 2 applies source mask and index.</string>
+     <string>Off rejects all messages. All sources ignores source mask and index. Selected applies both.</string>
     </property>
     <property name="channel" stdset="0">
      <string notr="true">$(IOC):MCU-RTLog-FilterMode</string>
@@ -253,21 +256,21 @@
    <widget class="caLabel" name="filterIndexLabel">
     <property name="geometry">
      <rect>
-      <x>400</x>
-      <y>25</y>
+      <x>15</x>
+      <y>55</y>
       <width>95</width>
       <height>18</height>
      </rect>
     </property>
     <property name="text">
-     <string>Index (-1=all)</string>
+     <string>Source index</string>
     </property>
    </widget>
    <widget class="caTextEntry" name="filterIndex">
     <property name="geometry">
      <rect>
-      <x>495</x>
-      <y>22</y>
+      <x>110</x>
+      <y>52</y>
       <width>50</width>
       <height>22</height>
      </rect>
@@ -275,26 +278,29 @@
     <property name="channel" stdset="0">
      <string notr="true">$(IOC):MCU-RTLog-FilterIndex</string>
     </property>
+    <property name="toolTip">
+     <string>-1 accepts every source index. Non-negative values select one axis, PLC or other source index.</string>
+    </property>
    </widget>
    <widget class="caLabel" name="srcLabel">
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>25</y>
-      <width>85</width>
+      <x>180</x>
+      <y>55</y>
+      <width>100</width>
       <height>18</height>
      </rect>
     </property>
     <property name="text">
-     <string>Last type/id</string>
+     <string>Last source type/id</string>
     </property>
    </widget>
    <widget class="caLineEdit" name="srcType">
     <property name="geometry">
      <rect>
-      <x>645</x>
-      <y>22</y>
-      <width>32</width>
+      <x>285</x>
+      <y>52</y>
+      <width>45</width>
       <height>22</height>
      </rect>
     </property>
@@ -308,9 +314,9 @@
    <widget class="caLineEdit" name="srcIndex">
     <property name="geometry">
      <rect>
-      <x>682</x>
-      <y>22</y>
-      <width>32</width>
+      <x>335</x>
+      <y>52</y>
+      <width>45</width>
       <height>22</height>
      </rect>
     </property>
@@ -321,11 +327,24 @@
      <enum>caLineEdit::Static</enum>
     </property>
    </widget>
+   <widget class="caLabel" name="selectedModeHelp">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>55</y>
+      <width>314</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Selected: apply source bits and index (-1 = all)</string>
+    </property>
+   </widget>
    <widget class="caLabel" name="filterMaskLabel">
     <property name="geometry">
      <rect>
       <x>15</x>
-      <y>55</y>
+      <y>83</y>
       <width>85</width>
       <height>18</height>
      </rect>
@@ -341,7 +360,7 @@
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>52</y>
+      <y>80</y>
       <width>95</width>
       <height>22</height>
      </rect>
@@ -357,7 +376,7 @@
     <property name="geometry">
      <rect>
       <x>205</x>
-      <y>52</y>
+      <y>80</y>
       <width>509</width>
       <height>22</height>
      </rect>
@@ -379,7 +398,7 @@
     <property name="geometry">
      <rect>
       <x>15</x>
-      <y>80</y>
+      <y>108</y>
       <width>700</width>
       <height>18</height>
      </rect>
@@ -397,7 +416,7 @@
     <property name="geometry">
      <rect>
       <x>15</x>
-      <y>101</y>
+      <y>129</y>
       <width>700</width>
       <height>18</height>
      </rect>
@@ -416,7 +435,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>260</y>
+     <y>285</y>
      <width>730</width>
      <height>125</height>
     </rect>
@@ -634,6 +653,11 @@
    <class>caByteController</class>
    <extends>QWidget</extends>
    <header>caByteController</header>
+  </customwidget>
+  <customwidget>
+   <class>caMenu</class>
+   <extends>QComboBox</extends>
+   <header>caMenu</header>
   </customwidget>
   <customwidget>
    <class>caLabel</class>

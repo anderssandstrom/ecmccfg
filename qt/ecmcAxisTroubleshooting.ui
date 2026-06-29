@@ -57,7 +57,7 @@
    </widget>
    <widget class="caLabel" name="blockCmdLabel">
     <property name="geometry"><rect><x>15</x><y>62</y><width>125</width><height>18</height></rect></property>
-    <property name="text"><string>axis block command</string></property>
+    <property name="text"><string>manual cmd block</string></property>
    </widget>
    <widget class="caLineEdit" name="blockCmd">
     <property name="geometry"><rect><x>145</x><y>58</y><width>90</width><height>22</height></rect></property>

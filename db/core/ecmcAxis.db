@@ -803,8 +803,8 @@ record(bo,"${P}${AXIS_NAME}-BlckMtnCmd"){
   info(asyn:READBACK,"1")
   field(DTYP, "asynUInt32Digital")
   field(OUT,  "@asynMask($(PORT),$(ADDR=0),0x2000,$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ax$(AXIS_NO).control?")
-  field(ZNAM, "Idle")
-  field(ONAM, "Tweak")
+  field(ZNAM, "Allowed")
+  field(ONAM, "Blocked")
   field(SCAN, "Passive")
   field(TSE,  "0")
 }

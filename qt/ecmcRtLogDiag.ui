@@ -2,202 +2,649 @@
 <ui version="4.0">
  <class>Dialog</class>
  <widget class="QDialog" name="Dialog">
-  <property name="geometry"><rect><x>0</x><y>0</y><width>760</width><height>400</height></rect></property>
-  <property name="windowTitle"><string>RT logger diagnostics</string></property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>762</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>RT logger diagnostics</string>
+  </property>
   <widget class="caLabel" name="title">
-   <property name="geometry"><rect><x>10</x><y>10</y><width>300</width><height>24</height></rect></property>
-   <property name="font"><font><pointsize>12</pointsize><bold>true</bold></font></property>
-   <property name="text"><string>RT logger diagnostics</string></property>
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>300</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>RT logger diagnostics</string>
+   </property>
   </widget>
-
   <widget class="caLabel" name="lastMsgLabel">
-   <property name="geometry"><rect><x>10</x><y>48</y><width>95</width><height>18</height></rect></property>
-   <property name="text"><string>Last message</string></property>
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>48</y>
+     <width>95</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Last message</string>
+   </property>
   </widget>
   <widget class="caLineEdit" name="lastMsg">
-   <property name="geometry"><rect><x>110</x><y>44</y><width>630</width><height>24</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-Msg</string></property>
-   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
-   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>44</y>
+     <width>630</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(IOC):MCU-RTLog-Msg</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Static</enum>
+   </property>
+   <property name="precisionMode">
+    <enum>caLineEdit::Channel</enum>
+   </property>
+   <property name="limitsMode">
+    <enum>caLineEdit::Channel</enum>
+   </property>
+   <property name="fontScaleMode" stdset="0">
+    <enum>caLineEdit::Height</enum>
+   </property>
+   <property name="formatType">
+    <enum>caLineEdit::string</enum>
+   </property>
   </widget>
-
   <widget class="caLabel" name="levelLabel">
-   <property name="geometry"><rect><x>10</x><y>82</y><width>95</width><height>18</height></rect></property>
-   <property name="text"><string>Level</string></property>
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>82</y>
+     <width>95</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Level</string>
+   </property>
   </widget>
   <widget class="caLineEdit" name="levelTxt">
-   <property name="geometry"><rect><x>110</x><y>78</y><width>100</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-LevelTxt</string></property>
-   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>78</y>
+     <width>100</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(IOC):MCU-RTLog-LevelTxt</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Static</enum>
+   </property>
   </widget>
   <widget class="caLineEdit" name="level">
-   <property name="geometry"><rect><x>220</x><y>78</y><width>60</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-Level</string></property>
-   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>78</y>
+     <width>60</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(IOC):MCU-RTLog-Level</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Static</enum>
+   </property>
   </widget>
   <widget class="caLabel" name="countLabel">
-   <property name="geometry"><rect><x>300</x><y>82</y><width>75</width><height>18</height></rect></property>
-   <property name="text"><string>Count</string></property>
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>82</y>
+     <width>75</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Count</string>
+   </property>
   </widget>
   <widget class="caLineEdit" name="count">
-   <property name="geometry"><rect><x>375</x><y>78</y><width>90</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-Cnt</string></property>
-   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="geometry">
+    <rect>
+     <x>375</x>
+     <y>78</y>
+     <width>90</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(IOC):MCU-RTLog-Cnt</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Static</enum>
+   </property>
   </widget>
   <widget class="caLabel" name="dropLabel">
-   <property name="geometry"><rect><x>485</x><y>82</y><width>75</width><height>18</height></rect></property>
-   <property name="text"><string>Dropped</string></property>
+   <property name="geometry">
+    <rect>
+     <x>485</x>
+     <y>82</y>
+     <width>75</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Dropped</string>
+   </property>
   </widget>
   <widget class="caLineEdit" name="dropped">
-   <property name="geometry"><rect><x>560</x><y>78</y><width>90</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-DropCnt</string></property>
-   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>78</y>
+     <width>90</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(IOC):MCU-RTLog-DropCnt</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Static</enum>
+   </property>
   </widget>
-
   <widget class="QGroupBox" name="filterBox">
-   <property name="geometry"><rect><x>10</x><y>118</y><width>730</width><height>130</height></rect></property>
-   <property name="title"><string>Logger control and filter</string></property>
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>118</y>
+     <width>730</width>
+     <height>130</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Logger control and filter</string>
+   </property>
    <widget class="caLabel" name="ctrlLabel">
-    <property name="geometry"><rect><x>15</x><y>25</y><width>105</width><height>18</height></rect></property>
-    <property name="text"><string>Levels I/W/E/D</string></property>
-    <property name="toolTip"><string>Level mask bits: 0=Info, 1=Warning, 2=Error, 3=Debug</string></property>
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>25</y>
+      <width>105</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Level mask bits: 0=Info, 1=Warning, 2=Error, 3=Debug</string>
+    </property>
+    <property name="text">
+     <string>Levels I/W/E/D</string>
+    </property>
    </widget>
    <widget class="caTextEntry" name="ctrl">
-    <property name="geometry"><rect><x>120</x><y>22</y><width>55</width><height>22</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-Ctrl</string></property>
-    <property name="toolTip"><string>Bit mask: 1=Info, 2=Warning, 4=Error, 8=Debug</string></property>
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>22</y>
+      <width>55</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Bit mask: 1=Info, 2=Warning, 4=Error, 8=Debug</string>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):MCU-RTLog-Ctrl</string>
+    </property>
    </widget>
    <widget class="caLabel" name="filterModeLabel">
-    <property name="geometry"><rect><x>190</x><y>25</y><width>150</width><height>18</height></rect></property>
-    <property name="text"><string>Mode 0=Off 1=All 2=Sel</string></property>
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>25</y>
+      <width>150</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Mode 0=Off 1=All 2=Sel</string>
+    </property>
    </widget>
    <widget class="caTextEntry" name="filterMode">
-    <property name="geometry"><rect><x>340</x><y>22</y><width>45</width><height>22</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-FilterMode</string></property>
-    <property name="toolTip"><string>Mode 0 rejects all, mode 1 accepts all and ignores mask/index, mode 2 applies source mask and index.</string></property>
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>22</y>
+      <width>45</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Mode 0 rejects all, mode 1 accepts all and ignores mask/index, mode 2 applies source mask and index.</string>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):MCU-RTLog-FilterMode</string>
+    </property>
    </widget>
    <widget class="caLabel" name="filterIndexLabel">
-    <property name="geometry"><rect><x>400</x><y>25</y><width>95</width><height>18</height></rect></property>
-    <property name="text"><string>Index (-1=all)</string></property>
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>25</y>
+      <width>95</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Index (-1=all)</string>
+    </property>
    </widget>
    <widget class="caTextEntry" name="filterIndex">
-    <property name="geometry"><rect><x>495</x><y>22</y><width>50</width><height>22</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-FilterIndex</string></property>
+    <property name="geometry">
+     <rect>
+      <x>495</x>
+      <y>22</y>
+      <width>50</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):MCU-RTLog-FilterIndex</string>
+    </property>
    </widget>
    <widget class="caLabel" name="srcLabel">
-    <property name="geometry"><rect><x>560</x><y>25</y><width>85</width><height>18</height></rect></property>
-    <property name="text"><string>Last type/id</string></property>
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>25</y>
+      <width>85</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Last type/id</string>
+    </property>
    </widget>
    <widget class="caLineEdit" name="srcType">
-    <property name="geometry"><rect><x>645</x><y>22</y><width>32</width><height>22</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-SrcType</string></property>
-    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+    <property name="geometry">
+     <rect>
+      <x>645</x>
+      <y>22</y>
+      <width>32</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):MCU-RTLog-SrcType</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
    </widget>
    <widget class="caLineEdit" name="srcIndex">
-    <property name="geometry"><rect><x>682</x><y>22</y><width>32</width><height>22</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-SrcIndex</string></property>
-    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+    <property name="geometry">
+     <rect>
+      <x>682</x>
+      <y>22</y>
+      <width>32</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):MCU-RTLog-SrcIndex</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
    </widget>
    <widget class="caLabel" name="filterMaskLabel">
-    <property name="geometry"><rect><x>15</x><y>55</y><width>85</width><height>18</height></rect></property>
-    <property name="text"><string>Source mask</string></property>
-    <property name="toolTip"><string>Used only in Selected mode. Click bits to include or exclude source types.</string></property>
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>55</y>
+      <width>85</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Used only in Selected mode. Click bits to include or exclude source types.</string>
+    </property>
+    <property name="text">
+     <string>Source mask</string>
+    </property>
    </widget>
    <widget class="caTextEntry" name="filterMask">
-    <property name="geometry"><rect><x>100</x><y>52</y><width>95</width><height>22</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-FilterMask</string></property>
-    <property name="toolTip"><string>Decimal value of the selected source bits.</string></property>
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>52</y>
+      <width>95</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Decimal value of the selected source bits.</string>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):MCU-RTLog-FilterMask</string>
+    </property>
    </widget>
    <widget class="caByteController" name="filterMaskBits">
-    <property name="geometry"><rect><x>205</x><y>52</y><width>509</width><height>22</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-FilterMask</string></property>
-    <property name="endBit"><number>16</number></property>
-    <property name="toolTip"><string>Bits 0 through 16. Axis family bit 1 matches every axis subtype; Motor family bit 11 matches every motor subtype.</string></property>
+    <property name="geometry">
+     <rect>
+      <x>205</x>
+      <y>52</y>
+      <width>509</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Bits 0 through 16. Axis family bit 1 matches every axis subtype; Motor family bit 11 matches every motor subtype.</string>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):MCU-RTLog-FilterMask</string>
+    </property>
+    <property name="direction">
+     <enum>caByteController::Right</enum>
+    </property>
+    <property name="endBit">
+     <number>16</number>
+    </property>
    </widget>
    <widget class="caLabel" name="maskBits1">
-    <property name="geometry"><rect><x>15</x><y>80</y><width>700</width><height>18</height></rect></property>
-    <property name="font"><font><pointsize>8</pointsize></font></property>
-    <property name="text"><string>0 Unk | 1 Axis* | 2 Base | 3 Seq | 4 Data | 5 Mon | 6 Enc | 7 Drv | 8 PID | 9 Traj | 10 PVT</string></property>
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>80</y>
+      <width>700</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>0 Unk | 1 Axis* | 2 Base | 3 Seq | 4 Data | 5 Mon | 6 Enc | 7 Drv | 8 PID | 9 Traj | 10 PVT</string>
+    </property>
    </widget>
    <widget class="caLabel" name="maskBits2">
-    <property name="geometry"><rect><x>15</x><y>101</y><width>700</width><height>18</height></rect></property>
-    <property name="font"><font><pointsize>8</pointsize></font></property>
-    <property name="text"><string>11 Motor* | 12 Motor axis | 13 Motor ctrl | 14 Master/slave | 15 EtherCAT | 16 PLC    (* family includes all subtypes)</string></property>
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>101</y>
+      <width>700</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>11 Motor* | 12 Motor axis | 13 Motor ctrl | 14 Master/slave | 15 EtherCAT | 16 PLC    (* family includes all subtypes)</string>
+    </property>
    </widget>
   </widget>
-
   <widget class="QGroupBox" name="diagBox">
-   <property name="geometry"><rect><x>10</x><y>260</y><width>730</width><height>125</height></rect></property>
-   <property name="title"><string>Motion diagnostics dump</string></property>
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>260</y>
+     <width>730</width>
+     <height>125</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Motion diagnostics dump</string>
+   </property>
    <widget class="caLabel" name="diagLevelLabel">
-    <property name="geometry"><rect><x>15</x><y>28</y><width>70</width><height>18</height></rect></property>
-    <property name="text"><string>Level</string></property>
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>28</y>
+      <width>70</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Level</string>
+    </property>
    </widget>
    <widget class="caTextEntry" name="diagLevel">
-    <property name="geometry"><rect><x>90</x><y>24</y><width>70</width><height>22</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-DiagLevel</string></property>
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>24</y>
+      <width>70</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):MCU-RTLog-DiagLevel</string>
+    </property>
    </widget>
    <widget class="caMessageButton" name="diagDump">
-    <property name="geometry"><rect><x>175</x><y>22</y><width>90</width><height>28</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-DiagDump</string></property>
-    <property name="label"><string notr="true">Dump</string></property>
-    <property name="releaseMessage"><string notr="true">0</string></property>
-    <property name="pressMessage"><string notr="true">1</string></property>
-    <property name="colorMode"><enum>caMessageButton::Default</enum></property>
+    <property name="geometry">
+     <rect>
+      <x>175</x>
+      <y>22</y>
+      <width>90</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):MCU-RTLog-DiagDump</string>
+    </property>
+    <property name="label">
+     <string notr="true">Dump</string>
+    </property>
+    <property name="releaseMessage">
+     <string notr="true">0</string>
+    </property>
+    <property name="pressMessage">
+     <string notr="true">1</string>
+    </property>
+    <property name="colorMode">
+     <enum>caMessageButton::Default</enum>
+    </property>
    </widget>
    <widget class="caLabel" name="diagBusyLabel">
-    <property name="geometry"><rect><x>285</x><y>28</y><width>50</width><height>18</height></rect></property>
-    <property name="text"><string>Busy</string></property>
+    <property name="geometry">
+     <rect>
+      <x>285</x>
+      <y>28</y>
+      <width>50</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Busy</string>
+    </property>
    </widget>
    <widget class="caLineEdit" name="diagBusy">
-    <property name="geometry"><rect><x>335</x><y>24</y><width>70</width><height>22</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-DiagBusy</string></property>
-    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+    <property name="geometry">
+     <rect>
+      <x>335</x>
+      <y>24</y>
+      <width>70</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):MCU-RTLog-DiagBusy</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
    </widget>
    <widget class="caLabel" name="diagStatusLabel">
-    <property name="geometry"><rect><x>425</x><y>28</y><width>55</width><height>18</height></rect></property>
-    <property name="text"><string>Status</string></property>
+    <property name="geometry">
+     <rect>
+      <x>425</x>
+      <y>28</y>
+      <width>55</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Status</string>
+    </property>
    </widget>
    <widget class="caLineEdit" name="diagStatus">
-    <property name="geometry"><rect><x>485</x><y>24</y><width>70</width><height>22</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-DiagStatus</string></property>
-    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+    <property name="geometry">
+     <rect>
+      <x>485</x>
+      <y>24</y>
+      <width>70</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):MCU-RTLog-DiagStatus</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
    </widget>
    <widget class="caLabel" name="diagAxisLabel">
-    <property name="geometry"><rect><x>575</x><y>28</y><width>40</width><height>18</height></rect></property>
-    <property name="text"><string>Axis</string></property>
+    <property name="geometry">
+     <rect>
+      <x>575</x>
+      <y>28</y>
+      <width>40</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Axis</string>
+    </property>
    </widget>
    <widget class="caTextEntry" name="diagAxis">
-    <property name="geometry"><rect><x>620</x><y>24</y><width>70</width><height>22</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-DiagAxis</string></property>
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>24</y>
+      <width>70</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):MCU-RTLog-DiagAxis</string>
+    </property>
    </widget>
    <widget class="caLabel" name="diagFileLabel">
-    <property name="geometry"><rect><x>15</x><y>62</y><width>70</width><height>18</height></rect></property>
-    <property name="text"><string>File</string></property>
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>62</y>
+      <width>70</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>File</string>
+    </property>
    </widget>
    <widget class="caLineEdit" name="diagFile">
-    <property name="geometry"><rect><x>90</x><y>58</y><width>600</width><height>22</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-DiagFile</string></property>
-    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>58</y>
+      <width>600</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):MCU-RTLog-DiagFile</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
    </widget>
    <widget class="caLabel" name="axisRptLabel">
-    <property name="geometry"><rect><x>15</x><y>96</y><width>70</width><height>18</height></rect></property>
-    <property name="text"><string>Axis rpt</string></property>
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>96</y>
+      <width>70</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Axis rpt</string>
+    </property>
    </widget>
    <widget class="caLineEdit" name="axisRpt">
-    <property name="geometry"><rect><x>90</x><y>92</y><width>600</width><height>22</height></rect></property>
-    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-DiagAxisRpt</string></property>
-    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>92</y>
+      <width>600</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):MCU-RTLog-DiagAxisRpt</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
    </widget>
   </widget>
  </widget>
  <customwidgets>
-  <customwidget><class>caLabel</class><extends>QLabel</extends><header>caLabel</header></customwidget>
-  <customwidget><class>caLineEdit</class><extends>QLineEdit</extends><header>caLineEdit</header></customwidget>
-  <customwidget><class>caTextEntry</class><extends>caLineEdit</extends><header>caTextEntry</header></customwidget>
-  <customwidget><class>caMessageButton</class><extends>QPushButton</extends><header>caMessageButton</header></customwidget>
-  <customwidget><class>caByteController</class><extends>QWidget</extends><header>caByteController</header></customwidget>
+  <customwidget>
+   <class>caTextEntry</class>
+   <extends>caLineEdit</extends>
+   <header>caTextEntry</header>
+  </customwidget>
+  <customwidget>
+   <class>caMessageButton</class>
+   <extends>QPushButton</extends>
+   <header>caMessageButton</header>
+  </customwidget>
+  <customwidget>
+   <class>caByteController</class>
+   <extends>QWidget</extends>
+   <header>caByteController</header>
+  </customwidget>
+  <customwidget>
+   <class>caLabel</class>
+   <extends>QLabel</extends>
+   <header>caLabel</header>
+  </customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>caLineEdit</header>
+  </customwidget>
  </customwidgets>
  <resources/>
  <connections/>

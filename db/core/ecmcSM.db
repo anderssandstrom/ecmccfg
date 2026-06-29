@@ -79,9 +79,9 @@ record(mbbiDirect,"${P}SM${ID_2CH}-Stat_"){
 }
 
 record(calc,"${P}SM${ID_2CH}-StatPhase"){
-  field(DESC, "Current status phase")
+  field(DESC, "Current status enum index")
   field(INPA, "${P}SM${ID_2CH}-Stat CP")
-  field(CALC, "A&65535")
+  field(CALC, "A==0?0:(A&1?1:(A&2?2:(A&4?3:(A&8?4:(A&16?5:(A&32?6:(A&32768?7:0)))))))")
   field(TSE,  "$(TSE=-2)")
 }
 
@@ -95,15 +95,15 @@ record(mbbi,"${P}SM${ID_2CH}-StatTxt"){
   field(ONST, "SLV_ACT")
   field(TWVL, "2")
   field(TWST, "PREP_MST")
-  field(THVL, "4")
+  field(THVL, "3")
   field(THST, "WAIT_EXT")
-  field(FRVL, "8")
+  field(FRVL, "4")
   field(FRST, "MST_MOV")
-  field(FVVL, "16")
+  field(FVVL, "5")
   field(FVST, "WAIT_AT")
-  field(SXVL, "32")
+  field(SXVL, "6")
   field(SXST, "WAIT_DIS")
-  field(SVVL, "32768")
+  field(SVVL, "7")
   field(SVST, "TIMEOUT")
   field(TSE,  "$(TSE=-2)")
 }

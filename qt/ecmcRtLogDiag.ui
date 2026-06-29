@@ -237,7 +237,7 @@
      <string>Source filter</string>
     </property>
    </widget>
-   <widget class="caMenu" name="filterMode">
+   <widget class="caLineEdit" name="filterMode">
     <property name="geometry">
      <rect>
       <x>600</x>
@@ -250,7 +250,10 @@
      <string>Off rejects all messages. All sources ignores source mask and index. Selected applies both.</string>
     </property>
     <property name="channel" stdset="0">
-     <string notr="true">$(IOC):MCU-RTLog-FilterMode</string>
+     <string notr="true">$(IOC):MCU-RTLog-FilterMode-Txt</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
     </property>
    </widget>
    <widget class="caLabel" name="filterIndexLabel">
@@ -327,18 +330,48 @@
      <enum>caLineEdit::Static</enum>
     </property>
    </widget>
-   <widget class="caLabel" name="selectedModeHelp">
+   <widget class="caLabel" name="filterModeSetLabel">
     <property name="geometry">
      <rect>
       <x>400</x>
       <y>55</y>
-      <width>314</width>
+      <width>30</width>
       <height>18</height>
      </rect>
     </property>
     <property name="text">
-     <string>Selected: apply source bits and index (-1 = all)</string>
+     <string>Set:</string>
     </property>
+   </widget>
+   <widget class="caMessageButton" name="filterModeOff">
+    <property name="geometry">
+     <rect><x>430</x><y>51</y><width>55</width><height>24</height></rect>
+    </property>
+    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-FilterMode</string></property>
+    <property name="label"><string>Off</string></property>
+    <property name="pressMessage"><string notr="true">0</string></property>
+    <property name="releaseMessage"><string notr="true">0</string></property>
+    <property name="toolTip"><string>Reject all logger messages.</string></property>
+   </widget>
+   <widget class="caMessageButton" name="filterModeAll">
+    <property name="geometry">
+     <rect><x>490</x><y>51</y><width>75</width><height>24</height></rect>
+    </property>
+    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-FilterMode</string></property>
+    <property name="label"><string>All sources</string></property>
+    <property name="pressMessage"><string notr="true">1</string></property>
+    <property name="releaseMessage"><string notr="true">1</string></property>
+    <property name="toolTip"><string>Accept enabled levels from every source; source mask and index are ignored.</string></property>
+   </widget>
+   <widget class="caMessageButton" name="filterModeSelected">
+    <property name="geometry">
+     <rect><x>570</x><y>51</y><width>85</width><height>24</height></rect>
+    </property>
+    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-RTLog-FilterMode</string></property>
+    <property name="label"><string>Selected</string></property>
+    <property name="pressMessage"><string notr="true">2</string></property>
+    <property name="releaseMessage"><string notr="true">2</string></property>
+    <property name="toolTip"><string>Apply both source mask and source index; index -1 accepts every index.</string></property>
    </widget>
    <widget class="caLabel" name="filterMaskLabel">
     <property name="geometry">
@@ -653,11 +686,6 @@
    <class>caByteController</class>
    <extends>QWidget</extends>
    <header>caByteController</header>
-  </customwidget>
-  <customwidget>
-   <class>caMenu</class>
-   <extends>QComboBox</extends>
-   <header>caMenu</header>
   </customwidget>
   <customwidget>
    <class>caLabel</class>

@@ -1,5 +1,5 @@
 record(longin,"${P}${AXIS_NAME}-MtnCmdMrReqCnt") {
-  field(DESC, "Axis motor record motion command request counter")
+  field(DESC, "Axis motor record mtn cmd req. cnt")
   field(DTYP, "asynInt32")
   field(PINI, "$(PINI=1)")
   field(INP,  "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_CMD_MR_REQUEST_COUNT")

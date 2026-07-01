@@ -16,7 +16,7 @@
   <widget class="caLabel" name="title">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>20</x>
      <y>20</y>
      <width>251</width>
      <height>26</height>
@@ -24,13 +24,16 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
    <property name="text">
-    <string>$(DEV):$(Axis) motion state</string>
+    <string>IOC=$(IOC), Axis: $(DEV):$(Axis)</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QGroupBox" name="motorRecordBox">
@@ -217,9 +220,9 @@
    <widget class="caMenu" name="spmg">
     <property name="geometry">
      <rect>
-      <x>320</x>
+      <x>334</x>
       <y>126</y>
-      <width>105</width>
+      <width>91</width>
       <height>22</height>
      </rect>
     </property>
@@ -340,7 +343,7 @@
    <widget class="caLabel" name="movnL">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>100</x>
       <y>164</y>
       <width>45</width>
       <height>18</height>
@@ -501,7 +504,7 @@
    <widget class="caLineEdit" name="sevr">
     <property name="geometry">
      <rect>
-      <x>364</x>
+      <x>360</x>
       <y>186</y>
       <width>61</width>
       <height>22</height>
@@ -796,7 +799,7 @@
      <rect>
       <x>260</x>
       <y>220</y>
-      <width>61</width>
+      <width>55</width>
       <height>22</height>
      </rect>
     </property>
@@ -810,7 +813,7 @@
    <widget class="caLineEdit" name="hls">
     <property name="geometry">
      <rect>
-      <x>140</x>
+      <x>160</x>
       <y>220</y>
       <width>51</width>
       <height>22</height>
@@ -868,7 +871,7 @@
    <widget class="caLabel" name="hlsL">
     <property name="geometry">
      <rect>
-      <x>95</x>
+      <x>110</x>
       <y>224</y>
       <width>38</width>
       <height>18</height>
@@ -4038,13 +4041,13 @@
      </rect>
     </property>
     <property name="text">
-     <string>Clr</string>
+     <string>Clear</string>
     </property>
     <property name="channel" stdset="0">
      <string notr="true">$(DEV):$(Axis)-MtnCmdClr</string>
     </property>
     <property name="label">
-     <string notr="true">&gt;&gt;</string>
+     <string notr="true">Clear</string>
     </property>
     <property name="releaseMessage">
      <string notr="true">1</string>
@@ -4053,6 +4056,28 @@
      <string notr="true">0</string>
     </property>
    </widget>
+  </widget>
+  <widget class="caShellCommand" name="cashellcommand_13">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>40</y>
+     <width>96</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="label">
+    <string notr="true">Open Ax Cfg App</string>
+   </property>
+   <property name="labels">
+    <string>Open Axis Config Editor</string>
+   </property>
+   <property name="files">
+    <string>bash /ioc/NeedfulThings/ecmc_cfg_tool/start_axis.sh $(IOC) $(Axis)</string>
+   </property>
+   <property name="args">
+    <string/>
+   </property>
   </widget>
  </widget>
  <customwidgets>
@@ -4095,6 +4120,11 @@
    <class>caByte</class>
    <extends>QWidget</extends>
    <header>caByte</header>
+  </customwidget>
+  <customwidget>
+   <class>caShellCommand</class>
+   <extends>QWidget</extends>
+   <header>caShellCommand</header>
   </customwidget>
  </customwidgets>
  <resources/>

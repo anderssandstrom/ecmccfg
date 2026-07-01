@@ -4021,7 +4021,7 @@
     <string>ecmcAxisExpert.ui;ecmcAxisMini.ui;motorx_all.ui;ecmcAxisErrorIlock.ui;ecmcMain.ui</string>
    </property>
    <property name="args">
-    <string>DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC);DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC);P=$(DEV):,M=$(Axis);DEV=$(DEV),Axis=$(Axis);DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC)</string>
+    <string>DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC);DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC);P=$(DEV):,M=$(Axis);DEV=$(DEV),Axis=$(Axis),IOC=$(IOC);DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC)</string>
    </property>
    <property name="stackingMode" stdset="0">
     <enum>caRowColMenu::Menu</enum>
@@ -4445,7 +4445,7 @@
     <string>ecmcAxisTroubleshooting.ui</string>
    </property>
    <property name="args">
-    <string>DEV=$(DEV),Axis=$(Axis)</string>
+    <string>DEV=$(DEV),Axis=$(Axis),IOC=$(IOC)</string>
    </property>
   </widget>
   <zorder>tabWidget_2</zorder>

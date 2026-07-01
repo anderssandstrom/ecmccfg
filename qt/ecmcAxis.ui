@@ -4429,6 +4429,25 @@
     </property>
    </widget>
   </widget>
+  <widget class="caRelatedDisplay" name="axisTroubleshootingDisplay">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>430</y>
+     <width>71</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="labels">
+    <string>Troubleshooting</string>
+   </property>
+   <property name="files">
+    <string>ecmcAxisTroubleshooting.ui</string>
+   </property>
+   <property name="args">
+    <string>DEV=$(DEV),Axis=$(Axis)</string>
+   </property>
+  </widget>
   <zorder>tabWidget_2</zorder>
   <zorder>camessagebutton_15</zorder>
   <zorder>StatusFrame</zorder>
@@ -4439,6 +4458,7 @@
   <zorder>carelateddisplay</zorder>
   <zorder>calabel_3</zorder>
   <zorder>caframe_2</zorder>
+  <zorder>axisTroubleshootingDisplay</zorder>
  </widget>
  <customwidgets>
   <customwidget>

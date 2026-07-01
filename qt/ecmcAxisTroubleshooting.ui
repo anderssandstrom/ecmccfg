@@ -2,109 +2,909 @@
 <ui version="4.0">
  <class>Dialog</class>
  <widget class="QDialog" name="Dialog">
-  <property name="geometry"><rect><x>0</x><y>0</y><width>760</width><height>438</height></rect></property>
-  <property name="windowTitle"><string>Axis troubleshooting</string></property>
-
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>760</width>
+    <height>438</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Axis troubleshooting</string>
+  </property>
   <widget class="caLabel" name="title">
-   <property name="geometry"><rect><x>12</x><y>10</y><width>500</width><height>26</height></rect></property>
-   <property name="font"><font><pointsize>14</pointsize><bold>true</bold></font></property>
-   <property name="text"><string>$(DEV):$(Axis) troubleshooting</string></property>
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>10</y>
+     <width>471</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>$(DEV):$(Axis) troubleshooting</string>
+   </property>
   </widget>
   <widget class="caMessageButton" name="clearDiagnostics">
-   <property name="geometry"><rect><x>635</x><y>8</y><width>105</width><height>28</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdClr</string></property>
-   <property name="label"><string notr="true">Clear history</string></property>
-   <property name="releaseMessage"><string notr="true">0</string></property>
-   <property name="pressMessage"><string notr="true">1</string></property>
+   <property name="geometry">
+    <rect>
+     <x>635</x>
+     <y>8</y>
+     <width>105</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="channel" stdset="0">
+    <string notr="true">$(DEV):$(Axis)-MtnCmdClr</string>
+   </property>
+   <property name="label">
+    <string notr="true">Clear history</string>
+   </property>
+   <property name="releaseMessage">
+    <string notr="true">0</string>
+   </property>
+   <property name="pressMessage">
+    <string notr="true">1</string>
+   </property>
   </widget>
   <widget class="caRelatedDisplay" name="motionStateDisplay">
-   <property name="geometry"><rect><x>500</x><y>8</y><width>125</width><height>28</height></rect></property>
-   <property name="labels"><string>Motion state</string></property>
-   <property name="files"><string>ecmcAxisMotionState.ui</string></property>
-   <property name="args"><string>DEV=$(DEV),Axis=$(Axis)</string></property>
+   <property name="geometry">
+    <rect>
+     <x>534</x>
+     <y>8</y>
+     <width>91</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="labels">
+    <string>Motion state</string>
+   </property>
+   <property name="files">
+    <string>ecmcAxisMotionState.ui</string>
+   </property>
+   <property name="args">
+    <string>DEV=$(DEV),Axis=$(Axis)</string>
+   </property>
   </widget>
-
   <widget class="QGroupBox" name="commandPathBox">
-   <property name="geometry"><rect><x>10</x><y>42</y><width>740</width><height>142</height></rect></property>
-   <property name="title"><string>Command counters and last motor-record result</string></property>
-
-   <widget class="caLabel" name="mrReqLabel"><property name="geometry"><rect><x>15</x><y>24</y><width>130</width><height>18</height></rect></property><property name="text"><string>Motor-record requests</string></property></widget>
-   <widget class="caLineEdit" name="mrReq"><property name="geometry"><rect><x>15</x><y>44</y><width>120</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdMrReqCnt</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
-   <widget class="caLabel" name="pathArrow1"><property name="geometry"><rect><x>145</x><y>46</y><width>20</width><height>18</height></rect></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="text"><string>&gt;</string></property></widget>
-   <widget class="caLabel" name="reqLabel"><property name="geometry"><rect><x>175</x><y>24</y><width>130</width><height>18</height></rect></property><property name="text"><string>All ecmc requests</string></property></widget>
-   <widget class="caLineEdit" name="req"><property name="geometry"><rect><x>175</x><y>44</y><width>120</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdReqCnt</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
-   <widget class="caLabel" name="pathArrow2"><property name="geometry"><rect><x>305</x><y>46</y><width>20</width><height>18</height></rect></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="text"><string>&gt;</string></property></widget>
-   <widget class="caLabel" name="execLabel"><property name="geometry"><rect><x>335</x><y>24</y><width>130</width><height>18</height></rect></property><property name="text"><string>Execution attempts</string></property></widget>
-   <widget class="caLineEdit" name="exec"><property name="geometry"><rect><x>335</x><y>44</y><width>120</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdExecCnt</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
-
-   <widget class="caLabel" name="lastTextLabel"><property name="geometry"><rect><x>15</x><y>76</y><width>150</width><height>18</height></rect></property><property name="text"><string>Last motor-record result</string></property></widget>
-   <widget class="caLineEdit" name="lastText"><property name="geometry"><rect><x>170</x><y>72</y><width>550</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdMrLastTxt</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
-
-   <widget class="caLabel" name="lastTypeLabel"><property name="geometry"><rect><x>15</x><y>108</y><width>35</width><height>18</height></rect></property><property name="text"><string>Type</string></property></widget>
-   <widget class="caLineEdit" name="lastType"><property name="geometry"><rect><x>50</x><y>104</y><width>85</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdMrLastType</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
-   <widget class="caLabel" name="lastResultLabel"><property name="geometry"><rect><x>145</x><y>108</y><width>50</width><height>18</height></rect></property><property name="text"><string>Result</string></property></widget>
-   <widget class="caLineEdit" name="lastResult"><property name="geometry"><rect><x>195</x><y>104</y><width>100</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdMrLastRslt</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
-   <widget class="caLabel" name="lastReasonLabel"><property name="geometry"><rect><x>305</x><y>108</y><width>52</width><height>18</height></rect></property><property name="text"><string>Reason</string></property></widget>
-   <widget class="caLineEdit" name="lastReason"><property name="geometry"><rect><x>360</x><y>104</y><width>105</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdMrLastRsn</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
-   <widget class="caLabel" name="lastErrLabel"><property name="geometry"><rect><x>475</x><y>108</y><width>38</width><height>18</height></rect></property><property name="text"><string>Error</string></property></widget>
-   <widget class="caLineEdit" name="lastErr"><property name="geometry"><rect><x>515</x><y>104</y><width>75</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdMrLastErr</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property><property name="formatType"><enum>caLineEdit::hexadecimal</enum></property></widget>
-   <widget class="caLabel" name="lastCycleLabel"><property name="geometry"><rect><x>600</x><y>108</y><width>38</width><height>18</height></rect></property><property name="text"><string>Cycle</string></property></widget>
-   <widget class="caLineEdit" name="lastCycle"><property name="geometry"><rect><x>640</x><y>104</y><width>80</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdMrLastCyc</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>42</y>
+     <width>740</width>
+     <height>142</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Command counters and last motor-record result</string>
+   </property>
+   <widget class="caLabel" name="mrReqLabel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>24</y>
+      <width>130</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Motor-record requests</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="mrReq">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>44</y>
+      <width>120</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-MtnCmdMrReqCnt</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="pathArrow1">
+    <property name="geometry">
+     <rect>
+      <x>145</x>
+      <y>46</y>
+      <width>20</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&gt;</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="caLabel" name="reqLabel">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>24</y>
+      <width>130</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>All ecmc requests</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="req">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>44</y>
+      <width>120</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-MtnCmdReqCnt</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="pathArrow2">
+    <property name="geometry">
+     <rect>
+      <x>305</x>
+      <y>46</y>
+      <width>20</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&gt;</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="caLabel" name="execLabel">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>24</y>
+      <width>130</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Execution attempts</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="exec">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>44</y>
+      <width>120</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-MtnCmdExecCnt</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="lastTextLabel">
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>76</y>
+      <width>150</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Last motor-record result</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="lastText">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>72</y>
+      <width>550</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-MtnCmdMrLastTxt</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="formatType">
+     <enum>caLineEdit::string</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="lastTypeLabel">
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>108</y>
+      <width>35</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Type</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="lastType">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>104</y>
+      <width>85</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-MtnCmdMrLastType</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="lastResultLabel">
+    <property name="geometry">
+     <rect>
+      <x>145</x>
+      <y>108</y>
+      <width>50</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Result</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="lastResult">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>104</y>
+      <width>100</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-MtnCmdMrLastRslt</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="lastReasonLabel">
+    <property name="geometry">
+     <rect>
+      <x>305</x>
+      <y>108</y>
+      <width>52</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Reason</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="lastReason">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>104</y>
+      <width>105</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-MtnCmdMrLastRsn</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="lastErrLabel">
+    <property name="geometry">
+     <rect>
+      <x>475</x>
+      <y>108</y>
+      <width>38</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Error</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="lastErr">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>104</y>
+      <width>75</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-MtnCmdMrLastErr</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="formatType">
+     <enum>caLineEdit::hexadecimal</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="lastCycleLabel">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>108</y>
+      <width>38</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cycle</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="lastCycle">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>104</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-MtnCmdMrLastCyc</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
   </widget>
-
   <widget class="QGroupBox" name="blockersBox">
-   <property name="geometry"><rect><x>10</x><y>190</y><width>740</width><height>135</height></rect></property>
-   <property name="title"><string>Motion blockers and interlocks</string></property>
-
-   <widget class="caLabel" name="commandBlockLabel"><property name="geometry"><rect><x>15</x><y>28</y><width>100</width><height>18</height></rect></property><property name="text"><string>Command block</string></property></widget>
-   <widget class="caLineEdit" name="commandBlock"><property name="geometry"><rect><x>115</x><y>24</y><width>95</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-BlckMtnCmd</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
-   <widget class="caLabel" name="groupBlockLabel"><property name="geometry"><rect><x>230</x><y>28</y><width>92</width><height>18</height></rect></property><property name="text"><string>Group block</string></property></widget>
-   <widget class="caLineEdit" name="groupBlock"><property name="geometry"><rect><x>320</x><y>24</y><width>95</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Blocked</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
-   <widget class="caLabel" name="fwdIlockLabel"><property name="geometry"><rect><x>440</x><y>28</y><width>82</width><height>18</height></rect></property><property name="text"><string>Interlock FWD</string></property></widget>
-   <widget class="caLineEdit" name="fwdIlock"><property name="geometry"><rect><x>525</x><y>24</y><width>75</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-SumIlockFwd</string></property><property name="colorMode"><enum>caLineEdit::Alarm_Default</enum></property></widget>
-   <widget class="caLabel" name="bwdIlockLabel"><property name="geometry"><rect><x>610</x><y>28</y><width>32</width><height>18</height></rect></property><property name="text"><string>BWD</string></property></widget>
-   <widget class="caLineEdit" name="bwdIlock"><property name="geometry"><rect><x>645</x><y>24</y><width>75</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-SumIlockBwd</string></property><property name="colorMode"><enum>caLineEdit::Alarm_Default</enum></property></widget>
-
-   <widget class="caLabel" name="softLimitLabel"><property name="geometry"><rect><x>15</x><y>60</y><width>100</width><height>18</height></rect></property><property name="text"><string>Soft-limit interlock</string></property></widget>
-   <widget class="caLabel" name="softFwdLabel"><property name="geometry"><rect><x>125</x><y>60</y><width>35</width><height>18</height></rect></property><property name="text"><string>FWD</string></property></widget>
-   <widget class="caLineEdit" name="softFwd"><property name="geometry"><rect><x>160</x><y>56</y><width>75</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-SftLimFwdIlock</string></property><property name="colorMode"><enum>caLineEdit::Alarm_Default</enum></property></widget>
-   <widget class="caLabel" name="softBwdLabel"><property name="geometry"><rect><x>250</x><y>60</y><width>35</width><height>18</height></rect></property><property name="text"><string>BWD</string></property></widget>
-   <widget class="caLineEdit" name="softBwd"><property name="geometry"><rect><x>285</x><y>56</y><width>75</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-SftLimBwdIlock</string></property><property name="colorMode"><enum>caLineEdit::Alarm_Default</enum></property></widget>
-   <widget class="caLabel" name="problemLabel"><property name="geometry"><rect><x>400</x><y>60</y><width>120</width><height>18</height></rect></property><property name="text"><string>MR MSTA problem</string></property></widget>
-   <widget class="caByte" name="problem"><property name="geometry"><rect><x>525</x><y>60</y><width>15</width><height>15</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis).MSTA</string></property><property name="startBit"><number>9</number></property><property name="endBit"><number>9</number></property><property name="foreground"><color><red>255</red><green>0</green><blue>0</blue></color></property><property name="background"><color><red>0</red><green>45</green><blue>0</blue></color></property><property name="colorMode"><enum>caByte::Static</enum></property></widget>
-
-   <widget class="caLabel" name="lastIlockLabel"><property name="geometry"><rect><x>15</x><y>96</y><width>90</width><height>18</height></rect></property><property name="text"><string>Last interlock</string></property></widget>
-   <widget class="caLineEdit" name="lastIlock"><property name="geometry"><rect><x>110</x><y>92</y><width>75</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-LastIlock</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
-   <widget class="caLineEdit" name="lastIlockText"><property name="geometry"><rect><x>195</x><y>92</y><width>525</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-IlockTxt</string></property><property name="colorMode"><enum>caLineEdit::Alarm_Default</enum></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>190</y>
+     <width>740</width>
+     <height>135</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Motion blockers and interlocks</string>
+   </property>
+   <widget class="caLabel" name="commandBlockLabel">
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>30</y>
+      <width>100</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Command block</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="commandBlock">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>30</y>
+      <width>95</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-BlckMtnCmd</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="groupBlockLabel">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>30</y>
+      <width>92</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Group block</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="groupBlock">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>30</y>
+      <width>95</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-Blocked</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="fwdIlockLabel">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>30</y>
+      <width>82</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Interlock FWD</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="fwdIlock">
+    <property name="geometry">
+     <rect>
+      <x>525</x>
+      <y>30</y>
+      <width>75</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-SumIlockFwd</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Alarm_Default</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="bwdIlockLabel">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>30</y>
+      <width>32</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>BWD</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="bwdIlock">
+    <property name="geometry">
+     <rect>
+      <x>645</x>
+      <y>30</y>
+      <width>75</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-SumIlockBwd</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Alarm_Default</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="softLimitLabel">
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>60</y>
+      <width>100</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Soft-limit interlock</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="softFwdLabel">
+    <property name="geometry">
+     <rect>
+      <x>125</x>
+      <y>60</y>
+      <width>35</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>FWD</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="softFwd">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>56</y>
+      <width>75</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-SftLimFwdIlock</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Alarm_Default</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="softBwdLabel">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>60</y>
+      <width>35</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>BWD</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="softBwd">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>56</y>
+      <width>75</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-SftLimBwdIlock</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Alarm_Default</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="problemLabel">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>60</y>
+      <width>120</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>MR MSTA problem</string>
+    </property>
+   </widget>
+   <widget class="caByte" name="problem">
+    <property name="geometry">
+     <rect>
+      <x>525</x>
+      <y>60</y>
+      <width>15</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis).MSTA</string>
+    </property>
+    <property name="startBit">
+     <number>9</number>
+    </property>
+    <property name="endBit">
+     <number>9</number>
+    </property>
+    <property name="colorMode">
+     <enum>caByte::Static</enum>
+    </property>
+    <property name="foreground" stdset="0">
+     <color>
+      <red>255</red>
+      <green>0</green>
+      <blue>0</blue>
+     </color>
+    </property>
+    <property name="background" stdset="0">
+     <color>
+      <red>0</red>
+      <green>45</green>
+      <blue>0</blue>
+     </color>
+    </property>
+   </widget>
+   <widget class="caLabel" name="lastIlockLabel">
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>96</y>
+      <width>90</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Last interlock</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="lastIlock">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>92</y>
+      <width>75</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-LastIlock</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="lastIlockText">
+    <property name="geometry">
+     <rect>
+      <x>195</x>
+      <y>92</y>
+      <width>531</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-IlockTxt</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Alarm_Default</enum>
+    </property>
+    <property name="formatType">
+     <enum>caLineEdit::string</enum>
+    </property>
+   </widget>
   </widget>
-
   <widget class="QGroupBox" name="historyBox">
-   <property name="geometry"><rect><x>10</x><y>331</y><width>740</width><height>96</height></rect></property>
-   <property name="title"><string>Master/slave history and motor-record counter options</string></property>
-
-   <widget class="caLabel" name="msTextLabel"><property name="geometry"><rect><x>15</x><y>28</y><width>92</width><height>18</height></rect></property><property name="text"><string>Last transition</string></property></widget>
-   <widget class="caLineEdit" name="msText"><property name="geometry"><rect><x>110</x><y>24</y><width>280</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnMsBlkTxt</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
-   <widget class="caLabel" name="msCurrentLabel"><property name="geometry"><rect><x>400</x><y>28</y><width>52</width><height>18</height></rect></property><property name="text"><string>Current</string></property></widget>
-   <widget class="caLineEdit" name="msCurrent"><property name="geometry"><rect><x>455</x><y>24</y><width>60</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnMsBlk</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
-   <widget class="caLabel" name="msCntLabel"><property name="geometry"><rect><x>525</x><y>28</y><width>40</width><height>18</height></rect></property><property name="text"><string>Count</string></property></widget>
-   <widget class="caLineEdit" name="msCnt"><property name="geometry"><rect><x>565</x><y>24</y><width>55</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnMsBlkCnt</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
-   <widget class="caLabel" name="msCycleLabel"><property name="geometry"><rect><x>630</x><y>28</y><width>40</width><height>18</height></rect></property><property name="text"><string>Cycle</string></property></widget>
-   <widget class="caLineEdit" name="msCycle"><property name="geometry"><rect><x>670</x><y>24</y><width>50</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnMsBlkCyc</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
-
-   <widget class="caLabel" name="countStopLabel"><property name="geometry"><rect><x>15</x><y>62</y><width>105</width><height>18</height></rect></property><property name="text"><string>Count MR stops</string></property></widget>
-   <widget class="caToggleButton" name="countMrStop"><property name="geometry"><rect><x>120</x><y>58</y><width>24</width><height>22</height></rect></property><property name="checkable"><bool>true</bool></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdCntMrStop</string></property></widget>
-   <widget class="caLabel" name="countEnableLabel"><property name="geometry"><rect><x>175</x><y>62</y><width>110</width><height>18</height></rect></property><property name="text"><string>Count MR enables</string></property></widget>
-   <widget class="caToggleButton" name="countEnable"><property name="geometry"><rect><x>290</x><y>58</y><width>24</width><height>22</height></rect></property><property name="checkable"><bool>true</bool></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdCntEna</string></property></widget>
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>331</y>
+     <width>740</width>
+     <height>96</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Master/slave history and motor-record counter options</string>
+   </property>
+   <widget class="caLabel" name="msTextLabel">
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>30</y>
+      <width>92</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Last transition</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="msText">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>30</y>
+      <width>280</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-MtnMsBlkTxt</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="formatType">
+     <enum>caLineEdit::string</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="msCurrentLabel">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>30</y>
+      <width>52</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Current</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="msCurrent">
+    <property name="geometry">
+     <rect>
+      <x>455</x>
+      <y>30</y>
+      <width>60</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-MtnMsBlk</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="msCntLabel">
+    <property name="geometry">
+     <rect>
+      <x>525</x>
+      <y>30</y>
+      <width>40</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Count</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="msCnt">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>30</y>
+      <width>55</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-MtnMsBlkCnt</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="msCycleLabel">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
+      <y>30</y>
+      <width>40</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cycle</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="msCycle">
+    <property name="geometry">
+     <rect>
+      <x>680</x>
+      <y>30</y>
+      <width>50</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-MtnMsBlkCyc</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="caLabel" name="countStopLabel">
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>62</y>
+      <width>105</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Count MR stops</string>
+    </property>
+   </widget>
+   <widget class="caToggleButton" name="countMrStop">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>58</y>
+      <width>24</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-MtnCmdCntMrStop</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="countEnableLabel">
+    <property name="geometry">
+     <rect>
+      <x>175</x>
+      <y>62</y>
+      <width>110</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Count MR enables</string>
+    </property>
+   </widget>
+   <widget class="caToggleButton" name="countEnable">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>58</y>
+      <width>24</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(DEV):$(Axis)-MtnCmdCntEna</string>
+    </property>
+   </widget>
   </widget>
  </widget>
-
  <customwidgets>
-  <customwidget><class>caMessageButton</class><extends>QPushButton</extends><header>caMessageButton</header></customwidget>
-  <customwidget><class>caToggleButton</class><extends>QCheckBox</extends><header>caToggleButton</header></customwidget>
-  <customwidget><class>caLabel</class><extends>QLabel</extends><header>caLabel</header></customwidget>
-  <customwidget><class>caLineEdit</class><extends>QLineEdit</extends><header>caLineEdit</header></customwidget>
-  <customwidget><class>caRelatedDisplay</class><extends>QPushButton</extends><header>caRelatedDisplay</header></customwidget>
-  <customwidget><class>caByte</class><extends>QWidget</extends><header>caByte</header></customwidget>
+  <customwidget>
+   <class>caRelatedDisplay</class>
+   <extends>QWidget</extends>
+   <header>caRelatedDisplay</header>
+  </customwidget>
+  <customwidget>
+   <class>caMessageButton</class>
+   <extends>QPushButton</extends>
+   <header>caMessageButton</header>
+  </customwidget>
+  <customwidget>
+   <class>caToggleButton</class>
+   <extends>QCheckBox</extends>
+   <header>caToggleButton</header>
+  </customwidget>
+  <customwidget>
+   <class>caLabel</class>
+   <extends>QLabel</extends>
+   <header>caLabel</header>
+  </customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+  <customwidget>
+   <class>caByte</class>
+   <extends>QWidget</extends>
+   <header>caByte</header>
+  </customwidget>
  </customwidgets>
  <resources/>
  <connections/>

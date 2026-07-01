@@ -20,19 +20,19 @@
 
   <widget class="QGroupBox" name="commandPathBox">
    <property name="geometry"><rect><x>10</x><y>42</y><width>740</width><height>142</height></rect></property>
-   <property name="title"><string>Command path</string></property>
+   <property name="title"><string>Command counters and last motor-record result</string></property>
 
-   <widget class="caLabel" name="mrReqLabel"><property name="geometry"><rect><x>15</x><y>24</y><width>130</width><height>18</height></rect></property><property name="text"><string>Motor record arrived</string></property></widget>
+   <widget class="caLabel" name="mrReqLabel"><property name="geometry"><rect><x>15</x><y>24</y><width>130</width><height>18</height></rect></property><property name="text"><string>Motor-record requests</string></property></widget>
    <widget class="caLineEdit" name="mrReq"><property name="geometry"><rect><x>15</x><y>44</y><width>120</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdMrReqCnt</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
    <widget class="caLabel" name="pathArrow1"><property name="geometry"><rect><x>145</x><y>46</y><width>20</width><height>18</height></rect></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="text"><string>&gt;</string></property></widget>
-   <widget class="caLabel" name="reqLabel"><property name="geometry"><rect><x>175</x><y>24</y><width>130</width><height>18</height></rect></property><property name="text"><string>ecmc request</string></property></widget>
+   <widget class="caLabel" name="reqLabel"><property name="geometry"><rect><x>175</x><y>24</y><width>130</width><height>18</height></rect></property><property name="text"><string>All ecmc requests</string></property></widget>
    <widget class="caLineEdit" name="req"><property name="geometry"><rect><x>175</x><y>44</y><width>120</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdReqCnt</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
    <widget class="caLabel" name="pathArrow2"><property name="geometry"><rect><x>305</x><y>46</y><width>20</width><height>18</height></rect></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="text"><string>&gt;</string></property></widget>
-   <widget class="caLabel" name="execLabel"><property name="geometry"><rect><x>335</x><y>24</y><width>130</width><height>18</height></rect></property><property name="text"><string>Execution attempted</string></property></widget>
+   <widget class="caLabel" name="execLabel"><property name="geometry"><rect><x>335</x><y>24</y><width>130</width><height>18</height></rect></property><property name="text"><string>Execution attempts</string></property></widget>
    <widget class="caLineEdit" name="exec"><property name="geometry"><rect><x>335</x><y>44</y><width>120</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdExecCnt</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
 
-   <widget class="caLabel" name="lastTextLabel"><property name="geometry"><rect><x>15</x><y>76</y><width>90</width><height>18</height></rect></property><property name="text"><string>Last MR result</string></property></widget>
-   <widget class="caLineEdit" name="lastText"><property name="geometry"><rect><x>110</x><y>72</y><width>610</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdMrLastTxt</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
+   <widget class="caLabel" name="lastTextLabel"><property name="geometry"><rect><x>15</x><y>76</y><width>150</width><height>18</height></rect></property><property name="text"><string>Last motor-record result</string></property></widget>
+   <widget class="caLineEdit" name="lastText"><property name="geometry"><rect><x>170</x><y>72</y><width>550</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdMrLastTxt</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
 
    <widget class="caLabel" name="lastTypeLabel"><property name="geometry"><rect><x>15</x><y>108</y><width>35</width><height>18</height></rect></property><property name="text"><string>Type</string></property></widget>
    <widget class="caLineEdit" name="lastType"><property name="geometry"><rect><x>50</x><y>104</y><width>85</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdMrLastType</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
@@ -72,7 +72,7 @@
 
   <widget class="QGroupBox" name="historyBox">
    <property name="geometry"><rect><x>10</x><y>331</y><width>740</width><height>96</height></rect></property>
-   <property name="title"><string>Master/slave history and counter options</string></property>
+   <property name="title"><string>Master/slave history and motor-record counter options</string></property>
 
    <widget class="caLabel" name="msTextLabel"><property name="geometry"><rect><x>15</x><y>28</y><width>92</width><height>18</height></rect></property><property name="text"><string>Last transition</string></property></widget>
    <widget class="caLineEdit" name="msText"><property name="geometry"><rect><x>110</x><y>24</y><width>280</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnMsBlkTxt</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property><property name="formatType"><enum>caLineEdit::string</enum></property></widget>
@@ -85,8 +85,8 @@
 
    <widget class="caLabel" name="countStopLabel"><property name="geometry"><rect><x>15</x><y>62</y><width>105</width><height>18</height></rect></property><property name="text"><string>Count MR stops</string></property></widget>
    <widget class="caToggleButton" name="countMrStop"><property name="geometry"><rect><x>120</x><y>58</y><width>24</width><height>22</height></rect></property><property name="checkable"><bool>true</bool></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdCntMrStop</string></property></widget>
-   <widget class="caLabel" name="countEnableLabel"><property name="geometry"><rect><x>175</x><y>62</y><width>95</width><height>18</height></rect></property><property name="text"><string>Count enables</string></property></widget>
-   <widget class="caToggleButton" name="countEnable"><property name="geometry"><rect><x>270</x><y>58</y><width>24</width><height>22</height></rect></property><property name="checkable"><bool>true</bool></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdCntEna</string></property></widget>
+   <widget class="caLabel" name="countEnableLabel"><property name="geometry"><rect><x>175</x><y>62</y><width>110</width><height>18</height></rect></property><property name="text"><string>Count MR enables</string></property></widget>
+   <widget class="caToggleButton" name="countEnable"><property name="geometry"><rect><x>290</x><y>58</y><width>24</width><height>22</height></rect></property><property name="checkable"><bool>true</bool></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-MtnCmdCntEna</string></property></widget>
   </widget>
  </widget>
 

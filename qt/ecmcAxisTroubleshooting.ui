@@ -70,6 +70,8 @@
    <widget class="caLineEdit" name="softFwd"><property name="geometry"><rect><x>160</x><y>56</y><width>75</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-SftLimFwdIlock</string></property><property name="colorMode"><enum>caLineEdit::Alarm_Static</enum></property></widget>
    <widget class="caLabel" name="softBwdLabel"><property name="geometry"><rect><x>250</x><y>60</y><width>35</width><height>18</height></rect></property><property name="text"><string>BWD</string></property></widget>
    <widget class="caLineEdit" name="softBwd"><property name="geometry"><rect><x>285</x><y>56</y><width>75</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-SftLimBwdIlock</string></property><property name="colorMode"><enum>caLineEdit::Alarm_Static</enum></property></widget>
+   <widget class="caLabel" name="problemLabel"><property name="geometry"><rect><x>400</x><y>60</y><width>120</width><height>18</height></rect></property><property name="text"><string>MR MSTA problem</string></property></widget>
+   <widget class="caByte" name="problem"><property name="geometry"><rect><x>525</x><y>60</y><width>15</width><height>15</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis).MSTA</string></property><property name="startBit"><number>9</number></property><property name="endBit"><number>9</number></property><property name="foreground"><color><red>255</red><green>0</green><blue>0</blue></color></property><property name="background"><color><red>0</red><green>45</green><blue>0</blue></color></property><property name="colorMode"><enum>caByte::Static</enum></property></widget>
 
    <widget class="caLabel" name="lastIlockLabel"><property name="geometry"><rect><x>15</x><y>96</y><width>90</width><height>18</height></rect></property><property name="text"><string>Last interlock</string></property></widget>
    <widget class="caLineEdit" name="lastIlock"><property name="geometry"><rect><x>110</x><y>92</y><width>75</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-LastIlock</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
@@ -102,6 +104,7 @@
   <customwidget><class>caLabel</class><extends>QLabel</extends><header>caLabel</header></customwidget>
   <customwidget><class>caLineEdit</class><extends>QLineEdit</extends><header>caLineEdit</header></customwidget>
   <customwidget><class>caRelatedDisplay</class><extends>QPushButton</extends><header>caRelatedDisplay</header></customwidget>
+  <customwidget><class>caByte</class><extends>QWidget</extends><header>caByte</header></customwidget>
  </customwidgets>
  <resources/>
  <connections/>

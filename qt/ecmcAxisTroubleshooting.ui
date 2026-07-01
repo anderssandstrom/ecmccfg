@@ -17,6 +17,12 @@
    <property name="releaseMessage"><string notr="true">0</string></property>
    <property name="pressMessage"><string notr="true">1</string></property>
   </widget>
+  <widget class="caRelatedDisplay" name="motionStateDisplay">
+   <property name="geometry"><rect><x>500</x><y>8</y><width>125</width><height>28</height></rect></property>
+   <property name="labels"><string>Motion state</string></property>
+   <property name="files"><string>ecmcAxisMotionState.ui</string></property>
+   <property name="args"><string>DEV=$(DEV),Axis=$(Axis)</string></property>
+  </widget>
 
   <widget class="QGroupBox" name="commandPathBox">
    <property name="geometry"><rect><x>10</x><y>42</y><width>740</width><height>142</height></rect></property>
@@ -95,6 +101,7 @@
   <customwidget><class>caToggleButton</class><extends>QCheckBox</extends><header>caToggleButton</header></customwidget>
   <customwidget><class>caLabel</class><extends>QLabel</extends><header>caLabel</header></customwidget>
   <customwidget><class>caLineEdit</class><extends>QLineEdit</extends><header>caLineEdit</header></customwidget>
+  <customwidget><class>caRelatedDisplay</class><extends>QPushButton</extends><header>caRelatedDisplay</header></customwidget>
  </customwidgets>
  <resources/>
  <connections/>

@@ -130,7 +130,15 @@ def create_ui_file(fname: str, ioc: str, groups, rows: int):
     """ Create UI file from axes """
     # Qt UI files are of UTF-8 encoded XML format.
     
-    with open(fname, 'wb') as f:
+    old_umask = os.umask(0)
+    try:
+        mode = 'rb+' if os.path.exists(fname) else 'wb'
+        f = open(fname, mode)
+    finally:
+        os.umask(old_umask)
+
+    with f:
+        f.truncate(0)
         
         # number of columns in the grid layout
         cols = math.ceil(len(groups) / rows)

@@ -105,7 +105,15 @@ def get_ds_from_ioc(ioc: str):
 
 
 def create_ui_file(fname: str, ioc: str, ds_list, rows: int):
-    with open(fname, 'wb') as f:
+    old_umask = os.umask(0)
+    try:
+        mode = 'rb+' if os.path.exists(fname) else 'wb'
+        f = open(fname, mode)
+    finally:
+        os.umask(old_umask)
+
+    with f:
+        f.truncate(0)
         cols = max(1, math.ceil(len(ds_list) / rows))
 
         f.write(header % (

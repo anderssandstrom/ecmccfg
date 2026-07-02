@@ -167,7 +167,15 @@ def create_ui_file(filename, ioc, sequences):
     row_count = max(1, len(sequences))
     content_height = row_count * 34
     height = min(620, max(150, 62 + content_height))
-    with open(filename, "w", encoding="utf-8") as output:
+    old_umask = os.umask(0)
+    try:
+        mode = "r+" if os.path.exists(filename) else "w"
+        output = open(filename, mode, encoding="utf-8")
+    finally:
+        os.umask(old_umask)
+
+    with output:
+        output.truncate(0)
         output.write(HEADER.format(
             height=height,
             content_height=content_height,

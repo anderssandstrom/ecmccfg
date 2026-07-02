@@ -197,7 +197,15 @@ def create_ui_file(fname: str, ioc: str, axes, rows: int, panel_type: str):
     sub_panel_height = panel['height']
     panel_filename = bytes(panel['filename'], 'utf8')
     
-    with open(fname, 'wb') as f:
+    old_umask = os.umask(0)
+    try:
+        mode = 'rb+' if os.path.exists(fname) else 'wb'
+        f = open(fname, mode)
+    finally:
+        os.umask(old_umask)
+
+    with f:
+        f.truncate(0)
         
         # number of columns in the grid layout
         cols = math.ceil(len(axes) / rows)

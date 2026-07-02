@@ -3562,7 +3562,7 @@
      </rect>
     </property>
     <property name="title">
-     <string>Other</string>
+     <string>Other:</string>
     </property>
     <widget class="caLineEdit" name="calineedit_38">
      <property name="geometry">

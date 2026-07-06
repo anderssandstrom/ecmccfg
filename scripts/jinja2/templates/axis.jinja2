@@ -82,6 +82,9 @@ ecmcConfigOrDie "Cfg.LinkEcEntryToObject("{{ axis.healthOutput|default("") }}","
     {%- if axis.autoEnable.disableTimeout is defined %}
         ecmcConfigOrDie "Cfg.SetAxisAutoDisableAfterTime(${ECMC_AXIS_NO},{{ axis.autoEnable.disableTimeout }})"
     {%- endif %}
+    {%- if axis.autoEnable.autoDisableLatchAtTarget is defined %}
+        ecmcConfigOrDie "Cfg.SetAxisAutoDisableAtTgtLtch(${ECMC_AXIS_NO},{{ axis.autoEnable.autoDisableLatchAtTarget|int }})"
+    {%- endif %}
     {%- if axis.autoEnable.atStartup is defined %}
         ecmcConfigOrDie "Cfg.SetAxisEnableAtStartup(${ECMC_AXIS_NO},{{ axis.autoEnable.atStartup|int }})"
     {%- endif %}

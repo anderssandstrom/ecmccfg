@@ -48,6 +48,7 @@ For examples and configuration guidance, use [yaml configuration](../axisyaml/).
 - `autoEnable` (preferred over motor record auto-enable) — Native ecmc auto enable/disable.
   - `enableTimeout` — Try auto-enable for at most this many seconds.
   - `disableTimeout` — Disable after being idle this many seconds.
+  - `autoDisableLatchAtTarget` — After the first AtTarget assertion, allow the auto-disable timer to continue if AtTarget is later lost (default false).
   - `atStartup` — Auto-enable at IOC start (default false).
 - `tweakDist` (optional) — Tweak value for both ecmc and motor record.
 

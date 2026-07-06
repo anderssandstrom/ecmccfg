@@ -51,6 +51,7 @@ Notes:
 | axis.features.allowedFunctions.positioning | Allow positioning | No |
 | axis.autoEnable.enableTimeout | If defined, ecmc tries to auto-enable for a maximum enableTimeout seconds. | No |
 | axis.autoEnable.disableTimeout | If defined, ecmc disables axis after idle (non busy) in disableTime seconds | No |
+| axis.autoEnable.autoDisableLatchAtTarget | Keep the auto-disable timer active after AtTarget has been asserted once | No |
 | axis.autoEnable.atStartup | Auto enable axis at ioc start, default False | No |
 | axis.tweakDist | Tweak value (both ecmc interface and motor record tweak value) | No |
 | epics.name | Axis name | No |

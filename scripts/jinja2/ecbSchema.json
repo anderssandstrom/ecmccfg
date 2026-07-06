@@ -168,6 +168,11 @@
             "required": false,
             "default": -1.0
         },
+        "axis.autoEnable.autoDisableLatchAtTarget": {
+            "type": "boolean",
+            "required": false,
+            "default": false
+        },
         "axis.autoEnable.atStartup": {
             "type": "boolean",
             "required": false,

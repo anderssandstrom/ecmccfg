@@ -170,6 +170,7 @@ axis:
   autoEnable:                                         # ecmc auto enable of axis (Please use this instead of motor record version..)
     enableTimeout: 5.0                                # If defined, ecmc tries to auto-enable for a maximum enableTimeout seconds.
     disableTimeout:   5.0                                # If defined, ecmc disables axis after idle (non busy) in disableTime seconds
+    autoDisableLatchAtTarget: false                      # Continue auto-disable timing after AtTarget has been reached once
 ```
 The motor record auto-enable/disable functionality will then automatically be disabled.
 {{% notice warning %}}
@@ -677,6 +678,7 @@ axis:
   autoEnable:                                         # ecmc auto enable of axis (Please use this instead of motor record version..)
     enableTimeout: 5.0                                # If defined, ecmc tries to auto-enable for a maximum enableTimeout seconds.
     disableTimeout:   5.0                             # If defined, ecmc disables axis after idle (non busy) in disableTime seconds
+    autoDisableLatchAtTarget: false                   # Continue auto-disable timing after AtTarget has been reached once
     atStartup: True                                   # Auto enable axis at ioc start, default False
   tweakDist: 2.0                                      # Tweak value (both ecmc interface and motor record tweak value)
 

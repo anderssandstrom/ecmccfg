@@ -852,6 +852,14 @@
       "monitoring.target.time": {
         "type": "integer",
         "min": 0
+      },
+      "monitoring.target.slaveControlDeadband.tolerance": {
+        "type": "integer float",
+        "min": 0
+      },
+      "monitoring.target.slaveControlDeadband.time": {
+        "type": "integer",
+        "min": 0
       }
     }
   },

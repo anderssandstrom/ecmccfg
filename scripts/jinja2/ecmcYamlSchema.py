@@ -485,6 +485,14 @@ class Schema:
                     'enable': {'required': True, 'type': 'boolean', 'dependencies': ['tolerance', 'time']},
                     'tolerance': {'type': 'float', 'min': 0.0},
                     'time': {'type': 'integer', 'min': 0},
+                    'slaveControlDeadband': {
+                        'type': 'dict',
+                        'required': False,
+                        'schema': {
+                            'tolerance': {'required': True, 'type': 'float', 'min': 0.0},
+                            'time': {'required': True, 'type': 'integer', 'min': 0},
+                        }
+                    },
                 }
             },
             'target': {

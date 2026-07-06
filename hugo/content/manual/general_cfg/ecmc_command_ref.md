@@ -69,6 +69,8 @@ chapter = false
 | `GetAxisModType(<int>)` | Set axis modulo motion type. |
 | `GetAxisMonAtTargetTime(<int>)` | Get "at target" monitoring time (cycles). |
 | `GetAxisMonAtTargetTol(<int>)` | Set drive type. |
+| `GetAxisMonSlvCtrlDbTol(<int>)` | Get the master-axis control-deadband tolerance forwarded to slaves. |
+| `GetAxisMonSlvCtrlDbTime(<int>)` | Get the filter time for the control-deadband status forwarded to slaves. |
 | `GetAxisMonEnableAtTargetMon(<int>)` | Get enable "at target" monitoring. |
 | `GetAxisMonEnableLagMon(<int>)` | Get position lag monitoring enable. |
 | `GetAxisMonEnableMaxVel(<int>)` | Get enable maximum velocity monitoring (over speed). |
@@ -194,6 +196,8 @@ chapter = false
 | `Cfg.SetAxisMonAnILRawLim(<int>,<float>)` | Set analog interlock raw value limit . |
 | `Cfg.SetAxisMonAtTargetTime(<int>,<int>)` | Set "at target" monitoring time (cycles). |
 | `Cfg.SetAxisMonAtTargetTol(<int>,<float>)` | Set "at target" monitoring tolerance. |
+| `Cfg.SetAxisMonSlvCtrlDbTol(<int>,<float>)` | Set the master-axis control-deadband tolerance forwarded to slaves. |
+| `Cfg.SetAxisMonSlvCtrlDbTime(<int>,<int>)` | Set the filter time for the control-deadband status forwarded to slaves. |
 | `Cfg.SetAxisMonCntrlOutHL(<int>,<float>)` | Set monitoring controller output high limit. |
 | `Cfg.SetAxisMonEnableAnalogInterlock(<int>,<int>)` | Enable motion axis interlock from analog EtherCAT entry. |
 | `Cfg.SetAxisMonEnableAtTargetMon(<int>,<int>)` | Enable "at target" monitoring. |

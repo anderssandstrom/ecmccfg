@@ -178,6 +178,8 @@ Notes:
 | monitoring.target.enable | Enable at target monitoring (needs to be enabled and configured if using motor record) | No |
 | monitoring.target.tolerance | Allowed tolerance | No |
 | monitoring.target.time | Filter time inside tolerance to be at target | No |
+| monitoring.target.slaveControlDeadband.tolerance | Master-axis tolerance forwarded to slaves for reduced-torque control; defaults to AtTarget tolerance | No |
+| monitoring.target.slaveControlDeadband.time | Filter time inside slave-control deadband; defaults to AtTarget time | No |
 | monitoring.velocity.enable | Enable velocity monitoring | No |
 | monitoring.velocity.max | Allowed max velocity | No |
 | monitoring.velocity.time.trajectory | Time allowed outside max velocity before system init halt | No |

@@ -17,6 +17,11 @@
         ecmcConfigOrDie "Cfg.SetAxisMonEnableAtTargetMon(${ECMC_AXIS_NO},{{ monitoring.target.enable|int }})"
         ecmcConfigOrDie "Cfg.SetAxisMonAtTargetTol(${ECMC_AXIS_NO},{{ monitoring.target.tolerance }})"
         ecmcConfigOrDie "Cfg.SetAxisMonAtTargetTime(${ECMC_AXIS_NO},{{ monitoring.target.time }})"
+        {%- if monitoring.target.slaveControlDeadband is defined %}
+            #- Tight, live master-axis band forwarded to slaves for reduced torque.
+            ecmcConfigOrDie "Cfg.SetAxisMonSlvCtrlDbTol(${ECMC_AXIS_NO},{{ monitoring.target.slaveControlDeadband.tolerance }})"
+            ecmcConfigOrDie "Cfg.SetAxisMonSlvCtrlDbTime(${ECMC_AXIS_NO},{{ monitoring.target.slaveControlDeadband.time }})"
+        {%- endif %}
     {%- else  %}
         ecmcConfigOrDie "Cfg.SetAxisMonEnableAtTargetMon(${ECMC_AXIS_NO},0)"
     {%- endif %}

@@ -354,7 +354,7 @@ A shared memory buffer of 120 doubles can be accessed for read and write operati
                          <enable>,        : Enable power
                          );
     Enable power of  axis <axIndex>.
-    Motion is triggered with a positive edge on <execute> input.
+    
     returns 0 if success or error code.
 
  9. retvalue = mc_get_busy(

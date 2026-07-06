@@ -187,6 +187,7 @@ For examples and configuration guidance, use [yaml configuration](../axisyaml/).
 ## monitoring
 - `lag.enable` / `lag.tolerance` / `lag.time` (optional) — Position lag (following error) monitoring.
 - `target.enable` / `target.tolerance` / `target.time` (optional) — At-target monitoring (mandatory when using motor record).
+- `target.slaveControlDeadband.tolerance` / `target.slaveControlDeadband.time` (optional) — Live master-axis band forwarded to slaves for reduced-torque control. Applies to physical and virtual master axes and defaults to the AtTarget tolerance and time when omitted.
 - `velocity.enable` / `velocity.max` / `velocity.time.trajectory` / `velocity.time.drive` (optional) — Velocity monitoring.
 - `velocityDifference.enable` / `velocityDifference.max` / `velocityDifference.time.trajectory` / `velocityDifference.time.drive` (optional) — Velocity setpoint vs actual monitoring.
 - `stall.enable` / `stall.time.timeout` / `stall.time.factor` (optional) — Stall monitoring (requires target monitoring enabled).

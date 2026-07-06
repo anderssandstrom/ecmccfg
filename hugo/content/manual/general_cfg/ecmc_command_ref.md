@@ -113,6 +113,7 @@ chapter = false
 | `Cfg.SetAxisAllowCommandsFromPLC(<int>,<int>)` | Allow commands from PLCs. |
 | `Cfg.SetAxisAllowSourceChangeWhenEnabled(<int>,<int>)` | Allow change of encoder and trajectory source when axis is enabled |
 | `Cfg.SetAxisAutoDisableAfterTime(<int>,<float>)` | Set axis auto amplifier disable after a defined idle time (axis not busy). |
+| `Cfg.SetAxisAutoDisableLatchAtTarget(<int>,<int>)` | If enabled, latch the first AtTarget assertion while idle so later AtTarget loss does not reset the auto-disable timer. The latch resets on new motion or when the axis is disabled. |
 | `Cfg.SetAxisAutoEnableTimeout(<int>,<float>)` | Set axis auto amplifier enable timout time. |
 | `Cfg.SetAxisAutoModeCmdHoming(<int>,<int>)` | Set axis auto mode command for homing. |
 | `Cfg.SetAxisAutoModeCmdMotion(<int>,<int>)` | Set axis auto mode command for motion. |
@@ -355,6 +356,7 @@ chapter = false
 | `fVelocity?` | No public header brief found (parser-specific or undocumented). |
 | `GetAxisAllowSourceChangeWhenEnabled(<int>)` | No public header brief found (parser-specific or undocumented). |
 | `GetAxisAutoDisableAfterTime(<int>)` | No public header brief found (parser-specific or undocumented). |
+| `GetAxisAutoDisableLatchAtTarget(<int>)` | Read whether latched AtTarget auto-disable timing is enabled. |
 | `GetAxisAutoEnableTimeout(<int>)` | No public header brief found (parser-specific or undocumented). |
 | `GetAxisCntrlDeadband(<int>)` | No public header brief found (parser-specific or undocumented). |
 | `GetAxisCntrlDeadbandTime(<int>)` | No public header brief found (parser-specific or undocumented). |

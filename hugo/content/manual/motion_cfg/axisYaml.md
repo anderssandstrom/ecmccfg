@@ -304,6 +304,11 @@ mandatory
 - `absOffset`: Encoder offset in engineering units (for absolute encoders)
 - `position`: position entry
 
+`encoder.bits` and `encoder.mask` are applied to the encoder value maintained
+by ecmc after reading the configured position entry. They do not alter the raw
+EtherCAT process-data value received from the slave. The original hardware
+value remains available through the EtherCAT hardware PVs.
+
 optional
 
 - `source`: position source, 0=from EC entry ; 1=from PLC

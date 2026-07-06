@@ -88,6 +88,11 @@ This scaling ratio describes the relation of encoder counts and engineering unit
 Unlike the drive scaling, the encoder scaling is much simpler.
 It represents merely the relation between the observed counts on the encoder and the displacement of the load.
 
+The encoder `bits` and `mask` settings operate on ecmc's encoder value derived
+from the configured EtherCAT entry. They do not modify the raw process-data
+value from the EtherCAT slave. Use the EtherCAT hardware PVs to inspect that
+original value.
+
 ### closed-loop
 
 Scaling absolute encoders is simple.

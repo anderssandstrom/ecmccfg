@@ -86,10 +86,10 @@ Notes:
 | encoder.numerator | Scaling numerator example 360 deg/rev | No |
 | encoder.denominator | Scaling denominator example 4096 ticks per 360 degree | No |
 | encoder.type | Type: 0=Incremental, 1=Absolute | No |
-| encoder.bits | Total bit count of encoder raw data | No |
+| encoder.bits | Bit count used for ecmc's encoder value; does not alter the raw EtherCAT slave value | No |
 | encoder.absBits | Absolute bit count (for absolute encoders) always least significant part of 'bits' | No |
 | encoder.absOffset | Encoder offset in eng units (for absolute encoders) | No |
-| encoder.mask | Mask applied to raw encoder value | No |
+| encoder.mask | Mask applied to ecmc's encoder value; the original EtherCAT value remains visible in the hardware PVs | No |
 | encoder.position | EtherCAT entry for actual position input (encoder). `F32`/`F64` actual-position entries are only valid for absolute encoders (`encoder.type: 1`). Keep `encoder.bits` and `encoder.absBits` aligned with the datatype width (`32`/`32` or `64`/`64`). | No |
 | encoder.control | Mandatory only if 'reset' is used | No |
 | encoder.status | Mandatory only if 'warning' or 'error' are used | No |

@@ -33,6 +33,11 @@ you know the visible problem, but not yet which detailed page to use.
   Use: [motion]({{< relref "/manual/knowledgebase/motion.md" >}}), [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
 - **Following error, stall, or poor motion quality**:
   Use: [motion]({{< relref "/manual/knowledgebase/motion.md" >}}), [tuning]({{< relref "/manual/knowledgebase/tuning.md" >}})
+- **Encoder raw value differs from the EtherCAT slave value**: `encoder.bits`
+  and `encoder.mask` apply to the encoder value derived inside ecmc; they do
+  not modify the raw EtherCAT process-data value. Compare with the EtherCAT
+  hardware PV to inspect the original value received from the slave.
+  Use: [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md#encoder" >}}), [scaling]({{< relref "/manual/motion_cfg/scaling.md#encoder-scaling" >}})
 
 ## PLC and Scripting
 - **Limit logic overrides do not behave as expected**: when using `plcOverride`, verify that PLC code writes `ax<id>.mon.lowlim/highlim` correctly.

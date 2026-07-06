@@ -90,10 +90,10 @@ For examples and configuration guidance, use [yaml configuration](../axisyaml/).
 - `numerator` (required) — Scaling numerator (e.g. 360 deg/rev).
 - `denominator` (required) — Scaling denominator (e.g. ticks per rev).
 - `type` (required) — 0=incremental, 1=absolute.
-- `bits` (required) — Raw data bit count.
+- `bits` (required) — Bit count used for ecmc's encoder value; it does not alter the raw EtherCAT slave value.
 - `absBits` (required) — Absolute bit count (LSBs of `bits`).
 - `absOffset` (required) — Offset in engineering units for absolute encoders.
-- `mask` (optional) — Mask applied to raw encoder value.
+- `mask` (optional) — Mask applied to ecmc's encoder value, not the raw EtherCAT slave value. The original value remains visible in the EtherCAT hardware PVs.
 - `position` (required) — EtherCAT entry for actual position. `F32`/`F64` actual-position entries are only valid for absolute encoders (`type: 1`). Keep `bits` and `absBits` aligned with the datatype width (`32`/`32` or `64`/`64`).
 - `control` (optional; required if reset is used) — Encoder control word entry.
 - `status` (optional; required if warning/error are used) — Encoder status word entry.

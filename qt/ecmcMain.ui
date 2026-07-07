@@ -14,90 +14,6 @@
    <string>ecmc main gui</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="caMessageButton" name="stopAllAxesButton">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>670</y>
-      <width>185</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Request a controlled stop of all configured axes</string>
-    </property>
-    <property name="channel" stdset="0">
-     <string notr="true">$(IOC):MCU-StopAll</string>
-    </property>
-    <property name="label">
-     <string notr="true">Stop all axes</string>
-    </property>
-    <property name="foreground">
-     <color>
-      <red>0</red>
-      <green>0</green>
-      <blue>0</blue>
-     </color>
-    </property>
-    <property name="background">
-     <color>
-      <red>230</red>
-      <green>170</green>
-      <blue>30</blue>
-     </color>
-    </property>
-    <property name="releaseMessage">
-     <string notr="true">0</string>
-    </property>
-    <property name="pressMessage">
-     <string notr="true">1</string>
-    </property>
-    <property name="colorMode">
-     <enum>caMessageButton::Static</enum>
-    </property>
-   </widget>
-   <widget class="caMessageButton" name="disableAllAxesButton">
-    <property name="geometry">
-     <rect>
-      <x>205</x>
-      <y>670</y>
-      <width>185</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Stop and disable all configured axes</string>
-    </property>
-    <property name="channel" stdset="0">
-     <string notr="true">$(IOC):MCU-DisableAll</string>
-    </property>
-    <property name="label">
-     <string notr="true">Disable all axes</string>
-    </property>
-    <property name="foreground">
-     <color>
-      <red>255</red>
-      <green>255</green>
-      <blue>255</blue>
-     </color>
-    </property>
-    <property name="background">
-     <color>
-      <red>180</red>
-      <green>45</green>
-      <blue>40</blue>
-     </color>
-    </property>
-    <property name="releaseMessage">
-     <string notr="true">0</string>
-    </property>
-    <property name="pressMessage">
-     <string notr="true">1</string>
-    </property>
-    <property name="colorMode">
-     <enum>caMessageButton::Static</enum>
-    </property>
-   </widget>
    <widget class="caMessageButton" name="camessagebutton_9">
     <property name="geometry">
      <rect>
@@ -570,7 +486,7 @@
         <x>30</x>
         <y>280</y>
         <width>251</width>
-        <height>241</height>
+        <height>271</height>
        </rect>
       </property>
       <property name="title">
@@ -1121,6 +1037,90 @@
          <string>MOTION_SEQ_OVERVIEW $(IOC)</string>
         </property>
        </widget>
+      </widget>
+      <widget class="caMessageButton" name="disableAllAxesButton">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>240</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Stop and disable all configured axes</string>
+       </property>
+       <property name="channel" stdset="0">
+        <string notr="true">$(IOC):MCU-DisableAll</string>
+       </property>
+       <property name="label">
+        <string notr="true">Disable all axes</string>
+       </property>
+       <property name="foreground">
+        <color>
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </property>
+       <property name="background">
+        <color>
+         <red>180</red>
+         <green>45</green>
+         <blue>40</blue>
+        </color>
+       </property>
+       <property name="releaseMessage">
+        <string notr="true">0</string>
+       </property>
+       <property name="pressMessage">
+        <string notr="true">1</string>
+       </property>
+       <property name="colorMode">
+        <enum>caMessageButton::Static</enum>
+       </property>
+      </widget>
+      <widget class="caMessageButton" name="stopAllAxesButton">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>240</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Request a controlled stop of all configured axes</string>
+       </property>
+       <property name="channel" stdset="0">
+        <string notr="true">$(IOC):MCU-StopAll</string>
+       </property>
+       <property name="label">
+        <string notr="true">Stop all axes</string>
+       </property>
+       <property name="foreground">
+        <color>
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </property>
+       <property name="background">
+        <color>
+         <red>230</red>
+         <green>170</green>
+         <blue>30</blue>
+        </color>
+       </property>
+       <property name="releaseMessage">
+        <string notr="true">0</string>
+       </property>
+       <property name="pressMessage">
+        <string notr="true">1</string>
+       </property>
+       <property name="colorMode">
+        <enum>caMessageButton::Static</enum>
+       </property>
       </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_5">
@@ -2026,9 +2026,9 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>525</y>
-        <width>251</width>
-        <height>96</height>
+        <y>550</y>
+        <width>521</width>
+        <height>61</height>
        </rect>
       </property>
       <property name="title">
@@ -2038,7 +2038,7 @@
        <property name="geometry">
         <rect>
          <x>35</x>
-         <y>35</y>
+         <y>30</y>
          <width>80</width>
          <height>20</height>
         </rect>
@@ -2056,8 +2056,8 @@
       <widget class="caLabel" name="calabel_104">
        <property name="geometry">
         <rect>
-         <x>-15</x>
-         <y>65</y>
+         <x>220</x>
+         <y>30</y>
          <width>100</width>
          <height>16</height>
         </rect>
@@ -2075,8 +2075,8 @@
       <widget class="caLineEdit" name="calineedit_63">
        <property name="geometry">
         <rect>
-         <x>145</x>
-         <y>65</y>
+         <x>380</x>
+         <y>30</y>
          <width>56</width>
          <height>16</height>
         </rect>
@@ -2113,8 +2113,8 @@
       <widget class="caLed" name="caled_33">
        <property name="geometry">
         <rect>
-         <x>210</x>
-         <y>65</y>
+         <x>445</x>
+         <y>30</y>
          <width>21</width>
          <height>21</height>
         </rect>
@@ -2150,7 +2150,7 @@
        <property name="geometry">
         <rect>
          <x>145</x>
-         <y>35</y>
+         <y>30</y>
          <width>80</width>
          <height>20</height>
         </rect>

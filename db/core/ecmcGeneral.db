@@ -17,6 +17,26 @@ record(bo,"$(P)MCU-ErrRst"){
   field(VAL, "0")
 }
 
+record(mbbo,"$(P)MCU-StopAll"){
+  field(DESC,"Stop all configured axes")
+  field(DTYP,"asynInt32")
+  field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ecmc.error.reset=")
+  field(ZRST,"Idle")
+  field(ZRVL,"0")
+  field(ONST,"Stop all")
+  field(ONVL,"2")
+}
+
+record(mbbo,"$(P)MCU-DisableAll"){
+  field(DESC,"Stop and disable all axes")
+  field(DTYP,"asynInt32")
+  field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ecmc.error.reset=")
+  field(ZRST,"Idle")
+  field(ZRVL,"0")
+  field(ONST,"Disable all")
+  field(ONVL,"4")
+}
+
 record(ai,"$(P)MCU-ErrId"){
   field(PINI, "1")
   field(DTYP,"asynInt32")

@@ -44,6 +44,23 @@ EPICS PVs update at a lower rate than the EtherCAT master rate. See
 for details.
 {{% /notice %}}
 
+## Global motion commands
+
+The core database provides operational commands for all configured axes:
+
+- `$(P)MCU-StopAll`: request a controlled stop while keeping axes enabled.
+- `$(P)MCU-DisableAll`: stop and disable every configured axis.
+- `$(P)MCU-ErrRst`: reset all ecmc errors.
+
+The records share the existing `ecmc.error.reset` global command parameter.
+Its command bits are reset errors (`1`), stop all (`2`), and stop/disable all
+(`4`). Stop and disable requests are queued atomically and consumed by the
+realtime thread. The `mbbo` command records use `Idle` and their named command
+state; writing the command state again retriggers the action.
+
+These PVs are operational controls. They are not safety-rated and do not
+replace an emergency stop or hardware STO.
+
 ## Host setup
 
 - If possible, make sure the native `igb` EtherCAT driver is used.

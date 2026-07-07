@@ -5531,7 +5531,7 @@
        <string>R (Legacy)</string>
       </property>
       <property name="files">
-       <string>motorx_all.ui</string>
+       <string>ecmc_motorx_all.ui</string>
       </property>
       <property name="args">
        <string>P=$(DEV):,M=$(Axis),DEV=$(DEV),Axis=$(Axis),AX_ID=$(AX_ID),IOC=$(IOC)</string>

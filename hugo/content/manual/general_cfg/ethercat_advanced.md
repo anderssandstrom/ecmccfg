@@ -11,6 +11,7 @@ Use it when you need:
 
 - additional EtherCAT domains
 - custom process-image pointers/data items
+- cyclic copying between EtherCAT entries
 - runtime read/write access to individual SDOs
 - explicit distributed-clock setup
 - slave identity verification
@@ -72,6 +73,68 @@ Notes:
 - they can be linked to motion objects with `Cfg.LinkEcEntryToObject(...)`
 - they can be read and written with `ReadEcEntryIDString(<name>)` and `Cfg.WriteEcEntryEcPath(<name>,<value>)`
 - entries are held in the internal simulation slave and share the normal ecmc entry-list limit
+
+## Cyclic EtherCAT Entry Writes
+
+`Cfg.EcAddEntryCyclicWrite(...)` copies the value of one EtherCAT entry to
+another on every realtime cycle. This can be used to route an input or a local
+simulation value directly to an EtherCAT output without adding a PLC
+expression.
+
+The argument order is destination first, then source:
+
+```text
+Cfg.EcAddEntryCyclicWrite(<to-entry-path>,<from-entry-path>)
+Cfg.EcAddEntryCyclicWrite(<to-entry-path>,<from-entry-path>,<force>)
+```
+
+Both entries must already exist when the command is issued. The destination
+must be an EtherCAT output entry or a simulation entry.
+
+Example: copy a digital input on slave 1 to a digital output on slave 6:
+
+```bash
+ecmcConfigOrDie "Cfg.EcAddEntryCyclicWrite(ec0.s6.binaryOutput01,ec0.s1.binaryInput01)"
+```
+
+### Datatype and `force` behavior
+
+By default, the source and destination entries must have identical datatypes:
+
+```bash
+ecmcConfigOrDie "Cfg.EcAddEntryCyclicWrite(ec0.s6.outputValue,ec0.s1.inputValue)"
+```
+
+Set the optional `force` argument to a nonzero value to bypass datatype
+matching:
+
+```bash
+ecmcConfigOrDie "Cfg.EcAddEntryCyclicWrite(ec0.s6.outputValue,ec0.s1.inputValue,1)"
+```
+
+In forced mode, ecmc performs a raw bit copy using the smaller bit width of the
+two entries. It does not perform numeric scaling or datatype conversion. Use
+this mode only when the raw binary representations are intentionally
+compatible.
+
+{{% notice warning %}}
+A cyclic write updates its destination every realtime cycle. Do not configure
+another realtime object to write the same destination unless the resulting
+write ordering and ownership are explicitly understood.
+{{% /notice %}}
+
+### Reporting configured writes
+
+Use this command during startup diagnostics to list all configured cyclic
+writes:
+
+```bash
+ecmcConfigOrDie "Cfg.EcReportEntryCyclicWrites()"
+```
+
+The report includes the source, destination, number of copied bits, and whether
+`force` was enabled. `ecmcGrepParam` also annotates involved EtherCAT parameters
+with `r`, `w`, or `rw` for source, destination, or both.
 
 ## Custom EtherCAT Data Items
 

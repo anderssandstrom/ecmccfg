@@ -244,6 +244,8 @@ chapter = false
 | `Cfg.EcAddEntryComplete(<int>,0x<hex>,0x<hex>,<int>,<int>,0x<hex>,0x<hex>,0x<hex>,<int>,<str>,<int>)` | Set update in realtime bit for an entry * If set to zero the entry will not be updated during realtime operation. |
 | `Cfg.EcAddEntryDT(<int>,0x<hex>,0x<hex>,<int>,<int>,0x<hex>,0x<hex>,0x<hex>,<str>,<str>)` | Adds an EtherCAT slave to the hardware configuration. |
 | `Cfg.EcAddEntryDT(<int>,0x<hex>,0x<hex>,<int>,<int>,0x<hex>,0x<hex>,0x<hex>,<str>,<str>,<int>)` | Adds an EtherCAT slave to the hardware configuration. |
+| `Cfg.EcAddEntryCyclicWrite(<str>,<str>)` | Copies a source EtherCAT entry to a destination output or simulation entry every realtime cycle. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md#cyclic-ethercat-entry-writes" >}}). |
+| `Cfg.EcAddEntryCyclicWrite(<str>,<str>,<int>)` | Adds a cyclic entry write with optional forced raw-bit copying between different datatypes. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md#cyclic-ethercat-entry-writes" >}}). |
 | `Cfg.EcAddMemMap(<int>,<str>,<int>,<int>,<str>)` | Adds a memory map object to access data directly from EtherCAT domain. |
 | `Cfg.EcAddMemMapDT(<str>,<int>,<int>,<str>,<str>)` | Adds a memory map object to access data directly from EtherCAT domain. |
 | `Cfg.EcAddSdo(<int>,0x<hex>,0x<hex>,0x<hex>,<int>)` | Adds a Service Data Object for writing. |
@@ -265,6 +267,7 @@ chapter = false
 | `EcPrintSlaveConfig(<int>)=` | Prints hardware configuration for a selected slave. |
 | `EcReadSdo(<int>,0x<hex>,0x<hex>,<int>)` | Write to a Service Data Object. |
 | `Cfg.EcResetMaster(<int>)` | Retry configuring slaves for an selected EtherCAT master. |
+| `Cfg.EcReportEntryCyclicWrites()` | Reports configured cyclic entry writes, including source, destination, copied bit count, and force setting. |
 | `Cfg.EcSelectReferenceDC(<int>,<int>)` | Select EtherCAT reference clock. |
 | `Cfg.EcSetAllowOffline(<int>)` | Allow master to be offline |
 | `Cfg.EcSetDelayECOkAtStartup(<int>)` | Delay ethercat OK status for a time * This can be useful to allow extra time for DC clocks to synchronize or for slaves that do not report correct data directly when entering OP. |

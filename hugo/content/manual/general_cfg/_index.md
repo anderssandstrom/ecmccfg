@@ -27,6 +27,7 @@ General configuration covers IOC/bootstrap behavior that is not axis-specific:
 ### Use utility functions in startup scripts
 - [iocsh utilities]({{< relref "/manual/general_cfg/iocsh_utils.md" >}}) for `ecmcEpicsEnvSetCalc`, `ecmcIf`, loops, and file existence checks.
 - [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}}) for which `scripts/` entry points are public, advanced, or internal helpers.
+- [Startup Validator]({{< relref "/manual/general_cfg/startup_validator.md" >}}) for checking startup syntax, script macros, and local file references before IOC execution.
 - [ESI Parser]({{< relref "/manual/general_cfg/esi_parser.md" >}}) for the legacy EtherCAT ESI XML utility.
 - [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}) for extra domains, data items, DC, slave verify, and topology skips.
 - [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}}) for named axis collections used by `mc_grp_...` PLC helpers.
@@ -52,10 +53,11 @@ General configuration covers IOC/bootstrap behavior that is not axis-specific:
 ### Script authoring / automation path
 1. [iocsh utilities]({{< relref "/manual/general_cfg/iocsh_utils.md" >}})
 2. [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}})
-3. [ESI Parser]({{< relref "/manual/general_cfg/esi_parser.md" >}})
-4. [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}})
-5. [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}})
-6. [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}})
-7. [Lookup Tables]({{< relref "/manual/general_cfg/lut.md" >}})
-8. [data storage buffer]({{< relref "/manual/general_cfg/data_storage.md" >}})
-9. [ecmc command reference]({{< relref "/manual/general_cfg/ecmc_command_ref.md" >}})
+3. [Startup Validator]({{< relref "/manual/general_cfg/startup_validator.md" >}})
+4. [ESI Parser]({{< relref "/manual/general_cfg/esi_parser.md" >}})
+5. [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}})
+6. [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}})
+7. [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}})
+8. [Lookup Tables]({{< relref "/manual/general_cfg/lut.md" >}})
+9. [data storage buffer]({{< relref "/manual/general_cfg/data_storage.md" >}})
+10. [ecmc command reference]({{< relref "/manual/general_cfg/ecmc_command_ref.md" >}})

@@ -105,6 +105,12 @@ These are repository utilities rather than IOC startup scripts:
 - `utils/esi_mapping_browser.py`: newer interactive/browser-oriented ESI mapping
   inspection and snippet generation tool.
 
+### Startup Validation
+
+- `scripts/validate-startup`: optional offline validation of IOC startup syntax,
+  script macro lists, and local file references. See
+  [Startup Validator]({{< relref "/manual/general_cfg/startup_validator.md" >}}).
+
 ### Template / Substitution Helpers
 
 - `applySubstitutions.cmd`
@@ -172,6 +178,7 @@ should generally be seen as legacy entry points compared to the YAML-first path.
 - [startup.cmd]({{< relref "/manual/general_cfg/startup/_index.md" >}})
 - [PV Processing Rate]({{< relref "/manual/general_cfg/PVProcessingRate.md" >}})
 - [iocsh utilities]({{< relref "/manual/general_cfg/iocsh_utils.md" >}})
+- [Startup Validator]({{< relref "/manual/general_cfg/startup_validator.md" >}})
 - [ESI Parser]({{< relref "/manual/general_cfg/esi_parser.md" >}})
 - [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}})
 - [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}})

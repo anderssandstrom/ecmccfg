@@ -9,6 +9,14 @@ The documentation can be found [here](https://paulscherrerinstitute.github.io/ec
 
 ### [Sources](https://paulscherrerinstitute.github.io/ecmccfg/source/)
 
+## Experimental startup validation
+
+The offline IOC startup validator is documented in
+[scripts/startup_validator/README.md](scripts/startup_validator/README.md).
+It checks the existing startup file without introducing another configuration
+language or changing IOC runtime behavior. Run it with
+`./scripts/validate-startup startup.cmd`.
+
 ## [License](https://github.com/paulscherrerinstitute/ecmccfg/blob/master/LICENSE)
 
 This program is free software; you can redistribute it and/or modify

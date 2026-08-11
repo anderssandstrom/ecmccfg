@@ -19,6 +19,13 @@ ecmcConfigOrDie "Cfg.SetAxisCntrlKi(${ECMC_AXIS_NO},{{ controllerKi }})"
 ecmcConfigOrDie "Cfg.SetAxisCntrlKd(${ECMC_AXIS_NO},{{ controllerKd }})"
 ecmcConfigOrDie "Cfg.SetAxisCntrlKff(${ECMC_AXIS_NO},{{ controllerKff }})"
 
+{%- if (controller is defined) and (controller.resetIAtRmp is defined) %}
+ecmcConfigOrDie "Cfg.SetAxisCntrlResetIAtRmp(${ECMC_AXIS_NO},{{ controller.resetIAtRmp|int }})"
+{%- endif %}
+{%- if (controller is defined) and (controller.freezeIAtRmp is defined) %}
+ecmcConfigOrDie "Cfg.SetAxisCntrlFreezeIAtRmp(${ECMC_AXIS_NO},{{ controller.freezeIAtRmp|int }})"
+{%- endif %}
+
 #- Set controller params for when near target
 {%- if (controller is defined) and (controller.inner is defined) %}
     {%- if controller.inner.tol is defined %}

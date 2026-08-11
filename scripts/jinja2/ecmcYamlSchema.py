@@ -338,6 +338,8 @@ class Schema:
             'Ki': {'type': 'float', 'default': 0., 'min': 0},
             'Kd': {'type': 'float', 'default': 0., 'min': 0},
             'Kff': {'type': 'float', 'default': 1., 'min': 0},
+            'resetIAtRmp': {'type': 'boolean', 'required': False},
+            'freezeIAtRmp': {'type': 'boolean', 'required': False},
             'inner': {
                 'type': 'dict',
                 'required': False,

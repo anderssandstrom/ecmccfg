@@ -145,6 +145,8 @@ For examples and configuration guidance, use [yaml configuration](../axisyaml/).
 - `Ki` (optional) — Integral gain.
 - `Kd` (optional) — Derivative gain.
 - `Kff` (optional) — Feed-forward gain.
+- `resetIAtRmp` (optional) — Reset the integral part to zero while an internal trajectory is busy.
+- `freezeIAtRmp` (optional) — Freeze the integral part at its current value while an internal trajectory is busy.
 - `deadband.tol` (optional) — Stop control within this distance.
 - `deadband.time` (optional) — Deadband time filter.
 - `limits.minOutput` / `maxOutput` (optional) — Output clamps. Active only when `maxOutput > minOutput`; both `0` disables the limits.

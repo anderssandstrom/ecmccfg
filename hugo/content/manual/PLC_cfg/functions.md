@@ -500,6 +500,13 @@ A shared memory buffer of 120 doubles can be accessed for read and write operati
                             );
   Set max jerk.
   note: mc_set_traj_jerk() is only valid for s-curve trajectory (ruckig, trajectory.type=1)
+
+  29. error = mc_ctrl_i_reset(
+                            <axisid>,   : Axis index
+                            <reset>     : Reset integral part when nonzero
+                            );
+  Resets the PID controller integral (I) part to zero when reset is nonzero.
+  Returns 0 on success or an error code if the axis is invalid.
 ```
 
 ### Motion Group

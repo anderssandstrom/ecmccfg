@@ -642,6 +642,14 @@
         "min": 0,
         "type": "integer float"
       },
+      "controller.resetIAtRmp": {
+        "type": "boolean",
+        "required": false
+      },
+      "controller.freezeIAtRmp": {
+        "type": "boolean",
+        "required": false
+      },
       "controller.limits.minOutput": {
         "type": "integer float"
       },

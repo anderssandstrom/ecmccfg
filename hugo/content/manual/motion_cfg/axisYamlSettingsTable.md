@@ -136,6 +136,8 @@ Notes:
 | controller.Ki | Ki integral gain | Yes |
 | controller.Kd | Kd derivative gain | Yes |
 | controller.Kff | Feed forward gain | Yes |
+| controller.resetIAtRmp | Reset the integral part to zero while an internal trajectory is busy. Reset takes precedence over freeze. | Yes |
+| controller.freezeIAtRmp | Keep the current integral part unchanged while an internal trajectory is busy. | Yes |
 | controller.deadband.tol | Stop control if within this distance from target for the below time | Yes |
 | controller.deadband.time | Deadband time filter | Yes |
 | controller.limits.minOutput | Minimum controller output. Output limiting is active only when `maxOutput > minOutput`; `minOutput=0` and `maxOutput=0` disables it. | Yes |

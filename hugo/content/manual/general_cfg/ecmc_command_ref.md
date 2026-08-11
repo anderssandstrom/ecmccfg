@@ -122,6 +122,7 @@ chapter = false
 | `Cfg.SetAxisBlockCom(<int>,<int>)` | Block or unblock active command-parser set commands for an axis. |
 | `Cfg.SetAxisCntrlDeadband(<int>,<float>)` | Set PID-controller deadband. |
 | `Cfg.SetAxisCntrlDeadbandTime(<int>,<int>)` | Set PID-controller deadband time filter. |
+| `Cfg.SetAxisCntrlFreezeIAtRmp(<int>,<int>)` | Freeze the PID integral part while an internal trajectory is busy. |
 | `Cfg.SetAxisCntrlInnerParams(<int>,<float>,<float>,<float>,<float>)` | Use a differnt set of pid parameters if within a certain distance of target |
 | `Cfg.SetAxisCntrlIPartHL(<int>,<float>)` | Set PID-controller maximum integral part output value. |
 | `Cfg.SetAxisCntrlIPartLL(<int>,<float>)` | Set PID-controller minimum integral part output value. |
@@ -131,6 +132,7 @@ chapter = false
 | `Cfg.SetAxisCntrlKp(<int>,<float>)` | Set PID-controller proportional gain. |
 | `Cfg.SetAxisCntrlOutHL(<int>,<float>)` | Set PID-controller maximum output value. |
 | `Cfg.SetAxisCntrlOutLL(<int>,<float>)` | Set PID-controller minimum output value. |
+| `Cfg.SetAxisCntrlResetIAtRmp(<int>,<int>)` | Reset the PID integral part while an internal trajectory is busy. |
 | `Cfg.SetAxisDec(<int>,<float>)` | Set axis deceleration setpoint. |
 | `Cfg.SetAxisDisableAtErrorReset(<int>,<int>)` | Disable axis at error reset * If axis is in error state and a reset command is issued, then the axis will be disabled. |
 | `Cfg.SetAxisDrvBrakeCloseAheadTime(<int>,<int>)` | Set brake close ahead time . |
@@ -367,6 +369,7 @@ chapter = false
 | `GetAxisAutoEnableTimeout(<int>)` | No public header brief found (parser-specific or undocumented). |
 | `GetAxisCntrlDeadband(<int>)` | No public header brief found (parser-specific or undocumented). |
 | `GetAxisCntrlDeadbandTime(<int>)` | No public header brief found (parser-specific or undocumented). |
+| `GetAxisCntrlFreezeIAtRmp(<int>)` | Read whether the PID integral part is frozen while an internal trajectory is busy. |
 | `GetAxisCntrlInnerKd(<int>)` | No public header brief found (parser-specific or undocumented). |
 | `GetAxisCntrlInnerKi(<int>)` | No public header brief found (parser-specific or undocumented). |
 | `GetAxisCntrlInnerKp(<int>)` | No public header brief found (parser-specific or undocumented). |
@@ -379,6 +382,7 @@ chapter = false
 | `GetAxisCntrlKp(<int>)` | No public header brief found (parser-specific or undocumented). |
 | `GetAxisCntrlOutHL(<int>)` | No public header brief found (parser-specific or undocumented). |
 | `GetAxisCntrlOutLL(<int>)` | No public header brief found (parser-specific or undocumented). |
+| `GetAxisCntrlResetIAtRmp(<int>)` | Read whether the PID integral part is reset while an internal trajectory is busy. |
 | `GetAxisDrvBrakeCloseAheadTime(<int>)` | No public header brief found (parser-specific or undocumented). |
 | `GetAxisDrvBrakeEnable(<int>)` | No public header brief found (parser-specific or undocumented). |
 | `GetAxisDrvBrakeOpenDelayTime(<int>)` | No public header brief found (parser-specific or undocumented). |

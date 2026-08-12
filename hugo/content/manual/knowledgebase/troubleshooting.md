@@ -22,6 +22,15 @@ you know the visible problem, but not yet which detailed page to use.
 - **No slaves are visible or link is down**:
   Use: [ethercat command line interface]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}}), [host / ecmc server]({{< relref "/manual/knowledgebase/host.md" >}}), [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
 
+- **Slaves remain in an error state**: power-cycle the affected slaves. You can
+  also try `ethercat rescan -<master_id>`. Always specify the master ID;
+  otherwise, the command rescans every master on the host and may cause error
+  messages in other IOCs.
+- **Slaves repeatedly appear and disappear**: check for grounding issues. In
+  observed cases, connecting an oscilloscope to measure signals interrupted
+  EtherCAT communication. If possible, use a differential probe and avoid an
+  external ground reference.
+
 ## Motion and Axis Behavior
 - **Axis will not enable**: check auto-enable strategy, STO/brake signals, and drive readiness.
   Use: [motion]({{< relref "/manual/knowledgebase/motion.md" >}}), [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})

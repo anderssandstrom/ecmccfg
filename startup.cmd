@@ -36,6 +36,7 @@
 #- PNL_COLOR_ID      = Panel color ID, defaults to 0
 #- ECMC_REQUIRE_ECMC = Command used to load ecmc. Defaults to "require ecmc".
 #-                    Set to "#-" when ecmc is already registered by a classic IOC.
+#- START_EPICS_FIRST  = 1/0, default 0 (ecmc start first)
 #-
 #- [set by module]
 #- ECMC_CONFIG_ROOT       = root directory of ${MODULE}
@@ -52,6 +53,7 @@
 #- ECMC_SAMPLE_RATE_MS    = current record update rate in milli seconds
 #- ECMC_SAMPLE_RATE_MS_ORIGINAL = ECMC_SAMPLE_RATE_MS (used for restore to default if ECMC_SAMPLE_RATE_MS is changed)
 #- ECMC_BEC_MODE          = Limit PV update rate to 10Hz if in BEC_MODE
+#- ECMC_START_EPICS_FIRST = Bit stating in which sequence epics is started (before or after ecmc)
 #-
 #-------------------------------------------------------------------------------
 #- Halt on error (dbLoad*)
@@ -194,5 +196,10 @@ epicsEnvSet("ECMCCFG_INIT" ,"#")
 #- Ensure start of app thread and apply cfg (ESS maybe don't have the atInit command)
 on error continue
 ecmcFileExist("${ECMC_CONFIG_ROOT}finalize.cmd",1)
+
+epicsEnvSet(ECMC_START_EPICS_FIRST, ${START_EPICS_FIRST=0})
+ecmcEpicsEnvSetCalcTernary(ECMC_START_EPICS_FIRST_CMD,"${ECMC_START_EPICS_FIRST}=1",'','#-')
+ecmcEpicsEnvSetCalcTernary(ECMC_START_ECMC_FIRST_CMD,"${ECMC_START_EPICS_FIRST}=0",'','#-')
 atInit "$(SCRIPTEXEC) ($(ECMC_CONFIG_ROOT)finalize.cmd)"
+
 on error halt

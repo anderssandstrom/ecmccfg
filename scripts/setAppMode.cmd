@@ -39,11 +39,12 @@ epicsEnvUnset(EC_DELAY_CYCLES)
 epicsEnvUnset(ECMC_EC_STARTUP_DELAY)
 
 #- Start RT thread
-ecmcConfigOrDie "Cfg.SetAppMode(1)"
+${ECMC_START_ECMC_FIRST_CMD}ecmcConfigOrDie "Cfg.SetAppMode(1)"
+#- Postpone ecmc start if EPICS should start first
+${ECMC_START_EPICS_FIRST_CMD}afterIocRunning "ecmcStartAppModeAsync(${ECMC_EC_STABILIZATION_TIME=2})"
 
-#- Add some time before iocInit
 # Stabilize EtherCAT bus.....
-epicsThreadSleep ${ECMC_EC_STABILIZATION_TIME=2}
+${ECMC_START_ECMC_FIRST_CMD}epicsThreadSleep ${ECMC_EC_STABILIZATION_TIME=2}
 
 #- For check in finalize.cmd if executed
 epicsEnvSet(ECMC_SET_APP_MODE_DONE,1)

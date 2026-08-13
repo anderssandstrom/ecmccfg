@@ -109,6 +109,12 @@ Possible remedies are:
 * Increase `Kp` so the remaining error produces a non-zero drive command.
 * Add a small `Ki` so the residual error accumulates and is corrected. Increase
   it carefully to avoid overshoot or oscillation.
+* If increasing `controller.Kp` causes problems during the main part of a move,
+  keep that gain at a stable value and configure a higher
+  `controller.inner.Kp` for final positioning. Set `controller.inner.tol`
+  larger than `monitoring.target.tolerance` so the more aggressive inner gain
+  becomes active before the axis enters the at-target window. Tune the gain and
+  transition tolerance carefully to avoid oscillation near the switching point.
 * Reduce `controller.deadband.tol` so the controller continues correcting closer
   to the target.
 

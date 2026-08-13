@@ -36,7 +36,9 @@
 #- PNL_COLOR_ID      = Panel color ID, defaults to 0
 #- ECMC_REQUIRE_ECMC = Command used to load ecmc. Defaults to "require ecmc".
 #-                    Set to "#-" when ecmc is already registered by a classic IOC.
-#- START_EPICS_FIRST  = 1/0, default 0 (ecmc start first)
+#- START_EPICS_FIRST  = 1/0, default 0 (ecmc starts first). Set to 1 to let
+#-                      EPICS initialization/autosave restore run before ECMC
+#-                      runtime and EtherCAT are started asynchronously.
 #-
 #- [set by module]
 #- ECMC_CONFIG_ROOT       = root directory of ${MODULE}

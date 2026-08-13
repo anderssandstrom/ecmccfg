@@ -26,6 +26,8 @@ startup.cmd takes the following arguments:
  EC_TOOL_PATH      = Path to ethercat tool defaults to ethercat tool in ECmasterECMC_DIR,
  otherwise            "/opt/etherlab/bin/ethercat"
  MAX_PARAM_COUNT   = Maximum asyn param count, defaults to 1500
+ START_EPICS_FIRST = 1/0, default 0. Start EPICS records before ECMC runtime
+                     and EtherCAT when set to 1.
 
  [set by module]
  ECMC_CONFIG_ROOT       = root directory of ${MODULE}
@@ -47,6 +49,41 @@ Normally these arguments are set when the module is required:
 ```
 require ecmccfg "ENG_MODE=1,MASTER_ID=2"
 ```
+
+## Start EPICS before EtherCAT
+
+The default, `START_EPICS_FIRST=0`, preserves the traditional startup order:
+ECMC enters runtime and starts EtherCAT before `iocInit` completes.
+
+Set `START_EPICS_FIRST=1` when EPICS records must be initialized before ECMC
+runtime and EtherCAT start:
+
+```bash
+require ecmccfg "START_EPICS_FIRST=1"
+```
+
+In this mode, `startup.cmd` allows `iocInit` to reach the IOC-running state and
+then schedules ECMC startup asynchronously. The worker waits for
+`ECMC_EC_STABILIZATION_TIME` seconds (default `2`) before executing
+`Cfg.SetAppMode(1)`.
+
+This ordering can be useful with EPICS autosave. It gives autosave restore and
+record/device-support initialization an opportunity to apply restored PV values
+before the realtime thread and EtherCAT bus start. For example:
+
+```bash
+require ecmccfg "START_EPICS_FIRST=1,ECMC_EC_STABILIZATION_TIME=5"
+```
+
+The delay is a time window, not a completion handshake with autosave. Select a
+delay long enough for the IOC's restore workload and verify the startup log and
+restored values. If a configuration requires a strict guarantee, trigger ECMC
+startup from an explicit restore-complete mechanism instead of relying only on
+a fixed delay.
+
+PLCs can use `epics_get_started()`, `ec_get_started()`, and
+`system_get_started()` to inspect startup readiness. See
+[PLC functions]({{< relref "/manual/PLC_cfg/functions.md" >}}).
 
 ## EtherCAT startup timeout
 

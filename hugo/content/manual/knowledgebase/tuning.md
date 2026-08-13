@@ -112,7 +112,42 @@ Possible remedies are:
 * Reduce `controller.deadband.tol` so the controller continues correcting closer
   to the target.
 
-The controller deadband and `monitoring.target.tol` serve different purposes:
+For a P-only controller in CSV mode with an integer velocity-setpoint entry, the
+risk can be estimated from the configured values. At a position error `e`, the
+raw drive command due to the P term is approximately:
+
+```text
+raw_command = Kp * e * abs(drive.denominator / drive.numerator)
+```
+
+ecmc rounds this command to the nearest integer. Therefore, a magnitude below
+`0.5` raw counts becomes zero. To check the configuration, substitute
+`monitoring.target.tolerance` for `e` and use the `Kp` that is active close to
+the target (`controller.inner.Kp` when the error is inside
+`controller.inner.tol`, otherwise `controller.Kp`):
+
+```text
+Kp_near_target * monitoring.target.tolerance
+  * abs(drive.denominator / drive.numerator) >= 0.5
+```
+
+If this condition is false, the proportional output can already be zero at the
+edge of the at-target window. Equivalently, the smallest error that reliably
+produces a non-zero raw command is approximately:
+
+```text
+minimum_correctable_error = 0.5 * abs(drive.numerator / drive.denominator)
+                            / Kp_near_target
+```
+
+Treat `0.5` as the mathematical rounding boundary; requiring at least one full
+raw count gives a more conservative check. This calculation only detects
+controller-output quantization. Friction, backlash, drive-side deadbands, output
+limits, integral and derivative terms, floating-point setpoint entries, and
+`CSP_PC` mode require a runtime check of the actual controller and raw drive
+outputs.
+
+The controller deadband and `monitoring.target.tolerance` serve different purposes:
 the deadband determines when control action stops, while the monitoring
 tolerance determines when the axis reports `atTarget`. If correction must
 continue after `atTarget` becomes true, configure the controller deadband

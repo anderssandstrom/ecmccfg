@@ -97,6 +97,28 @@ Typical sequence:
 3. Reduce `Kp` to about 40% of that oscillation threshold.
 4. Add small `Ki` and `Kd` only when needed (for example backlash handling or `CSP_PC`).
 
+##### Axis stops close to target
+Sometimes an axis stops close to its requested position and the remaining error
+does not decrease over time. This can happen when the position error is so small
+that, after multiplication by `Kp` and conversion to the drive's velocity
+setpoint, the controller output is rounded or quantized to zero. With no
+effective velocity command, proportional control alone cannot remove the
+remaining error.
+
+Possible remedies are:
+* Increase `Kp` so the remaining error produces a non-zero drive command.
+* Add a small `Ki` so the residual error accumulates and is corrected. Increase
+  it carefully to avoid overshoot or oscillation.
+* Reduce `controller.deadband.tol` so the controller continues correcting closer
+  to the target.
+
+The controller deadband and `monitoring.target.tol` serve different purposes:
+the deadband determines when control action stops, while the monitoring
+tolerance determines when the axis reports `atTarget`. If correction must
+continue after `atTarget` becomes true, configure the controller deadband
+tolerance smaller than the at-target tolerance. See the
+[controller YAML settings]({{< relref "/manual/motion_cfg/axisYaml.md#controller" >}}).
+
 #### Velocity and Current loop
 These control loops need to be tuned in the drive.
 

@@ -1,0 +1,8 @@
+# Enable a MX-baseplate.
+# The IOC will not go into runtime but exit with an error code.
+# IOC needs to be restarted after each power cycle of the hardware.. not optimal
+
+# MB1120 on slave pos 10: MX_1=10
+require ecmccfg sandst_a "ECMC_VER=sandst_a,MASTER_ID=1,MX_1=10,MX_REPORT=1"
+
+exit

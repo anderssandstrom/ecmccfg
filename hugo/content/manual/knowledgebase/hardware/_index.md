@@ -46,5 +46,6 @@ Use the pages below for terminal/drive-specific diagnostics:
 - [EL7062]({{< relref "/manual/knowledgebase/hardware/EL7062.md" >}})
 - [EL72xx]({{< relref "/manual/knowledgebase/hardware/EL72xx.md" >}})
 - [EL9xxx]({{< relref "/manual/knowledgebase/hardware/EL9xxx.md" >}})
+- [Beckhoff MX-System]({{< relref "/manual/knowledgebase/hardware/MX-System.md" >}})
 - [Hardware issues]({{< relref "/manual/knowledgebase/hardware/hardware_issues.md" >}})
 - [Technosoft iPOS4808, iPOS8020]({{< relref "/manual/knowledgebase/hardware/iPOSXXXX.md" >}})

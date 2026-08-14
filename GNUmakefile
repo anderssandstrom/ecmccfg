@@ -19,6 +19,7 @@ DIRS += ${HW_DIR}Beckhoff_5XXX
 DIRS += ${HW_DIR}Beckhoff_6XXX
 DIRS += ${HW_DIR}Beckhoff_7XXX
 DIRS += ${HW_DIR}Beckhoff_9XXX
+DIRS += ${HW_DIR}Beckhoff_MX
 
 # all scripts in Beckhoff_*XXX/* ending with 'cmd'
 SCRIPTS += $(foreach d,${DIRS}, $(wildcard $d/*/*.cmd))

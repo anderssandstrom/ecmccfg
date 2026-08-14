@@ -32,6 +32,10 @@
 #- BEC_MODE          = 1/0. If BEC_MODE is set the all PVs will be throttled to a maximum of 10Hz  
 #- EC_TOOL_PATH      = Path to ethercat tool defaults to ethercat tool in ECmasterECMC_DIR, 
 #- otherwise            "/opt/etherlab/bin/ethercat"
+#- MX_1..MX_5        = Optional MB1120 slave positions for chained MX-System
+#-                     baseplates, processed in order before addMaster.cmd
+#- MX_REPORT         = Print slaves before and after each MX rescan (default 0)
+#- MX_RESCAN_DELAY   = Delay before each MX rescan in seconds (default 3)
 #- MAX_PARAM_COUNT   = Maximum asyn param count, defaults to 1650
 #- PNL_COLOR_ID      = Panel color ID, defaults to 0
 #- ECMC_REQUIRE_ECMC = Command used to load ecmc. Defaults to "require ecmc".
@@ -136,6 +140,30 @@ epicsEnvSet(ECMC_SAMPLE_RATE_MS_ORIGINAL,${ECMC_SAMPLE_RATE_MS})
 #- define naming convention script
 epicsEnvSet("ECMC_P_SCRIPT",        "${NAMING=mXsXXX}")
 
+#- Set path to ethercat tool before MX-System discovery and addMaster.cmd.
+epicsEnvSet(ECMC_EC_TOOL_PATH,${EC_TOOL_PATH="/opt/etherlab/bin/ethercat"})
+ecmcEpicsEnvSetCalcTernary(ECMC_USE_ECmasterECMC_DIR, "'${ECmasterECMC_DIR='empty'}'=='empty'", "#-","")
+${ECMC_USE_ECmasterECMC_DIR}epicsEnvSet(ECMC_EC_TOOL_PATH, "${ECmasterECMC_DIR}bin/${EPICS_HOST_ARCH}/ethercat")
+epicsEnvUnset(ECMC_USE_ECmasterECMC_DIR)
+
+#- Open downstream MX-System baseplates in discovery order. MX_1..MX_5 contain
+#- the MB1120 slave positions; an empty macro skips that position.
+ecmcEpicsEnvSetCalcTernary(ECMC_MX_1_CMD, "'${MX_1=}'!='' and ${MASTER_ID=0}>=0", "", "#-")
+ecmcEpicsEnvSetCalcTernary(ECMC_MX_2_CMD, "'${MX_2=}'!='' and ${MASTER_ID=0}>=0", "", "#-")
+ecmcEpicsEnvSetCalcTernary(ECMC_MX_3_CMD, "'${MX_3=}'!='' and ${MASTER_ID=0}>=0", "", "#-")
+ecmcEpicsEnvSetCalcTernary(ECMC_MX_4_CMD, "'${MX_4=}'!='' and ${MASTER_ID=0}>=0", "", "#-")
+ecmcEpicsEnvSetCalcTernary(ECMC_MX_5_CMD, "'${MX_5=}'!='' and ${MASTER_ID=0}>=0", "", "#-")
+${ECMC_MX_1_CMD}${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}mxEnableDownStreamBaseplate.cmd", "MASTER_ID=${MASTER_ID=0},MB1120_SID=${MX_1=0},REPORT=${MX_REPORT=0},RESCAN_DELAY=${MX_RESCAN_DELAY=3}"
+${ECMC_MX_2_CMD}${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}mxEnableDownStreamBaseplate.cmd", "MASTER_ID=${MASTER_ID=0},MB1120_SID=${MX_2=0},REPORT=${MX_REPORT=0},RESCAN_DELAY=${MX_RESCAN_DELAY=3}"
+${ECMC_MX_3_CMD}${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}mxEnableDownStreamBaseplate.cmd", "MASTER_ID=${MASTER_ID=0},MB1120_SID=${MX_3=0},REPORT=${MX_REPORT=0},RESCAN_DELAY=${MX_RESCAN_DELAY=3}"
+${ECMC_MX_4_CMD}${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}mxEnableDownStreamBaseplate.cmd", "MASTER_ID=${MASTER_ID=0},MB1120_SID=${MX_4=0},REPORT=${MX_REPORT=0},RESCAN_DELAY=${MX_RESCAN_DELAY=3}"
+${ECMC_MX_5_CMD}${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}mxEnableDownStreamBaseplate.cmd", "MASTER_ID=${MASTER_ID=0},MB1120_SID=${MX_5=0},REPORT=${MX_REPORT=0},RESCAN_DELAY=${MX_RESCAN_DELAY=3}"
+epicsEnvUnset(ECMC_MX_1_CMD)
+epicsEnvUnset(ECMC_MX_2_CMD)
+epicsEnvUnset(ECMC_MX_3_CMD)
+epicsEnvUnset(ECMC_MX_4_CMD)
+epicsEnvUnset(ECMC_MX_5_CMD)
+
 #- add master (defaults to '0'), no master when MASTER_ID < 0
 ecmcEpicsEnvSetCalcTernary(ECMC_MASTER_CMD, "${MASTER_ID=0}>=0", "","#- ")
 ${ECMC_MASTER_CMD} ecmcFileExist("${ECMC_CONFIG_ROOT}addMaster.cmd",1)
@@ -181,15 +209,6 @@ dbLoadRecords(ecmcPlgFirstPlg.db,"P=${ECMC_PREFIX}")
 
 ecmcFileExist(ecmcDsFirstDs.db,1,1)
 dbLoadRecords(ecmcDsFirstDs.db,"P=${ECMC_PREFIX}")
-
-#-------------------------------------------------------------------------------
-#- Set path to ethercat tool
-#- Set default
-epicsEnvSet(ECMC_EC_TOOL_PATH,${EC_TOOL_PATH="/opt/etherlab/bin/ethercat"})
-#- if ECmasterECMC_DIR is defined then use ethercat tool in installed module
-ecmcEpicsEnvSetCalcTernary(ECMC_USE_ECmasterECMC_DIR, "'${ECmasterECMC_DIR='empty'}'=='empty'", "#-","")
-${ECMC_USE_ECmasterECMC_DIR}epicsEnvSet(ECMC_EC_TOOL_PATH, "${ECmasterECMC_DIR}bin/${EPICS_HOST_ARCH}/ethercat")
-epicsEnvUnset(ECMC_USE_ECmasterECMC_DIR)
 
 #-
 #- Ensure that this command is not executed twice (ESS vs PSI)

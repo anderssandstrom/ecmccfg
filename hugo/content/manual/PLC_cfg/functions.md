@@ -17,6 +17,7 @@ Most PLC helper functions follow a clear prefix:
 - `ds_...`: data-storage helpers
 - `lut_...`: lookup-table helpers
 - `epics_...`: EPICS runtime state helpers
+- `system_...`: combined system state helpers
 
 Use your browser search for these prefixes when you already know the category.
 
@@ -500,6 +501,13 @@ A shared memory buffer of 120 doubles can be accessed for read and write operati
                             );
   Set max jerk.
   note: mc_set_traj_jerk() is only valid for s-curve trajectory (ruckig, trajectory.type=1)
+
+  29. error = mc_ctrl_i_reset(
+                            <axisid>,   : Axis index
+                            <reset>     : Reset integral part when nonzero
+                            );
+  Resets the PID controller integral (I) part to zero when reset is nonzero.
+  Returns 0 on success or an error code if the axis is invalid.
 ```
 
 ### Motion Group
@@ -777,9 +785,33 @@ Use [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}}) to define
 ```text
  1.  value = epics_get_started()
 
-   Returns if epics has started (passed iocInit())
+   Returns 1 if EPICS has reached the IOC-running state, otherwise 0.
 
  2.  value = epics_get_state()
 
-   Returns epics state (hook)
+   Returns the numeric EPICS initialization-hook state.
+
+ 3.  value = ec_get_started()
+
+   Returns 1 only when an EtherCAT master is configured, ECMC has completed
+   runtime startup, and the EtherCAT master status is OK. Returns 0 while the
+   bus is starting, when it is not operational, or when no master is configured.
+
+ 4.  value = system_get_started()
+
+   Returns 1 only when both epics_get_started() and ec_get_started() return 1.
+   Use this as the normal readiness check for PLC logic that depends on both
+   EPICS initialization and operational EtherCAT communication.
 ```
+
+Example startup gate:
+
+```text
+if(system_get_started()) {
+  # Logic requiring both EPICS and EtherCAT readiness
+};
+```
+
+`system_get_started()` is intentionally strict: it remains 0 for an ECMC IOC
+configured without an EtherCAT master. Use `epics_get_started()` when the logic
+only depends on EPICS initialization.

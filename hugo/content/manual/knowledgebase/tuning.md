@@ -97,6 +97,69 @@ Typical sequence:
 3. Reduce `Kp` to about 40% of that oscillation threshold.
 4. Add small `Ki` and `Kd` only when needed (for example backlash handling or `CSP_PC`).
 
+##### Axis stops close to target
+Sometimes an axis stops close to its requested position and the remaining error
+does not decrease over time. This can happen when the position error is so small
+that, after multiplication by `Kp` and conversion to the drive's velocity
+setpoint, the controller output is rounded or quantized to zero. With no
+effective velocity command, proportional control alone cannot remove the
+remaining error.
+
+Possible remedies are:
+* Increase `Kp` so the remaining error produces a non-zero drive command.
+* Add a small `Ki` so the residual error accumulates and is corrected. Increase
+  it carefully to avoid overshoot or oscillation.
+* If increasing `controller.Kp` causes problems during the main part of a move,
+  keep that gain at a stable value and configure a higher
+  `controller.inner.Kp` for final positioning. Set `controller.inner.tol`
+  larger than `monitoring.target.tolerance` so the more aggressive inner gain
+  becomes active before the axis enters the at-target window. Tune the gain and
+  transition tolerance carefully to avoid oscillation near the switching point.
+* Reduce `controller.deadband.tol` so the controller continues correcting closer
+  to the target.
+
+For a P-only controller in CSV mode with an integer velocity-setpoint entry, the
+risk can be estimated from the configured values. At a position error `e`, the
+raw drive command due to the P term is approximately:
+
+```text
+raw_command = Kp * e * abs(drive.denominator / drive.numerator)
+```
+
+ecmc rounds this command to the nearest integer. Therefore, a magnitude below
+`0.5` raw counts becomes zero. To check the configuration, substitute
+`monitoring.target.tolerance` for `e` and use the `Kp` that is active close to
+the target (`controller.inner.Kp` when the error is inside
+`controller.inner.tol`, otherwise `controller.Kp`):
+
+```text
+Kp_near_target * monitoring.target.tolerance
+  * abs(drive.denominator / drive.numerator) >= 0.5
+```
+
+If this condition is false, the proportional output can already be zero at the
+edge of the at-target window. Equivalently, the smallest error that reliably
+produces a non-zero raw command is approximately:
+
+```text
+minimum_correctable_error = 0.5 * abs(drive.numerator / drive.denominator)
+                            / Kp_near_target
+```
+
+Treat `0.5` as the mathematical rounding boundary; requiring at least one full
+raw count gives a more conservative check. This calculation only detects
+controller-output quantization. Friction, backlash, drive-side deadbands, output
+limits, integral and derivative terms, floating-point setpoint entries, and
+`CSP_PC` mode require a runtime check of the actual controller and raw drive
+outputs.
+
+The controller deadband and `monitoring.target.tolerance` serve different purposes:
+the deadband determines when control action stops, while the monitoring
+tolerance determines when the axis reports `atTarget`. If correction must
+continue after `atTarget` becomes true, configure the controller deadband
+tolerance smaller than the at-target tolerance. See the
+[controller YAML settings]({{< relref "/manual/motion_cfg/axisYaml.md#controller" >}}).
+
 #### Velocity and Current loop
 These control loops need to be tuned in the drive.
 

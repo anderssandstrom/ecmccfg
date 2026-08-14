@@ -22,6 +22,15 @@ you know the visible problem, but not yet which detailed page to use.
 - **No slaves are visible or link is down**:
   Use: [ethercat command line interface]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}}), [host / ecmc server]({{< relref "/manual/knowledgebase/host.md" >}}), [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
 
+- **Slaves remain in an error state**: power-cycle the affected slaves. You can
+  also try `ethercat rescan -<master_id>`. Always specify the master ID;
+  otherwise, the command rescans every master on the host and may cause error
+  messages in other IOCs.
+- **Slaves repeatedly appear and disappear**: check for grounding issues. In
+  observed cases, connecting an oscilloscope to measure signals interrupted
+  EtherCAT communication. If possible, use a differential probe and avoid an
+  external ground reference.
+
 ## Motion and Axis Behavior
 - **Axis will not enable**: check auto-enable strategy, STO/brake signals, and drive readiness.
   Use: [motion]({{< relref "/manual/knowledgebase/motion.md" >}}), [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
@@ -33,6 +42,12 @@ you know the visible problem, but not yet which detailed page to use.
   Use: [motion]({{< relref "/manual/knowledgebase/motion.md" >}}), [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
 - **Following error, stall, or poor motion quality**:
   Use: [motion]({{< relref "/manual/knowledgebase/motion.md" >}}), [tuning]({{< relref "/manual/knowledgebase/tuning.md" >}})
+- **Axis stops close to the target without reaching it**: a small position error,
+  combined with a low proportional gain, can become a zero velocity setpoint
+  after output scaling or quantization. Increase `Kp`, add a small `Ki`, or
+  reduce the controller deadband tolerance so that position correction remains
+  active near the target.
+  Use: [tuning: axis stops close to target]({{< relref "/manual/knowledgebase/tuning.md#axis-stops-close-to-target" >}}), [YAML controller settings]({{< relref "/manual/motion_cfg/axisYaml.md#controller" >}})
 - **Encoder raw value differs from the EtherCAT slave value**: `encoder.bits`
   and `encoder.mask` apply to the encoder value derived inside ecmc; they do
   not modify the raw EtherCAT process-data value. Compare with the EtherCAT

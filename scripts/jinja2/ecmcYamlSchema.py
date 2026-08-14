@@ -338,6 +338,8 @@ class Schema:
             'Ki': {'type': 'float', 'default': 0., 'min': 0},
             'Kd': {'type': 'float', 'default': 0., 'min': 0},
             'Kff': {'type': 'float', 'default': 1., 'min': 0},
+            'resetIAtRmp': {'type': 'boolean', 'required': False},
+            'freezeIAtRmp': {'type': 'boolean', 'required': False},
             'inner': {
                 'type': 'dict',
                 'required': False,
@@ -486,14 +488,6 @@ class Schema:
                     'enable': {'required': True, 'type': 'boolean', 'dependencies': ['tolerance', 'time']},
                     'tolerance': {'type': 'float', 'min': 0.0},
                     'time': {'type': 'integer', 'min': 0},
-                    'slaveControlDeadband': {
-                        'type': 'dict',
-                        'required': False,
-                        'schema': {
-                            'tolerance': {'required': True, 'type': 'float', 'min': 0.0},
-                            'time': {'required': True, 'type': 'integer', 'min': 0},
-                        }
-                    },
                 }
             },
             'target': {
@@ -503,6 +497,14 @@ class Schema:
                     'enable': {'required': True, 'type': 'boolean', 'dependencies': ['tolerance', 'time']},
                     'tolerance': {'type': 'float', 'min': 0.0},
                     'time': {'type': 'integer', 'min': 0},
+                    'slaveControlDeadband': {
+                        'type': 'dict',
+                        'required': False,
+                        'schema': {
+                            'tolerance': {'required': True, 'type': 'float', 'min': 0.0},
+                            'time': {'required': True, 'type': 'integer', 'min': 0},
+                        }
+                    },
                 }
             },
             'velocity': {

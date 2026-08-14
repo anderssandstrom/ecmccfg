@@ -28,4 +28,7 @@ The ecb module startup file sets this automatically.
 - Default backend remains `jinja` if `ECMC_CFG_TOOL` is not set to `ecb`.
 - Using `ecb` avoids Python venv/pip dependency during YAML parsing.
 - `ecb` supports the subset of Jinja syntax needed by ecmccfg templates (implemented via Inja, with ecb-specific compatibility handling).
+- Controller YAML settings, including `controller.resetIAtRmp` and
+  `controller.freezeIAtRmp`, use the same generated configuration commands with
+  either the `ecb` or `jinja` backend.
 - For CLI details and schema behavior, see the `ecb` repository documentation.

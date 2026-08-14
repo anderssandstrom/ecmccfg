@@ -385,6 +385,8 @@ optional
 - `Ki`: integral; default 0
 - `Kd`: differential; default 0
 - `Kff`: feed forward; default 1
+- `resetIAtRmp`: Reset the integral part to zero while the internal trajectory is busy; default false
+- `freezeIAtRmp`: Keep the current integral part unchanged while the internal trajectory is busy; default false
 - `deadband`:
   - `tol`: Stop control if within this distance from target for the below time
   - `time`: Time filter
@@ -406,12 +408,18 @@ Limit handling for `controller.limits`:
 - Integral limiting follows the same rule: it is active only when `maxIntegral > minIntegral`.
 - If `minIntegral = 0` and `maxIntegral = 0`, the integral limits are disabled.
 
+The ramp settings apply only when the trajectory source is internal and the local
+trajectory is busy. Outside that state, the controller integrates normally. If
+both `resetIAtRmp` and `freezeIAtRmp` are enabled, reset takes precedence.
+
 ```yaml
 controller:
   Kp:  90
   #Ki:  0.1
   #Kd:  0
   #Kff: 1
+  #resetIAtRmp: false
+  #freezeIAtRmp: false
   #deadband:
   #  tol: 0.01
   #  time: 100
@@ -788,6 +796,8 @@ controller:
 #  Ki: 0.001                                           # Ki integral gain
 #  Kd: 0                                               # Kd derivative gain
 #  Kff: 1                                              # Feed forward gain
+#  resetIAtRmp: false                                  # Reset I-part while an internal trajectory is busy
+#  freezeIAtRmp: false                                 # Freeze I-part while an internal trajectory is busy
 #  deadband:
 #    tol: 0.01                                         # Stop control if within this distance from target for the below time
 #    time: 100

@@ -46,3 +46,28 @@ def test_get_axis_type(myValidator):
     myValidator.document['axis']['type'] = 'NotImplementedError'
     with pytest.raises(NotImplementedError):
         myValidator.get_axis_type()
+
+
+def test_slave_control_deadband_belongs_to_target(myValidator):
+    monitoring_schema = myValidator.Schema.monitoringSchema['schema']
+    target_schema = monitoring_schema['target']['schema']
+    lag_schema = monitoring_schema['lag']['schema']
+
+    assert 'slaveControlDeadband' in target_schema
+    assert 'slaveControlDeadband' not in lag_schema
+
+    validator = cerberus.Validator({'monitoring': myValidator.Schema.monitoringSchema})
+    valid = {
+        'monitoring': {
+            'target': {
+                'enable': True,
+                'tolerance': 0.1,
+                'time': 10,
+                'slaveControlDeadband': {
+                    'tolerance': 0.2,
+                    'time': 20,
+                },
+            },
+        },
+    }
+    assert validator.validate(valid), validator.errors

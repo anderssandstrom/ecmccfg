@@ -25,6 +25,20 @@ The relevant EtherCAT Slave Controller (ESC) register is:
 - MB1120 default: `0x0007c001`
 - Port 3 set to `Auto`: `0x00070001`
 
+### Observed topology and slave positions
+
+- The `MB1120` is the backplane-junction EtherCAT slave that controls access
+  to the next downstream baseplate. Its slave position is the value passed as
+  `MB1120_SID`, or as `MX_1` through `MX_5` during startup. For multiple
+  baseplates, specify the MB1120 positions in upstream-to-downstream discovery
+  order.
+- The `MB1100-002` Bluetooth gateway seems to offset subsequent EtherCAT
+  slave positions by one. Account for this when determining the MB1120 slave
+  position used by the workaround.
+- The `MS1110-0000` always seems to appear as the last slave. With one
+  baseplate it is last in that topology; when a second baseplate is enabled,
+  it moves to the end of the expanded topology.
+
 ### Workaround
 
 Set port 3 to `Auto`, wait for the downstream baseplate to become available,

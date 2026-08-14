@@ -1,7 +1,7 @@
 ##############################################################################
 ## Motion sequencer lab example based on stepper_bissc/startup_local_hw.cmd
 
-require ecmccfg sandst_a "ENG_MODE=1,MASTER_ID=0,ECMC_VER=sandst_a"
+require ecmccfg seq "ENG_MODE=1,MASTER_ID=0,ECMC_VER=seq"
 
 # 0:7 - EL7041 1Ch Stepper
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=14,HW_DESC=EL7041-0052"

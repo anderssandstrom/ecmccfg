@@ -1,9 +1,10 @@
 #- Configuration scripts
-#require ecmccfg v11.0.9_RC1 "MASTER_ID=0,ENG_MODE=1,EC_RATE=500,ECMC_VER=v11.0.9_RC1"
-require ecmccfg sandst_a "MASTER_ID=0,ENG_MODE=1,EC_RATE=500,ECMC_VER=sandst_a"
-#require ecmccfg "MASTER_ID=0,ENG_MODE=1,EC_RATE=500"
+
+epicsEnvSet(ECMC_START_EPICS_FIRST,"")
+require ecmccfg sandst_a "MASTER_ID=0,ENG_MODE=1,EC_RATE=500,ECMC_VER=sandst_a,START_EPICS_FIRST=1"
+
 #- Only output errors
-asynSetTraceMask(${ECMC_ASYN_PORT}, -1, 0x01)
+#asynSetTraceMask(${ECMC_ASYN_PORT}, -1, 0x01)
 
 #- #################################################################
 # Configure Hardware and Motion
@@ -45,5 +46,9 @@ ecmcConfigOrDie "Cfg.EcAddEntryCyclicWrite(ec0.s14.ZERO,ec0.s9.ZERO)"
 ecmcConfigOrDie "Cfg.EcReportEntryCyclicWrites()"
 #- #############################################################################
 #- reset all errors
-afterInit("ecmcConfigOrDie 'ControllerErrorReset()'")
+#afterInit("ecmcConfigOrDie 'ControllerErrorReset()'")
+
+
+
+
 

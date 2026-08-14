@@ -1,7 +1,6 @@
 #- Configuration scripts
-#require ecmccfg v11.0.9_RC1 "MASTER_ID=0,ENG_MODE=1,EC_RATE=500,ECMC_VER=v11.0.9_RC1"
-require ecmccfg sandst_a "MASTER_ID=0,ENG_MODE=1,EC_RATE=500,ECMC_VER=sandst_a"
-#require ecmccfg "MASTER_ID=0,ENG_MODE=1,EC_RATE=500"
+require ecmccfg v11.0.9_RC2 "MASTER_ID=0,ENG_MODE=1,EC_RATE=500,ECMC_VER=v11.0.9_RC2"
+
 #- Only output errors
 asynSetTraceMask(${ECMC_ASYN_PORT}, -1, 0x01)
 
@@ -39,10 +38,6 @@ ${SCRIPTEXEC} ${ECMC_CONFIG_ROOT}loadPLCFile.cmd,  "FILE=cfg/axis_main.plc, INC=
 #- Add state machine to sync the virtual and physical axes (the groups are defined in the yaml axis-cfg files) 
 ${SCRIPTEXEC} ${ecmccfg_DIR}addMasterSlaveSM.cmd "NAME=Slit_SM, MST_GRP_NAME=virtualAxes, SLV_GRP_NAME=realAxes"
 
-ecmcConfigOrDie "Cfg.EcAddEntryCyclicWrite(ec0.s9.ZERO,ec0.s9.positionActual01,1)"
-ecmcConfigOrDie "Cfg.EcReportEntryCyclicWrites()"
-ecmcConfigOrDie "Cfg.EcAddEntryCyclicWrite(ec0.s14.ZERO,ec0.s9.ZERO)"
-ecmcConfigOrDie "Cfg.EcReportEntryCyclicWrites()"
 #- #############################################################################
 #- reset all errors
 afterInit("ecmcConfigOrDie 'ControllerErrorReset()'")

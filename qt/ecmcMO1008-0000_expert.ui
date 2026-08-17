@@ -2,23 +2,105 @@
 <ui version="4.0">
  <class>Form</class>
  <widget class="QWidget" name="Form">
-  <property name="geometry"><rect><x>0</x><y>0</y><width>650</width><height>370</height></rect></property>
-  <property name="font"><font><pointsize>9</pointsize></font></property>
-  <property name="windowTitle"><string>MO1008 expert</string></property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>264</width>
+    <height>370</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>9</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>MO1008 expert</string>
+  </property>
   <widget class="QTabWidget" name="tabWidget">
-   <property name="geometry"><rect><x>10</x><y>10</y><width>630</width><height>350</height></rect></property>
-   <property name="currentIndex"><number>0</number></property>
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>241</width>
+     <height>350</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
    <widget class="QWidget" name="tabBIStat">
-    <attribute name="title"><string>BI status</string></attribute>
-    <widget class="QLabel" name="labelBIStat"><property name="geometry"><rect><x>145</x><y>15</y><width>340</width><height>20</height></rect></property><property name="text"><string>BI-Stat</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
+    <attribute name="title">
+     <string>BI status</string>
+    </attribute>
+    <widget class="QLabel" name="labelBIStat">
+     <property name="geometry">
+      <rect>
+       <x>-130</x>
+       <y>15</y>
+       <width>340</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>BI-Stat</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
     <widget class="caByte" name="biStat">
-     <property name="geometry"><rect><x>145</x><y>40</y><width>24</width><height>224</height></rect></property><property name="toolTip"><string>Bits 0 through 15 from top to bottom</string></property>
-     <property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-BI-Stat</string></property><property name="direction"><enum>caByte::Down</enum></property><property name="startBit"><number>0</number></property><property name="endBit"><number>15</number></property>
-     <property name="colorMode"><enum>caByte::Static</enum></property><property name="foreground" stdset="0"><color><red>0</red><green>85</green><blue>0</blue></color></property>
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>40</y>
+       <width>24</width>
+       <height>224</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Bits 0 through 15 from top to bottom</string>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-BI-Stat</string>
+     </property>
+     <property name="direction">
+      <enum>caByte::Down</enum>
+     </property>
+     <property name="startBit">
+      <number>0</number>
+     </property>
+     <property name="endBit">
+      <number>15</number>
+     </property>
+     <property name="colorMode">
+      <enum>caByte::Static</enum>
+     </property>
+     <property name="foreground" stdset="0">
+      <color>
+       <red>0</red>
+       <green>85</green>
+       <blue>0</blue>
+      </color>
+     </property>
     </widget>
     <widget class="QLabel" name="bitsBIStat">
-     <property name="geometry"><rect><x>177</x><y>40</y><width>308</width><height>224</height></rect></property><property name="font"><font><pointsize>8</pointsize></font></property>
-     <property name="text"><string>0  Ch1 Wirebreak
+     <property name="geometry">
+      <rect>
+       <x>57</x>
+       <y>40</y>
+       <width>308</width>
+       <height>224</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>0  Ch1 Wirebreak
 1  Ch1 Power supply missing
 2  Ch2 Wirebreak
 3  Ch2 Power supply missing
@@ -33,20 +115,84 @@
 12 Ch7 Wirebreak
 13 Ch7 Power supply missing
 14 Ch8 Wirebreak
-15 Ch8 Power supply missing</string></property><property name="alignment"><set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set></property>
+15 Ch8 Power supply missing</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="tabEFU">
-    <attribute name="title"><string>EFU</string></attribute>
-    <widget class="QLabel" name="labelEFUStat"><property name="geometry"><rect><x>145</x><y>15</y><width>340</width><height>20</height></rect></property><property name="text"><string>EFU-Stat</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
+    <attribute name="title">
+     <string>EFU</string>
+    </attribute>
+    <widget class="QLabel" name="labelEFUStat">
+     <property name="geometry">
+      <rect>
+       <x>-130</x>
+       <y>15</y>
+       <width>340</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>EFU-Stat</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
     <widget class="caByte" name="efuStat">
-     <property name="geometry"><rect><x>145</x><y>40</y><width>24</width><height>224</height></rect></property><property name="toolTip"><string>Bits 0 through 15 from top to bottom</string></property>
-     <property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-EFU-Stat</string></property><property name="direction"><enum>caByte::Down</enum></property><property name="startBit"><number>0</number></property><property name="endBit"><number>15</number></property>
-     <property name="colorMode"><enum>caByte::Static</enum></property><property name="foreground" stdset="0"><color><red>0</red><green>85</green><blue>0</blue></color></property>
+     <property name="geometry">
+      <rect>
+       <x>15</x>
+       <y>40</y>
+       <width>24</width>
+       <height>224</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Bits 0 through 15 from top to bottom</string>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-EFU-Stat</string>
+     </property>
+     <property name="direction">
+      <enum>caByte::Down</enum>
+     </property>
+     <property name="startBit">
+      <number>0</number>
+     </property>
+     <property name="endBit">
+      <number>15</number>
+     </property>
+     <property name="colorMode">
+      <enum>caByte::Static</enum>
+     </property>
+     <property name="foreground" stdset="0">
+      <color>
+       <red>0</red>
+       <green>85</green>
+       <blue>0</blue>
+      </color>
+     </property>
     </widget>
     <widget class="QLabel" name="bitsEFUStat">
-     <property name="geometry"><rect><x>177</x><y>40</y><width>308</width><height>224</height></rect></property><property name="font"><font><pointsize>8</pointsize></font></property>
-     <property name="text"><string>0  Warning
+     <property name="geometry">
+      <rect>
+       <x>47</x>
+       <y>40</y>
+       <width>308</width>
+       <height>224</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>0  Warning
 1  Error
 2  Tripped
 3  Enabled
@@ -61,16 +207,62 @@
 12 gap
 13 gap
 14 Input cycle counter bit 0
-15 Input cycle counter bit 1</string></property><property name="alignment"><set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set></property>
+15 Input cycle counter bit 1</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
     </widget>
-    <widget class="QLabel" name="labelEFUCurr"><property name="geometry"><rect><x>180</x><y>278</y><width>100</width><height>22</height></rect></property><property name="text"><string>EFU current</string></property><property name="alignment"><set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set></property></widget>
-    <widget class="caLineEdit" name="efuCurr"><property name="geometry"><rect><x>290</x><y>278</y><width>120</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-EFU-Curr</string></property><property name="alignment"><set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set></property><property name="precisionMode"><enum>caLineEdit::Channel</enum></property></widget>
+    <widget class="QLabel" name="labelEFUCurr">
+     <property name="geometry">
+      <rect>
+       <x>-20</x>
+       <y>278</y>
+       <width>100</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>EFU current</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="efuCurr">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>278</y>
+       <width>120</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-EFU-Curr</string>
+     </property>
+     <property name="precisionMode">
+      <enum>caLineEdit::Channel</enum>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>
  <customwidgets>
-  <customwidget><class>caByte</class><extends>QWidget</extends><header>caByte</header></customwidget>
-  <customwidget><class>caLineEdit</class><extends>QLineEdit</extends><header>caLineEdit</header></customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+  <customwidget>
+   <class>caByte</class>
+   <extends>QWidget</extends>
+   <header>caByte</header>
+  </customwidget>
  </customwidgets>
- <resources/><connections/>
+ <resources/>
+ <connections/>
 </ui>

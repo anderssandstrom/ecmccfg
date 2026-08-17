@@ -112,14 +112,65 @@ BO05/BO06, and BO07/BO08 in the same pattern.
 On one MO2338-0000-1112, the BO02 LED was observed to remain off while all of
 the following showed that the output was operating correctly:
 
-- `DOS-Ctrl-RB` returned `0xff` after writing `0xff` to `DOS-Ctrl`.
+- `BO-Arr-RB` returned `0xff` after writing `0xff` to `BO-Arr`.
 - Pin 2 of the first M12 connector measured 24 V.
-- `DOS-Stat`, `DOS-Stat02`, and `DOS-Stat03` were all zero.
+- `BO-Stat01`, `BO-Stat02`, and `BO-Stat03` were all zero.
 - `EFU-Stat` was `0x4008`, indicating that the electronic fuse was enabled
   without a warning, error, or trip.
 
 Do not use the BO02 LED alone to determine the electrical output state. Verify
-`DOS-Ctrl-RB`, the DOS diagnostics, and the voltage between pin 2 and pin 3.
+`BO-Arr-RB`, the BO diagnostics, and the voltage between pin 2 and pin 3.
+
+## MO1008 with missing SII SyncManager and PDO information
+
+One MO1008-0000-1112 was found with an incomplete or corrupt SII EEPROM. The
+terminal identity could still be read, but its descriptive and process-data
+information was absent. In this condition, `ethercat slaves` showed only the
+numeric vendor ID, product code, and revision instead of the terminal name:
+
+```text
+8  0:8  PREOP  +  0x00000002:0x811fbc0b
+```
+
+`ethercat pdos` returned no PDOs. Likewise, `ethercat xml` contained only the
+numeric identity and no SyncManager or PDO definitions. An
+`ethercat sii_read -v` returned only a minimal 128-byte SII area.
+
+When ecmc configured an input PDO on SM3, EtherLab consequently reported:
+
+```text
+EtherCAT ERROR 1-8: Failed to determine PDO sync manager for FMMU!
+```
+
+This error occurs before, and independently of, packing the `0x1a00` input PDO
+as `U8` or the `0x1a01` diagnosis PDO as `U16`. EtherLab creates the FMMU from
+the application configuration, but cannot resolve SM3 because the physical
+SyncManager descriptions are missing from the slave's SII. Adding an ecmc
+`Cfg.EcAddSyncManager()` call does not restore those SII descriptions.
+
+The matching ESI specifies the relevant process-data SyncManagers as:
+
+| SyncManager | Start address | Size | Control byte | Direction |
+|-------------|---------------|------|--------------|-----------|
+| SM2 | `0x1200` | 2 bytes | `0x24` | Outputs |
+| SM3 | `0x1900` | 11 bytes | `0x20` | Inputs |
+
+The terminal needs a valid binary SII EEPROM image generated from the matching
+ESI or read from an identical working MO1008-0000-1112. Back up the existing
+EEPROM before writing anything. The XML ESI file cannot be passed directly to
+`ethercat sii_write`; that command expects a compiled binary SII image.
+
+In the observed case, no working terminal was available from which to copy the
+SII. The issue therefore could not be repaired by cloning a known-good EEPROM
+image and remained a hardware/EEPROM provisioning issue rather than a CFG PDO
+mapping issue.
+
+{{% notice warning %}}
+The generic MO1008-0000 and MO1008-0000-1112 ecmccfg configurations are
+untested. Their mappings were prepared from the matching Beckhoff ESI, but the
+incomplete SII in the available terminal prevented the slave from reaching a
+state in which the configuration and process data could be validated.
+{{% /notice %}}
 
 ## Automatic downstream-baseplate discovery utility
 

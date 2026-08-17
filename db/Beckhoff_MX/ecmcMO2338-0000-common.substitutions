@@ -11,8 +11,8 @@
 
 file "ecmc_ESI_mbboDirect.template" {
     pattern { REC_NAME, DESC , SRC_NAME}
-        #- DOS_Ctrl B0..B7=Output
-        {"DOS-Ctrl", "DOS Outputs packed bits", "DOS_Ctrl"}
+        #- BO_Arr B0..B7=Output
+        {"BO-Arr", "BO Outputs packed bits", "BO_Arr"}
         #- EFU_Ctrl B0=Enable
         #- EFU_Ctrl B1=Control via Process Data
         #- EFU_Ctrl B2=Reset
@@ -22,68 +22,38 @@ file "ecmc_ESI_mbboDirect.template" {
 
 file "ecmc_ESI_mbbiDirect.template" {
     pattern { REC_NAME, DESC, FLNK , SRC_NAME}
-        #- DIP_Stat B0..B7=Input
-        {"DIP-Stat", "DIP Inputs packed bits", "", "DIP_Stat"}
-        #- DIP_Stat_02 B0=Wirebreak
-        #- DIP_Stat_02 B1=Power Supply Missing
-        #- DIP_Stat_02 B2=Wirebreak
-        #- DIP_Stat_02 B3=Power Supply Missing
-        #- DIP_Stat_02 B4=Wirebreak
-        #- DIP_Stat_02 B5=Power Supply Missing
-        #- DIP_Stat_02 B6=Wirebreak
-        #- DIP_Stat_02 B7=Power Supply Missing
-        #- DIP_Stat_02 B8=Wirebreak
-        #- DIP_Stat_02 B9=Power Supply Missing
-        #- DIP_Stat_02 B10=Wirebreak
-        #- DIP_Stat_02 B11=Power Supply Missing
-        #- DIP_Stat_02 B12=Wirebreak
-        #- DIP_Stat_02 B13=Power Supply Missing
-        #- DIP_Stat_02 B14=Wirebreak
-        #- DIP_Stat_02 B15=Power Supply Missing
-        {"DIP-Stat-02", "DIP Diagnosis packed bits", "", "DIP_Stat_02"}
-        #- DOS_Stat B0=Overcurrent
-        #- DOS_Stat B1=Overload
-        #- DOS_Stat B2=gap
-        #- DOS_Stat B3=Short to 24V
-        #- DOS_Stat B4=Power Supply Missing
-        #- DOS_Stat B5=Overcurrent
-        #- DOS_Stat B6=Overload
-        #- DOS_Stat B7=gap
-        #- DOS_Stat B8=Short to 24V
-        #- DOS_Stat B9=Power Supply Missing
-        #- DOS_Stat B10=Overcurrent
-        #- DOS_Stat B11=Overload
-        #- DOS_Stat B12=gap
-        #- DOS_Stat B13=Short to 24V
-        #- DOS_Stat B14=Power Supply Missing
-        #- DOS_Stat B15=Overcurrent
-        {"DOS-Stat", "DOS Diagnosis packed bits", "", "DOS_Stat"}
-        #- DOS_Stat02 B0=Overload
-        #- DOS_Stat02 B1=gap
-        #- DOS_Stat02 B2=Short to 24V
-        #- DOS_Stat02 B3=Power Supply Missing
-        #- DOS_Stat02 B4=Overcurrent
-        #- DOS_Stat02 B5=Overload
-        #- DOS_Stat02 B6=gap
-        #- DOS_Stat02 B7=Short to 24V
-        #- DOS_Stat02 B8=Power Supply Missing
-        #- DOS_Stat02 B9=Overcurrent
-        #- DOS_Stat02 B10=Overload
-        #- DOS_Stat02 B11=gap
-        #- DOS_Stat02 B12=Short to 24V
-        #- DOS_Stat02 B13=Power Supply Missing
-        #- DOS_Stat02 B14=Overcurrent
-        #- DOS_Stat02 B15=Overload
-        {"DOS-Stat02", "DOS Diagnosis packed bits", "", "DOS_Stat02"}
-        #- DOS_Stat03 B0=gap
-        #- DOS_Stat03 B1=Short to 24V
-        #- DOS_Stat03 B2=Power Supply Missing
-        #- DOS_Stat03 B3=Overcurrent
-        #- DOS_Stat03 B4=Overload
-        #- DOS_Stat03 B5=gap
-        #- DOS_Stat03 B6=Short to 24V
-        #- DOS_Stat03 B7=Power Supply Missing
-        {"DOS-Stat03", "DOS Diagnosis packed bits", "", "DOS_Stat03"}
+        #- BI_Arr B0..B7=Input
+        {"BI-Arr", "BI Inputs packed bits", "", "BI_Arr"}
+        #- BI_Stat B0=Wirebreak
+        #- BI_Stat B1=Power Supply Missing
+        #- BI_Stat B2=Wirebreak
+        #- BI_Stat B3=Power Supply Missing
+        #- BI_Stat B4=Wirebreak
+        #- BI_Stat B5=Power Supply Missing
+        #- BI_Stat B6=Wirebreak
+        #- BI_Stat B7=Power Supply Missing
+        #- BI_Stat B8=Wirebreak
+        #- BI_Stat B9=Power Supply Missing
+        #- BI_Stat B10=Wirebreak
+        #- BI_Stat B11=Power Supply Missing
+        #- BI_Stat B12=Wirebreak
+        #- BI_Stat B13=Power Supply Missing
+        #- BI_Stat B14=Wirebreak
+        #- BI_Stat B15=Power Supply Missing
+        {"BI-Stat", "BI Diagnosis packed bits", "", "BI_Stat"}
+        #- BO_Stat01 B0..B4=Ch1: Overcurrent, Overload, gap, Short to 24V, Power Supply Missing
+        #- BO_Stat01 B5..B9=Ch2: Overcurrent, Overload, gap, Short to 24V, Power Supply Missing
+        #- BO_Stat01 B10..B14=Ch3: Overcurrent, Overload, gap, Short to 24V, Power Supply Missing
+        #- BO_Stat01 B15=Ch4 Overcurrent
+        {"BO-Stat01", "BO Diagnosis packed bits", "", "BO_Stat01"}
+        #- BO_Stat02 B0..B3=Ch4: Overload, gap, Short to 24V, Power Supply Missing
+        #- BO_Stat02 B4..B8=Ch5: Overcurrent, Overload, gap, Short to 24V, Power Supply Missing
+        #- BO_Stat02 B9..B13=Ch6: Overcurrent, Overload, gap, Short to 24V, Power Supply Missing
+        #- BO_Stat02 B14..B15=Ch7: Overcurrent, Overload
+        {"BO-Stat02", "BO Diagnosis packed bits", "", "BO_Stat02"}
+        #- BO_Stat03 B0..B2=Ch7: gap, Short to 24V, Power Supply Missing
+        #- BO_Stat03 B3..B7=Ch8: Overcurrent, Overload, gap, Short to 24V, Power Supply Missing
+        {"BO-Stat03", "BO Diagnosis packed bits", "", "BO_Stat03"}
         #- EFU_Stat B0=Warning
         #- EFU_Stat B1=Error
         #- EFU_Stat B2=Tripped
@@ -95,5 +65,5 @@ file "ecmc_ESI_mbbiDirect.template" {
 
 file "ecmc_ESI_ai.template" {
     pattern { REC_NAME, DESC , SRC_NAME, DTYP}
-        {"EFU-Current", "Current", "EFU_Current", "asynFloat64"}
+        {"EFU-Curr", "Current", "EFU_Curr", "asynFloat64"}
 }

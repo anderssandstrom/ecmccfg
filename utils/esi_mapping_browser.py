@@ -25,6 +25,8 @@ from pathlib import Path
 
 
 ENTRY_TOKEN_MAP = {
+    "DOS": "BO",
+    "DIP": "BI",
     "Status": "Stat",
     "Control": "Ctrl",
     "Feedback": "Fb",
@@ -490,7 +492,9 @@ def _parse_pdo_definitions(
                 continue
 
             sm = (pdo.get("Sm") or "").strip()
-            pdo_name = _text(pdo.find("Name"))
+            # Normalize Beckhoff's DOS/DIP abbreviations to the BO/BI naming
+            # used by ecmccfg records and hardware source symbols.
+            pdo_name = _text(pdo.find("Name")).replace("DOS", "BO").replace("DIP", "BI")
             excludes = {_norm_hex(_text(ex_node)) for ex_node in pdo.findall("Exclude")}
             excludes = {idx for idx in excludes if idx}
             entries: List[PdoEntry] = []
@@ -1234,6 +1238,12 @@ def _entry_symbol(
 
 def _packed_root_name(pdo: PdoInfo) -> str:
     name_l = pdo.name.lower()
+    # Plain packed binary I/O is exposed as an array. Keep Ctrl/Stat for
+    # control words and diagnostic/status PDOs.
+    if name_l.startswith("bo ") and "output" in name_l:
+        return "Arr"
+    if name_l.startswith("bi ") and "input" in name_l:
+        return "Arr"
     if "control" in name_l:
         return "Ctrl"
     if "status" in name_l:
@@ -1255,7 +1265,8 @@ def _packed_symbol_name(
     root = _packed_root_name(pdo)
     _dev, prefix = _pdo_type_and_prefix(pdo, slave=slave, legacy_naming=legacy_naming)
     record_name = f"{prefix}-{root}"
-    if chunk_idx > 1:
+    packed_bit_count = sum(entry.bitlen for entry in pdo.entries if _is_packable_bit_entry(entry))
+    if packed_bit_count > 16 or chunk_idx > 1:
         record_name = f"{record_name}{chunk_idx:02d}"
     return _unique_symbol(_record_to_source_name(record_name), used)
 
@@ -1278,15 +1289,29 @@ def _build_packed_bit_comment(chunk: List[PdoEntry]) -> str:
     # Keep placeholders ("gap") so merged bit layout is explicit and reviewable.
     segments: List[Tuple[int, int, str]] = []
     bit_offset = 0
-    for entry in chunk:
+    for entry_idx, entry in enumerate(chunk):
         bit_width = entry.bitlen if entry.bitlen > 0 else 0
         if bit_width <= 0:
             continue
 
         if entry.index == "0x0":
             label = "gap"
+            neighbor_names = []
+            if entry_idx > 0:
+                prev = chunk[entry_idx - 1]
+                neighbor_names.append(prev.raw_name or prev.resolved_name)
+            if entry_idx + 1 < len(chunk):
+                nxt = chunk[entry_idx + 1]
+                neighbor_names.append(nxt.raw_name or nxt.resolved_name)
+            for neighbor_name in neighbor_names:
+                channel_match = re.search(r"Channel\s+(\d+)", neighbor_name or "", re.IGNORECASE)
+                if channel_match:
+                    label = f"gap Channel {channel_match.group(1)}"
+                    break
         else:
-            label = (entry.resolved_name or entry.raw_name or entry.index).strip()
+            # Raw ESI labels commonly retain useful qualifiers such as
+            # "Channel 2" that the resolved object-dictionary name omits.
+            label = (entry.raw_name or entry.resolved_name or entry.index).strip()
             label = re.sub(r"\s+", " ", label) if label else ""
             if not label:
                 label = "gap"

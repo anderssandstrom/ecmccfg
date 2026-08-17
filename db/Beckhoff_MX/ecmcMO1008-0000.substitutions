@@ -1,8 +1,11 @@
-file "ecmc_status-chX.template" { pattern
-  { CH_ID, KEY }
-  { 1,     ""  }
-  { 2,     ""  }
-  { 3,     ""  }
-  { 4,     ""  }
-  { 5,     ""  }
+file "ecmc_ESI_mbbiDirect.template" {
+  pattern { REC_NAME, DESC, FLNK, SRC_NAME }
+    { "BI-Arr",  "Binary inputs Ch1..Ch8", "", "BI_Arr"  }
+    { "BI-Stat", "Binary input diagnosis", "", "BI_Stat" }
+    { "EFU-Stat", "Electronic fuse status", "", "EFU_Stat" }
+}
+
+file "ecmc_ESI_ai.template" {
+  pattern { REC_NAME, DESC, SRC_NAME, DTYP }
+    { "EFU-Curr", "Electronic fuse current", "EFU_Curr", "asynFloat64" }
 }

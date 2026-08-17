@@ -93,6 +93,27 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}startup.cmd, "SYS=...,MX_1=10,MX_2=21,MX_REPORT=1"
 Omit unused `MX_n` macros. `MX_REPORT` defaults to `0`, and
 `MX_RESCAN_DELAY` defaults to `3` seconds.
 
+### Automatic discovery utility
+
+The `utils/mxEnableDownstreamBaseplates.sh` utility can discover and open a
+chain without specifying the MB1120 positions in advance. It repeatedly finds
+the last newly visible MB1120, opens port 3, waits, and rescans until no new
+MB1120 is found:
+
+```bash
+utils/mxEnableDownstreamBaseplates.sh 1 3 /opt/etherlab/bin/ethercat 3
+```
+
+The positional arguments are the master ID (default `0`) and rescan delay in
+seconds (default `3`), followed by the optional EtherCAT executable (default
+`/opt/etherlab/bin/ethercat`) and EtherCAT port (default `3`). Ports `0`
+through `3` are accepted. `MX_MAX_BASEPLATES` sets the safety limit and defaults
+to `32`.
+
+{{% notice warning %}}
+Run this utility before `addMaster.cmd` claims the EtherCAT master.
+{{% /notice %}}
+
 ## Related Pages
 
 - [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})

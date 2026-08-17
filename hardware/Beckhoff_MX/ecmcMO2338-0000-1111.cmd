@@ -1,3 +1,4 @@
+#- TESTED
 #- ecmc hardware config for: MO2338-0000-1111 | 8-channel digital combi, 24 V DC/0.5 A, M8
 #- source ESI file: Beckhoff MOxxxx.xml
 

@@ -1,8 +1,7 @@
+#- TESTED
 #- ecmc hardware config for: MO1008-0000-1112 | 8-channel digital input, 24 V DC, M12
 #- source ESI file: Beckhoff MOxxxx.xml
 #- product code: 0x811fbc0b, revision: 0x02000458
-#- UNTESTED: Hardware validation was blocked by incomplete SII SyncManager/PDO
-#- information in the available terminal.
 
 #- Reuse the generic MO1008 PDO configuration and database records.
 ecmcFileExist(${ecmccfg_DIR}ecmcMO1008-0000.cmd,1)

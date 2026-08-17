@@ -172,6 +172,19 @@ incomplete SII in the available terminal prevented the slave from reaching a
 state in which the configuration and process data could be validated.
 {{% /notice %}}
 
+## MS1010-1002-1334 rail shutdown and recovery
+
+{{% notice warning %}}
+Setting bit 0 (`Disable Output`) in `PSU-Ctrl` removes power from the complete
+24 V rail. Despite sometimes being described operationally as an enable
+control, this bit is active-high disable and must not be toggled casually.
+
+On the tested MS1010-1002-1334, clearing the bit did not immediately restore
+the rail. The slave had to be power-cycled and remain fully unpowered for at
+least 30 seconds before it would feed power again. Account for the loss of all
+devices supplied by that rail before operating this control.
+{{% /notice %}}
+
 ## Automatic downstream-baseplate discovery utility
 
 The `utils/mxEnableDownstreamBaseplates.sh` utility can discover and open a

@@ -1,3 +1,4 @@
+#- TESTED
 #- Common PDO configuration for MO2338-0000-1111 and MO2338-0000-1112
 #- Both variants use product code 0x812b6c8b and the same PDO mapping.
 #- NOTE: On an MO2338-0000-1112, the BO02 LED was observed to remain off even

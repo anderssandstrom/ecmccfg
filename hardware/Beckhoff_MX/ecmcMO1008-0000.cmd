@@ -1,5 +1,4 @@
-#- UNTESTED: This PDO configuration could not be validated on hardware because
-#- the available MO1008 had incomplete SII SyncManager/PDO information.
+#- TESTED
 epicsEnvSet("ECMC_EC_HWTYPE",        "MO1008-0000")
 epicsEnvSet("ECMC_EC_VENDOR_ID",     "0x00000002")
 epicsEnvSet("ECMC_EC_PRODUCT_ID",    "0x811fbc0b")

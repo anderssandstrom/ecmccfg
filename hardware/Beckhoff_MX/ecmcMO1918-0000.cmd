@@ -1,3 +1,4 @@
+# WARNING: UNTESTED
 epicsEnvSet("ECMC_EC_HWTYPE",        "MO1918-0000")
 epicsEnvSet("ECMC_EC_VENDOR_ID",     "0x00000002")
 epicsEnvSet("ECMC_EC_PRODUCT_ID",    "0x8127bb8b")

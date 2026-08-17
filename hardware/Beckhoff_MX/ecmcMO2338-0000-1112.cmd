@@ -1,3 +1,4 @@
+#- TESTED
 #- ecmc hardware config for: MO2338-0000-1112 | 8-channel digital combi, 24 V DC/0.5 A, M12
 #- source ESI file: Beckhoff MOxxxx.xml
 #- NOTE: BO02 is pin 2 on the first M12 connector. Its LED may remain off even

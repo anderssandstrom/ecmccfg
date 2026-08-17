@@ -1,3 +1,4 @@
+#- TESTED
 #- Generic ecmc hardware config for MO2338-0000-1111 and MO2338-0000-1112
 #- The connector-specific wrappers should be preferred when the exact variant
 #- is known. This wrapper intentionally does not constrain the ESI revision.

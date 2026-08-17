@@ -3,6 +3,7 @@
 set -euo pipefail
 
 # Usage: mxEnableDownstreamBaseplates.sh [MASTER_ID] [RESCAN_DELAY] [ETHERCAT_TOOL] [PORT]
+# Note: Run this utility before addMaster.cmd claims the EtherCAT master.
 MASTER_ID="${1:-0}"
 RESCAN_DELAY="${2:-3}"
 ETHERCAT_TOOL="${3:-/opt/etherlab/bin/ethercat}"

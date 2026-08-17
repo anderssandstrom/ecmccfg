@@ -93,7 +93,35 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}startup.cmd, "SYS=...,MX_1=10,MX_2=21,MX_REPORT=1"
 Omit unused `MX_n` macros. `MX_REPORT` defaults to `0`, and
 `MX_RESCAN_DELAY` defaults to `3` seconds.
 
-### Automatic discovery utility
+## MO2338-0000-1112 M12 pinout and BO02 LED indication
+
+Each M12 A-coded connector carries two digital input/output channels:
+
+| Pin | Signal |
+|-----|--------|
+| 1 | +24 V (`UB`) |
+| 2 | DIO B |
+| 3 | GND |
+| 4 | DIO A |
+| 5 | Not connected |
+
+The channels are assigned in A/B pairs. On the first connector, BO01 is DIO A
+on pin 4 and BO02 is DIO B on pin 2. The following connectors carry BO03/BO04,
+BO05/BO06, and BO07/BO08 in the same pattern.
+
+On one MO2338-0000-1112, the BO02 LED was observed to remain off while all of
+the following showed that the output was operating correctly:
+
+- `DOS-Ctrl-RB` returned `0xff` after writing `0xff` to `DOS-Ctrl`.
+- Pin 2 of the first M12 connector measured 24 V.
+- `DOS-Stat`, `DOS-Stat02`, and `DOS-Stat03` were all zero.
+- `EFU-Stat` was `0x4008`, indicating that the electronic fuse was enabled
+  without a warning, error, or trip.
+
+Do not use the BO02 LED alone to determine the electrical output state. Verify
+`DOS-Ctrl-RB`, the DOS diagnostics, and the voltage between pin 2 and pin 3.
+
+## Automatic downstream-baseplate discovery utility
 
 The `utils/mxEnableDownstreamBaseplates.sh` utility can discover and open a
 chain without specifying the MB1120 positions in advance. It repeatedly finds

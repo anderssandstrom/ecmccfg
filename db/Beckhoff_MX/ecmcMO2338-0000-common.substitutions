@@ -1,0 +1,99 @@
+#- Common ecmc database for MO2338-0000-1111 (M8) and MO2338-0000-1112 (M12)
+#- Implicit default mapping
+#- source ESI file: /psi.ch/.nfs-server/nfs32.psi.ch/8210_8214/sandst_a/sources/beckhoff_xml/Beckhoff MOxxxx.xml
+#- Both variants use product code 0x812b6c8b and the same PDO mapping.
+#- selected mapping id: M01 of 1
+#-      ECMC_EC_HWTYPE:     MO2338_0000_common
+#-      ECMC_EC_VENDOR_ID:  0x2
+#-      ECMC_EC_PRODUCT_ID: 0x812b6c8b
+#-      ECMC_EC_REVISION:   0x1000457
+#-      templates:          db/generic/ecmc_ESI_*.template
+
+file "ecmc_ESI_mbboDirect.template" {
+    pattern { REC_NAME, DESC , SRC_NAME}
+        #- DOS_Ctrl B0..B7=Output
+        {"DOS-Ctrl", "DOS Outputs packed bits", "DOS_Ctrl"}
+        #- EFU_Ctrl B0=Enable
+        #- EFU_Ctrl B1=Control via Process Data
+        #- EFU_Ctrl B2=Reset
+        #- EFU_Ctrl B3..B15=gap
+        {"EFU-Ctrl", "EFU Outputs packed bits", "EFU_Ctrl"}
+}
+
+file "ecmc_ESI_mbbiDirect.template" {
+    pattern { REC_NAME, DESC, FLNK , SRC_NAME}
+        #- DIP_Stat B0..B7=Input
+        {"DIP-Stat", "DIP Inputs packed bits", "", "DIP_Stat"}
+        #- DIP_Stat_02 B0=Wirebreak
+        #- DIP_Stat_02 B1=Power Supply Missing
+        #- DIP_Stat_02 B2=Wirebreak
+        #- DIP_Stat_02 B3=Power Supply Missing
+        #- DIP_Stat_02 B4=Wirebreak
+        #- DIP_Stat_02 B5=Power Supply Missing
+        #- DIP_Stat_02 B6=Wirebreak
+        #- DIP_Stat_02 B7=Power Supply Missing
+        #- DIP_Stat_02 B8=Wirebreak
+        #- DIP_Stat_02 B9=Power Supply Missing
+        #- DIP_Stat_02 B10=Wirebreak
+        #- DIP_Stat_02 B11=Power Supply Missing
+        #- DIP_Stat_02 B12=Wirebreak
+        #- DIP_Stat_02 B13=Power Supply Missing
+        #- DIP_Stat_02 B14=Wirebreak
+        #- DIP_Stat_02 B15=Power Supply Missing
+        {"DIP-Stat-02", "DIP Diagnosis packed bits", "", "DIP_Stat_02"}
+        #- DOS_Stat B0=Overcurrent
+        #- DOS_Stat B1=Overload
+        #- DOS_Stat B2=gap
+        #- DOS_Stat B3=Short to 24V
+        #- DOS_Stat B4=Power Supply Missing
+        #- DOS_Stat B5=Overcurrent
+        #- DOS_Stat B6=Overload
+        #- DOS_Stat B7=gap
+        #- DOS_Stat B8=Short to 24V
+        #- DOS_Stat B9=Power Supply Missing
+        #- DOS_Stat B10=Overcurrent
+        #- DOS_Stat B11=Overload
+        #- DOS_Stat B12=gap
+        #- DOS_Stat B13=Short to 24V
+        #- DOS_Stat B14=Power Supply Missing
+        #- DOS_Stat B15=Overcurrent
+        {"DOS-Stat", "DOS Diagnosis packed bits", "", "DOS_Stat"}
+        #- DOS_Stat02 B0=Overload
+        #- DOS_Stat02 B1=gap
+        #- DOS_Stat02 B2=Short to 24V
+        #- DOS_Stat02 B3=Power Supply Missing
+        #- DOS_Stat02 B4=Overcurrent
+        #- DOS_Stat02 B5=Overload
+        #- DOS_Stat02 B6=gap
+        #- DOS_Stat02 B7=Short to 24V
+        #- DOS_Stat02 B8=Power Supply Missing
+        #- DOS_Stat02 B9=Overcurrent
+        #- DOS_Stat02 B10=Overload
+        #- DOS_Stat02 B11=gap
+        #- DOS_Stat02 B12=Short to 24V
+        #- DOS_Stat02 B13=Power Supply Missing
+        #- DOS_Stat02 B14=Overcurrent
+        #- DOS_Stat02 B15=Overload
+        {"DOS-Stat02", "DOS Diagnosis packed bits", "", "DOS_Stat02"}
+        #- DOS_Stat03 B0=gap
+        #- DOS_Stat03 B1=Short to 24V
+        #- DOS_Stat03 B2=Power Supply Missing
+        #- DOS_Stat03 B3=Overcurrent
+        #- DOS_Stat03 B4=Overload
+        #- DOS_Stat03 B5=gap
+        #- DOS_Stat03 B6=Short to 24V
+        #- DOS_Stat03 B7=Power Supply Missing
+        {"DOS-Stat03", "DOS Diagnosis packed bits", "", "DOS_Stat03"}
+        #- EFU_Stat B0=Warning
+        #- EFU_Stat B1=Error
+        #- EFU_Stat B2=Tripped
+        #- EFU_Stat B3=Enabled
+        #- EFU_Stat B4..B13=gap
+        #- EFU_Stat B14..B15=Input Cycle Counter
+        {"EFU-Stat", "EFU Inputs packed bits", "", "EFU_Stat"}
+}
+
+file "ecmc_ESI_ai.template" {
+    pattern { REC_NAME, DESC , SRC_NAME, DTYP}
+        {"EFU-Current", "Current", "EFU_Current", "asynFloat64"}
+}

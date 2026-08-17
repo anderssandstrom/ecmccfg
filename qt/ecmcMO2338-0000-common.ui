@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>100</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MO2338-0000-1111 / 1112</string>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>100</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>100</width>
+    <height>400</height>
+   </size>
+  </property>
+  <widget class="caInclude" name="cainclude">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>100</width>
+     <height>400</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string>
+   </property>
+   <property name="filename" stdset="0">
+    <string notr="true">ecmcE_slave_frame_S.ui</string>
+   </property>
+  </widget>
+  <!-- common panel for MO2338-0000-1111 and MO2338-0000-1112 -->
+  <!-- source ESI file: /psi.ch/.nfs-server/nfs32.psi.ch/8210_8214/sandst_a/sources/beckhoff_xml/Beckhoff MOxxxx.xml -->
+  <widget class="QTabWidget" name="tabwidget_auto">
+   <property name="geometry">
+    <rect>
+     <x>1</x>
+     <y>118</y>
+     <width>98</width>
+     <height>281</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="tabPage_auto_01">
+    <attribute name="title">
+     <string>DEV</string>
+    </attribute>
+    <widget class="caLabel" name="calabel_auto_01_01">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>6</y>
+       <width>66</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>DOS Outputs pack</string>
+     </property>
+     <property name="toolTip">
+      <string>DOS Outputs packed bits</string>
+     </property>
+    </widget>
+    <widget class="caByte" name="cabyte_auto_01_01">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>2</y>
+       <width>24</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>DOS Outputs packed bits</string>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-DOS-Ctrl</string>
+     </property>
+     <property name="direction">
+      <enum>caByte::Up</enum>
+     </property>
+     <property name="startBit">
+      <number>0</number>
+     </property>
+     <property name="endBit">
+      <number>7</number>
+     </property>
+     <property name="colorMode">
+      <enum>caByte::Static</enum>
+     </property>
+     <property name="foreground" stdset="0">
+      <color>
+       <red>0</red>
+       <green>85</green>
+       <blue>0</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="caLabel" name="calabel_auto_01_02">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>34</y>
+       <width>66</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>EFU Outputs pack</string>
+     </property>
+     <property name="toolTip">
+      <string>EFU Outputs packed bits</string>
+     </property>
+    </widget>
+    <widget class="caByte" name="cabyte_auto_01_02">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>30</y>
+       <width>24</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>EFU Outputs packed bits</string>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-EFU-Ctrl</string>
+     </property>
+     <property name="direction">
+      <enum>caByte::Up</enum>
+     </property>
+     <property name="startBit">
+      <number>0</number>
+     </property>
+     <property name="endBit">
+      <number>15</number>
+     </property>
+     <property name="colorMode">
+      <enum>caByte::Static</enum>
+     </property>
+     <property name="foreground" stdset="0">
+      <color>
+       <red>0</red>
+       <green>85</green>
+       <blue>0</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="caLabel" name="calabel_auto_01_03">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>62</y>
+       <width>66</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>DIP Inputs packe</string>
+     </property>
+     <property name="toolTip">
+      <string>DIP Inputs packed bits</string>
+     </property>
+    </widget>
+    <widget class="caByte" name="cabyte_auto_01_03">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>58</y>
+       <width>24</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>DIP Inputs packed bits</string>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-DIP-Stat</string>
+     </property>
+     <property name="direction">
+      <enum>caByte::Up</enum>
+     </property>
+     <property name="startBit">
+      <number>0</number>
+     </property>
+     <property name="endBit">
+      <number>7</number>
+     </property>
+     <property name="colorMode">
+      <enum>caByte::Static</enum>
+     </property>
+     <property name="foreground" stdset="0">
+      <color>
+       <red>0</red>
+       <green>85</green>
+       <blue>0</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="caLabel" name="calabel_auto_01_04">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>90</y>
+       <width>66</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>DIP Diagnosis pa</string>
+     </property>
+     <property name="toolTip">
+      <string>DIP Diagnosis packed bits</string>
+     </property>
+    </widget>
+    <widget class="caByte" name="cabyte_auto_01_04">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>86</y>
+       <width>24</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>DIP Diagnosis packed bits</string>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-DIP-Stat-02</string>
+     </property>
+     <property name="direction">
+      <enum>caByte::Up</enum>
+     </property>
+     <property name="startBit">
+      <number>0</number>
+     </property>
+     <property name="endBit">
+      <number>15</number>
+     </property>
+     <property name="colorMode">
+      <enum>caByte::Static</enum>
+     </property>
+     <property name="foreground" stdset="0">
+      <color>
+       <red>0</red>
+       <green>85</green>
+       <blue>0</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="caLabel" name="calabel_auto_01_05">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>118</y>
+       <width>66</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>DOS Diagnosis pa</string>
+     </property>
+     <property name="toolTip">
+      <string>DOS Diagnosis packed bits</string>
+     </property>
+    </widget>
+    <widget class="caByte" name="cabyte_auto_01_05">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>114</y>
+       <width>24</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>DOS Diagnosis packed bits</string>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-DOS-Stat</string>
+     </property>
+     <property name="direction">
+      <enum>caByte::Up</enum>
+     </property>
+     <property name="startBit">
+      <number>0</number>
+     </property>
+     <property name="endBit">
+      <number>15</number>
+     </property>
+     <property name="colorMode">
+      <enum>caByte::Static</enum>
+     </property>
+     <property name="foreground" stdset="0">
+      <color>
+       <red>0</red>
+       <green>85</green>
+       <blue>0</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="caLabel" name="calabel_auto_01_06">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>146</y>
+       <width>66</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>DOS Diagnosis pa</string>
+     </property>
+     <property name="toolTip">
+      <string>DOS Diagnosis packed bits</string>
+     </property>
+    </widget>
+    <widget class="caByte" name="cabyte_auto_01_06">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>142</y>
+       <width>24</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>DOS Diagnosis packed bits</string>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-DOS-Stat02</string>
+     </property>
+     <property name="direction">
+      <enum>caByte::Up</enum>
+     </property>
+     <property name="startBit">
+      <number>0</number>
+     </property>
+     <property name="endBit">
+      <number>15</number>
+     </property>
+     <property name="colorMode">
+      <enum>caByte::Static</enum>
+     </property>
+     <property name="foreground" stdset="0">
+      <color>
+       <red>0</red>
+       <green>85</green>
+       <blue>0</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="caLabel" name="calabel_auto_01_07">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>174</y>
+       <width>66</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>DOS Diagnosis pa</string>
+     </property>
+     <property name="toolTip">
+      <string>DOS Diagnosis packed bits</string>
+     </property>
+    </widget>
+    <widget class="caByte" name="cabyte_auto_01_07">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>170</y>
+       <width>24</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>DOS Diagnosis packed bits</string>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-DOS-Stat03</string>
+     </property>
+     <property name="direction">
+      <enum>caByte::Up</enum>
+     </property>
+     <property name="startBit">
+      <number>0</number>
+     </property>
+     <property name="endBit">
+      <number>7</number>
+     </property>
+     <property name="colorMode">
+      <enum>caByte::Static</enum>
+     </property>
+     <property name="foreground" stdset="0">
+      <color>
+       <red>0</red>
+       <green>85</green>
+       <blue>0</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="caLabel" name="calabel_auto_01_08">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>202</y>
+       <width>66</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>EFU Inputs packe</string>
+     </property>
+     <property name="toolTip">
+      <string>EFU Inputs packed bits</string>
+     </property>
+    </widget>
+    <widget class="caByte" name="cabyte_auto_01_08">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>198</y>
+       <width>24</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>EFU Inputs packed bits</string>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-EFU-Stat</string>
+     </property>
+     <property name="direction">
+      <enum>caByte::Up</enum>
+     </property>
+     <property name="startBit">
+      <number>0</number>
+     </property>
+     <property name="endBit">
+      <number>15</number>
+     </property>
+     <property name="colorMode">
+      <enum>caByte::Static</enum>
+     </property>
+     <property name="foreground" stdset="0">
+      <color>
+       <red>0</red>
+       <green>85</green>
+       <blue>0</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="caLabel" name="calabel_auto_more_01">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>230</y>
+       <width>92</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>+1 more PVs</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caLabel</class>
+   <extends>QLabel</extends>
+   <header>caLabel</header>
+  </customwidget>
+  <customwidget>
+   <class>caInclude</class>
+   <extends>QWidget</extends>
+   <header>caInclude</header>
+  </customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+  <customwidget>
+   <class>caByte</class>
+   <extends>QWidget</extends>
+   <header>caByte</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

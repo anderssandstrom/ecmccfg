@@ -12,11 +12,11 @@ ecmcFileExist(${ecmccfg_DIR}slaveVerify.cmd,1)
 ${SCRIPTEXEC} ${ecmccfg_DIR}slaveVerify.cmd "RESET=0"
 
 #- SM2, RxPDO 0x1600: Bluetooth gateway control (16 bits).
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1600,0x7000,0x01,U16,BTG_Ctrl)"
+ecmcConfigOrDie "Cfg.EcAddEntryFixedDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1600,0x7000,0x01,U16,BTG_Ctrl)"
 #- BTG_Ctrl: B0=Enable Bluetooth, B1=Activate pairing, B2..B15=gap
 
 #- SM3, TxPDO 0x1a00: Bluetooth gateway status (16 bits).
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a00,0x6000,0x01,U16,BTG_Stat)"
+ecmcConfigOrDie "Cfg.EcAddEntryFixedDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a00,0x6000,0x01,U16,BTG_Stat)"
 #- BTG_Stat: B0=Dongle present, B1=Bluetooth enabled, B2=Pairing active
 #-           B3=Connected, B4..B11=gap, B12=Diag, B13=gap
 #-           B14..B15=Input cycle counter

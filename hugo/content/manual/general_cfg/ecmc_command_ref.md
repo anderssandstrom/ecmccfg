@@ -246,6 +246,7 @@ chapter = false
 | `Cfg.EcAddEntryComplete(<int>,0x<hex>,0x<hex>,<int>,<int>,0x<hex>,0x<hex>,0x<hex>,<int>,<str>,<int>)` | Set update in realtime bit for an entry * If set to zero the entry will not be updated during realtime operation. |
 | `Cfg.EcAddEntryDT(<int>,0x<hex>,0x<hex>,<int>,<int>,0x<hex>,0x<hex>,0x<hex>,<str>,<str>)` | Adds an EtherCAT slave to the hardware configuration. |
 | `Cfg.EcAddEntryDT(<int>,0x<hex>,0x<hex>,<int>,<int>,0x<hex>,0x<hex>,0x<hex>,<str>,<str>,<int>)` | Adds an EtherCAT slave to the hardware configuration. |
+| `Cfg.EcAddEntryFixedDT(<int>,0x<hex>,0x<hex>,<int>,<int>,0x<hex>,0x<hex>,0x<hex>,<str>,<str>)` | Registers an entry from an existing fixed/read-only PDO mapping without clearing or rewriting that mapping. |
 | `Cfg.EcAddEntryCyclicWrite(<str>,<str>)` | Copies a source EtherCAT entry to a destination output or simulation entry every realtime cycle. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md#cyclic-ethercat-entry-writes" >}}). |
 | `Cfg.EcAddEntryCyclicWrite(<str>,<str>,<int>)` | Adds a cyclic entry write with optional forced raw-bit copying between different datatypes. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md#cyclic-ethercat-entry-writes" >}}). |
 | `Cfg.EcAddMemMap(<int>,<str>,<int>,<int>,<str>)` | Adds a memory map object to access data directly from EtherCAT domain. |

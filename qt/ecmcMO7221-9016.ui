@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>125</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MO7221-9016</string>
+  </property>
+  <widget class="caInclude" name="drivePanel">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>125</width>
+     <height>500</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ID=01</string>
+   </property>
+   <property name="filename" stdset="0">
+    <string notr="true">ecmcEx72x1_STD.ui</string>
+   </property>
+  </widget>
+  <widget class="caRelatedDisplay" name="expertPanel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>390</y>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="labels">
+    <string>Expert</string>
+   </property>
+   <property name="files">
+    <string>ecmcMO7221-9016_expert.ui</string>
+   </property>
+   <property name="args">
+    <string>MasterID=$(MasterID),SlaveID=$(SlaveID),ID=01,IOC=$(IOC);</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="safetyGroup">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>310</y>
+     <width>115</width>
+     <height>55</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Diagnostic only; not a safety-rated signal. 0=STO active, 1=safety ready.</string>
+   </property>
+   <property name="title">
+    <string>Safety diagnostic</string>
+   </property>
+   <widget class="caLed" name="safetyReadyLed">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>22</y>
+      <width>18</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Drv01-SafetyReady</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLed::Static</enum>
+    </property>
+    <property name="falseColor">
+     <color>
+      <red>255</red>
+      <green>0</green>
+      <blue>0</blue>
+     </color>
+    </property>
+    <property name="trueColor">
+     <color>
+      <red>0</red>
+      <green>205</green>
+      <blue>0</blue>
+     </color>
+    </property>
+   </widget>
+   <widget class="QLabel" name="safetyReadyLabel">
+    <property name="geometry">
+     <rect>
+      <x>31</x>
+      <y>20</y>
+      <width>78</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>STO</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caRelatedDisplay</class>
+   <extends>QWidget</extends>
+   <header>caRelatedDisplay</header>
+  </customwidget>
+  <customwidget>
+   <class>caInclude</class>
+   <extends>QWidget</extends>
+   <header>caInclude</header>
+  </customwidget>
+  <customwidget>
+   <class>caLed</class>
+   <extends>QWidget</extends>
+   <header>caLed</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

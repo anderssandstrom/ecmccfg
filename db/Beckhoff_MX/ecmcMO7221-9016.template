@@ -1,0 +1,12 @@
+#- MO7221 safety diagnostics. These records are monitoring aids only and are
+#- not safety-rated signals. Functional safety remains in FSoE/TwinSAFE.
+record(bi,"${ECMC_P}Drv${CH_ID}-SafetyReady") {
+  field(DESC, "Output stage safety state")
+  field(PINI, "$(PINI=1)")
+  field(DTYP, "asynUInt32Digital")
+  field(INP,  "@asynMask($(PORT),$(ADDR=0),0x1,$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ec$(MASTER_ID).s$(SLAVE_POS).outputStageSafetyState${CH_ID}?")
+  field(SCAN, "I/O Intr")
+  field(ZNAM, "STO active")
+  field(ONAM, "Safety ready")
+  field(TSE,  "$(TSE=-2)")
+}

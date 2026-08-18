@@ -1,0 +1,4 @@
+#- MB1120 is a passive backplane junction and exposes no process data.
+file "empty.template" {
+  pattern {}
+}

@@ -1,0 +1,9 @@
+file "ecmc_ESI_mbboDirect.template" {
+  pattern { REC_NAME, DESC, SRC_NAME }
+    { "BTG-Ctrl", "Bluetooth gateway control", "BTG_Ctrl" }
+}
+
+file "ecmc_ESI_mbbiDirect.template" {
+  pattern { REC_NAME, DESC, FLNK, SRC_NAME }
+    { "BTG-Stat", "Bluetooth gateway status", "", "BTG_Stat" }
+}

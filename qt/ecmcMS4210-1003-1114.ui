@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>125</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MS4210-1003-1114</string>
+  </property>
+  <widget class="caInclude" name="slaveFrame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>128</width>
+     <height>500</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),HWType=$(HWType)</string>
+   </property>
+   <property name="filename" stdset="0">
+    <string notr="true">ecmcE_slave_frame.ui</string>
+   </property>
+  </widget>
+  <widget class="caShellCommand" name="hardwareDiagnostics">
+   <property name="geometry">
+    <rect>
+     <x>5</x>
+     <y>5</y>
+     <width>26</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="label">
+    <string>HW</string>
+   </property>
+   <property name="labels">
+    <string>Open hardware diagnostics</string>
+   </property>
+   <property name="files">
+    <string>bash /ioc/modules/qt/ecmcOpenObject.sh</string>
+   </property>
+   <property name="args">
+    <string>OPEN_EC_TOOL_HW_DIAG_MAIN $(IOC) $(MasterID) $(SlaveID)</string>
+   </property>
+  </widget>
+  <widget class="QTabWidget" name="railTabs">
+   <property name="geometry">
+    <rect>
+     <x>4</x>
+     <y>55</y>
+     <width>117</width>
+     <height>325</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="usTab">
+    <attribute name="title">
+     <string>Us</string>
+    </attribute>
+    <widget class="caLabel" name="usCtrlLabel">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>8</y>
+       <width>45</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Control</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="caLabel" name="usStatLabel">
+     <property name="geometry">
+      <rect>
+       <x>58</x>
+       <y>8</y>
+       <width>45</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Status</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="caByteController" name="usCtrl">
+     <property name="geometry">
+      <rect>
+       <x>16</x>
+       <y>35</y>
+       <width>24</width>
+       <height>241</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>B0 Reset; B2 Enable; B3 Control via process data</string>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Us-Ctrl</string>
+     </property>
+     <property name="direction">
+      <enum>caByteController::Down</enum>
+     </property>
+     <property name="startBit">
+      <number>0</number>
+     </property>
+     <property name="endBit">
+      <number>15</number>
+     </property>
+    </widget>
+    <widget class="caByte" name="usStat">
+     <property name="geometry">
+      <rect>
+       <x>69</x>
+       <y>35</y>
+       <width>24</width>
+       <height>241</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>B0 Enabled; B1 Tripped; B3 Overload; B6 Undervoltage; B7 Current warning; B8 Cool-down; B18 Error; B21 Load warning</string>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Us-Stat</string>
+     </property>
+     <property name="direction">
+      <enum>caByte::Down</enum>
+     </property>
+     <property name="startBit">
+      <number>0</number>
+     </property>
+     <property name="endBit">
+      <number>31</number>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="upTab">
+    <attribute name="title">
+     <string>Up</string>
+    </attribute>
+    <widget class="caLabel" name="upCtrlLabel">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>8</y>
+       <width>45</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Control</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="caLabel" name="upStatLabel">
+     <property name="geometry">
+      <rect>
+       <x>58</x>
+       <y>8</y>
+       <width>45</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Status</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="caByteController" name="upCtrl">
+     <property name="geometry">
+      <rect>
+       <x>16</x>
+       <y>35</y>
+       <width>24</width>
+       <height>241</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>B0 Reset; B2 Enable; B3 Control via process data</string>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Up-Ctrl</string>
+     </property>
+     <property name="direction">
+      <enum>caByteController::Down</enum>
+     </property>
+     <property name="startBit">
+      <number>0</number>
+     </property>
+     <property name="endBit">
+      <number>15</number>
+     </property>
+    </widget>
+    <widget class="caByte" name="upStat">
+     <property name="geometry">
+      <rect>
+       <x>69</x>
+       <y>35</y>
+       <width>24</width>
+       <height>241</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>B0 Enabled; B1 Tripped; B3 Overload; B6 Undervoltage; B7 Current warning; B8 Cool-down; B18 Error; B21 Load warning</string>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Up-Stat</string>
+     </property>
+     <property name="direction">
+      <enum>caByte::Down</enum>
+     </property>
+     <property name="startBit">
+      <number>0</number>
+     </property>
+     <property name="endBit">
+      <number>31</number>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="caRelatedDisplay" name="expertPanel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>390</y>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="labels">
+    <string>Expert</string>
+   </property>
+   <property name="files">
+    <string>ecmcMS4210-1003-1114_expert.ui</string>
+   </property>
+   <property name="args">
+    <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caRelatedDisplay</class>
+   <extends>QWidget</extends>
+   <header>caRelatedDisplay</header>
+  </customwidget>
+  <customwidget>
+   <class>caByteController</class>
+   <extends>QWidget</extends>
+   <header>caByteController</header>
+  </customwidget>
+  <customwidget>
+   <class>caLabel</class>
+   <extends>QLabel</extends>
+   <header>caLabel</header>
+  </customwidget>
+  <customwidget>
+   <class>caInclude</class>
+   <extends>QWidget</extends>
+   <header>caInclude</header>
+  </customwidget>
+  <customwidget>
+   <class>caByte</class>
+   <extends>QWidget</extends>
+   <header>caByte</header>
+  </customwidget>
+  <customwidget>
+   <class>caShellCommand</class>
+   <extends>QWidget</extends>
+   <header>caShellCommand</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

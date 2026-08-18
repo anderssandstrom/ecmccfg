@@ -1,0 +1,11 @@
+file "ecmc_ESI_mbboDirect.template" {
+  pattern { REC_NAME, DESC, SRC_NAME }
+    { "Us-Ctrl", "Us output control", "Us_Ctrl" }
+    { "Up-Ctrl", "Up output control", "Up_Ctrl" }
+}
+
+file "ecmc_ESI_mbbiDirect.template" {
+  pattern { REC_NAME, DESC, FLNK, SRC_NAME }
+    { "Us-Stat", "Us output status", "", "Us_Stat" }
+    { "Up-Stat", "Up output status", "", "Up_Stat" }
+}

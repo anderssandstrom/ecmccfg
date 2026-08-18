@@ -82,6 +82,7 @@ you know the visible problem, but not yet which detailed page to use.
 | `ERROR_EC_LINK_DOWN` | EtherCAT cabling issue, slave power missing. |
 | `ERROR_EC_STATUS_NOT_OK` | EtherCAT cabling issue, slave power missing. |
 | `ERROR_EC_MAIN_DOMAIN_DATA_FAILED` | EtherCAT cabling issue, slave power missing. |
+| `ERROR_MAIN_ASYN_CREATE_PARAM_FAIL` (`0x20044`) | The asyn parameter table is full. Increase `MAX_PARAM_COUNT`; see [Asyn Parameter Count Exceeded]({{< relref "/manual/knowledgebase/general.md#asyn-parameter-count-exceeded" >}}). Sometimes referred to as `ECMC_MAIN_ASYN_CREATE_PARAM_FAIL`. |
 | `ERROR_AXIS_SLAVED_AXIS_INTERLOCK` | Slaved axis in error (synchronized axes). |
 
 ## Related Pages

@@ -45,7 +45,15 @@ Diagnose the issue by logging into the host/server and running the
 
 ## Asyn Parameter Count Exceeded
 
-For big IOC:s sometimes the default maximum asyn parameter count might not be enough and an error will be shown:
+For large IOCs, the default maximum number of asyn parameters may be too low.
+The corresponding ecmc error is
+`ERROR_MAIN_ASYN_CREATE_PARAM_FAIL` (`0x20044`). This is sometimes referred to
+as `ECMC_MAIN_ASYN_CREATE_PARAM_FAIL`, but the canonical error symbol emitted
+by ecmc is `ERROR_MAIN_ASYN_CREATE_PARAM_FAIL`.
+
+The IOC output typically also contains `Parameter table full` and identifies
+the parameter that could not be created:
+
 ```
 ...
 ecmcConfigOrDie "Cfg.SetAppMode(1)"
@@ -55,7 +63,13 @@ Increase paramtable size in call to ecmcAsynPortDriverConfigure().
 .....
 ```
 
-The solution is to increase the maximum parameter count by setting the "MAX_PARAM_COUNT" macro when requiring ecmccfg:
+The failure commonly becomes visible when `Cfg.SetAppMode(1)` creates the
+remaining asyn parameters. It does not mean that `SetAppMode` itself is
+incorrect; the parameter table has already reached its configured limit.
+
+Increase the maximum parameter count by setting the `MAX_PARAM_COUNT` macro
+when requiring ecmccfg:
+
 ```
 require ecmccfg "MASTER_ID=1,......,MAX_PARAM_COUNT=2000"
 ```

@@ -11,7 +11,7 @@ epicsEnvSet("ECMC_EC_PRODUCT_ID"         "0x00110001")
 epicsEnvSet("ECMC_EC_REVISION"           "0x09CC0000")
 epicsEnvSet("ECMC_EC_COMP_TYPE"          "N6")
 epicsEnvSet("ECMC_SUBST_TYPE"            "N6-1-1-1-S")
-epicsEnvSet("ECMC_HW_PANEL"              "Ex72x1")
+epicsEnvSet("ECMC_HW_PANEL"              "N6-1-1-1-S")
 
 #- Verify identity without attempting a restore-default SDO on untested hardware.
 ecmcFileExist(${ecmccfg_DIR}slaveVerify.cmd,1)
@@ -31,6 +31,8 @@ ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${EC
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1600,0x6060,0x00,S8,modeControl01)"
 #- 0x1602: CSV target velocity
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1602,0x60FF,0x00,S32,velocitySetpoint01)"
+#- 0x1603: physical digital outputs
+ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1603,0x60FE,0x01,U32,binaryOutputArray01)"
 
 #- SM3 inputs.
 #- 0x1a00: statusword + displayed mode
@@ -40,11 +42,20 @@ ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${EC
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a01,0x6064,0x00,S32,positionActual01)"
 #- 0x1a02: actual velocity
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a02,0x606C,0x00,S32,velocityActual01)"
-#- 0x1a03: digital inputs
+#- 0x1a03: digital inputs, external feedback and diagnostics. The N6 has
+#- only four slots in 0x1C13, so all added Tx entries stay in PDO 0x1a03.
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a03,0x60FD,0x00,U32,binaryInputArray01)"
+#- Feedback interface 3: incremental A/B/I (configured at 0x33A0).
+ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a03,0x60E4,0x03,S32,positionActualInc01)"
+#- Feedback interface 4: SSI (configured at 0x33B0).
+ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a03,0x60E4,0x04,S32,positionActualSSI01)"
+#- Drive diagnostics.
+ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a03,0x603F,0x00,U16,errorCode01)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a03,0x6077,0x00,S16,torqueActual01)"
 
 #- Initialise the cyclic mode byte and replay the SDO after reconnection.
 ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},modeControl01,9)"
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},binaryOutputArray01,0)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x6060,0x00,9,1)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x60A8,0x00,0x00B50000,4)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x60A9,0x00,0x00B50300,4)"

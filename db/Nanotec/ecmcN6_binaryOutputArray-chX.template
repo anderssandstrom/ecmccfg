@@ -1,0 +1,20 @@
+#- N6 0x60FE:01 is a full 32-bit word. Physical outputs start at bit 16.
+record(mbboDirect,"${ECMC_P}${KEY=BO}${CH_ID}${suffix=-Arr}"){
+  info(asyn:READBACK,"1")
+  field(DESC, "${HWTYPE}: 0x60FE:01 digital outputs")
+  field(PINI, "${PINI=1}")
+  field(DTYP, "asynUInt32Digital")
+  field(NOBT, "32")
+  field(OUT,  "@asynMask(${PORT},${ADDR=0},0xFFFFFFFF,${TIMEOUT=1})T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynUInt32Digital/ec${MASTER_ID}.s${SLAVE_POS}.${sourceName=binaryOutputArray}${CH_ID}=")
+  field(TSE,  "${TSE=-2}")
+}
+
+record(mbbiDirect,"${ECMC_P}${KEY=BO}${CH_ID}${suffix=-Arr}-RB"){
+  field(DESC, "${HWTYPE}: 0x60FE:01 outputs readback")
+  field(PINI, "${PINI=1}")
+  field(DTYP, "asynUInt32Digital")
+  field(SCAN, "${SCAN=I/O Intr}")
+  field(NOBT, "32")
+  field(INP,  "@asynMask(${PORT},${ADDR=0},0xFFFFFFFF,${TIMEOUT=1})T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynUInt32Digital/ec${MASTER_ID}.s${SLAVE_POS}.${sourceName=binaryOutputArray}${CH_ID}?")
+  field(TSE,  "${TSE=-2}")
+}

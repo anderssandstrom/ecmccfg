@@ -49,3 +49,4 @@ Use the pages below for terminal/drive-specific diagnostics:
 - [Beckhoff MX-System]({{< relref "/manual/knowledgebase/hardware/MX-System.md" >}})
 - [Hardware issues]({{< relref "/manual/knowledgebase/hardware/hardware_issues.md" >}})
 - [Technosoft iPOS4808, iPOS8020]({{< relref "/manual/knowledgebase/hardware/iPOSXXXX.md" >}})
+- [Nanotec N6 EtherCAT drive]({{< relref "/manual/knowledgebase/hardware/Nanotec-N6.md" >}})

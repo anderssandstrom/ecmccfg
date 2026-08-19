@@ -1,0 +1,10 @@
+#- N6 0x60FD is a full 32-bit word. Physical inputs are above bit 15.
+record(mbbiDirect,"${ECMC_P}${KEY=BI}${CH_ID}${suffix=-Arr}"){
+  field(DESC, "${HWTYPE}: 0x60FD digital inputs")
+  field(PINI, "${PINI=1}")
+  field(DTYP, "asynUInt32Digital")
+  field(SCAN, "${SCAN=I/O Intr}")
+  field(NOBT, "32")
+  field(INP,  "@asynMask(${PORT},${ADDR=0},0xFFFFFFFF,${TIMEOUT=1})T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynUInt32Digital/ec${MASTER_ID}.s${SLAVE_POS}.${sourceName=binaryInputArray}${CH_ID}?")
+  field(TSE,  "${TSE=-2}")
+}

@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>125</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>125</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>125</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Nanotec N6-1-1-1-S</string>
+  </property>
+  <widget class="caInclude" name="slaveFrame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>128</width>
+     <height>500</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),HWType=$(HWType)</string>
+   </property>
+   <property name="filename" stdset="0">
+    <string notr="true">ecmcE_slave_frame.ui</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="titleLabel">
+   <property name="geometry">
+    <rect>
+     <x>4</x>
+     <y>30</y>
+     <width>117</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>N6-1-1-1-S</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QTabWidget" name="tabWidget">
+   <property name="geometry">
+    <rect>
+     <x>2</x>
+     <y>70</y>
+     <width>121</width>
+     <height>345</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="driveTab">
+    <attribute name="title">
+     <string>Drive</string>
+    </attribute>
+    <widget class="QLabel" name="velocityLabel">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>12</y>
+       <width>104</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Velocity</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="velocityActual">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>31</y>
+       <width>104</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Drv01-VelAct</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Static</enum>
+     </property>
+     <property name="unitsEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="torqueLabel">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>62</y>
+       <width>104</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Torque</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="torqueActual">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>81</y>
+       <width>104</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Drv01-TrqAct</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Static</enum>
+     </property>
+     <property name="unitsEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="statusLabel">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>112</y>
+       <width>104</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Status word</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="driveStatus">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>131</y>
+       <width>104</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Drv01-Stat</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Static</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="errorLabel">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>162</y>
+       <width>104</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Error code</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="errorCode">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>181</y>
+       <width>104</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Drv01-ErrCode</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Static</enum>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="encoderTab">
+    <attribute name="title">
+     <string>Enc</string>
+    </attribute>
+    <widget class="QLabel" name="motorPositionLabel">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>12</y>
+       <width>104</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Motor position</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="motorPosition">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>31</y>
+       <width>104</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Enc01-PosAct</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Static</enum>
+     </property>
+     <property name="unitsEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="incPositionLabel">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>67</y>
+       <width>104</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Incremental</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="incPosition">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>86</y>
+       <width>104</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Inc01-PosAct</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Static</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="ssiPositionLabel">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>122</y>
+       <width>104</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>SSI</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="ssiPosition">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>141</y>
+       <width>104</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-SSI01-PosAct</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Static</enum>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="ioTab">
+    <attribute name="title">
+     <string>I/O</string>
+    </attribute>
+    <widget class="QLabel" name="inputArrayLabel">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>12</y>
+       <width>104</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Input array</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="inputArray">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>31</y>
+       <width>104</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-BI01-Arr</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Static</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="outputArrayLabel">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>67</y>
+       <width>104</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Output array</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="outputArray">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>86</y>
+       <width>104</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-BO01-Arr</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="outputReadbackLabel">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>122</y>
+       <width>104</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Output readback</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="outputReadback">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>141</y>
+       <width>104</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-BO01-Arr-RB</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Static</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="ioHint">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>180</y>
+       <width>104</width>
+       <height>65</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>See Expert for bit meanings and controls.</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="caRelatedDisplay" name="expertPanel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>425</y>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="labels">
+    <string>Expert</string>
+   </property>
+   <property name="files">
+    <string>ecmcN6-1-1-1-S_expert.ui</string>
+   </property>
+   <property name="args">
+    <string>MasterID=$(MasterID),SlaveID=$(SlaveID),ID=01,IOC=$(IOC);</string>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caRelatedDisplay</class>
+   <extends>QWidget</extends>
+   <header>caRelatedDisplay</header>
+  </customwidget>
+  <customwidget>
+   <class>caInclude</class>
+   <extends>QWidget</extends>
+   <header>caInclude</header>
+  </customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

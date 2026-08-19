@@ -39,6 +39,8 @@ The main component macros are:
 | `CURR_RED_DLY_MS` | Delay before standstill-current reduction | `1000` ms |
 | `N6_POS_UNIT` | CiA-402 object `0x60A8` | `0x00B50000` |
 | `N6_VEL_UNIT` | CiA-402 object `0x60A9` | `0x00B50300` |
+| `N6_IO_24V` | Select 24 V inputs and +UB outputs | `1` |
+| `N6_INPUT_PULLUP` | Select input pull-up instead of pull-down | `0` |
 
 `U_NOM_MV`, `R_COIL_MOHM`, and `L_COIL_UH` are accepted for compatibility
 with generic motor definitions. They are validated where applicable but are
@@ -164,6 +166,12 @@ because the N6 physical I/O bits are above bit 15.
 
 ## Digital inputs and ecmc limit handling
 
+The configuration explicitly writes `0x323A:01=1` and `0x323A:02=0`. The
+inputs therefore use 24 V thresholds with pull-down wiring. The voltage-level
+selector is shared with the outputs, so outputs 1 through 3 use `+UB` rather
+than 5 V. Override these values with `N6_IO_24V` and `N6_INPUT_PULLUP` only
+when the connected electrical interface requires it.
+
 `BI01-Arr` exposes two kinds of signals:
 
 | Bit | Meaning |
@@ -238,4 +246,3 @@ Expected for open-loop standstill are `0x3202=0` and `0x60FF=0`.
 - [Hardware knowledge base]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
 - [Motion scaling]({{< relref "/manual/motion_cfg/scaling.md" >}})
 - [ecmccomp]({{< relref "/manual/motion_cfg/ecmccomp.md" >}})
-

@@ -7,48 +7,48 @@
   <widget class="caInclude" name="driveExpertPanel">
    <property name="geometry"><rect><x>0</x><y>0</y><width>412</width><height>502</height></rect></property>
    <property name="macro"><string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ID=01</string></property>
-   <property name="filename" stdset="0"><string notr="true">ecmcEx72x1_expert.ui</string></property>
+   <property name="filename" stdset="0"><string notr="true">ecmcN6_drive_expert.ui</string></property>
   </widget>
   <widget class="QGroupBox" name="diagnosticGroup">
    <property name="geometry"><rect><x>420</x><y>10</y><width>450</width><height>155</height></rect></property>
    <property name="title"><string>N6 feedback and diagnostics</string></property>
-   <widget class="QLabel" name="incLabel"><property name="geometry"><rect><x>10</x><y>27</y><width>120</width><height>20</height></rect></property><property name="text"><string>Incremental position</string></property></widget>
-   <widget class="caLineEdit" name="incPosition"><property name="geometry"><rect><x>145</x><y>27</y><width>290</width><height>20</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Inc01-PosAct</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
-   <widget class="QLabel" name="ssiLabel"><property name="geometry"><rect><x>10</x><y>55</y><width>120</width><height>20</height></rect></property><property name="text"><string>SSI position</string></property></widget>
-   <widget class="caLineEdit" name="ssiPosition"><property name="geometry"><rect><x>145</x><y>55</y><width>290</width><height>20</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-SSI01-PosAct</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
-   <widget class="QLabel" name="torqueLabel"><property name="geometry"><rect><x>10</x><y>83</y><width>120</width><height>20</height></rect></property><property name="text"><string>Actual torque</string></property></widget>
-   <widget class="caLineEdit" name="torqueActual"><property name="geometry"><rect><x>145</x><y>83</y><width>290</width><height>20</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Drv01-TrqAct</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property><property name="unitsEnabled"><bool>true</bool></property></widget>
-   <widget class="QLabel" name="errorLabel"><property name="geometry"><rect><x>10</x><y>111</y><width>120</width><height>20</height></rect></property><property name="text"><string>CiA-402 error code</string></property></widget>
-   <widget class="caLineEdit" name="errorCode"><property name="geometry"><rect><x>145</x><y>111</y><width>290</width><height>20</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Drv01-ErrCode</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
+   <widget class="QLabel" name="incLabel"><property name="geometry"><rect><x>10</x><y>27</y><width>135</width><height>20</height></rect></property><property name="text"><string>Incremental position</string></property></widget>
+   <widget class="caLineEdit" name="incPosition"><property name="geometry"><rect><x>150</x><y>27</y><width>285</width><height>20</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Inc01-PosAct</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
+   <widget class="QLabel" name="ssiLabel"><property name="geometry"><rect><x>10</x><y>55</y><width>135</width><height>20</height></rect></property><property name="text"><string>SSI position</string></property></widget>
+   <widget class="caLineEdit" name="ssiPosition"><property name="geometry"><rect><x>150</x><y>55</y><width>285</width><height>20</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-SSI01-PosAct</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
+   <widget class="QLabel" name="torqueLabel"><property name="geometry"><rect><x>10</x><y>83</y><width>135</width><height>20</height></rect></property><property name="text"><string>Actual torque</string></property></widget>
+   <widget class="caLineEdit" name="torqueActual"><property name="geometry"><rect><x>150</x><y>83</y><width>285</width><height>20</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Drv01-TrqAct</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property><property name="unitsEnabled"><bool>true</bool></property></widget>
+   <widget class="QLabel" name="errorLabel"><property name="geometry"><rect><x>10</x><y>111</y><width>135</width><height>20</height></rect></property><property name="text"><string>CiA-402 error code</string></property></widget>
+   <widget class="caLineEdit" name="errorCode"><property name="geometry"><rect><x>150</x><y>111</y><width>285</width><height>20</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Drv01-ErrCode</string></property><property name="colorMode"><enum>caLineEdit::Static</enum></property></widget>
   </widget>
   <widget class="QGroupBox" name="ioGroup">
    <property name="geometry"><rect><x>420</x><y>175</y><width>450</width><height>315</height></rect></property>
    <property name="title"><string>Digital I/O — complete 32-bit objects</string></property>
    <widget class="QLabel" name="specialLabel"><property name="geometry"><rect><x>10</x><y>25</y><width>95</width><height>20</height></rect></property><property name="text"><string>Special inputs</string></property></widget>
    <widget class="caByte" name="specialInputs"><property name="geometry"><rect><x>12</x><y>50</y><width>24</width><height>96</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-BI01-Arr</string></property><property name="direction"><enum>caByte::Down</enum></property><property name="startBit"><number>0</number></property><property name="endBit"><number>3</number></property></widget>
-   <widget class="QLabel" name="specialCaptions"><property name="geometry"><rect><x>42</x><y>50</y><width>65</width><height>96</height></rect></property><property name="text"><string>B0 NLS
-B1 PLS
-B2 Home
-B3 Interlock</string></property></widget>
+   <widget class="QLabel" name="specialCaption0"><property name="geometry"><rect><x>42</x><y>50</y><width>75</width><height>24</height></rect></property><property name="text"><string>B0 NLS</string></property></widget>
+   <widget class="QLabel" name="specialCaption1"><property name="geometry"><rect><x>42</x><y>74</y><width>75</width><height>24</height></rect></property><property name="text"><string>B1 PLS</string></property></widget>
+   <widget class="QLabel" name="specialCaption2"><property name="geometry"><rect><x>42</x><y>98</y><width>75</width><height>24</height></rect></property><property name="text"><string>B2 Home</string></property></widget>
+   <widget class="QLabel" name="specialCaption3"><property name="geometry"><rect><x>42</x><y>122</y><width>75</width><height>24</height></rect></property><property name="text"><string>B3 Interlock</string></property></widget>
    <widget class="QLabel" name="physicalInputLabel"><property name="geometry"><rect><x>120</x><y>25</y><width>110</width><height>20</height></rect></property><property name="text"><string>Physical inputs</string></property></widget>
    <widget class="caByte" name="physicalInputs"><property name="geometry"><rect><x>122</x><y>50</y><width>24</width><height>216</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-BI01-Arr</string></property><property name="direction"><enum>caByte::Down</enum></property><property name="startBit"><number>16</number></property><property name="endBit"><number>24</number></property></widget>
-   <widget class="QLabel" name="physicalInputCaptions"><property name="geometry"><rect><x>152</x><y>50</y><width>78</width><height>216</height></rect></property><property name="text"><string>B16 Input 1
-B17 Input 2
-B18 Input 3
-B19 Input 4
-B20 Input 5
-B21 reserved
-B22 reserved
-B23 reserved
-B24 Input 6</string></property></widget>
+   <widget class="QLabel" name="physicalInputCaption16"><property name="geometry"><rect><x>152</x><y>50</y><width>85</width><height>24</height></rect></property><property name="text"><string>B16 Input 1</string></property></widget>
+   <widget class="QLabel" name="physicalInputCaption17"><property name="geometry"><rect><x>152</x><y>74</y><width>85</width><height>24</height></rect></property><property name="text"><string>B17 Input 2</string></property></widget>
+   <widget class="QLabel" name="physicalInputCaption18"><property name="geometry"><rect><x>152</x><y>98</y><width>85</width><height>24</height></rect></property><property name="text"><string>B18 Input 3</string></property></widget>
+   <widget class="QLabel" name="physicalInputCaption19"><property name="geometry"><rect><x>152</x><y>122</y><width>85</width><height>24</height></rect></property><property name="text"><string>B19 Input 4</string></property></widget>
+   <widget class="QLabel" name="physicalInputCaption20"><property name="geometry"><rect><x>152</x><y>146</y><width>85</width><height>24</height></rect></property><property name="text"><string>B20 Input 5</string></property></widget>
+   <widget class="QLabel" name="physicalInputCaption21"><property name="geometry"><rect><x>152</x><y>170</y><width>85</width><height>24</height></rect></property><property name="text"><string>B21 reserved</string></property></widget>
+   <widget class="QLabel" name="physicalInputCaption22"><property name="geometry"><rect><x>152</x><y>194</y><width>85</width><height>24</height></rect></property><property name="text"><string>B22 reserved</string></property></widget>
+   <widget class="QLabel" name="physicalInputCaption23"><property name="geometry"><rect><x>152</x><y>218</y><width>85</width><height>24</height></rect></property><property name="text"><string>B23 reserved</string></property></widget>
+   <widget class="QLabel" name="physicalInputCaption24"><property name="geometry"><rect><x>152</x><y>242</y><width>85</width><height>24</height></rect></property><property name="text"><string>B24 Input 6</string></property></widget>
    <widget class="QLabel" name="brakeLabel"><property name="geometry"><rect><x>245</x><y>25</y><width>80</width><height>20</height></rect></property><property name="text"><string>Brake</string></property></widget>
    <widget class="caByteController" name="brakeOutput"><property name="geometry"><rect><x>247</x><y>50</y><width>24</width><height>24</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-BO01-Arr</string></property><property name="direction"><enum>caByteController::Down</enum></property><property name="startBit"><number>0</number></property><property name="endBit"><number>0</number></property></widget>
    <widget class="QLabel" name="brakeCaption"><property name="geometry"><rect><x>277</x><y>50</y><width>55</width><height>24</height></rect></property><property name="text"><string>B0 BRK</string></property></widget>
    <widget class="QLabel" name="physicalOutputLabel"><property name="geometry"><rect><x>245</x><y>92</y><width>110</width><height>20</height></rect></property><property name="text"><string>Physical outputs</string></property></widget>
    <widget class="caByteController" name="physicalOutputs"><property name="geometry"><rect><x>247</x><y>117</y><width>24</width><height>72</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-BO01-Arr</string></property><property name="direction"><enum>caByteController::Down</enum></property><property name="startBit"><number>16</number></property><property name="endBit"><number>18</number></property></widget>
-   <widget class="QLabel" name="physicalOutputCaptions"><property name="geometry"><rect><x>277</x><y>117</y><width>100</width><height>72</height></rect></property><property name="text"><string>B16 Output 1
-B17 Output 2
-B18 Output 3</string></property></widget>
+   <widget class="QLabel" name="physicalOutputCaption16"><property name="geometry"><rect><x>277</x><y>117</y><width>100</width><height>24</height></rect></property><property name="text"><string>B16 Output 1</string></property></widget>
+   <widget class="QLabel" name="physicalOutputCaption17"><property name="geometry"><rect><x>277</x><y>141</y><width>100</width><height>24</height></rect></property><property name="text"><string>B17 Output 2</string></property></widget>
+   <widget class="QLabel" name="physicalOutputCaption18"><property name="geometry"><rect><x>277</x><y>165</y><width>100</width><height>24</height></rect></property><property name="text"><string>B18 Output 3</string></property></widget>
    <widget class="QLabel" name="ioNote"><property name="geometry"><rect><x>245</x><y>205</y><width>190</width><height>76</height></rect></property><property name="text"><string>Outputs depend on routing in 0x3252. The defaults route OUT1..3 to bits 16..18.</string></property><property name="wordWrap"><bool>true</bool></property></widget>
   </widget>
  </widget>

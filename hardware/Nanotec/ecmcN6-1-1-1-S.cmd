@@ -25,6 +25,11 @@ ecmcConfigOrDie "Cfg.EcWriteSdo(${ECMC_EC_SLAVE_NUM},0x6060,0x00,9,1)"
 ecmcConfigOrDie "Cfg.EcWriteSdo(${ECMC_EC_SLAVE_NUM},0x60A8,0x00,0x00B50000,4)"
 ecmcConfigOrDie "Cfg.EcWriteSdo(${ECMC_EC_SLAVE_NUM},0x60A9,0x00,0x00B50300,4)"
 
+#- Industrial digital I/O levels: 24 V inputs, +UB outputs and pull-down inputs.
+#- 0x323A:01 is shared by the inputs and outputs (0=5 V, 1=24 V/+UB).
+ecmcConfigOrDie "Cfg.EcWriteSdo(${ECMC_EC_SLAVE_NUM},0x323A,0x01,1,1)"
+ecmcConfigOrDie "Cfg.EcWriteSdo(${ECMC_EC_SLAVE_NUM},0x323A,0x02,0,1)"
+
 #- SM2 outputs.
 #- 0x1600: controlword + mode of operation
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1600,0x6040,0x00,U16,driveControl01)"
@@ -59,6 +64,8 @@ ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},binaryOutputArray
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x6060,0x00,9,1)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x60A8,0x00,0x00B50000,4)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x60A9,0x00,0x00B50300,4)"
+ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x323A,0x01,1,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x323A,0x02,0,1)"
 ecmcConfigOrDie "Cfg.EcSetSlaveNeedSDOSettings(${ECMC_EC_SLAVE_NUM},1,1)"
 
 #- ESI DC mode: SYNC0=1 ms, shift=250 us, AssignActivate=0x0330.

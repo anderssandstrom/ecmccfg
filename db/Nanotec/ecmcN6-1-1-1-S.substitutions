@@ -1,0 +1,27 @@
+# WARNING: UNTESTED
+
+file "ecmcEL72XX_DRV.template"
+{
+  pattern {CH_ID}
+          {01   }
+}
+
+file "ecmcEL72XX_ENC.template"
+{
+  pattern {CH_ID}
+          {01   }
+}
+
+file "ecmc_analogInput-chX.template"
+{
+  pattern {CH_ID, sourceName,       KEY,   suffix,    DESC,             EGU,   ESLO, PREC}
+          {01,    "velocityActual", "Drv", "-VelAct", "Actual velocity", "Raw", 1,    0   }
+}
+
+#- The generic array record currently displays the lower 16 of the N6's
+#- 32 digital-input bits.
+file "ecmc_binaryInputArray-chX.template"
+{
+  pattern {CH_ID}
+          {01   }
+}

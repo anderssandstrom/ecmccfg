@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>360</width><height>285</height></rect></property>
+  <property name="windowTitle"><string>ED2504 PWM (REAL32)</string></property>
+  <widget class="caInclude" name="slaveFrame">
+   <property name="geometry"><rect><x>0</x><y>0</y><width>360</width><height>30</height></rect></property>
+   <property name="macro"><string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string></property>
+   <property name="filename" stdset="0"><string>ecmcE_slave_frame.ui</string></property>
+  </widget>
+  <widget class="caLabel" name="headCh"><property name="geometry"><rect><x>8</x><y>38</y><width>45</width><height>20</height></rect></property><property name="text"><string>Channel</string></property></widget>
+  <widget class="caLabel" name="headDuty"><property name="geometry"><rect><x>65</x><y>38</y><width>120</width><height>20</height></rect></property><property name="text"><string>Duty cycle [%]</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
+  <widget class="caLabel" name="headFreq"><property name="geometry"><rect><x>195</x><y>38</y><width>120</width><height>20</height></rect></property><property name="text"><string>Frequency [Hz]</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
+  <widget class="caLabel" name="headDI"><property name="geometry"><rect><x>325</x><y>38</y><width>25</width><height>20</height></rect></property><property name="text"><string>DI</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
+  <widget class="caLabel" name="ch01"><property name="geometry"><rect><x>12</x><y>62</y><width>35</width><height>24</height></rect></property><property name="text"><string>1</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
+  <widget class="caTextEntry" name="duty01"><property name="geometry"><rect><x>65</x><y>62</y><width>120</width><height>24</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM01-Duty</string></property></widget>
+  <widget class="caTextEntry" name="freq01"><property name="geometry"><rect><x>195</x><y>62</y><width>120</width><height>24</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM01-Freq</string></property></widget>
+  <widget class="caLed" name="di01"><property name="geometry"><rect><x>328</x><y>64</y><width>20</width><height>20</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-DI01</string></property></widget>
+  <widget class="caLabel" name="ch02"><property name="geometry"><rect><x>12</x><y>104</y><width>35</width><height>24</height></rect></property><property name="text"><string>2</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
+  <widget class="caTextEntry" name="duty02"><property name="geometry"><rect><x>65</x><y>104</y><width>120</width><height>24</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM02-Duty</string></property></widget>
+  <widget class="caTextEntry" name="freq02"><property name="geometry"><rect><x>195</x><y>104</y><width>120</width><height>24</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM02-Freq</string></property></widget>
+  <widget class="caLed" name="di02"><property name="geometry"><rect><x>328</x><y>106</y><width>20</width><height>20</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-DI02</string></property></widget>
+  <widget class="caLabel" name="ch03"><property name="geometry"><rect><x>12</x><y>146</y><width>35</width><height>24</height></rect></property><property name="text"><string>3</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
+  <widget class="caTextEntry" name="duty03"><property name="geometry"><rect><x>65</x><y>146</y><width>120</width><height>24</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM03-Duty</string></property></widget>
+  <widget class="caTextEntry" name="freq03"><property name="geometry"><rect><x>195</x><y>146</y><width>120</width><height>24</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM03-Freq</string></property></widget>
+  <widget class="caLed" name="di03"><property name="geometry"><rect><x>328</x><y>148</y><width>20</width><height>20</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-DI03</string></property></widget>
+  <widget class="caLabel" name="ch04"><property name="geometry"><rect><x>12</x><y>188</y><width>35</width><height>24</height></rect></property><property name="text"><string>4</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
+  <widget class="caTextEntry" name="duty04"><property name="geometry"><rect><x>65</x><y>188</y><width>120</width><height>24</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM04-Duty</string></property></widget>
+  <widget class="caTextEntry" name="freq04"><property name="geometry"><rect><x>195</x><y>188</y><width>120</width><height>24</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM04-Freq</string></property></widget>
+  <widget class="caLed" name="di04"><property name="geometry"><rect><x>328</x><y>190</y><width>20</width><height>20</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-DI04</string></property></widget>
+  <widget class="caLed" name="warn"><property name="geometry"><rect><x>65</x><y>238</y><width>20</width><height>20</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM-Warn</string></property></widget>
+  <widget class="caLabel" name="warnLabel"><property name="geometry"><rect><x>88</x><y>238</y><width>55</width><height>20</height></rect></property><property name="text"><string>Warning</string></property></widget>
+  <widget class="caLed" name="err"><property name="geometry"><rect><x>195</x><y>238</y><width>20</width><height>20</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM-Err</string></property></widget>
+  <widget class="caLabel" name="errLabel"><property name="geometry"><rect><x>218</x><y>238</y><width>45</width><height>20</height></rect></property><property name="text"><string>Error</string></property></widget>
+ </widget>
+ <customwidgets>
+  <customwidget><class>caInclude</class><extends>QWidget</extends><header>caInclude</header></customwidget>
+  <customwidget><class>caLabel</class><extends>QLabel</extends><header>caLabel</header></customwidget>
+  <customwidget><class>caTextEntry</class><extends>QLineEdit</extends><header>caTextEntry</header></customwidget>
+  <customwidget><class>caLed</class><extends>QWidget</extends><header>caLed</header></customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
+

@@ -1,0 +1,21 @@
+file "ecmcED2504_F32.template" {
+  pattern { CH }
+          { 01 }
+          { 02 }
+          { 03 }
+          { 04 }
+}
+
+file "ecmc_ESI_bi.template" {
+  pattern { REC_NAME, DESC, SRC_NAME, ZNAM, ONAM }
+          { "PWM-Warn",      "PWM warning",           "PWM_Warn",      "OK",    "Warning" }
+          { "PWM-Err",       "PWM error",             "PWM_Err",       "OK",    "Error" }
+          { "PWM-Diag",      "PWM diagnostic active", "PWM_Diag",      "No",    "Yes" }
+          { "PWM-TxInvalid", "PWM TxPDO invalid",     "PWM_TxInvalid", "Valid", "Invalid" }
+}
+
+
+file "ecmc_ESI_mbbiDirect.template" {
+  pattern { REC_NAME, DESC, FLNK, SRC_NAME }
+          { "PWM-CycleCnt", "PWM input cycle counter", "", "PWM_CycleCnt" }
+}

@@ -1,0 +1,58 @@
+record(ao, "${ECMC_P}PWM${CH}-Duty") {
+  info(asyn:READBACK, "1")
+  field(DESC, "ED2504 PWM ${CH} duty cycle")
+  field(PINI, "1")
+  field(DTYP, "asynFloat64")
+  field(OUT,  "@asyn(${PORT},${ADDR=0},${TIMEOUT=1})T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynFloat64/ec${MASTER_ID}.s${SLAVE_POS}.PWM_Duty${CH}=")
+  field(EGU,  "%")
+  field(LINR, "SLOPE")
+  field(ESLO, "0.01")
+  field(PREC, "1")
+  field(DRVL, "0")
+  field(DRVH, "100")
+}
+
+record(ai, "${ECMC_P}PWM${CH}-Duty-RB") {
+  field(DESC, "ED2504 PWM ${CH} duty readback")
+  field(DTYP, "asynFloat64")
+  field(INP,  "@asyn(${PORT},${ADDR=0},${TIMEOUT=1})T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynFloat64/ec${MASTER_ID}.s${SLAVE_POS}.PWM_Duty${CH}?")
+  field(SCAN, "I/O Intr")
+  field(EGU,  "%")
+  field(LINR, "SLOPE")
+  field(ESLO, "100")
+  field(PREC, "1")
+  field(TSE,  "-2")
+}
+
+record(ao, "${ECMC_P}PWM${CH}-Freq") {
+  info(asyn:READBACK, "1")
+  field(DESC, "ED2504 PWM ${CH} frequency")
+  field(PINI, "1")
+  field(DTYP, "asynFloat64")
+  field(OUT,  "@asyn(${PORT},${ADDR=0},${TIMEOUT=1})T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynFloat64/ec${MASTER_ID}.s${SLAVE_POS}.PWM_Freq${CH}=")
+  field(EGU,  "Hz")
+  field(PREC, "0")
+  field(DRVL, "1")
+  field(DRVH, "64000")
+}
+
+record(ai, "${ECMC_P}PWM${CH}-Freq-RB") {
+  field(DESC, "ED2504 PWM ${CH} frequency readback")
+  field(DTYP, "asynFloat64")
+  field(INP,  "@asyn(${PORT},${ADDR=0},${TIMEOUT=1})T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynFloat64/ec${MASTER_ID}.s${SLAVE_POS}.PWM_Freq${CH}?")
+  field(SCAN, "I/O Intr")
+  field(EGU,  "Hz")
+  field(PREC, "0")
+  field(TSE,  "-2")
+}
+
+record(bi, "${ECMC_P}DI${CH}") {
+  field(DESC, "ED2504 digital input ${CH}")
+  field(PINI, "1")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn(${PORT},${ADDR=0},${TIMEOUT=1})T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynInt32/ec${MASTER_ID}.s${SLAVE_POS}.DI${CH}?")
+  field(SCAN, "I/O Intr")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+  field(TSE,  "-2")
+}

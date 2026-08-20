@@ -11,8 +11,11 @@ from collections import defaultdict
 from pathlib import Path
 
 
-HW_DESC_RE = re.compile(r'epicsEnvSet\("ECMC_EC_HWTYPE"\s+"([^"]+)"\)')
-PRODUCT_ID_RE = re.compile(r'epicsEnvSet\("ECMC_EC_PRODUCT_ID"\s+"([^"]+)"\)')
+HW_DESC_RE = re.compile(r'epicsEnvSet\("ECMC_EC_HWTYPE"\s*,?\s*"([^"]+)"\)')
+PRODUCT_ID_RE = re.compile(
+    r'epicsEnvSet\("ECMC_EC_PRODUCT_ID"\s*,?\s*"([^"]+)"\)'
+)
+PRODUCT_CODE_COMMENT_RE = re.compile(r"product code:\s*(0x[0-9a-f]+)", re.IGNORECASE)
 
 
 def repo_root() -> Path:
@@ -42,8 +45,12 @@ def github_blob_base_url() -> str:
 def extract_metadata(cmd_file: Path) -> tuple[str | None, str | None]:
     hw_desc = None
     product_id = None
+    documented_product_id = None
 
     for line in cmd_file.read_text(encoding="utf-8", errors="replace").splitlines():
+        documented_product_id_match = PRODUCT_CODE_COMMENT_RE.search(line)
+        if documented_product_id_match and documented_product_id is None:
+            documented_product_id = documented_product_id_match.group(1)
         if line.lstrip().startswith("#"):
             continue
         hw_desc_match = HW_DESC_RE.search(line)
@@ -55,7 +62,7 @@ def extract_metadata(cmd_file: Path) -> tuple[str | None, str | None]:
         if hw_desc is not None and product_id is not None:
             break
 
-    return hw_desc, product_id
+    return hw_desc, product_id or documented_product_id
 
 
 def collect_entries(hardware_dir: Path) -> list[tuple[str, str, str]]:

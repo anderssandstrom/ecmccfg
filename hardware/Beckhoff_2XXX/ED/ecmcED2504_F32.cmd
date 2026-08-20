@@ -21,11 +21,10 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}slaveVerify.cmd "RESET=0"
 #- even slots = 0x002009c8, digital input
 #- The corresponding PDO mappings are read-only; register the existing maps.
 
-#- Select PWM_OUT_REAL32_DI explicitly for all four channels.
-ecmcConfigOrDie "Cfg.EcWriteSdo(${ECMC_EC_SLAVE_NUM},0xF030,0x01,0x001009c8,4)"
-ecmcConfigOrDie "Cfg.EcWriteSdo(${ECMC_EC_SLAVE_NUM},0xF030,0x03,0x001009c8,4)"
-ecmcConfigOrDie "Cfg.EcWriteSdo(${ECMC_EC_SLAVE_NUM},0xF030,0x05,0x001009c8,4)"
-ecmcConfigOrDie "Cfg.EcWriteSdo(${ECMC_EC_SLAVE_NUM},0xF030,0x07,0x001009c8,4)"
+#- This configuration uses the factory PWM_OUT_REAL32_DI module assignment.
+#- Do not write 0xF030 here: the ESI permits changing the module-ident list only
+#- during INIT -> PREOP, which ecmc cannot schedule. The assignment must already
+#- match 0x001009c8 in odd slots and 0x002009c8 in even slots.
 
 #- SM2: channel PWM duty cycle [0..1] and frequency [Hz].
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1600,0x7001,0x12,F32,PWM_Duty01)"

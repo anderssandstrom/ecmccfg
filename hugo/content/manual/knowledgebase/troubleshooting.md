@@ -22,6 +22,29 @@ you know the visible problem, but not yet which detailed page to use.
 - **No slaves are visible or link is down**:
   Use: [ethercat command line interface]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}}), [host / ecmc server]({{< relref "/manual/knowledgebase/host.md" >}}), [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
 
+- **`0x002D: "No Sync Error"` and DC slaves remain in `SAFEOP + ERROR`**:
+  A known cause is connecting the incoming EtherCAT cable to the coupler's
+  downstream/output port instead of its upstream/input port. Slaves may still
+  be detected, but the reversed topology can prevent Distributed Clocks (DC)
+  from synchronizing. The IOC may then fail to start and report:
+
+  ```text
+  Failed to set OP state, slave refused state change (SAFEOP + ERROR).
+  AL status message 0x002D: "No Sync Error".
+  ```
+
+  Check the coupler's port labels or direction arrows: the cable from the
+  controller or preceding slave must enter **IN**, and **OUT** must lead to the
+  next slave. Do not assume the direction is correct merely because the link
+  is up or `ethercat slaves` finds the terminals. After correcting the cable,
+  power-cycle the affected coupler/terminals if necessary, restart the IOC,
+  and verify that the slaves reach `OP`.
+
+  A reversed coupler connection is one known cause, not the only cause of
+  `0x002D`. If the ports are correct, continue by checking the configured DC
+  cycle time, application timing/jitter, link quality, and EtherCAT topology.
+  See also the [EL72xx hardware note]({{< relref "/manual/knowledgebase/hardware/EL72xx.md" >}}).
+
 - **Slaves remain in an error state**: power-cycle the affected slaves. You can
   also try `ethercat rescan -<master_id>`. Always specify the master ID;
   otherwise, the command rescans every master on the host and may cause error

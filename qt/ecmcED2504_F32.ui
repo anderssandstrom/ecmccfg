@@ -21,7 +21,7 @@
    <property name="currentIndex"><number>0</number></property>
    <widget class="QWidget" name="channel01Tab">
     <attribute name="title"><string>1</string></attribute>
-    <widget class="caLabel" name="value1Label01"><property name="geometry"><rect><x>8</x><y>18</y><width>95</width><height>20</height></rect></property><property name="text"><string>Duty [%]</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
+    <widget class="caLabel" name="value1Label01"><property name="geometry"><rect><x>8</x><y>18</y><width>95</width><height>20</height></rect></property><property name="text"><string>Duty [0..1]</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
     <widget class="caTextEntry" name="value1_01"><property name="geometry"><rect><x>8</x><y>42</y><width>95</width><height>25</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM01-Duty</string></property></widget>
     <widget class="caLabel" name="value2Label01"><property name="geometry"><rect><x>8</x><y>82</y><width>95</width><height>20</height></rect></property><property name="text"><string>Freq [Hz]</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
     <widget class="caTextEntry" name="value2_01"><property name="geometry"><rect><x>8</x><y>106</y><width>95</width><height>25</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM01-Freq</string></property></widget>
@@ -30,7 +30,7 @@
    </widget>
    <widget class="QWidget" name="channel02Tab">
     <attribute name="title"><string>2</string></attribute>
-    <widget class="caLabel" name="value1Label02"><property name="geometry"><rect><x>8</x><y>18</y><width>95</width><height>20</height></rect></property><property name="text"><string>Duty [%]</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
+    <widget class="caLabel" name="value1Label02"><property name="geometry"><rect><x>8</x><y>18</y><width>95</width><height>20</height></rect></property><property name="text"><string>Duty [0..1]</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
     <widget class="caTextEntry" name="value1_02"><property name="geometry"><rect><x>8</x><y>42</y><width>95</width><height>25</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM02-Duty</string></property></widget>
     <widget class="caLabel" name="value2Label02"><property name="geometry"><rect><x>8</x><y>82</y><width>95</width><height>20</height></rect></property><property name="text"><string>Freq [Hz]</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
     <widget class="caTextEntry" name="value2_02"><property name="geometry"><rect><x>8</x><y>106</y><width>95</width><height>25</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM02-Freq</string></property></widget>
@@ -39,7 +39,7 @@
    </widget>
    <widget class="QWidget" name="channel03Tab">
     <attribute name="title"><string>3</string></attribute>
-    <widget class="caLabel" name="value1Label03"><property name="geometry"><rect><x>8</x><y>18</y><width>95</width><height>20</height></rect></property><property name="text"><string>Duty [%]</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
+    <widget class="caLabel" name="value1Label03"><property name="geometry"><rect><x>8</x><y>18</y><width>95</width><height>20</height></rect></property><property name="text"><string>Duty [0..1]</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
     <widget class="caTextEntry" name="value1_03"><property name="geometry"><rect><x>8</x><y>42</y><width>95</width><height>25</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM03-Duty</string></property></widget>
     <widget class="caLabel" name="value2Label03"><property name="geometry"><rect><x>8</x><y>82</y><width>95</width><height>20</height></rect></property><property name="text"><string>Freq [Hz]</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
     <widget class="caTextEntry" name="value2_03"><property name="geometry"><rect><x>8</x><y>106</y><width>95</width><height>25</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM03-Freq</string></property></widget>
@@ -48,7 +48,7 @@
    </widget>
    <widget class="QWidget" name="channel04Tab">
     <attribute name="title"><string>4</string></attribute>
-    <widget class="caLabel" name="value1Label04"><property name="geometry"><rect><x>8</x><y>18</y><width>95</width><height>20</height></rect></property><property name="text"><string>Duty [%]</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
+    <widget class="caLabel" name="value1Label04"><property name="geometry"><rect><x>8</x><y>18</y><width>95</width><height>20</height></rect></property><property name="text"><string>Duty [0..1]</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
     <widget class="caTextEntry" name="value1_04"><property name="geometry"><rect><x>8</x><y>42</y><width>95</width><height>25</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM04-Duty</string></property></widget>
     <widget class="caLabel" name="value2Label04"><property name="geometry"><rect><x>8</x><y>82</y><width>95</width><height>20</height></rect></property><property name="text"><string>Freq [Hz]</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
     <widget class="caTextEntry" name="value2_04"><property name="geometry"><rect><x>8</x><y>106</y><width>95</width><height>25</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-PWM04-Freq</string></property></widget>

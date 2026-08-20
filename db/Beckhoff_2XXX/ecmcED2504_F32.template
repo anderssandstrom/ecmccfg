@@ -1,26 +1,22 @@
 record(ao, "${ECMC_P}PWM${CH}-Duty") {
   info(asyn:READBACK, "1")
-  field(DESC, "ED2504 PWM ${CH} duty cycle")
+  field(DESC, "ED2504 PWM ${CH} duty ratio")
   field(PINI, "1")
   field(DTYP, "asynFloat64")
   field(OUT,  "@asyn(${PORT},${ADDR=0},${TIMEOUT=1})T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynFloat64/ec${MASTER_ID}.s${SLAVE_POS}.PWM_Duty${CH}=")
-  field(EGU,  "%")
-  field(LINR, "SLOPE")
-  field(ESLO, "0.01")
-  field(PREC, "1")
+  field(EGU,  "ratio")
+  field(PREC, "3")
   field(DRVL, "0")
-  field(DRVH, "100")
+  field(DRVH, "1")
 }
 
 record(ai, "${ECMC_P}PWM${CH}-Duty-RB") {
-  field(DESC, "ED2504 PWM ${CH} duty readback")
+  field(DESC, "ED2504 PWM ${CH} duty ratio readback")
   field(DTYP, "asynFloat64")
   field(INP,  "@asyn(${PORT},${ADDR=0},${TIMEOUT=1})T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynFloat64/ec${MASTER_ID}.s${SLAVE_POS}.PWM_Duty${CH}?")
   field(SCAN, "I/O Intr")
-  field(EGU,  "%")
-  field(LINR, "SLOPE")
-  field(ESLO, "100")
-  field(PREC, "1")
+  field(EGU,  "ratio")
+  field(PREC, "3")
   field(TSE,  "-2")
 }
 

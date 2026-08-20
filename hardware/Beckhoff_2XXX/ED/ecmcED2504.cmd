@@ -1,4 +1,8 @@
 # WARNING: UNTESTED
+# WARNING: NOT WORKING - NEEDS INVESTIGATION
+# The INT32 legacy PDO mapping reaches OP and the process-data readbacks follow
+# the requested duty/period values, but no PWM output has been observed.
+# Use ED2504_F32 for the currently working configuration.
 #-d /**
 #-d   \brief Hardware configuration for ED2504
 #-d   \details Four-channel PWM integer legacy mode with four digital inputs

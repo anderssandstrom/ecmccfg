@@ -57,6 +57,13 @@ you know the visible problem, but not yet which detailed page to use.
 ## Motion and Axis Behavior
 - **Axis will not enable**: check auto-enable strategy, STO/brake signals, and drive readiness.
   Use: [motion]({{< relref "/manual/knowledgebase/motion.md" >}}), [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
+- **Axis will not move and reports `ERROR_AXIS_HW_NOT_READY`**: either the
+  drive hardware or the currently selected encoder hardware is reporting that
+  it is not ready. Check the hardware state. For the encoder, also verify that
+  it provides a valid position value. If an open-loop encoder is configured,
+  motion may still be possible by selecting the open-loop encoder as the
+  primary encoder used for control.
+  Use: [motion]({{< relref "/manual/knowledgebase/motion.md" >}}), [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}}), [YAML encoder settings]({{< relref "/manual/motion_cfg/axisYaml.md#encoder" >}})
 - **Axis moves in the wrong direction**:
   Use: [direction]({{< relref "/manual/motion_cfg/direction.md" >}}), [motion]({{< relref "/manual/knowledgebase/motion.md" >}})
 - **Homing stalls or never completes**:
@@ -102,6 +109,7 @@ you know the visible problem, but not yet which detailed page to use.
 | `ERROR_MON_TOL_OUT_OF_RANGE` | Invalid monitor tolerance or limit window, for example calculated virtual-axis softlimits outside the valid range. See [motion]({{< relref "/manual/knowledgebase/motion.md#error_mon_tol_out_of_range" >}}). |
 | `ERROR_DRV_HW_ALARM_X` | Hardware error, missing power supply; check dedicated hardware panels. |
 | `ERROR_ENC_NOT_READY` | Encoder issue, cabling issue, or missing power supply. |
+| `ERROR_AXIS_HW_NOT_READY` | The drive or currently selected encoder hardware is not ready; check its state and verify that the encoder provides a valid position value. |
 | `ERROR_EC_LINK_DOWN` | EtherCAT cabling issue, slave power missing. |
 | `ERROR_EC_STATUS_NOT_OK` | EtherCAT cabling issue, slave power missing. |
 | `ERROR_EC_MAIN_DOMAIN_DATA_FAILED` | EtherCAT cabling issue, slave power missing. |

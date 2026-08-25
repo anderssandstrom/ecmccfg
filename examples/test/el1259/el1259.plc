@@ -1,46 +1,141 @@
-/* 
- Setup:
- * bridge output01 to input01
- * set output at a certain time 
- * Wait for input event
- * compare output time with latched input time
-  This example uses only one event
-*/
+/*
+ * Bridge output 01 to input 01.
+ *
+ * Non-blocking state machine: every invocation performs at most one action
+ * and returns.  The input is configured for synchronous buffer operation, so
+ * its input order counter is not acknowledged by the terminal.  Stat_NoEvts
+ * alone is not a new-event flag; freshness is detected from the timestamps.
+ *
+ * state 0: assert input/output buffer reset
+ * state 1: release buffer reset on a later PLC scan
+ * state 6: wait for both buffers to become empty
+ * state 2: submit output when due
+ * state 3: wait for output acknowledgement
+ * state 4: wait for input event
+ */
 
 static.time := ec_get_time();
 
-// Only one output event at a time
-if (static.time > static.outputTime and not(static.waitForNextEvent) ) {
-  // Time for next event
-  static.outputTime := static.time + $(CYCLE_NS=100E6);
-
-  // Next state of output (note this is an array)
-  ${M}.s${S_ID=10}.BO${CH_ID=01}_EvtStateArr := not(${M}.s${S_ID=10}.BO${CH_ID=01}_EvtStateArr);
-
-  // Time is only 32bit
-  ${M}.s${S_ID=10}.BO${CH_ID=01}_OutpEvtTme01 := ec_chk_bits(static.outputTime,0,31);
-
-  // One vaild event in array
-  ${M}.s${S_ID=10}.BO${CH_ID=01}_Ctrl_NoOutpEvts := 1;
-  
-  // Trigger event write into event buffer with increase of OutpOrdrCntr
-  ${M}.s${S_ID=10}.BO${CH_ID=01}_Ctrl_OutpOrdrCntr += 1;
-
-  println('Output event trigger at: ', ${M}.s${S_ID=10}.BO${CH_ID=01}_OutpEvtTme01, ', state: ',${M}.s${S_ID=10}.BO01_EvtStateArr );
-
-  // Block further output events until reacived
-  static.waitForNextEvent := 1;
+if (not(static.initialised)) {
+  static.initialised := 1;
+  static.state := 0;
+  static.outputTime := static.time;
+  static.outputState := ec_chk_bits(${M}.s${S_ID=10}.BO${CH_ID=01}_EvtStateArr,0,0);
+  static.lastInputTime01 := ${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme01;
+  static.lastInputTime02 := ${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme02;
 };
 
-// See if an input event occured
-if(${M}.s${S_ID=10}.BI${CH_ID=01}_Stat_NoEvts > 0 and static.waitForNextEvent) {
+/* Clear events retained across PLC reloads. Keep reset asserted for a scan. */
+if (static.state = 0) {
+  ${M}.s${S_ID=10}.BO${CH_ID=01}_Ctrl_ := 1;
+  ${M}.s${S_ID=10}.BI${CH_ID=01}_Ctrl_ := 1;
+  static.resetTime := static.time;
+  static.deadline := static.time + $(TIMEOUT_NS=2E9);
+  static.state := 1;
+};
+
+if (static.state = 1 and static.time > static.resetTime) {
+  ${M}.s${S_ID=10}.BO${CH_ID=01}_Ctrl_ := 0;
+  ${M}.s${S_ID=10}.BI${CH_ID=01}_Ctrl_ := 0;
+  static.state := 6;
+  static.deadline := static.time + $(TIMEOUT_NS=2E9);
+};
+
+if (static.state = 6 and
+    ${M}.s${S_ID=10}.BO${CH_ID=01}_Stat_EvtsInOutpBuff = 0 and
+    ${M}.s${S_ID=10}.BI${CH_ID=01}_Stat_EvtsInBuff = 0 and
+    ${M}.s${S_ID=10}.BI${CH_ID=01}_Stat_NoEvts = 0) {
+  /* Resynchronise the local value with the terminal's 8-bit feedback. */
+  ${M}.s${S_ID=10}.BO${CH_ID=01}_Ctrl_OutpOrdrCntr := ${M}.s${S_ID=10}.BO${CH_ID=01}_Stat_OutpOrdrFb;
+  static.lastInputTime01 := ${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme01;
+  static.lastInputTime02 := ${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme02;
+  static.outputTime := static.time;
+  static.state := 2;
+};
+
+if (static.state = 2 and static.time > static.outputTime) {
+  static.outputTime := static.time + $(CYCLE_NS=100E6);
   static.outputTime32bits := ec_chk_bits(static.outputTime,0,31);
-  println('Input event recived at:  ', ${M}.s${S_ID=10}.BI01_EvtTme01, ', state: ',${M}.s${S_ID=10}.BI01_EvtStateArr ,' (diff [us]: ', (${M}.s${S_ID=10}.BI01_EvtTme01-static.outputTime32bits)/1000, ')');
-  static.waitForNextEvent := 0;
-} 
+  static.outputState := not(static.outputState);
 
-// The above code only send a trigger after one is recived 
-if(${M}.s${S_ID=10}.BI${CH_ID=01}_Stat_NoEvts > 1) {
-  println('Now we are out of sync...')
-}
+  ${M}.s${S_ID=10}.BO${CH_ID=01}_EvtStateArr := static.outputState;
+  ${M}.s${S_ID=10}.BO${CH_ID=01}_OutpEvtTme01 := static.outputTime32bits;
+  ${M}.s${S_ID=10}.BO${CH_ID=01}_Ctrl_NoOutpEvts := 1;
+  /* The PDO counter is U8; ecmc expressions do not wrap it automatically. */
+  ${M}.s${S_ID=10}.BO${CH_ID=01}_Ctrl_OutpOrdrCntr := ec_chk_bits(${M}.s${S_ID=10}.BO${CH_ID=01}_Ctrl_OutpOrdrCntr + 1,0,7);
 
+  println('Output event submitted at: ', static.outputTime32bits,
+          ', state: ', static.outputState,
+          ', order: ', ${M}.s${S_ID=10}.BO${CH_ID=01}_Ctrl_OutpOrdrCntr);
+  static.state := 3;
+  static.deadline := static.time + $(TIMEOUT_NS=2E9);
+};
+
+if (static.state = 3 and ${M}.s${S_ID=10}.BO${CH_ID=01}_Stat_OutpOrdrFb = ${M}.s${S_ID=10}.BO${CH_ID=01}_Ctrl_OutpOrdrCntr) {
+  static.state := 4;
+  static.deadline := static.time + $(TIMEOUT_NS=2E9);
+};
+
+if (static.state = 4 and ${M}.s${S_ID=10}.BI${CH_ID=01}_Stat_NoEvts > 0 and
+    (${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme01 != static.lastInputTime01 or
+     (${M}.s${S_ID=10}.BI${CH_ID=01}_Stat_NoEvts > 1 and
+      ${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme02 != static.lastInputTime02))) {
+  static.inputMatched := 0;
+
+  /* Check event 1: it must be fresh, have the requested state and be close. */
+  static.inputTime := ${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme01;
+  static.inputState := ec_chk_bits(${M}.s${S_ID=10}.BI${CH_ID=01}_EvtStateArr,0,0);
+  static.diff := static.inputTime - static.outputTime32bits;
+  if (static.diff > 2147483647) {
+    static.diff := static.diff - 4294967296;
+  };
+  if (static.diff < -2147483648) {
+    static.diff := static.diff + 4294967296;
+  };
+  if (static.inputTime != static.lastInputTime01 and
+      static.inputState = static.outputState and
+      static.diff > -$(MATCH_WINDOW_NS=5E6) and static.diff < $(MATCH_WINDOW_NS=5E6)) {
+    static.inputMatched := 1;
+  };
+
+  /* EVS=2: inspect event 2 if event 1 did not match. */
+  if (not(static.inputMatched) and
+      ${M}.s${S_ID=10}.BI${CH_ID=01}_Stat_NoEvts > 1 and
+      ${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme02 != static.lastInputTime02) {
+    static.inputTime := ${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme02;
+    static.inputState := ec_chk_bits(${M}.s${S_ID=10}.BI${CH_ID=01}_EvtStateArr,1,1);
+    static.diff := static.inputTime - static.outputTime32bits;
+    if (static.diff > 2147483647) {
+      static.diff := static.diff - 4294967296;
+    };
+    if (static.diff < -2147483648) {
+      static.diff := static.diff + 4294967296;
+    };
+    if (static.inputState = static.outputState and
+        static.diff > -$(MATCH_WINDOW_NS=5E6) and static.diff < $(MATCH_WINDOW_NS=5E6)) {
+      static.inputMatched := 1;
+    };
+  };
+
+  /* Mark the complete synchronous page as inspected, matched or not. */
+  static.lastInputTime01 := ${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme01;
+  static.lastInputTime02 := ${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme02;
+
+  if (static.inputMatched) {
+    println('Input event received at: ', static.inputTime,
+            ', state: ', static.inputState,
+            ' (diff [us]: ', static.diff/1000, ')');
+    static.state := 2;
+  };
+};
+
+/* Never wait silently forever: report status and reset both event buffers. */
+if (static.state != 2 and static.time > static.deadline) {
+  println('EL1259 handshake timeout, state: ', static.state,
+          ', events: ', ${M}.s${S_ID=10}.BI${CH_ID=01}_Stat_NoEvts,
+          ', input ctrl/fb: ', ${M}.s${S_ID=10}.BI${CH_ID=01}_Ctrl_OrdrCntr,
+          '/', ${M}.s${S_ID=10}.BI${CH_ID=01}_Stat_OrdrFb,
+          ', output ctrl/fb: ', ${M}.s${S_ID=10}.BO${CH_ID=01}_Ctrl_OutpOrdrCntr,
+          '/', ${M}.s${S_ID=10}.BO${CH_ID=01}_Stat_OutpOrdrFb);
+  static.state := 0;
+};

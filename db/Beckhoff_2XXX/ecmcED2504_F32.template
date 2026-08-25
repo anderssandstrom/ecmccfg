@@ -46,7 +46,7 @@ record(bi, "${ECMC_P}DI${CH}") {
   field(DESC, "ED2504 digital input ${CH}")
   field(PINI, "1")
   field(DTYP, "asynUInt32Digital")
-  field(INP,  "@asynMask(${PORT},${ADDR=0},0x1,${TIMEOUT=1})T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynUInt32Digital/ec${MASTER_ID}.s${SLAVE_POS}.DI${CH}?")
+  field(INP,  "@asynMask(${PORT},${ADDR=0},0x1,${TIMEOUT=1})T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynUInt32Digital/ec${MASTER_ID}.s${SLAVE_POS}.BI${CH}?")
   field(SCAN, "I/O Intr")
   field(ZNAM, "Low")
   field(ONAM, "High")

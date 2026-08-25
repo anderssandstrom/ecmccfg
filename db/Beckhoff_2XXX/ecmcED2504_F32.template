@@ -42,7 +42,7 @@ record(ai, "${ECMC_P}PWM${CH}-Freq-RB") {
   field(TSE,  "-2")
 }
 
-record(bi, "${ECMC_P}DI${CH}") {
+record(bi, "${ECMC_P}BI${CH}") {
   field(DESC, "ED2504 digital input ${CH}")
   field(PINI, "1")
   field(DTYP, "asynUInt32Digital")

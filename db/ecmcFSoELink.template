@@ -1,13 +1,12 @@
 #- Navigation metadata for one FSoE connection.
-record(ai, "$(P):FSoE-M$(MASTER_ID)-C$(MASTER_CONN)-RemoteSID") {
+record(ai, "$(P)FSoE-M$(MASTER_ID)-CH$(MASTER_CONN)-RmtSID") {
   field(DESC, "FSoE remote EtherCAT slave")
   field(PINI, "YES")
   field(VAL,  "$(SLAVE_SID)")
 }
 
-record(ai, "$(P):FSoE-M$(MASTER_ID)-C$(MASTER_CONN)-RemoteConn") {
+record(ai, "$(P)FSoE-M$(MASTER_ID)-CH$(MASTER_CONN)-RmtConn") {
   field(DESC, "FSoE remote connection")
   field(PINI, "YES")
   field(VAL,  "$(SLAVE_CONN)")
 }
-

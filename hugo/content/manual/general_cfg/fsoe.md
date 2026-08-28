@@ -90,10 +90,10 @@ the connection details or the connected safety-slave hardware panel.
 `linkFSoEConn.cmd` loads navigation metadata such as:
 
 ```text
-$(IOC):FSoE-M1-C01-RemoteSID
-$(IOC):FSoE-M1-C01-RemoteConn
-$(IOC):FSoE-M1-C02-RemoteSID
-$(IOC):FSoE-M1-C02-RemoteConn
+$(IOC):FSoE-M1-CH01-RmtSID
+$(IOC):FSoE-M1-CH01-RmtConn
+$(IOC):FSoE-M1-CH02-RmtSID
+$(IOC):FSoE-M1-CH02-RmtConn
 ```
 
 The **Open slave** buttons call `ecmcOpenObject.sh EC_SLAVE_GENERIC`. That

@@ -210,3 +210,4 @@ Run this utility before `addMaster.cmd` claims the EtherCAT master.
 
 - [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
 - [ethercat command line interface]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}})
+- [FSoE and TwinSAFE]({{< relref "/manual/general_cfg/fsoe.md" >}})

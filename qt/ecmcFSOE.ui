@@ -46,7 +46,7 @@
      </rect>
     </property>
     <property name="channel" stdset="0">
-     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-CmdIn01</string>
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-CmdIn$(ConnID)</string>
     </property>
     <property name="background">
      <color alpha="0">
@@ -110,7 +110,7 @@
      </rect>
     </property>
     <property name="channel" stdset="0">
-     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-DataIn01</string>
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-DataIn$(ConnID)</string>
     </property>
     <property name="background">
      <color alpha="0">
@@ -158,7 +158,7 @@
      <string/>
     </property>
     <property name="channel" stdset="0">
-     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-CrcIn01</string>
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-CrcIn$(ConnID)</string>
     </property>
     <property name="background">
      <color alpha="0">
@@ -187,7 +187,7 @@
      <string/>
     </property>
     <property name="channel" stdset="0">
-     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-ConnIdIn01</string>
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-ConnIdIn$(ConnID)</string>
     </property>
     <property name="background">
      <color alpha="0">
@@ -360,7 +360,7 @@
      </rect>
     </property>
     <property name="channel" stdset="0">
-     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-CmdOut01-RB</string>
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-CmdOut$(ConnID)-RB</string>
     </property>
     <property name="background">
      <color alpha="0">
@@ -386,7 +386,7 @@
      </rect>
     </property>
     <property name="channel" stdset="0">
-     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-DataOut01-RB</string>
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-DataOut$(ConnID)-RB</string>
     </property>
     <property name="background">
      <color alpha="0">
@@ -431,7 +431,7 @@
      </rect>
     </property>
     <property name="channel" stdset="0">
-     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-CrcOut01-RB</string>
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-CrcOut$(ConnID)-RB</string>
     </property>
     <property name="background">
      <color alpha="0">
@@ -495,7 +495,7 @@
      </rect>
     </property>
     <property name="channel" stdset="0">
-     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-ConnIdOut01-RB</string>
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-ConnIdOut$(ConnID)-RB</string>
     </property>
     <property name="background">
      <color alpha="0">
@@ -540,7 +540,7 @@
      </rect>
     </property>
     <property name="channel" stdset="0">
-     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-LogicOut01-RB</string>
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-LogicOut$(ConnID)-RB</string>
     </property>
     <property name="background">
      <color alpha="0">
@@ -575,7 +575,7 @@
      <bool>false</bool>
     </property>
     <property name="channel" stdset="0">
-     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-CmdOut01</string>
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-CmdOut$(ConnID)</string>
     </property>
     <property name="keepFocus">
      <bool>true</bool>
@@ -600,7 +600,7 @@
      <bool>false</bool>
     </property>
     <property name="channel" stdset="0">
-     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-DataOut01</string>
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-DataOut$(ConnID)</string>
     </property>
     <property name="keepFocus">
      <bool>true</bool>
@@ -625,7 +625,7 @@
      <bool>false</bool>
     </property>
     <property name="channel" stdset="0">
-     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-CrcOut01</string>
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-CrcOut$(ConnID)</string>
     </property>
     <property name="keepFocus">
      <bool>true</bool>
@@ -650,7 +650,7 @@
      <bool>false</bool>
     </property>
     <property name="channel" stdset="0">
-     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-ConnIdOut01</string>
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-ConnIdOut$(ConnID)</string>
     </property>
     <property name="keepFocus">
      <bool>true</bool>
@@ -675,7 +675,7 @@
      <bool>false</bool>
     </property>
     <property name="channel" stdset="0">
-     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-LogicOut01</string>
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-FSoE-LogicOut$(ConnID)</string>
     </property>
     <property name="keepFocus">
      <bool>true</bool>

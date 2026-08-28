@@ -48,6 +48,15 @@
     <string>MasterID=$(MasterID),SlaveID=$(SlaveID),ID=01,IOC=$(IOC);</string>
    </property>
   </widget>
+  <widget class="caRelatedDisplay" name="fsoePanel">
+   <property name="geometry">
+    <rect><x>10</x><y>366</y><width>101</width><height>21</height></rect>
+   </property>
+   <property name="toolTip"><string>Monitoring only; functional safety remains in TwinSAFE/FSoE hardware.</string></property>
+   <property name="labels"><string>FSoE</string></property>
+   <property name="files"><string>ecmcFSOE.ui</string></property>
+   <property name="args"><string>MasterID=$(MasterID),SlaveID=$(SlaveID),ConnID=01,IOC=$(IOC);</string></property>
+  </widget>
   <widget class="QGroupBox" name="safetyGroup">
    <property name="geometry">
     <rect>

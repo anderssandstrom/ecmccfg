@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>510</width><height>155</height></rect></property>
+  <property name="windowTitle"><string>FSoE connections</string></property>
+  <widget class="QLabel" name="warning">
+   <property name="geometry"><rect><x>10</x><y>5</y><width>490</width><height>24</height></rect></property>
+   <property name="text"><string>Monitoring only — functional safety remains in TwinSAFE/FSoE hardware.</string></property>
+  </widget>
+  <widget class="QLabel" name="master"><property name="geometry"><rect><x>10</x><y>32</y><width>170</width><height>22</height></rect></property><property name="text"><string>Safety master: s$(SlaveID)</string></property></widget>
+  <widget class="QLabel" name="headConn"><property name="geometry"><rect><x>10</x><y>58</y><width>75</width><height>20</height></rect></property><property name="text"><string>Connection</string></property></widget>
+  <widget class="QLabel" name="headSlave"><property name="geometry"><rect><x>95</x><y>58</y><width>90</width><height>20</height></rect></property><property name="text"><string>Remote slave</string></property></widget>
+  <widget class="QLabel" name="headRemoteConn"><property name="geometry"><rect><x>195</x><y>58</y><width>100</width><height>20</height></rect></property><property name="text"><string>Remote conn.</string></property></widget>
+
+  <widget class="QLabel" name="conn01"><property name="geometry"><rect><x>25</x><y>82</y><width>35</width><height>24</height></rect></property><property name="text"><string>01</string></property></widget>
+  <widget class="caLineEdit" name="remoteSID01"><property name="geometry"><rect><x>105</x><y>82</y><width>60</width><height>24</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):FSoE-M$(MasterID)-C01-RemoteSID</string></property><property name="precisionMode"><enum>caLineEdit::User</enum></property><property name="precision"><number>0</number></property></widget>
+  <widget class="caLineEdit" name="remoteConn01"><property name="geometry"><rect><x>210</x><y>82</y><width>60</width><height>24</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):FSoE-M$(MasterID)-C01-RemoteConn</string></property><property name="precisionMode"><enum>caLineEdit::User</enum></property><property name="precision"><number>0</number></property></widget>
+  <widget class="caRelatedDisplay" name="details01"><property name="geometry"><rect><x>290</x><y>82</y><width>85</width><height>24</height></rect></property><property name="labels"><string>Details</string></property><property name="files"><string>ecmcFSOE.ui</string></property><property name="args"><string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ConnID=01;</string></property></widget>
+  <widget class="caShellCommand" name="openSlave01"><property name="geometry"><rect><x>385</x><y>82</y><width>110</width><height>24</height></rect></property><property name="labels"><string>Open slave</string></property><property name="files"><string>bash /ioc/modules/qt/ecmcOpenObject.sh</string></property><property name="args"><string>EC_SLAVE_GENERIC $(IOC) $(IOC):FSoE-M$(MasterID)-C01-RemoteSID</string></property></widget>
+
+  <widget class="QLabel" name="conn02"><property name="geometry"><rect><x>25</x><y>114</y><width>35</width><height>24</height></rect></property><property name="text"><string>02</string></property></widget>
+  <widget class="caLineEdit" name="remoteSID02"><property name="geometry"><rect><x>105</x><y>114</y><width>60</width><height>24</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):FSoE-M$(MasterID)-C02-RemoteSID</string></property><property name="precisionMode"><enum>caLineEdit::User</enum></property><property name="precision"><number>0</number></property></widget>
+  <widget class="caLineEdit" name="remoteConn02"><property name="geometry"><rect><x>210</x><y>114</y><width>60</width><height>24</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):FSoE-M$(MasterID)-C02-RemoteConn</string></property><property name="precisionMode"><enum>caLineEdit::User</enum></property><property name="precision"><number>0</number></property></widget>
+  <widget class="caRelatedDisplay" name="details02"><property name="geometry"><rect><x>290</x><y>114</y><width>85</width><height>24</height></rect></property><property name="labels"><string>Details</string></property><property name="files"><string>ecmcFSOE.ui</string></property><property name="args"><string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ConnID=02;</string></property></widget>
+  <widget class="caShellCommand" name="openSlave02"><property name="geometry"><rect><x>385</x><y>114</y><width>110</width><height>24</height></rect></property><property name="labels"><string>Open slave</string></property><property name="files"><string>bash /ioc/modules/qt/ecmcOpenObject.sh</string></property><property name="args"><string>EC_SLAVE_GENERIC $(IOC) $(IOC):FSoE-M$(MasterID)-C02-RemoteSID</string></property></widget>
+ </widget>
+ <customwidgets>
+  <customwidget><class>caLineEdit</class><extends>QLineEdit</extends><header>caLineEdit</header></customwidget>
+  <customwidget><class>caRelatedDisplay</class><extends>QWidget</extends><header>caRelatedDisplay</header></customwidget>
+  <customwidget><class>caShellCommand</class><extends>QWidget</extends><header>caShellCommand</header></customwidget>
+ </customwidgets>
+ <resources/><connections/>
+</ui>

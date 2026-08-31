@@ -1,0 +1,18 @@
+file "ecmc_ESI_mbboDirect.template" {
+  pattern { REC_NAME, DESC, SRC_NAME }
+    { "PSU-Ctrl", "PSU control word", "PSU_Ctrl" }
+}
+
+file "ecmc_ESI_mbbiDirect.template" {
+  pattern { REC_NAME, DESC, FLNK, SRC_NAME }
+    { "PSU-Stat", "PSU status word", "", "PSU_Stat" }
+}
+
+file "ecmc_ESI_ai.template" {
+  pattern { REC_NAME, DESC, SRC_NAME, DTYP }
+    { "PSU-OutVolt", "PSU output voltage", "PSU_OutVolt", "asynFloat64" }
+    { "PSU-OutCurr", "PSU output current", "PSU_OutCurr", "asynFloat64" }
+    { "PSU-I2T", "PSU I2T utilization", "PSU_I2T", "asynInt32" }
+    { "PSU-Info01", "PSU info data 1", "PSU_Info01", "asynInt32" }
+    { "PSU-Info02", "PSU info data 2", "PSU_Info02", "asynInt32" }
+}

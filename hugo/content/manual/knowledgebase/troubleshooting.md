@@ -22,6 +22,29 @@ you know the visible problem, but not yet which detailed page to use.
 - **No slaves are visible or link is down**:
   Use: [ethercat command line interface]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}}), [host / ecmc server]({{< relref "/manual/knowledgebase/host.md" >}}), [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
 
+- **`0x002D: "No Sync Error"` and DC slaves remain in `SAFEOP + ERROR`**:
+  A known cause is connecting the incoming EtherCAT cable to the coupler's
+  downstream/output port instead of its upstream/input port. Slaves may still
+  be detected, but the reversed topology can prevent Distributed Clocks (DC)
+  from synchronizing. The IOC may then fail to start and report:
+
+  ```text
+  Failed to set OP state, slave refused state change (SAFEOP + ERROR).
+  AL status message 0x002D: "No Sync Error".
+  ```
+
+  Check the coupler's port labels or direction arrows: the cable from the
+  controller or preceding slave must enter **IN**, and **OUT** must lead to the
+  next slave. Do not assume the direction is correct merely because the link
+  is up or `ethercat slaves` finds the terminals. After correcting the cable,
+  power-cycle the affected coupler/terminals if necessary, restart the IOC,
+  and verify that the slaves reach `OP`.
+
+  A reversed coupler connection is one known cause, not the only cause of
+  `0x002D`. If the ports are correct, continue by checking the configured DC
+  cycle time, application timing/jitter, link quality, and EtherCAT topology.
+  See also the [EL72xx hardware note]({{< relref "/manual/knowledgebase/hardware/EL72xx.md" >}}).
+
 - **Slaves remain in an error state**: power-cycle the affected slaves. You can
   also try `ethercat rescan -<master_id>`. Always specify the master ID;
   otherwise, the command rescans every master on the host and may cause error
@@ -34,6 +57,13 @@ you know the visible problem, but not yet which detailed page to use.
 ## Motion and Axis Behavior
 - **Axis will not enable**: check auto-enable strategy, STO/brake signals, and drive readiness.
   Use: [motion]({{< relref "/manual/knowledgebase/motion.md" >}}), [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
+- **Axis will not move and reports `ERROR_AXIS_HW_NOT_READY`**: either the
+  drive hardware or the currently selected encoder hardware is reporting that
+  it is not ready. Check the hardware state. For the encoder, also verify that
+  it provides a valid position value. If an open-loop encoder is configured,
+  motion may still be possible by selecting the open-loop encoder as the
+  primary encoder used for control.
+  Use: [motion]({{< relref "/manual/knowledgebase/motion.md" >}}), [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}}), [YAML encoder settings]({{< relref "/manual/motion_cfg/axisYaml.md#encoder" >}})
 - **Axis moves in the wrong direction**:
   Use: [direction]({{< relref "/manual/motion_cfg/direction.md" >}}), [motion]({{< relref "/manual/knowledgebase/motion.md" >}})
 - **Homing stalls or never completes**:
@@ -79,9 +109,11 @@ you know the visible problem, but not yet which detailed page to use.
 | `ERROR_MON_TOL_OUT_OF_RANGE` | Invalid monitor tolerance or limit window, for example calculated virtual-axis softlimits outside the valid range. See [motion]({{< relref "/manual/knowledgebase/motion.md#error_mon_tol_out_of_range" >}}). |
 | `ERROR_DRV_HW_ALARM_X` | Hardware error, missing power supply; check dedicated hardware panels. |
 | `ERROR_ENC_NOT_READY` | Encoder issue, cabling issue, or missing power supply. |
+| `ERROR_AXIS_HW_NOT_READY` | The drive or currently selected encoder hardware is not ready; check its state and verify that the encoder provides a valid position value. |
 | `ERROR_EC_LINK_DOWN` | EtherCAT cabling issue, slave power missing. |
 | `ERROR_EC_STATUS_NOT_OK` | EtherCAT cabling issue, slave power missing. |
 | `ERROR_EC_MAIN_DOMAIN_DATA_FAILED` | EtherCAT cabling issue, slave power missing. |
+| `ERROR_MAIN_ASYN_CREATE_PARAM_FAIL` (`0x20044`) | The asyn parameter table is full. Increase `MAX_PARAM_COUNT`; see [Asyn Parameter Count Exceeded]({{< relref "/manual/knowledgebase/general.md#asyn-parameter-count-exceeded" >}}). Sometimes referred to as `ECMC_MAIN_ASYN_CREATE_PARAM_FAIL`. |
 | `ERROR_AXIS_SLAVED_AXIS_INTERLOCK` | Slaved axis in error (synchronized axes). |
 
 ## Related Pages

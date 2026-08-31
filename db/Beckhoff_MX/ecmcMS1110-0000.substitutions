@@ -1,0 +1,4 @@
+#- MS1110-0000 is a passive EtherCAT extension and exposes no process data.
+file "empty.template" {
+  pattern {}
+}

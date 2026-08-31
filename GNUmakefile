@@ -19,6 +19,7 @@ DIRS += ${HW_DIR}Beckhoff_5XXX
 DIRS += ${HW_DIR}Beckhoff_6XXX
 DIRS += ${HW_DIR}Beckhoff_7XXX
 DIRS += ${HW_DIR}Beckhoff_9XXX
+DIRS += ${HW_DIR}Beckhoff_MX
 
 # all scripts in Beckhoff_*XXX/* ending with 'cmd'
 SCRIPTS += $(foreach d,${DIRS}, $(wildcard $d/*/*.cmd))
@@ -35,8 +36,8 @@ SCRIPTS+=$(wildcard ./plc_lib/*.plc)
 SCRIPTS+=$(wildcard ./plc_lib/*.plc_inc)
 SCRIPTS+=$(wildcard ./plc_lib/master_slave/*.plc)
 SCRIPTS+=$(wildcard ./plc_lib/master_slave/*.plc_inc)
-SCRIPTS+=$(wildcard ./plc_lib/twinsafe/*.plc)
-SCRIPTS+=$(wildcard ./plc_lib/twinsafe/*.plc_inc)
+SCRIPTS+=$(wildcard ./plc_lib/FSoE/*.plc)
+SCRIPTS+=$(wildcard ./plc_lib/FSoE/*.plc_inc)
 
 TEMPLATES+=$(wildcard ./db/*.db)
 TEMPLATES+=$(wildcard ./db/*.template)

@@ -1,0 +1,17 @@
+file "ecmc_ESI_mbboDirect.template" {
+  pattern { REC_NAME, DESC, SRC_NAME }
+    { "EFU-Ctrl", "Electronic fuse control", "EFU_Ctrl" }
+}
+
+file "ecmc_ESI_mbbiDirect.template" {
+  pattern { REC_NAME, DESC, FLNK, SRC_NAME }
+    { "EFU-Stat", "Electronic fuse status", "", "EFU_Stat" }
+    { "PWI-Stat", "Power infeed status", "", "PWI_Stat" }
+}
+
+file "ecmc_ESI_ai.template" {
+  pattern { REC_NAME, DESC, SRC_NAME, DTYP }
+    { "EFU-Curr", "Electronic fuse current", "EFU_Curr", "asynFloat64" }
+    { "PWI-Volt", "Power infeed voltage", "PWI_Volt", "asynFloat64" }
+    { "PWI-Curr", "Power infeed current", "PWI_Curr", "asynFloat64" }
+}

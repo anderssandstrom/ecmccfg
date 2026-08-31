@@ -1,0 +1,37 @@
+# WARNING: UNTESTED
+
+file "ecmcEL72XX_DRV.template"
+{
+  pattern {CH_ID}
+          {01   }
+}
+
+file "ecmcEL72XX_ENC.template"
+{
+  pattern {CH_ID}
+          {01   }
+}
+
+file "ecmc_analogInput-chX.template"
+{
+  pattern {CH_ID, sourceName,       KEY,   suffix,    DESC,             EGU,   ESLO, PREC}
+          {01,    "velocityActual", "Drv", "-VelAct", "Actual velocity", "Raw", 1,    0   }
+          {01,    "torqueActual",   "Drv", "-TrqAct", "Actual torque",   "%",   0.1,  1   }
+          {01,    "errorCode",      "Drv", "-ErrCode", "Drive error code", "Raw", 1,    0   }
+          {01,    "positionActualInc", "Inc", "-PosAct", "Incremental position", "Raw", 1, 0}
+          {01,    "positionActualSSI", "SSI", "-PosAct", "SSI position",     "Raw", 1,    0}
+}
+
+#- The generic array record currently displays the lower 16 of the N6's
+#- 32 digital-input bits.
+file "ecmcN6_binaryInputArray-chX.template"
+{
+  pattern {CH_ID}
+          {01   }
+}
+
+file "ecmcN6_binaryOutputArray-chX.template"
+{
+  pattern {CH_ID}
+          {01   }
+}

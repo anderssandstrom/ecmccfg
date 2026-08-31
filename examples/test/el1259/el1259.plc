@@ -140,3 +140,78 @@ if (static.state != 2 and static.time > static.deadline) {
   static.state := 0;
 };
 
+  println('Output event submitted at: ', static.outputTime32bits,
+          ', state: ', static.outputState,
+          ', order: ', ${M}.s${S_ID=10}.BO${CH_ID=01}_Ctrl_OutpOrdrCntr);
+  static.state := 3;
+  static.deadline := static.time + $(TIMEOUT_NS=2E9);
+};
+
+if (static.state = 3 and ${M}.s${S_ID=10}.BO${CH_ID=01}_Stat_OutpOrdrFb = ${M}.s${S_ID=10}.BO${CH_ID=01}_Ctrl_OutpOrdrCntr) {
+  static.state := 4;
+  static.deadline := static.time + $(TIMEOUT_NS=2E9);
+};
+
+if (static.state = 4 and ${M}.s${S_ID=10}.BI${CH_ID=01}_Stat_NoEvts > 0 and
+    (${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme01 != static.lastInputTime01 or
+     (${M}.s${S_ID=10}.BI${CH_ID=01}_Stat_NoEvts > 1 and
+      ${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme02 != static.lastInputTime02))) {
+  static.inputMatched := 0;
+
+  /* Check event 1: it must be fresh, have the requested state and be close. */
+  static.inputTime := ${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme01;
+  static.inputState := ec_chk_bits(${M}.s${S_ID=10}.BI${CH_ID=01}_EvtStateArr,0,0);
+  static.diff := static.inputTime - static.outputTime32bits;
+  if (static.diff > 2147483647) {
+    static.diff := static.diff - 4294967296;
+  };
+  if (static.diff < -2147483648) {
+    static.diff := static.diff + 4294967296;
+  };
+  if (static.inputTime != static.lastInputTime01 and
+      static.inputState = static.outputState and
+      static.diff > -$(MATCH_WINDOW_NS=5E6) and static.diff < $(MATCH_WINDOW_NS=5E6)) {
+    static.inputMatched := 1;
+  };
+
+  /* EVS=2: inspect event 2 if event 1 did not match. */
+  if (not(static.inputMatched) and
+      ${M}.s${S_ID=10}.BI${CH_ID=01}_Stat_NoEvts > 1 and
+      ${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme02 != static.lastInputTime02) {
+    static.inputTime := ${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme02;
+    static.inputState := ec_chk_bits(${M}.s${S_ID=10}.BI${CH_ID=01}_EvtStateArr,1,1);
+    static.diff := static.inputTime - static.outputTime32bits;
+    if (static.diff > 2147483647) {
+      static.diff := static.diff - 4294967296;
+    };
+    if (static.diff < -2147483648) {
+      static.diff := static.diff + 4294967296;
+    };
+    if (static.inputState = static.outputState and
+        static.diff > -$(MATCH_WINDOW_NS=5E6) and static.diff < $(MATCH_WINDOW_NS=5E6)) {
+      static.inputMatched := 1;
+    };
+  };
+
+  /* Mark the complete synchronous page as inspected, matched or not. */
+  static.lastInputTime01 := ${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme01;
+  static.lastInputTime02 := ${M}.s${S_ID=10}.BI${CH_ID=01}_EvtTme02;
+
+  if (static.inputMatched) {
+    println('Input event received at: ', static.inputTime,
+            ', state: ', static.inputState,
+            ' (diff [us]: ', static.diff/1000, ')');
+    static.state := 2;
+  };
+};
+
+/* Never wait silently forever: report status and reset both event buffers. */
+if (static.state != 2 and static.time > static.deadline) {
+  println('EL1259 handshake timeout, state: ', static.state,
+          ', events: ', ${M}.s${S_ID=10}.BI${CH_ID=01}_Stat_NoEvts,
+          ', input ctrl/fb: ', ${M}.s${S_ID=10}.BI${CH_ID=01}_Ctrl_OrdrCntr,
+          '/', ${M}.s${S_ID=10}.BI${CH_ID=01}_Stat_OrdrFb,
+          ', output ctrl/fb: ', ${M}.s${S_ID=10}.BO${CH_ID=01}_Ctrl_OutpOrdrCntr,
+          '/', ${M}.s${S_ID=10}.BO${CH_ID=01}_Stat_OutpOrdrFb);
+  static.state := 0;
+};

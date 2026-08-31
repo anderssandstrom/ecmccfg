@@ -25,6 +25,8 @@ from pathlib import Path
 
 
 ENTRY_TOKEN_MAP = {
+    "DOS": "BO",
+    "DIP": "BI",
     "Status": "Stat",
     "Control": "Ctrl",
     "Feedback": "Fb",
@@ -312,8 +314,10 @@ class DcModeInfo:
     name: str
     assign_activate: str
     cycle_time_sync0: str = ""
+    cycle_time_sync0_factor: str = ""
     shift_time_sync0: str = ""
     cycle_time_sync1: str = ""
+    cycle_time_sync1_factor: str = ""
     shift_time_sync1: str = ""
 
 
@@ -488,7 +492,9 @@ def _parse_pdo_definitions(
                 continue
 
             sm = (pdo.get("Sm") or "").strip()
-            pdo_name = _text(pdo.find("Name"))
+            # Normalize Beckhoff's DOS/DIP abbreviations to the BO/BI naming
+            # used by ecmccfg records and hardware source symbols.
+            pdo_name = _text(pdo.find("Name")).replace("DOS", "BO").replace("DIP", "BI")
             excludes = {_norm_hex(_text(ex_node)) for ex_node in pdo.findall("Exclude")}
             excludes = {idx for idx in excludes if idx}
             entries: List[PdoEntry] = []
@@ -537,13 +543,21 @@ def _extract_dc_modes(device: ET.Element) -> List[DcModeInfo]:
     modes: List[DcModeInfo] = []
     for dc in device.findall("Dc"):
         for opmode in dc.findall("OpMode"):
+            cycle_time_sync0 = opmode.find("CycleTimeSync0")
+            cycle_time_sync1 = opmode.find("CycleTimeSync1")
             modes.append(
                 DcModeInfo(
                     name=_text(opmode.find("Name")),
                     assign_activate=_norm_hex(_text(opmode.find("AssignActivate"))),
-                    cycle_time_sync0=_text(opmode.find("CycleTimeSync0")),
+                    cycle_time_sync0=_text(cycle_time_sync0),
+                    cycle_time_sync0_factor=(cycle_time_sync0.get("Factor") or "").strip()
+                    if cycle_time_sync0 is not None
+                    else "",
                     shift_time_sync0=_text(opmode.find("ShiftTimeSync0")),
-                    cycle_time_sync1=_text(opmode.find("CycleTimeSync1")),
+                    cycle_time_sync1=_text(cycle_time_sync1),
+                    cycle_time_sync1_factor=(cycle_time_sync1.get("Factor") or "").strip()
+                    if cycle_time_sync1 is not None
+                    else "",
                     shift_time_sync1=_text(opmode.find("ShiftTimeSync1")),
                 )
             )
@@ -1224,6 +1238,12 @@ def _entry_symbol(
 
 def _packed_root_name(pdo: PdoInfo) -> str:
     name_l = pdo.name.lower()
+    # Plain packed binary I/O is exposed as an array. Keep Ctrl/Stat for
+    # control words and diagnostic/status PDOs.
+    if name_l.startswith("bo ") and "output" in name_l:
+        return "Arr"
+    if name_l.startswith("bi ") and "input" in name_l:
+        return "Arr"
     if "control" in name_l:
         return "Ctrl"
     if "status" in name_l:
@@ -1245,7 +1265,8 @@ def _packed_symbol_name(
     root = _packed_root_name(pdo)
     _dev, prefix = _pdo_type_and_prefix(pdo, slave=slave, legacy_naming=legacy_naming)
     record_name = f"{prefix}-{root}"
-    if chunk_idx > 1:
+    packed_bit_count = sum(entry.bitlen for entry in pdo.entries if _is_packable_bit_entry(entry))
+    if packed_bit_count > 16 or chunk_idx > 1:
         record_name = f"{record_name}{chunk_idx:02d}"
     return _unique_symbol(_record_to_source_name(record_name), used)
 
@@ -1268,15 +1289,29 @@ def _build_packed_bit_comment(chunk: List[PdoEntry]) -> str:
     # Keep placeholders ("gap") so merged bit layout is explicit and reviewable.
     segments: List[Tuple[int, int, str]] = []
     bit_offset = 0
-    for entry in chunk:
+    for entry_idx, entry in enumerate(chunk):
         bit_width = entry.bitlen if entry.bitlen > 0 else 0
         if bit_width <= 0:
             continue
 
         if entry.index == "0x0":
             label = "gap"
+            neighbor_names = []
+            if entry_idx > 0:
+                prev = chunk[entry_idx - 1]
+                neighbor_names.append(prev.raw_name or prev.resolved_name)
+            if entry_idx + 1 < len(chunk):
+                nxt = chunk[entry_idx + 1]
+                neighbor_names.append(nxt.raw_name or nxt.resolved_name)
+            for neighbor_name in neighbor_names:
+                channel_match = re.search(r"Channel\s+(\d+)", neighbor_name or "", re.IGNORECASE)
+                if channel_match:
+                    label = f"gap Channel {channel_match.group(1)}"
+                    break
         else:
-            label = (entry.resolved_name or entry.raw_name or entry.index).strip()
+            # Raw ESI labels commonly retain useful qualifiers such as
+            # "Channel 2" that the resolved object-dictionary name omits.
+            label = (entry.raw_name or entry.resolved_name or entry.index).strip()
             label = re.sub(r"\s+", " ", label) if label else ""
             if not label:
                 label = "gap"
@@ -1474,6 +1509,26 @@ def _normalize_dc_time(value: str) -> str:
     if parsed is None:
         return value
     return str(parsed)
+
+
+def _dc_cycle_expression(value: str, factor_value: str) -> str:
+    """Translate an ESI cycle value/factor to an EPICS calc expression."""
+    base = _parse_hexish(value)
+    factor = _parse_int(factor_value)
+    if factor in (None, 0):
+        return str(base) if base is not None else (_normalize_dc_time(value) or "0")
+
+    period = "${ECMC_TEMP_PERIOD_NANO_SECS}"
+    if factor == 1 or factor == -1:
+        expression = period
+    elif factor > 1:
+        expression = f"{period}*{factor}"
+    else:
+        expression = f"{period}/{abs(factor)}"
+
+    if base:
+        expression += f"+{base}" if base > 0 else str(base)
+    return expression
 
 
 def _select_dc_mode(slave: SlaveInfo) -> Optional[DcModeInfo]:
@@ -1761,33 +1816,30 @@ def generate_hw_snippet(
 
     dc_mode = _select_dc_mode(slave)
     if include_dc and dc_mode and dc_mode.assign_activate:
-        sync0_cycle = _normalize_dc_time(dc_mode.cycle_time_sync0)
+        sync0_cycle = _dc_cycle_expression(
+            dc_mode.cycle_time_sync0, dc_mode.cycle_time_sync0_factor
+        )
         sync0_shift = _normalize_dc_time(dc_mode.shift_time_sync0)
-        sync1_cycle = _normalize_dc_time(dc_mode.cycle_time_sync1)
+        sync1_cycle = _dc_cycle_expression(
+            dc_mode.cycle_time_sync1, dc_mode.cycle_time_sync1_factor
+        )
         sync1_shift = _normalize_dc_time(dc_mode.shift_time_sync1)
 
-        # Use Sync0 values directly from ESI; fallback to 0 if missing.
-        if not sync0_cycle:
-            sync0_cycle = "0"
         if not sync0_shift:
             sync0_shift = "0"
-        if not sync1_cycle:
-            sync1_cycle = "0"
         if not sync1_shift:
             sync1_shift = "0"
 
         rows.append(f"#- DC mode: {dc_mode.name or 'unnamed'}")
         rows.append("ecmcEpicsEnvSetCalc(\"ECMC_TEMP_PERIOD_NANO_SECS\",1000/${ECMC_EC_SAMPLE_RATE=1000}*1E6)")
 
-        rows.append(f'# ecmcEpicsEnvSetCalc("ECMC_SYNC_1","${{ECMC_TEMP_PERIOD_NANO_SECS}}-{sync0_cycle}")')
         rows.append("ecmcFileExist(${ecmccfg_DIR}applySlaveDCconfig.cmd,1)")
         rows.append(
             "${SCRIPTEXEC} ${ecmccfg_DIR}applySlaveDCconfig.cmd "
             f"\"ASSIGN_ACTIVATE={dc_mode.assign_activate},SYNC_0_CYCLE={sync0_cycle},"
-            f"SYNC_0_SHIFT={sync0_shift},SYNC_1_CYCLE=$(ECMC_SYNC_1={sync1_cycle})\""
+            f"SYNC_0_SHIFT={sync0_shift},SYNC_1_CYCLE={sync1_cycle},"
+            f"SYNC_1_SHIFT={sync1_shift}\""
         )
-        if sync1_shift and sync1_shift != "0":
-            rows.append(f"#- NOTE: Sync1 shift from ESI ({sync1_shift}) is not applied by applySlaveDCconfig.cmd")
         rows.append("epicsEnvUnset(ECMC_TEMP_PERIOD_NANO_SECS)")
 
     return "\n".join(rows).rstrip() + "\n"

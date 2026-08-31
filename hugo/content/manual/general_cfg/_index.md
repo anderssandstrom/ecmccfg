@@ -30,6 +30,7 @@ General configuration covers IOC/bootstrap behavior that is not axis-specific:
 - [Startup Validator]({{< relref "/manual/general_cfg/startup_validator.md" >}}) for checking startup syntax, script macros, and local file references before IOC execution.
 - [ESI Parser]({{< relref "/manual/general_cfg/esi_parser.md" >}}) for the legacy EtherCAT ESI XML utility.
 - [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}) for extra domains, data items, DC, slave verify, and topology skips.
+- [FSoE and TwinSAFE]({{< relref "/manual/general_cfg/fsoe.md" >}}) for direct safety-telegram forwarding and hardware-panel navigation.
 - [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}}) for named axis collections used by `mc_grp_...` PLC helpers.
 - [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}}) for synchronized virtual/physical systems.
 - [Lookup Tables]({{< relref "/manual/general_cfg/lut.md" >}}) for loading numeric correction/value tables into ecmc.
@@ -56,8 +57,9 @@ General configuration covers IOC/bootstrap behavior that is not axis-specific:
 3. [Startup Validator]({{< relref "/manual/general_cfg/startup_validator.md" >}})
 4. [ESI Parser]({{< relref "/manual/general_cfg/esi_parser.md" >}})
 5. [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}})
-6. [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}})
-7. [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}})
-8. [Lookup Tables]({{< relref "/manual/general_cfg/lut.md" >}})
-9. [data storage buffer]({{< relref "/manual/general_cfg/data_storage.md" >}})
-10. [ecmc command reference]({{< relref "/manual/general_cfg/ecmc_command_ref.md" >}})
+6. [FSoE and TwinSAFE]({{< relref "/manual/general_cfg/fsoe.md" >}})
+7. [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}})
+8. [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}})
+9. [Lookup Tables]({{< relref "/manual/general_cfg/lut.md" >}})
+10. [data storage buffer]({{< relref "/manual/general_cfg/data_storage.md" >}})
+11. [ecmc command reference]({{< relref "/manual/general_cfg/ecmc_command_ref.md" >}})

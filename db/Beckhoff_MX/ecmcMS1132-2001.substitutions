@@ -1,0 +1,10 @@
+file "ecmc_analogInput-chX.template" { pattern
+  { CH_ID, sourceName,    suffix,       ESLO,           EOFF, EGU, PREC }
+  { "",    OutputVoltage, "-OutVolt",   2.1757E-08,     0,    "V", 5    }
+  { "",    OutputCurrent, "-OutCurr",   3.4250E-10,     0,    "A", 5    }
+}
+
+file "ecmc_controlWord-chX.template" { pattern
+  { CH_ID }
+  { 1     }
+}

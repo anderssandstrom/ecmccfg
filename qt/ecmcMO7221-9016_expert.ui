@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>730</width>
+    <height>502</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MO7221-9016 expert</string>
+  </property>
+  <widget class="caInclude" name="driveExpertPanel">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>412</width>
+     <height>502</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ID=01</string>
+   </property>
+   <property name="filename" stdset="0">
+    <string notr="true">ecmcEx72x1_STD_expert.ui</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="safetyGroup">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>10</y>
+     <width>140</width>
+     <height>150</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Monitoring aid only. Functional safety remains in FSoE/TwinSAFE.</string>
+   </property>
+   <property name="title">
+    <string>Safety diagnostic</string>
+   </property>
+   <widget class="caLed" name="safetyReadyLed">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>28</y>
+      <width>22</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Drv01-SafetyReady</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLed::Static</enum>
+    </property>
+    <property name="falseColor">
+     <color>
+      <red>255</red>
+      <green>0</green>
+      <blue>0</blue>
+     </color>
+    </property>
+    <property name="trueColor">
+     <color>
+      <red>0</red>
+      <green>205</green>
+      <blue>0</blue>
+     </color>
+    </property>
+   </widget>
+   <widget class="QLabel" name="safetyReadyLabel">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>28</y>
+      <width>92</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Safety ready</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="safetyStateRaw">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>62</y>
+      <width>45</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Drv01-SafetyReady</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="safetyStateLabel">
+    <property name="geometry">
+     <rect>
+      <x>63</x>
+      <y>62</y>
+      <width>67</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0 STO / 1 ready</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="safetyWarning">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>91</y>
+      <width>118</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Diagnostic only.
+Not safety-rated.</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caInclude" name="standardIoPanel">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>170</y>
+     <width>300</width>
+     <height>245</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string>
+   </property>
+   <property name="filename" stdset="0">
+    <string notr="true">ecmcMO7221-9016_fsoe_io.ui</string>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caInclude</class>
+   <extends>QWidget</extends>
+   <header>caInclude</header>
+  </customwidget>
+  <customwidget>
+   <class>caLed</class>
+   <extends>QWidget</extends>
+   <header>caLed</header>
+  </customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

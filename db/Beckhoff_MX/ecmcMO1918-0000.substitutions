@@ -1,0 +1,34 @@
+#- Connection records are loaded by addFSoEConn.cmd. The following
+#- records belong to the master's mandatory FSLOGIC status PDO.
+file "ecmc_status-chX.template" {
+pattern
+  { CH_ID, KEY,              sourceName             ,suffix }
+  { 01,    FSoE-StateIn,     fsoe_state_in_         , ""    }
+  { 01,    FSoE-CycCntIn,    fsoe_cycle_counter_in_ , ""    }
+}
+
+#- Standard non-safety inputs to the TwinSAFE application.
+file "ecmc_binaryOutput-chX.template" {
+  pattern { CH_ID, sourceName, KEY, DESC, ZNAM, ONAM }
+    { "", "binaryOutput01", "Rst", "Reset safety application", "Idle",    "Reset" }
+    { "", "binaryOutput02", "Run", "Run safety application",   "Stopped", "Run"   }
+}
+
+#- Electronic-fuse diagnostics, using the common Beckhoff MX PV names.
+file "ecmc_ESI_mbbiDirect.template" {
+  pattern { REC_NAME,  DESC,                     FLNK, SRC_NAME }
+    { "EFU-Stat", "Electronic fuse status", "",   "EFU_Stat" }
+}
+
+file "ecmc_ESI_ai.template" {
+  pattern { REC_NAME,  DESC,                      SRC_NAME,  DTYP,        EGU }
+    { "EFU-Curr", "Electronic fuse current", "EFU_Curr", "asynFloat64", "A" }
+}
+
+## Other
+#file "ecmc_status-chX.template" {
+#pattern
+#  { CH_ID, KEY,                sourceName,   suffix }
+#  { 01,    STD_vars_in_,       std_vars_in_, ""     }
+#}
+#

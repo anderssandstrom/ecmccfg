@@ -1,0 +1,9 @@
+file "ecmc_ESI_mbbiDirect.template" {
+  pattern { REC_NAME, DESC, FLNK, SRC_NAME }
+    { "Pwr-Stat", "Packed power status", "", "Pwr_Stat" }
+}
+
+file "ecmcMS2210-0021-1114.template" {
+  pattern { REC_NAME, DESC, SRC_NAME, MASK }
+    { "Pwr-Good", "Power input good", "Pwr_Stat", "0x10" }
+}

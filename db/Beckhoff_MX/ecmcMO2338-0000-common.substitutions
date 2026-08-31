@@ -1,0 +1,69 @@
+#- Common ecmc database for MO2338-0000-1111 (M8) and MO2338-0000-1112 (M12)
+#- Implicit default mapping
+#- source ESI file: /psi.ch/.nfs-server/nfs32.psi.ch/8210_8214/sandst_a/sources/beckhoff_xml/Beckhoff MOxxxx.xml
+#- Both variants use product code 0x812b6c8b and the same PDO mapping.
+#- selected mapping id: M01 of 1
+#-      ECMC_EC_HWTYPE:     MO2338_0000_common
+#-      ECMC_EC_VENDOR_ID:  0x2
+#-      ECMC_EC_PRODUCT_ID: 0x812b6c8b
+#-      ECMC_EC_REVISION:   0x1000457
+#-      templates:          db/generic/ecmc_ESI_*.template
+
+file "ecmc_ESI_mbboDirect.template" {
+    pattern { REC_NAME, DESC , SRC_NAME}
+        #- BO_Arr B0..B7=Output
+        {"BO-Arr", "BO Outputs packed bits", "BO_Arr"}
+        #- EFU_Ctrl B0=Enable
+        #- EFU_Ctrl B1=Control via Process Data
+        #- EFU_Ctrl B2=Reset
+        #- EFU_Ctrl B3..B15=gap
+        {"EFU-Ctrl", "EFU Outputs packed bits", "EFU_Ctrl"}
+}
+
+file "ecmc_ESI_mbbiDirect.template" {
+    pattern { REC_NAME, DESC, FLNK , SRC_NAME}
+        #- BI_Arr B0..B7=Input
+        {"BI-Arr", "BI Inputs packed bits", "", "BI_Arr"}
+        #- BI_Stat B0=Wirebreak
+        #- BI_Stat B1=Power Supply Missing
+        #- BI_Stat B2=Wirebreak
+        #- BI_Stat B3=Power Supply Missing
+        #- BI_Stat B4=Wirebreak
+        #- BI_Stat B5=Power Supply Missing
+        #- BI_Stat B6=Wirebreak
+        #- BI_Stat B7=Power Supply Missing
+        #- BI_Stat B8=Wirebreak
+        #- BI_Stat B9=Power Supply Missing
+        #- BI_Stat B10=Wirebreak
+        #- BI_Stat B11=Power Supply Missing
+        #- BI_Stat B12=Wirebreak
+        #- BI_Stat B13=Power Supply Missing
+        #- BI_Stat B14=Wirebreak
+        #- BI_Stat B15=Power Supply Missing
+        {"BI-Stat", "BI Diagnosis packed bits", "", "BI_Stat"}
+        #- BO_Stat01 B0..B4=Ch1: Overcurrent, Overload, gap, Short to 24V, Power Supply Missing
+        #- BO_Stat01 B5..B9=Ch2: Overcurrent, Overload, gap, Short to 24V, Power Supply Missing
+        #- BO_Stat01 B10..B14=Ch3: Overcurrent, Overload, gap, Short to 24V, Power Supply Missing
+        #- BO_Stat01 B15=Ch4 Overcurrent
+        {"BO-Stat01", "BO Diagnosis packed bits", "", "BO_Stat01"}
+        #- BO_Stat02 B0..B3=Ch4: Overload, gap, Short to 24V, Power Supply Missing
+        #- BO_Stat02 B4..B8=Ch5: Overcurrent, Overload, gap, Short to 24V, Power Supply Missing
+        #- BO_Stat02 B9..B13=Ch6: Overcurrent, Overload, gap, Short to 24V, Power Supply Missing
+        #- BO_Stat02 B14..B15=Ch7: Overcurrent, Overload
+        {"BO-Stat02", "BO Diagnosis packed bits", "", "BO_Stat02"}
+        #- BO_Stat03 B0..B2=Ch7: gap, Short to 24V, Power Supply Missing
+        #- BO_Stat03 B3..B7=Ch8: Overcurrent, Overload, gap, Short to 24V, Power Supply Missing
+        {"BO-Stat03", "BO Diagnosis packed bits", "", "BO_Stat03"}
+        #- EFU_Stat B0=Warning
+        #- EFU_Stat B1=Error
+        #- EFU_Stat B2=Tripped
+        #- EFU_Stat B3=Enabled
+        #- EFU_Stat B4..B13=gap
+        #- EFU_Stat B14..B15=Input Cycle Counter
+        {"EFU-Stat", "EFU Inputs packed bits", "", "EFU_Stat"}
+}
+
+file "ecmc_ESI_ai.template" {
+    pattern { REC_NAME, DESC , SRC_NAME, DTYP}
+        {"EFU-Curr", "Current", "EFU_Curr", "asynFloat64"}
+}

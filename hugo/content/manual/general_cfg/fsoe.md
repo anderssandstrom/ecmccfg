@@ -58,6 +58,22 @@ The required call order is:
 5. Link each master connection to its slave connection.
 6. Activate application mode.
 
+`finishFSoEMaster.cmd` is required for safety masters whose fixed PDOs follow
+the project-dependent FSoE connections. It must run exactly once, after the
+last `addFSoEConn.cmd` call. For the MO1918 this produces the process-image
+order reported by the slave:
+
+```text
+SM2: 0x1600, 0x1601, ..., 0x17f0, 0x17ff
+SM3: 0x1a00, 0x1a01, ..., 0x1bfe, 0x1bff
+```
+
+The ellipsis represents additional configured FSoE connections. The standard
+outputs and the EFUSE/device-status PDOs must remain after them. Adding those
+fixed PDOs in `addSlave.cmd`, before the dynamic connections, gives ecmc a
+different process-image order and shifts the FSoE data even though
+`EcPrintSlaveConfig()` prints the expected PDO indices.
+
 ## Telegram mapping
 
 The six-byte telegram is registered directly as four packed entries rather
@@ -73,6 +89,39 @@ than as one unsupported 48-bit datatype:
 Mandatory bit groups and gaps that occupy a complete byte are registered as
 packed `U8` entries. This avoids invalid `B1`/gap combinations while
 preserving the exact PDO length expected by the slave.
+
+The connection ID is mapped directly as the final `U16` entry in each
+telegram. An additional `Cfg.EcAddDataDT()` view is not needed when the PDOs
+are registered in process-image order. `EcAddDataDT()` is still useful for
+named bit views, such as the MO1918 Reset and Run controls inside its packed
+standard-output byte.
+
+## MO1918 diagnostics
+
+The MO1918 hardware panel provides controls for the standard outputs and
+links to both the FSoE overview and an expert panel.
+
+| PV suffix | Description |
+|---|---|
+| `-Rst` / `-Rst-RB` | Reset the safety application and its readback |
+| `-Run` / `-Run-RB` | Run the safety application and its readback |
+| `-FSoE-StateIn01` | Safe Logic state |
+| `-FSoE-CycCntIn01` | Safe Logic cycle counter |
+| `-EFU-Stat` | Electronic-fuse status bits |
+| `-EFU-Curr` | Electronic-fuse current in amperes |
+
+`EFU-Stat` uses the standard Beckhoff MX layout:
+
+| Bit | Meaning |
+|---:|---|
+| 0 | Warning |
+| 1 | Error |
+| 2 | Tripped |
+| 3 | Enabled |
+| 4...15 | Gap/reserved |
+
+The current entry is EtherCAT object `0x6040:18` with datatype `REAL`, mapped
+as `F32` and exposed to EPICS through `asynFloat64`.
 
 ## Hardware-panel navigation
 
@@ -123,6 +172,24 @@ An EtherCAT AL status of `0x0025` (`Invalid Output Mapping`) normally means
 the configured PDO order, entry sizes, or total SyncManager length differs
 from the mapping expected by the device. Compare the configuration with an
 export for the exact product code and revision.
+
+Rapidly changing or implausible connection IDs are another indication of a
+process-image offset error. For example, an MO1918 connection ID showing the
+EFUSE status value, or the Safe Logic state/cycle counter, means the trailing
+PDOs were registered before the FSoE connections. Verify that
+`finishFSoEMaster.cmd` ran after every `addFSoEConn.cmd` and before
+`Cfg.SetAppMode(1)`.
+
+Useful runtime checks are:
+
+```text
+ethercat pdos -m <master> -p <slave> -v
+ecmcConfig "EcPrintSlaveConfig(<slave>)"
+```
+
+The EtherCAT output establishes the physical PDO layout. The ecmc output
+confirms which entries and sizes were registered; live EPICS monitoring can
+then reveal an offset mismatch.
 
 ## Related pages
 

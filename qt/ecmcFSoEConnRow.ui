@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>500</width><height>30</height></rect></property>
+  <widget class="caLabel" name="connection"><property name="geometry"><rect><x>18</x><y>3</y><width>45</width><height>24</height></rect></property><property name="text"><string>$(ConnID)</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget>
+  <widget class="caLineEdit" name="remoteSID"><property name="geometry"><rect><x>105</x><y>3</y><width>60</width><height>24</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):FSoE-M$(MasterID)-CH$(ConnID)-RmtSID</string></property><property name="precisionMode"><enum>caLineEdit::User</enum></property><property name="precision"><number>0</number></property></widget>
+  <widget class="caLineEdit" name="remoteConn"><property name="geometry"><rect><x>210</x><y>3</y><width>60</width><height>24</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):FSoE-M$(MasterID)-CH$(ConnID)-RmtConn</string></property><property name="precisionMode"><enum>caLineEdit::User</enum></property><property name="precision"><number>0</number></property></widget>
+  <widget class="caRelatedDisplay" name="details"><property name="geometry"><rect><x>290</x><y>3</y><width>85</width><height>24</height></rect></property><property name="labels"><string>Details</string></property><property name="files"><string>ecmcFSOE.ui</string></property><property name="args"><string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ConnID=$(ConnID);</string></property></widget>
+  <widget class="caShellCommand" name="openSlave"><property name="geometry"><rect><x>385</x><y>3</y><width>110</width><height>24</height></rect></property><property name="label"><string>Open slave</string></property><property name="labels"><string>Open slave hardware panel</string></property><property name="files"><string>bash /ioc/modules/qt/ecmcOpenObject.sh</string></property><property name="args"><string>EC_SLAVE_GENERIC $(IOC) $(IOC):FSoE-M$(MasterID)-CH$(ConnID)-RmtSID</string></property></widget>
+ </widget>
+ <customwidgets>
+  <customwidget><class>caLabel</class><extends>QLabel</extends><header>caLabel</header></customwidget>
+  <customwidget><class>caLineEdit</class><extends>QLineEdit</extends><header>caLineEdit</header></customwidget>
+  <customwidget><class>caRelatedDisplay</class><extends>QWidget</extends><header>caRelatedDisplay</header></customwidget>
+  <customwidget><class>caShellCommand</class><extends>QWidget</extends><header>caShellCommand</header></customwidget>
+ </customwidgets>
+ <resources/><connections/>
+</ui>

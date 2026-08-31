@@ -80,12 +80,16 @@ ecmcMain.ui
   -> generic EtherCAT slave overview
   -> ecmcMO1918-0000.ui
   -> FSoE connections
-  -> ecmcFSoEMaster.ui
+  -> generated FSoE connection overview
 ```
 
 The MO1918 hardware definition sets `PnlTyp` to `MO1918-0000`. Its FSoE
-overview contains one row for each of its two connections. Each row can open
-the connection details or the connected safety-slave hardware panel.
+button opens `ecmcFSoEMaster.ui`, which contains reusable
+`ecmcFSoEConnRow.ui` rows for connections `01` through `08`. Each
+row is visible only when its `RmtSID` metadata PV exists and contains a
+positive slave ID. This supports up to eight configured connections without
+a launcher script or generated UI. Each visible row can open the connection
+details or the connected safety-slave hardware panel.
 
 `linkFSoEConn.cmd` loads navigation metadata such as:
 
@@ -122,4 +126,3 @@ export for the exact product code and revision.
 - [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}})
 - [Beckhoff MX-System]({{< relref "/manual/knowledgebase/hardware/MX-System.md" >}})
 - [Panels]({{< relref "/manual/knowledgebase/panel.md" >}})
-

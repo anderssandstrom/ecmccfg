@@ -7,6 +7,13 @@ pattern
   { 01,    FSoE-CycCntIn,    fsoe_cycle_counter_in_ , ""    }
 }
 
+#- Standard non-safety inputs to the TwinSAFE application.
+file "ecmc_binaryOutput-chX.template" {
+  pattern { CH_ID, sourceName, KEY, DESC, ZNAM, ONAM }
+    { "", "binaryOutput01", "Rst", "Reset safety application", "Idle",    "Reset" }
+    { "", "binaryOutput02", "Run", "Run safety application",   "Stopped", "Run"   }
+}
+
 ## Other
 #file "ecmc_status-chX.template" {
 #pattern
@@ -14,9 +21,3 @@ pattern
 #  { 01,    STD_vars_in_,       std_vars_in_, ""     }
 #}
 #
-## Other
-#file "ecmc_controlWord-chX.template" {
-#pattern
-#  { CH_ID, KEY,                sourceName        }
-#  { 01,    STD_vars_out_,      std_vars_out_     }
-#}

@@ -27,6 +27,26 @@ file "ecmc_analogOutput-chX.template" {
     { 01, "torqueOffset", "Drv", "-TrqOff", "Torque Offset", "%", 0.1, 1, -200, 200, 0, 0, 0, 0, 0, "NO_ALARM", "NO_ALARM", "NO_ALARM", "NO_ALARM" }
 }
 
+# Standard non-safety process data from the controller to the drive.
+file "ecmc_binaryOutput-chX.template" {
+  pattern { CH_ID, sourceName, KEY, DESC, ZNAM, ONAM }
+    { "", "binaryOutput01", "Rst", "Reset safety application", "Idle",    "Reset" }
+    { "", "binaryOutput02", "Run", "Run safety application",   "Stopped", "Run"   }
+}
+
+# Standard non-safety process data from the drive to the controller.
+file "ecmc_binaryInput-chX.template" {
+  pattern { CH_ID, sourceName, KEY, DESC }
+    { "", "binaryInput01", "ComErr",      "Communication error"        }
+    { "", "binaryInput02", "ComStartup",  "Communication startup"      }
+    { "", "binaryInput03", "FBDeactive",  "Function block deactivated" }
+    { "", "binaryInput04", "FBErr",       "Function block error"       }
+    { "", "binaryInput05", "FBRun",       "Function block running"     }
+    { "", "binaryInput06", "InRun",       "Input running"              }
+    { "", "binaryInput07", "OtherErr",    "Other error"                }
+    { "", "binaryInput08", "ReduceSpeed", "Reduced speed active"       }
+}
+
 # FSOE outputs (outputs from master to slave)
 file "ecmc_controlWord-chX.template" {
 pattern

@@ -57,7 +57,11 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}slaveVerify.cmd "RESET=0"
 #- general/addFSoEConn.cmd.
 
 #- Standard outputs: two bits plus six padding bits, registered as one byte.
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x17f0,0x6000,0x01,U8,std_vars_out_01)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x17f0,0xf788,0x00,U8,std_vars_out_01)"
+ecmcConfigOrDie "Cfg.EcAddDataDT(ec${ECMC_EC_MASTER_ID=0}.s${ECMC_EC_SLAVE_NUM}.std_vars_out_01,0,0,1,B1,binaryOutput01)"
+ecmcConfigOrDie "Cfg.EcAddEntryAlias(${ECMC_EC_SLAVE_NUM},binaryOutput01,BO01)"
+ecmcConfigOrDie "Cfg.EcAddDataDT(ec${ECMC_EC_MASTER_ID=0}.s${ECMC_EC_SLAVE_NUM}.std_vars_out_01,0,1,1,B1,binaryOutput02)"
+ecmcConfigOrDie "Cfg.EcAddEntryAlias(${ECMC_EC_SLAVE_NUM},binaryOutput02,BO02)"
 
 #- Mandatory FSLOGIC output gap.
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x17ff,0x0000,0x00,U16,dummyStub1,0)"

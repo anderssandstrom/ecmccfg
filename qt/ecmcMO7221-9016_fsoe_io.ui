@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>300</width><height>245</height></rect></property>
+  <property name="windowTitle"><string>MO7221 Safety Application I/O</string></property>
+  <widget class="QLabel" name="title">
+   <property name="geometry"><rect><x>10</x><y>5</y><width>280</width><height>24</height></rect></property>
+   <property name="text"><string>Safety application interface</string></property>
+  </widget>
+  <widget class="QGroupBox" name="outputs">
+   <property name="geometry"><rect><x>10</x><y>35</y><width>130</width><height>90</height></rect></property>
+   <property name="title"><string>Application control</string></property>
+   <widget class="caToggleButton" name="bo01">
+    <property name="geometry"><rect><x>15</x><y>25</y><width>100</width><height>22</height></rect></property>
+    <property name="text"><string>Reset</string></property>
+    <property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Rst</string></property>
+   </widget>
+   <widget class="caToggleButton" name="bo02">
+    <property name="geometry"><rect><x>15</x><y>55</y><width>100</width><height>22</height></rect></property>
+    <property name="text"><string>Run</string></property>
+    <property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Run</string></property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="inputs">
+   <property name="geometry"><rect><x>150</x><y>35</y><width>140</width><height>200</height></rect></property>
+   <property name="title"><string>Application status</string></property>
+   <widget class="caLed" name="bi01"><property name="geometry"><rect><x>15</x><y>25</y><width>18</width><height>18</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-ComErr</string></property></widget>
+   <widget class="QLabel" name="bi01Label"><property name="geometry"><rect><x>42</x><y>23</y><width>90</width><height>22</height></rect></property><property name="text"><string>ComErr</string></property></widget>
+   <widget class="caLed" name="bi02"><property name="geometry"><rect><x>15</x><y>47</y><width>18</width><height>18</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-ComStartup</string></property></widget>
+   <widget class="QLabel" name="bi02Label"><property name="geometry"><rect><x>42</x><y>45</y><width>90</width><height>22</height></rect></property><property name="text"><string>ComStartup</string></property></widget>
+   <widget class="caLed" name="bi03"><property name="geometry"><rect><x>15</x><y>69</y><width>18</width><height>18</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-FBDeactive</string></property></widget>
+   <widget class="QLabel" name="bi03Label"><property name="geometry"><rect><x>42</x><y>67</y><width>90</width><height>22</height></rect></property><property name="text"><string>FBDeactive</string></property></widget>
+   <widget class="caLed" name="bi04"><property name="geometry"><rect><x>15</x><y>91</y><width>18</width><height>18</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-FBErr</string></property></widget>
+   <widget class="QLabel" name="bi04Label"><property name="geometry"><rect><x>42</x><y>89</y><width>90</width><height>22</height></rect></property><property name="text"><string>FBErr</string></property></widget>
+   <widget class="caLed" name="bi05"><property name="geometry"><rect><x>15</x><y>113</y><width>18</width><height>18</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-FBRun</string></property></widget>
+   <widget class="QLabel" name="bi05Label"><property name="geometry"><rect><x>42</x><y>111</y><width>90</width><height>22</height></rect></property><property name="text"><string>FBRun</string></property></widget>
+   <widget class="caLed" name="bi06"><property name="geometry"><rect><x>15</x><y>135</y><width>18</width><height>18</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-InRun</string></property></widget>
+   <widget class="QLabel" name="bi06Label"><property name="geometry"><rect><x>42</x><y>133</y><width>90</width><height>22</height></rect></property><property name="text"><string>InRun</string></property></widget>
+   <widget class="caLed" name="bi07"><property name="geometry"><rect><x>15</x><y>157</y><width>18</width><height>18</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-OtherErr</string></property></widget>
+   <widget class="QLabel" name="bi07Label"><property name="geometry"><rect><x>42</x><y>155</y><width>90</width><height>22</height></rect></property><property name="text"><string>OtherErr</string></property></widget>
+   <widget class="caLed" name="bi08"><property name="geometry"><rect><x>15</x><y>179</y><width>18</width><height>18</height></rect></property><property name="channel" stdset="0"><string>$(IOC):m$(MasterID)s$(SlaveID)-ReduceSpeed</string></property></widget>
+   <widget class="QLabel" name="bi08Label"><property name="geometry"><rect><x>42</x><y>177</y><width>90</width><height>22</height></rect></property><property name="text"><string>ReduceSpeed</string></property></widget>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget><class>caToggleButton</class><extends>QCheckBox</extends><header>caToggleButton</header></customwidget>
+  <customwidget><class>caLed</class><extends>QWidget</extends><header>caLed</header></customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

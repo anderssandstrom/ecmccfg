@@ -30,6 +30,7 @@ and its two directly mapped connections:
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=4,HW_DESC=MO1918-0000"
 ${SCRIPTEXEC} ${ecmccfg_DIR}addFSoEConn.cmd, "SFTY_MASTER_SID=4,SFTY_MASTER_CONN=01"
 ${SCRIPTEXEC} ${ecmccfg_DIR}addFSoEConn.cmd, "SFTY_MASTER_SID=4,SFTY_MASTER_CONN=02"
+${SCRIPTEXEC} ${ecmccfg_DIR}finishFSoEMaster.cmd, "SFTY_MASTER_SID=4"
 ```
 
 Add the safety slaves and their normal hardware configurations, then link the
@@ -51,9 +52,11 @@ The required call order is:
 
 1. Add the safety master.
 2. Add every master-side FSoE connection.
-3. Add the safety slaves, including their FSoE PDO mappings.
-4. Link each master connection to its slave connection.
-5. Activate application mode.
+3. Finish the safety-master mapping with `finishFSoEMaster.cmd`. This appends its
+   standard-output, EFUSE, and device-status PDOs after the FSoE telegrams.
+4. Add the safety slaves, including their FSoE PDO mappings.
+5. Link each master connection to its slave connection.
+6. Activate application mode.
 
 ## Telegram mapping
 

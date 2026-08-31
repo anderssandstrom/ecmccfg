@@ -53,24 +53,6 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}slaveVerify.cmd "RESET=0"
 #    PDO entry 0x6080:11, 32 bit, "Current"
 
 
-#- FSoE connections are project-dependent and are added after addSlave.cmd with
-#- general/addFSoEConn.cmd.
-
-#- Standard outputs: two bits plus six padding bits, registered as one byte.
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x17f0,0xf788,0x00,U8,std_vars_out_01)"
-ecmcConfigOrDie "Cfg.EcAddDataDT(ec${ECMC_EC_MASTER_ID=0}.s${ECMC_EC_SLAVE_NUM}.std_vars_out_01,0,0,1,B1,binaryOutput01)"
-ecmcConfigOrDie "Cfg.EcAddEntryAlias(${ECMC_EC_SLAVE_NUM},binaryOutput01,BO01)"
-ecmcConfigOrDie "Cfg.EcAddDataDT(ec${ECMC_EC_MASTER_ID=0}.s${ECMC_EC_SLAVE_NUM}.std_vars_out_01,0,1,1,B1,binaryOutput02)"
-ecmcConfigOrDie "Cfg.EcAddEntryAlias(${ECMC_EC_SLAVE_NUM},binaryOutput02,BO02)"
-
-#- Mandatory FSLOGIC output gap.
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x17ff,0x0000,0x00,U16,dummyStub1,0)"
-
-
-#- EFUSE Inputs
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1bfe,0x6040,0x01,U16,status1)"
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1bfe,0x6040,0x11,S32,current)"
-
-#- FSoE Device Status: SafeLogicState and CycleCounter
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1bff,0xf100,0x01,U8,fsoe_state_in_01)"
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1bff,0xf100,0x02,U8,fsoe_cycle_counter_in_01)"
+#- FSoE connections are project-dependent. Add them with addFSoEConn.cmd and
+#- then call finishFSoEMaster.cmd. The latter must add the trailing PDOs only after
+#- every connection, so that ecmc's process-image order matches the slave.

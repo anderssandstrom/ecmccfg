@@ -13,8 +13,8 @@ ecmcConfigOrDie "Cfg.EcAddEntryAlias(${SFTY_MASTER_SID},binaryOutput02,BO02)"
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${SFTY_MASTER_SID},${SFTY_MASTER_VENDOR_ID=0x00000002},${SFTY_MASTER_PRODUCT_ID=0x8127bb8b},1,2,0x17ff,0x0000,0x00,U16,dummyStub1,0)"
 
 #- EFUSE status: four status bits, 12-bit gap, then 32-bit current.
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${SFTY_MASTER_SID},${SFTY_MASTER_VENDOR_ID=0x00000002},${SFTY_MASTER_PRODUCT_ID=0x8127bb8b},2,3,0x1bfe,0x6040,0x01,U16,status1)"
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${SFTY_MASTER_SID},${SFTY_MASTER_VENDOR_ID=0x00000002},${SFTY_MASTER_PRODUCT_ID=0x8127bb8b},2,3,0x1bfe,0x6040,0x12,S32,current)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(${SFTY_MASTER_SID},${SFTY_MASTER_VENDOR_ID=0x00000002},${SFTY_MASTER_PRODUCT_ID=0x8127bb8b},2,3,0x1bfe,0x6040,0x01,U16,EFU_Stat)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(${SFTY_MASTER_SID},${SFTY_MASTER_VENDOR_ID=0x00000002},${SFTY_MASTER_PRODUCT_ID=0x8127bb8b},2,3,0x1bfe,0x6040,0x12,F32,EFU_Curr)"
 
 #- FSoE device status.
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${SFTY_MASTER_SID},${SFTY_MASTER_VENDOR_ID=0x00000002},${SFTY_MASTER_PRODUCT_ID=0x8127bb8b},2,3,0x1bff,0xf100,0x01,U8,fsoe_state_in_01)"

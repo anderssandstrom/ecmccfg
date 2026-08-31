@@ -14,6 +14,17 @@ file "ecmc_binaryOutput-chX.template" {
     { "", "binaryOutput02", "Run", "Run safety application",   "Stopped", "Run"   }
 }
 
+#- Electronic-fuse diagnostics, using the common Beckhoff MX PV names.
+file "ecmc_ESI_mbbiDirect.template" {
+  pattern { REC_NAME,  DESC,                     FLNK, SRC_NAME }
+    { "EFU-Stat", "Electronic fuse status", "",   "EFU_Stat" }
+}
+
+file "ecmc_ESI_ai.template" {
+  pattern { REC_NAME,  DESC,                      SRC_NAME,  DTYP,        EGU }
+    { "EFU-Curr", "Electronic fuse current", "EFU_Curr", "asynFloat64", "A" }
+}
+
 ## Other
 #file "ecmc_status-chX.template" {
 #pattern

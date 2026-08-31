@@ -51,6 +51,14 @@
     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID);</string>
    </property>
   </widget>
+  <widget class="caRelatedDisplay" name="expertPanel">
+   <property name="geometry">
+    <rect><x>10</x><y>390</y><width>101</width><height>21</height></rect>
+   </property>
+   <property name="labels"><string>Expert</string></property>
+   <property name="files"><string>ecmcMO1918-0000_expert.ui</string></property>
+   <property name="args"><string>MasterID=$(MasterID),SlaveID=$(SlaveID),IOC=$(IOC);</string></property>
+  </widget>
   <widget class="QGroupBox" name="standardOutputs">
    <property name="geometry">
     <rect>

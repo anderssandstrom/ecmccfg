@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>730</width><height>502</height></rect></property>
+  <property name="windowTitle"><string>MO7221-9016 CSP expert</string></property>
+  <widget class="caInclude" name="baseExpertPanel">
+   <property name="geometry"><rect><x>0</x><y>0</y><width>730</width><height>502</height></rect></property>
+   <property name="macro"><string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ID=01</string></property>
+   <property name="filename" stdset="0"><string notr="true">ecmcMO7221-9016_expert.ui</string></property>
+  </widget>
+  <widget class="caInclude" name="cspDriveExpertPanel">
+   <property name="geometry"><rect><x>0</x><y>0</y><width>412</width><height>502</height></rect></property>
+   <property name="macro"><string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ID=01,SetpointLabel=Target position,SetpointPV=Drv01-PosCmd-RB</string></property>
+   <property name="filename" stdset="0"><string notr="true">ecmcMO7221-9016_DS402_expert.ui</string></property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget><class>caInclude</class><extends>QWidget</extends><header>caInclude</header></customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

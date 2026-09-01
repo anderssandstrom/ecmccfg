@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>412</width><height>502</height></rect></property>
+  <property name="windowTitle"><string>MO7221 DS402</string></property>
+  <widget class="QGroupBox" name="driveGroup">
+   <property name="geometry"><rect><x>5</x><y>5</y><width>402</width><height>492</height></rect></property>
+   <property name="title"><string>MO7221 DS402 state machine</string></property>
+   <widget class="QLabel" name="statusTitle"><property name="geometry"><rect><x>10</x><y>25</y><width>180</width><height>20</height></rect></property><property name="text"><string>Statusword</string></property></widget>
+   <widget class="caByte" name="statusBits">
+    <property name="geometry"><rect><x>10</x><y>50</y><width>20</width><height>320</height></rect></property>
+    <property name="toolTip"><string>0 Ready to switch on; 1 Switched on; 2 Operation enabled; 3 Fault; 4 Reserved; 5 Reserved; 6 Switch on disabled; 7 Warning; 8-9 Reserved; 10 TxPDO toggle; 11 Internal limit active; 12 Drive follows command value; 13 Input cycle counter; 14-15 Reserved</string></property>
+    <property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Drv01-Stat</string></property>
+    <property name="direction"><enum>caByte::Down</enum></property><property name="startBit"><number>0</number></property><property name="endBit"><number>15</number></property>
+   </widget>
+   <widget class="QLabel" name="statusLabels">
+    <property name="geometry"><rect><x>36</x><y>50</y><width>164</width><height>320</height></rect></property><property name="font"><font><family>Monospace</family><pointsize>8</pointsize></font></property>
+    <property name="text"><string>0  Ready to switch on
+1  Switched on
+2  Operation enabled
+3  Fault
+4  Reserved
+5  Reserved
+6  Switch on disabled
+7  Warning
+8  Reserved
+9  Reserved
+10 TxPDO toggle
+11 Internal limit active
+12 Follows command
+13 Input cycle counter
+14 Reserved
+15 Reserved</string></property><property name="alignment"><set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set></property>
+   </widget>
+   <widget class="QLabel" name="controlTitle"><property name="geometry"><rect><x>210</x><y>25</y><width>180</width><height>20</height></rect></property><property name="text"><string>Controlword</string></property></widget>
+   <widget class="caByte" name="controlBits">
+    <property name="geometry"><rect><x>210</x><y>50</y><width>20</width><height>320</height></rect></property>
+    <property name="toolTip"><string>0 Switch on; 1 Enable voltage; 2 Reserved; 3 Enable operation; 4-6 Reserved; 7 Fault reset; 8-15 Reserved</string></property>
+    <property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Drv01-Cmd-RB</string></property>
+    <property name="direction"><enum>caByte::Down</enum></property><property name="startBit"><number>0</number></property><property name="endBit"><number>15</number></property>
+   </widget>
+   <widget class="QLabel" name="controlLabels">
+    <property name="geometry"><rect><x>236</x><y>50</y><width>155</width><height>320</height></rect></property><property name="font"><font><family>Monospace</family><pointsize>8</pointsize></font></property>
+    <property name="text"><string>0  Switch on
+1  Enable voltage
+2  Reserved
+3  Enable operation
+4  Reserved
+5  Reserved
+6  Reserved
+7  Fault reset
+8  Reserved
+9  Reserved
+10 Reserved
+11 Reserved
+12 Reserved
+13 Reserved
+14 Reserved
+15 Reserved</string></property><property name="alignment"><set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set></property>
+   </widget>
+   <widget class="QLabel" name="setpointLabel"><property name="geometry"><rect><x>10</x><y>390</y><width>130</width><height>22</height></rect></property><property name="text"><string>$(SetpointLabel)</string></property></widget>
+   <widget class="caLineEdit" name="setpoint"><property name="geometry"><rect><x>145</x><y>390</y><width>110</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-$(SetpointPV)</string></property></widget>
+   <widget class="QLabel" name="wordValuesLabel"><property name="geometry"><rect><x>10</x><y>425</y><width>130</width><height>22</height></rect></property><property name="text"><string>Control / status</string></property></widget>
+   <widget class="caLineEdit" name="controlValue"><property name="geometry"><rect><x>145</x><y>425</y><width>70</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Drv01-Cmd-RB</string></property></widget>
+   <widget class="caLineEdit" name="statusValue"><property name="geometry"><rect><x>225</x><y>425</y><width>70</width><height>22</height></rect></property><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Drv01-Stat</string></property></widget>
+  </widget>
+ </widget>
+ <customwidgets><customwidget><class>caByte</class><extends>QWidget</extends><header>caByte</header></customwidget><customwidget><class>caLineEdit</class><extends>QLineEdit</extends><header>caLineEdit</header></customwidget></customwidgets>
+ <resources/><connections/>
+</ui>

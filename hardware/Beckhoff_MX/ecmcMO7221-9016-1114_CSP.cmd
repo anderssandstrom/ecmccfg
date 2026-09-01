@@ -7,7 +7,7 @@ epicsEnvSet("ECMC_EC_PRODUCT_ID"         "0x815657db")
 epicsEnvSet("ECMC_EC_REVISION"           "0x0102755a")
 epicsEnvSet("ECMC_EC_COMP_TYPE"          "MO7221_OCT")
 epicsEnvSet("ECMC_SUBST_TYPE"            "MO7221-9016-CSP")
-epicsEnvSet("ECMC_HW_PANEL"              "MO7221-9016")
+epicsEnvSet("ECMC_HW_PANEL"              "MO7221-9016_CSP")
 
 epicsEnvSet("ECMC_MO7221_MODE"           "8")
 epicsEnvSet("ECMC_MO7221_SETPOINT_PDO"   "0x1611")

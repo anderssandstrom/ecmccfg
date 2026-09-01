@@ -51,20 +51,12 @@
     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID);</string>
    </property>
   </widget>
-  <widget class="caRelatedDisplay" name="expertPanel">
-   <property name="geometry">
-    <rect><x>10</x><y>390</y><width>101</width><height>21</height></rect>
-   </property>
-   <property name="labels"><string>Expert</string></property>
-   <property name="files"><string>ecmcMO1918-0000_expert.ui</string></property>
-   <property name="args"><string>MasterID=$(MasterID),SlaveID=$(SlaveID),IOC=$(IOC);</string></property>
-  </widget>
   <widget class="QGroupBox" name="standardOutputs">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>50</y>
-     <width>105</width>
+     <x>5</x>
+     <y>280</y>
+     <width>115</width>
      <height>72</height>
     </rect>
    </property>
@@ -72,13 +64,13 @@
     <string>Reset and run controls for the safety application.</string>
    </property>
    <property name="title">
-    <string>Safety app cntrl</string>
+    <string>Safety</string>
    </property>
    <widget class="caToggleButton" name="bo01">
     <property name="geometry">
      <rect>
       <x>8</x>
-      <y>22</y>
+      <y>25</y>
       <width>88</width>
       <height>20</height>
      </rect>
@@ -107,6 +99,120 @@
     </property>
    </widget>
   </widget>
+  <widget class="QGroupBox" name="efuGroup">
+   <property name="geometry">
+    <rect>
+     <x>5</x>
+     <y>50</y>
+     <width>115</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Electronic fuse</string>
+   </property>
+   <widget class="QLabel" name="statusLabel">
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>25</y>
+      <width>85</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>EFU status</string>
+    </property>
+   </widget>
+   <widget class="caByte" name="efuStat">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>24</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Bits 0 through 15 from top to bottom</string>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-EFU-Stat</string>
+    </property>
+    <property name="direction">
+     <enum>caByte::Down</enum>
+    </property>
+    <property name="startBit">
+     <number>0</number>
+    </property>
+    <property name="endBit">
+     <number>3</number>
+    </property>
+    <property name="colorMode">
+     <enum>caByte::Static</enum>
+    </property>
+    <property name="foreground" stdset="0">
+     <color>
+      <red>0</red>
+      <green>85</green>
+      <blue>0</blue>
+     </color>
+    </property>
+   </widget>
+   <widget class="QLabel" name="statusBits">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>50</y>
+      <width>130</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>0  Warning
+1  Error
+2  Tripped
+3  Enabled</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="currentLabel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>115</y>
+      <width>120</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>EFU current [A]</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="efuCurrent">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>140</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-EFU-Curr</string>
+    </property>
+   </widget>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -123,6 +229,16 @@
    <class>caInclude</class>
    <extends>QWidget</extends>
    <header>caInclude</header>
+  </customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+  <customwidget>
+   <class>caByte</class>
+   <extends>QWidget</extends>
+   <header>caByte</header>
   </customwidget>
  </customwidgets>
  <resources/>

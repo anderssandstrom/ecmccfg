@@ -216,6 +216,11 @@ These select mode `8` and map target position through PDO `0x1611`, object
 descriptors without `_CSP` select mode `9` and map target velocity through
 `0x1612`, object `0x7010:06`.
 
+The CSP descriptors set `PnlTyp` to `MO7221-9016_CSP`. Its hardware panel
+retains the normal MO7221 status and FSoE navigation, while its Expert button
+opens the CSP drive panel with position-command PVs instead of CSV velocity
+commands.
+
 ## Related pages
 
 - [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}})

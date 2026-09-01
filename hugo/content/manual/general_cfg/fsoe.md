@@ -38,7 +38,7 @@ endpoints:
 
 ```text
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=8,HW_DESC=MO7221-9016-1114"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=9,HW_DESC=MO7221-9016-1114"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=9,HW_DESC=MO7221-9016-1124"
 
 ${SCRIPTEXEC} ${ecmccfg_DIR}linkFSoEConn.cmd, "SFTY_MASTER_SID=4,SFTY_MASTER_CONN=01,SFTY_SLAVE_SID=8,SFTY_SLAVE_CONN=01"
 ${SCRIPTEXEC} ${ecmccfg_DIR}linkFSoEConn.cmd, "SFTY_MASTER_SID=4,SFTY_MASTER_CONN=02,SFTY_SLAVE_SID=9,SFTY_SLAVE_CONN=01"
@@ -190,6 +190,31 @@ ecmcConfig "EcPrintSlaveConfig(<slave>)"
 The EtherCAT output establishes the physical PDO layout. The ecmc output
 confirms which entries and sizes were registered; live EPICS monitoring can
 then reveal an offset mismatch.
+
+If an MO7221 reaches `Ready to switch on` (`0x0021`) but does not advance when
+the controlword changes to `7` or `15`, verify its stored operating mode:
+
+```text
+ethercat upload -m <master> -p <slave> -t int8 0x7010 3
+```
+
+The standard ecmccfg MO7221 mapping uses cyclic synchronous velocity mode
+(CSV), so the value must be `9`. A device previously configured by TwinCAT may
+retain CSP mode (`8`). The MO7221 hardware configuration explicitly writes
+CSV during PREOP and registers the setting for reapplication after reconnect.
+
+MO7221 is also available with cyclic synchronous position mode descriptors:
+
+```text
+MO7221-9016-1114_CSP  # 24 V
+MO7221-9016-1124_CSP  # 48 V
+```
+
+These select mode `8` and map target position through PDO `0x1611`, object
+`0x7010:05`, as `positionSetpoint01`. The CSP RxPDO assignment contains
+`0x1610` and `0x1611`; it does not include the CSV torque-offset PDO. The
+descriptors without `_CSP` select mode `9` and map target velocity through
+`0x1612`, object `0x7010:06`.
 
 ## Related pages
 

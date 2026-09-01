@@ -37,7 +37,7 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=7, HW_DESC=MS1010-1002
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=8, HW_DESC=MO7221-9016-1114"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Motor-Beckhoff-AM8111-XFX0, MACROS='I_MAX_MA=1355'"
 epicsEnvSet(DRV_1_SID,${ECMC_EC_SLAVE_NUM})
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=9, HW_DESC=MO7221-9016-1114"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=9, HW_DESC=MO7221-9016-1124"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Motor-Beckhoff-AM8121-XFX0, MACROS='I_MAX_MA=1355'"
 epicsEnvSet(DRV_2_SID,${ECMC_EC_SLAVE_NUM})
 

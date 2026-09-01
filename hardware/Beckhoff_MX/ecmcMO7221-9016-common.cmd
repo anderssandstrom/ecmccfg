@@ -6,6 +6,11 @@
 ecmcFileExist(${ecmccfg_DIR}slaveVerify.cmd,1)
 ${SCRIPTEXEC} ${ecmccfg_DIR}slaveVerify.cmd "RESET=0"
 
+#- Select the requested synchronous mode. The operating mode is stored in the
+#- slave and may otherwise retain a previous configuration.
+#- Write it in PREOP now and register it for reapplication after reconnect.
+ecmcConfigOrDie "Cfg.EcWriteSdo(${ECMC_EC_SLAVE_NUM},0x7010,0x03,${ECMC_MO7221_MODE=9},1)"
+
 #- Info data 1: DC link voltage [mV]; Info data 2: PCB temperature [0.1 degC].
 #- EcWriteSdo applies them now; EcAddSdo replays them after a slave power loss.
 #ecmcConfigOrDie "Cfg.EcWriteSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x39,2,1)"
@@ -35,8 +40,10 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}slaveVerify.cmd "RESET=0"
 
 #- SM2 outputs: CSV control, target velocity, and torque offset.
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1610,0x7010,0x01,U16,driveControl01)"
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1612,0x7010,0x06,S32,velocitySetpoint01)"
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1616,0x7010,0x0A,S16,torqueOffset01)"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,${ECMC_MO7221_SETPOINT_PDO=0x1612},0x7010,${ECMC_MO7221_SETPOINT_SUB=0x06},S32,${ECMC_MO7221_SETPOINT_ENTRY=velocitySetpoint01})"
+ecmcIf("${ECMC_MO7221_INCLUDE_TORQUE_OFFSET=1}==1")
+${IF_TRUE}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1616,0x7010,0x0A,S16,torqueOffset01)"
+ecmcEndIf()
 
 #- SM3 inputs: feedback position/status and drive feedback values.
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a00,0x6000,0x11,U32,positionActual01)"
@@ -61,6 +68,7 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}ecmcMO7221-9016-fsoe.cmd
 #- The ECMC slave object now exists; retain the info selections for reconnect.
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x39,2,1)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x3A,4,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x7010,0x03,${ECMC_MO7221_MODE=9},1)"
 
 ecmcConfigOrDie "Cfg.EcSetSlaveNeedSDOSettings(${ECMC_EC_SLAVE_NUM},1,1)"
 
@@ -84,3 +92,8 @@ epicsEnvUnset(ECMC_TEMP_PERIOD_NANO_SECS)
 epicsEnvUnset(ECMC_SYNC_1)
 epicsEnvUnset(ECMC_TEMP_WATCHDOG_1)
 epicsEnvUnset(ECMC_TEMP_WATCHDOG_2)
+epicsEnvUnset(ECMC_MO7221_MODE)
+epicsEnvUnset(ECMC_MO7221_SETPOINT_PDO)
+epicsEnvUnset(ECMC_MO7221_SETPOINT_SUB)
+epicsEnvUnset(ECMC_MO7221_SETPOINT_ENTRY)
+epicsEnvUnset(ECMC_MO7221_INCLUDE_TORQUE_OFFSET)

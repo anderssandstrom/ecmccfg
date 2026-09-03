@@ -43,6 +43,9 @@ Notes:
 - IOC startup is intended to use:
   - `$(ecmccfg_DIR)scripts/loadCppLogic.cmd`
 - Built-in cpp_logic PVs load by default through that script.
+- `ASYN_PORT=MY_PORT` creates asyn port `CPP.MY_PORT`. Built-in records keep
+  the two-digit index prefix (`CPP00` for logic instance 0); custom exported PVs
+  keep their generated names.
 - For the default app substitutions path to stay predictable, keep `FILE` as the library basename and use `DIR` for the directory path.
 - Generated custom `epics.*` substitutions load automatically by default from
   `cfg/libmain.so_cpp_logic.subs`. Set `EPICS_SUBST=EMPTY` to skip them.
@@ -52,4 +55,3 @@ Notes:
 - checked-in and generated startup scripts include exact `caqtdm` commands for:
   - `ecmcCppLogicOverview.ui`
   - `ecmcCppLogic.ui`
-  

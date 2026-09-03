@@ -3,7 +3,7 @@
 record(longin, "${ECMC_P}Timing-$(DIR_PV)-Stat") {
   field(DESC, "Timing status bits")
   field(DTYP, "asynInt32")
-  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).status?")
+  field(INP,  "@asyn($(TIMING_PORT=ecmcRTLog),$(SLAVE_POS),$(TIMEOUT=1))timing.$(DIR_ASYN).status")
   field(SCAN, "I/O Intr")
   field(TSE,  "$(TSE=-2)")
   field(FLNK, "${ECMC_P}Timing-$(DIR_PV)-Stat_.PROC")
@@ -71,7 +71,7 @@ record(bi, "${ECMC_P}Timing-$(DIR_PV)-EventOffsetValid") {
 record(mbbi, "${ECMC_P}Timing-$(DIR_PV)-Source") {
   field(DESC, "Timing source")
   field(DTYP, "asynInt32")
-  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).source?")
+  field(INP,  "@asyn($(TIMING_PORT=ecmcRTLog),$(SLAVE_POS),$(TIMEOUT=1))timing.$(DIR_ASYN).source")
   field(SCAN, "I/O Intr")
   field(ZRST, "Cycle only")
   field(ZRVL, "0")
@@ -86,7 +86,7 @@ record(mbbi, "${ECMC_P}Timing-$(DIR_PV)-Source") {
 record(mbbi, "${ECMC_P}Timing-$(DIR_PV)-Reference") {
   field(DESC, "Timing reference")
   field(DTYP, "asynInt32")
-  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).reference?")
+  field(INP,  "@asyn($(TIMING_PORT=ecmcRTLog),$(SLAVE_POS),$(TIMEOUT=1))timing.$(DIR_ASYN).reference")
   field(SCAN, "I/O Intr")
   field(ZRST, "Receive")
   field(ZRVL, "0")
@@ -99,14 +99,14 @@ record(mbbi, "${ECMC_P}Timing-$(DIR_PV)-Reference") {
 record(longin, "${ECMC_P}Timing-$(DIR_PV)-SyncType") {
   field(DESC, "SM synchronization type")
   field(DTYP, "asynInt32")
-  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).syncType?")
+  field(INP,  "@asyn($(TIMING_PORT=ecmcRTLog),$(SLAVE_POS),$(TIMEOUT=1))timing.$(DIR_ASYN).syncType")
   field(SCAN, "I/O Intr")
 }
 
 record(longin, "${ECMC_P}Timing-$(DIR_PV)-CycleOffset") {
   field(DESC, "Timing cycle offset")
   field(DTYP, "asynInt32")
-  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).cycleOffset?")
+  field(INP,  "@asyn($(TIMING_PORT=ecmcRTLog),$(SLAVE_POS),$(TIMEOUT=1))timing.$(DIR_ASYN).cycleOffset")
   field(SCAN, "I/O Intr")
 }
 
@@ -114,7 +114,7 @@ record(longin, "${ECMC_P}Timing-$(DIR_PV)-TimestampBits") {
   field(DESC, "Timestamp width")
   field(EGU,  "bits")
   field(DTYP, "asynInt32")
-  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).timestampBits?")
+  field(INP,  "@asyn($(TIMING_PORT=ecmcRTLog),$(SLAVE_POS),$(TIMEOUT=1))timing.$(DIR_ASYN).timestampBits")
   field(SCAN, "I/O Intr")
 }
 
@@ -122,7 +122,7 @@ record(int64in, "${ECMC_P}Timing-$(DIR_PV)-CycleTime") {
   field(DESC, "Timing cycle time")
   field(EGU,  "ns")
   field(DTYP, "asynInt64")
-  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt64/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).cycleTimeNs?")
+  field(INP,  "@asyn($(TIMING_PORT=ecmcRTLog),$(SLAVE_POS),$(TIMEOUT=1))timing.$(DIR_ASYN).cycleTimeNs")
   field(SCAN, "I/O Intr")
 }
 
@@ -130,7 +130,7 @@ record(int64in, "${ECMC_P}Timing-$(DIR_PV)-ShiftTime") {
   field(DESC, "SM shift time")
   field(EGU,  "ns")
   field(DTYP, "asynInt64")
-  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt64/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).shiftTimeNs?")
+  field(INP,  "@asyn($(TIMING_PORT=ecmcRTLog),$(SLAVE_POS),$(TIMEOUT=1))timing.$(DIR_ASYN).shiftTimeNs")
   field(SCAN, "I/O Intr")
 }
 
@@ -138,7 +138,7 @@ record(int64in, "${ECMC_P}Timing-$(DIR_PV)-CalcCopyTime") {
   field(DESC, "Calculation/copy time")
   field(EGU,  "ns")
   field(DTYP, "asynInt64")
-  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt64/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).calculationCopyTimeNs?")
+  field(INP,  "@asyn($(TIMING_PORT=ecmcRTLog),$(SLAVE_POS),$(TIMEOUT=1))timing.$(DIR_ASYN).calculationCopyTimeNs")
   field(SCAN, "I/O Intr")
 }
 
@@ -146,7 +146,7 @@ record(int64in, "${ECMC_P}Timing-$(DIR_PV)-EventOffset") {
   field(DESC, "Resolved event offset")
   field(EGU,  "ns")
   field(DTYP, "asynInt64")
-  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt64/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).eventOffsetNs?")
+  field(INP,  "@asyn($(TIMING_PORT=ecmcRTLog),$(SLAVE_POS),$(TIMEOUT=1))timing.$(DIR_ASYN).eventOffsetNs")
   field(SCAN, "I/O Intr")
 }
 
@@ -154,7 +154,7 @@ record(int64in, "${ECMC_P}Timing-$(DIR_PV)-Uncertainty") {
   field(DESC, "Timing uncertainty")
   field(EGU,  "ns")
   field(DTYP, "asynInt64")
-  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt64/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).uncertaintyNs?")
+  field(INP,  "@asyn($(TIMING_PORT=ecmcRTLog),$(SLAVE_POS),$(TIMEOUT=1))timing.$(DIR_ASYN).uncertaintyNs")
   field(SCAN, "I/O Intr")
 }
 
@@ -162,6 +162,6 @@ record(int64in, "${ECMC_P}Timing-$(DIR_PV)-TimestampCorrection") {
   field(DESC, "Timestamp correction")
   field(EGU,  "ns")
   field(DTYP, "asynInt64")
-  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt64/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).timestampCorrectionNs?")
+  field(INP,  "@asyn($(TIMING_PORT=ecmcRTLog),$(SLAVE_POS),$(TIMEOUT=1))timing.$(DIR_ASYN).timestampCorrectionNs")
   field(SCAN, "I/O Intr")
 }

@@ -30,7 +30,10 @@ Important defaults in `loadCppLogic.cmd`:
 - `FILE`: defaults to `libmain.so`
 - `DIR`: defaults to `./bin/`
 - `LOGIC_ID`: defaults to the next free id
-- `ASYN_PORT`: defaults to `CPP.LOGIC<LOGIC_ID>`
+- `ASYN_PORT`: optional short name; `MY_PORT` creates asyn port `CPP.MY_PORT`.
+  If omitted, it defaults to `CPP.LOGIC<LOGIC_ID>`. Built-in PVs always use a
+  two-digit index (`CPP00`, `CPP01`, ...); custom exported PVs keep their
+  generated names.
 - `MACROS`: optional free-form text passed into user code through `ecmcCpp::getMacrosString()`
 - `LOAD_DEFAULT_PVS`: defaults to `1`
 - `EPICS_SUBST`: optional custom substitutions file for exported `epics.*` PVs, default `cfg/<FILE>_cpp_logic.subs`

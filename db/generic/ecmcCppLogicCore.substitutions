@@ -1,34 +1,34 @@
 file ecmcCppLogicLongOut.template {
   pattern { REC, PARAM, DESC }
-  { "CppLogic$(CPP_ID=0)-CtrlWord-RB", "logic.ctrl.word", "bit0 en, bit1 timing, bit2 dbg" }
+  { "CPP$(CPP_ID_2_CHARS=00)-CtrlWord-RB", "logic.ctrl.word", "bit0 en, bit1 timing, bit2 dbg" }
 }
 
 file ecmcCppLogicLongIn.template {
   pattern { REC, PARAM, DESC }
-  { "CppLogic$(CPP_ID=0)-StatWord", "logic.stat.word", "Status bits 0..4" }
-  { "CppLogic$(CPP_ID=0)-DivAct",   "logic.stat.div",  "Execute divider" }
-  { "CppLogic$(CPP_ID=0)-CntAct",   "logic.stat.count","Execute count" }
+  { "CPP$(CPP_ID_2_CHARS=00)-StatWord", "logic.stat.word", "Status bits 0..4" }
+  { "CPP$(CPP_ID_2_CHARS=00)-DivAct",   "logic.stat.div",  "Execute divider" }
+  { "CPP$(CPP_ID_2_CHARS=00)-CntAct",   "logic.stat.count","Execute count" }
 }
 
 file ecmcCppLogicAo.template {
   pattern { REC, PARAM, DESC, PREC }
-  { "CppLogic$(CPP_ID=0)-RateMs-RB",  "logic.ctrl.rate_ms", "Requested sample rate", "3" }
-  { "CppLogic$(CPP_ID=0)-UpdMs-RB",  "logic.ctrl.update_rate_ms", "Requested PV update rate", "3" }
+  { "CPP$(CPP_ID_2_CHARS=00)-RateMs-RB",  "logic.ctrl.rate_ms", "Requested sample rate", "3" }
+  { "CPP$(CPP_ID_2_CHARS=00)-UpdMs-RB",  "logic.ctrl.update_rate_ms", "Requested PV update rate", "3" }
 }
 
 file ecmcCppLogicAi.template {
   pattern { REC, PARAM, DESC, PREC }
-  { "CppLogic$(CPP_ID=0)-RateMsAct", "logic.stat.rate_ms", "Actual sample rate",    "3" }
-  { "CppLogic$(CPP_ID=0)-UpdMsAct", "logic.stat.update_rate_ms", "Actual PV update rate",    "3" }
-  { "CppLogic$(CPP_ID=0)-ExeMsAct",  "logic.stat.exec_ms", "Logic exec time",       "6" }
-  { "CppLogic$(CPP_ID=0)-InMsAct",   "logic.stat.input_ms","Input copy time",       "6" }
-  { "CppLogic$(CPP_ID=0)-OutMsAct",  "logic.stat.output_ms","Output copy time",     "6" }
-  { "CppLogic$(CPP_ID=0)-TotMsAct",  "logic.stat.total_ms","Total logic time",      "6" }
+  { "CPP$(CPP_ID_2_CHARS=00)-RateMsAct", "logic.stat.rate_ms", "Actual sample rate",    "3" }
+  { "CPP$(CPP_ID_2_CHARS=00)-UpdMsAct", "logic.stat.update_rate_ms", "Actual PV update rate",    "3" }
+  { "CPP$(CPP_ID_2_CHARS=00)-ExeMsAct",  "logic.stat.exec_ms", "Logic exec time",       "6" }
+  { "CPP$(CPP_ID_2_CHARS=00)-InMsAct",   "logic.stat.input_ms","Input copy time",       "6" }
+  { "CPP$(CPP_ID_2_CHARS=00)-OutMsAct",  "logic.stat.output_ms","Output copy time",     "6" }
+  { "CPP$(CPP_ID_2_CHARS=00)-TotMsAct",  "logic.stat.total_ms","Total logic time",      "6" }
 }
 
 file ecmcCppLogicStringIn.template {
   pattern { REC, PARAM, DESC }
-  { "CppLogic$(CPP_ID=0)-DbgTxtAct", "logic.stat.dbg_txt", "Debug text" }
+  { "CPP$(CPP_ID_2_CHARS=00)-DbgTxtAct", "logic.stat.dbg_txt", "Debug text" }
 }
 
 file ecmcCppLogicStringVal.template {

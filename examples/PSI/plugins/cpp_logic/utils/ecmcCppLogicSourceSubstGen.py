@@ -175,7 +175,6 @@ def render_substitutions(logic_name: str, specs: list[TemplateSpec]) -> str:
     lines = [
         "# Auto-generated C++ logic substitutions",
         f"# Logic: {logic_name}",
-        'global { P = "$(P)" PORT = "$(PORT)" }',
         "",
     ]
 

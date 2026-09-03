@@ -1,0 +1,167 @@
+# EtherCAT endpoint timing diagnostics using the normal slave PV prefix.
+
+record(longin, "${ECMC_P}Timing-$(DIR_PV)-Stat") {
+  field(DESC, "Timing status bits")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).status?")
+  field(SCAN, "I/O Intr")
+  field(TSE,  "$(TSE=-2)")
+  field(FLNK, "${ECMC_P}Timing-$(DIR_PV)-Stat_.PROC")
+}
+
+record(mbbiDirect, "${ECMC_P}Timing-$(DIR_PV)-Stat_") {
+  field(DESC, "Timing status bits")
+  field(INP,  "${ECMC_P}Timing-$(DIR_PV)-Stat.VAL")
+  field(FLNK, "${ECMC_P}Timing-$(DIR_PV)-Valid.PROC")
+}
+
+record(bi, "${ECMC_P}Timing-$(DIR_PV)-Valid") {
+  field(DESC, "Timing is usable")
+  field(INP,  "${ECMC_P}Timing-$(DIR_PV)-Stat_.B0")
+  field(ZNAM, "Invalid")
+  field(ONAM, "Valid")
+  field(FLNK, "${ECMC_P}Timing-$(DIR_PV)-DC.PROC")
+}
+
+record(bi, "${ECMC_P}Timing-$(DIR_PV)-DC") {
+  field(DESC, "DC configured")
+  field(INP,  "${ECMC_P}Timing-$(DIR_PV)-Stat_.B1")
+  field(ZNAM, "No DC")
+  field(ONAM, "DC")
+  field(FLNK, "${ECMC_P}Timing-$(DIR_PV)-Discovery.PROC")
+}
+
+record(bi, "${ECMC_P}Timing-$(DIR_PV)-Discovery") {
+  field(DESC, "Timing discovery done")
+  field(INP,  "${ECMC_P}Timing-$(DIR_PV)-Stat_.B2")
+  field(ZNAM, "Pending/N/A")
+  field(ONAM, "Complete")
+  field(FLNK, "${ECMC_P}Timing-$(DIR_PV)-Override.PROC")
+}
+
+record(bi, "${ECMC_P}Timing-$(DIR_PV)-Override") {
+  field(DESC, "Timing override used")
+  field(INP,  "${ECMC_P}Timing-$(DIR_PV)-Stat_.B3")
+  field(FLNK, "${ECMC_P}Timing-$(DIR_PV)-Timestamp.PROC")
+}
+
+record(bi, "${ECMC_P}Timing-$(DIR_PV)-Timestamp") {
+  field(DESC, "Timestamp linked")
+  field(INP,  "${ECMC_P}Timing-$(DIR_PV)-Stat_.B4")
+  field(FLNK, "${ECMC_P}Timing-$(DIR_PV)-CalcCopyValid.PROC")
+}
+
+record(bi, "${ECMC_P}Timing-$(DIR_PV)-CalcCopyValid") {
+  field(DESC, "Calc/copy time valid")
+  field(INP,  "${ECMC_P}Timing-$(DIR_PV)-Stat_.B5")
+  field(FLNK, "${ECMC_P}Timing-$(DIR_PV)-CycleOffsetValid.PROC")
+}
+
+record(bi, "${ECMC_P}Timing-$(DIR_PV)-CycleOffsetValid") {
+  field(DESC, "Cycle offset known")
+  field(INP,  "${ECMC_P}Timing-$(DIR_PV)-Stat_.B6")
+  field(FLNK, "${ECMC_P}Timing-$(DIR_PV)-EventOffsetValid.PROC")
+}
+
+record(bi, "${ECMC_P}Timing-$(DIR_PV)-EventOffsetValid") {
+  field(DESC, "Event offset known")
+  field(INP,  "${ECMC_P}Timing-$(DIR_PV)-Stat_.B7")
+}
+
+record(mbbi, "${ECMC_P}Timing-$(DIR_PV)-Source") {
+  field(DESC, "Timing source")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).source?")
+  field(SCAN, "I/O Intr")
+  field(ZRST, "Cycle only")
+  field(ZRVL, "0")
+  field(ONST, "SYNC0")
+  field(ONVL, "1")
+  field(TWST, "SYNC1")
+  field(TWVL, "2")
+  field(THST, "Timestamp")
+  field(THVL, "3")
+}
+
+record(mbbi, "${ECMC_P}Timing-$(DIR_PV)-Reference") {
+  field(DESC, "Timing reference")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).reference?")
+  field(SCAN, "I/O Intr")
+  field(ZRST, "Receive")
+  field(ZRVL, "0")
+  field(ONST, "Application")
+  field(ONVL, "1")
+  field(TWST, "SYNC")
+  field(TWVL, "2")
+}
+
+record(longin, "${ECMC_P}Timing-$(DIR_PV)-SyncType") {
+  field(DESC, "SM synchronization type")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).syncType?")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "${ECMC_P}Timing-$(DIR_PV)-CycleOffset") {
+  field(DESC, "Timing cycle offset")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).cycleOffset?")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "${ECMC_P}Timing-$(DIR_PV)-TimestampBits") {
+  field(DESC, "Timestamp width")
+  field(EGU,  "bits")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).timestampBits?")
+  field(SCAN, "I/O Intr")
+}
+
+record(int64in, "${ECMC_P}Timing-$(DIR_PV)-CycleTime") {
+  field(DESC, "Timing cycle time")
+  field(EGU,  "ns")
+  field(DTYP, "asynInt64")
+  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt64/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).cycleTimeNs?")
+  field(SCAN, "I/O Intr")
+}
+
+record(int64in, "${ECMC_P}Timing-$(DIR_PV)-ShiftTime") {
+  field(DESC, "SM shift time")
+  field(EGU,  "ns")
+  field(DTYP, "asynInt64")
+  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt64/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).shiftTimeNs?")
+  field(SCAN, "I/O Intr")
+}
+
+record(int64in, "${ECMC_P}Timing-$(DIR_PV)-CalcCopyTime") {
+  field(DESC, "Calculation/copy time")
+  field(EGU,  "ns")
+  field(DTYP, "asynInt64")
+  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt64/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).calculationCopyTimeNs?")
+  field(SCAN, "I/O Intr")
+}
+
+record(int64in, "${ECMC_P}Timing-$(DIR_PV)-EventOffset") {
+  field(DESC, "Resolved event offset")
+  field(EGU,  "ns")
+  field(DTYP, "asynInt64")
+  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt64/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).eventOffsetNs?")
+  field(SCAN, "I/O Intr")
+}
+
+record(int64in, "${ECMC_P}Timing-$(DIR_PV)-Uncertainty") {
+  field(DESC, "Timing uncertainty")
+  field(EGU,  "ns")
+  field(DTYP, "asynInt64")
+  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt64/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).uncertaintyNs?")
+  field(SCAN, "I/O Intr")
+}
+
+record(int64in, "${ECMC_P}Timing-$(DIR_PV)-TimestampCorrection") {
+  field(DESC, "Timestamp correction")
+  field(EGU,  "ns")
+  field(DTYP, "asynInt64")
+  field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt64/ec$(MASTER_ID).s$(SLAVE_POS).timing.$(DIR_ASYN).timestampCorrectionNs?")
+  field(SCAN, "I/O Intr")
+}

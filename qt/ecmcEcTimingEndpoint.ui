@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>355</width><height>380</height></rect></property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item><widget class="QGroupBox" name="groupBox">
+    <property name="title"><string>$(DIR) endpoint</string></property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0"><widget class="QLabel" name="validLabel"><property name="text"><string>Valid</string></property></widget></item>
+     <item row="0" column="1"><widget class="caLed" name="validLed"><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Timing-$(DIR)-Valid</string></property><property name="trueColor"><color><red>0</red><green>170</green><blue>0</blue></color></property><property name="falseColor"><color><red>170</red><green>0</green><blue>0</blue></color></property></widget></item>
+     <item row="0" column="2"><widget class="QLabel" name="dcLabel"><property name="text"><string>DC</string></property></widget></item>
+     <item row="0" column="3"><widget class="caLed" name="dcLed"><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Timing-$(DIR)-DC</string></property></widget></item>
+     <item row="0" column="4"><widget class="QLabel" name="discoveryLabel"><property name="text"><string>Discovery</string></property></widget></item>
+     <item row="0" column="5"><widget class="caLed" name="discoveryLed"><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Timing-$(DIR)-Discovery</string></property></widget></item>
+     <item row="1" column="0"><widget class="QLabel" name="timestampLabel"><property name="text"><string>Timestamp</string></property></widget></item>
+     <item row="1" column="1"><widget class="caLed" name="timestampLed"><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Timing-$(DIR)-Timestamp</string></property></widget></item>
+     <item row="1" column="2"><widget class="QLabel" name="overrideLabel"><property name="text"><string>Override</string></property></widget></item>
+     <item row="1" column="3"><widget class="caLed" name="overrideLed"><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Timing-$(DIR)-Override</string></property></widget></item>
+     <item row="2" column="0" colspan="2"><widget class="QLabel" name="sourceLabel"><property name="text"><string>Source</string></property></widget></item>
+     <item row="2" column="2" colspan="4"><widget class="caLineEdit" name="source"><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Timing-$(DIR)-Source</string></property><property name="colorMode"><enum>caLineEdit::Alarm_Static</enum></property></widget></item>
+     <item row="3" column="0" colspan="2"><widget class="QLabel" name="referenceLabel"><property name="text"><string>Reference</string></property></widget></item>
+     <item row="3" column="2" colspan="4"><widget class="caLineEdit" name="reference"><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Timing-$(DIR)-Reference</string></property></widget></item>
+     <item row="4" column="0" colspan="2"><widget class="QLabel" name="syncTypeLabel"><property name="text"><string>Sync type</string></property></widget></item>
+     <item row="4" column="2" colspan="4"><widget class="caLineEdit" name="syncType"><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Timing-$(DIR)-SyncType</string></property></widget></item>
+     <item row="5" column="0" colspan="2"><widget class="QLabel" name="cycleTimeLabel"><property name="text"><string>Cycle time</string></property></widget></item>
+     <item row="5" column="2" colspan="4"><widget class="caLineEdit" name="cycleTime"><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Timing-$(DIR)-CycleTime</string></property><property name="unitsEnabled"><bool>true</bool></property></widget></item>
+     <item row="6" column="0" colspan="2"><widget class="QLabel" name="shiftTimeLabel"><property name="text"><string>Shift time</string></property></widget></item>
+     <item row="6" column="2" colspan="4"><widget class="caLineEdit" name="shiftTime"><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Timing-$(DIR)-ShiftTime</string></property><property name="unitsEnabled"><bool>true</bool></property></widget></item>
+     <item row="7" column="0" colspan="2"><widget class="QLabel" name="calcCopyLabel"><property name="text"><string>Calc/copy time</string></property></widget></item>
+     <item row="7" column="2" colspan="4"><widget class="caLineEdit" name="calcCopy"><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Timing-$(DIR)-CalcCopyTime</string></property><property name="unitsEnabled"><bool>true</bool></property></widget></item>
+     <item row="8" column="0" colspan="2"><widget class="QLabel" name="cycleOffsetLabel"><property name="text"><string>Cycle offset</string></property></widget></item>
+     <item row="8" column="2" colspan="4"><widget class="caLineEdit" name="cycleOffset"><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Timing-$(DIR)-CycleOffset</string></property></widget></item>
+     <item row="9" column="0" colspan="2"><widget class="QLabel" name="eventOffsetLabel"><property name="text"><string>Event offset</string></property></widget></item>
+     <item row="9" column="2" colspan="4"><widget class="caLineEdit" name="eventOffset"><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Timing-$(DIR)-EventOffset</string></property><property name="unitsEnabled"><bool>true</bool></property></widget></item>
+     <item row="10" column="0" colspan="2"><widget class="QLabel" name="uncertaintyLabel"><property name="text"><string>Uncertainty</string></property></widget></item>
+     <item row="10" column="2" colspan="4"><widget class="caLineEdit" name="uncertainty"><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Timing-$(DIR)-Uncertainty</string></property><property name="unitsEnabled"><bool>true</bool></property></widget></item>
+     <item row="11" column="0" colspan="2"><widget class="QLabel" name="timestampBitsLabel"><property name="text"><string>Timestamp bits</string></property></widget></item>
+     <item row="11" column="2" colspan="4"><widget class="caLineEdit" name="timestampBits"><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Timing-$(DIR)-TimestampBits</string></property><property name="unitsEnabled"><bool>true</bool></property></widget></item>
+     <item row="12" column="0" colspan="2"><widget class="QLabel" name="timestampCorrectionLabel"><property name="text"><string>Timestamp correction</string></property></widget></item>
+     <item row="12" column="2" colspan="4"><widget class="caLineEdit" name="timestampCorrection"><property name="channel" stdset="0"><string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-Timing-$(DIR)-TimestampCorrection</string></property><property name="unitsEnabled"><bool>true</bool></property></widget></item>
+    </layout>
+   </widget></item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget><class>caLed</class><extends>QWidget</extends><header>caLed</header></customwidget>
+  <customwidget><class>caLineEdit</class><extends>QLineEdit</extends><header>caLineEdit</header></customwidget>
+ </customwidgets>
+ <resources/><connections/>
+</ui>

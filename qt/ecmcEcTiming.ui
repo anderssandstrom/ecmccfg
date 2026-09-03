@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>760</width><height>430</height></rect></property>
+  <property name="windowTitle"><string>EtherCAT slave timing</string></property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item><widget class="caLabel" name="titleLabel">
+    <property name="font"><font><pointsize>12</pointsize><weight>75</weight><bold>true</bold></font></property>
+    <property name="text"><string>$(IOC):m$(MasterID)s$(SlaveID) timing</string></property>
+    <property name="alignment"><set>Qt::AlignCenter</set></property>
+   </widget></item>
+   <item><layout class="QHBoxLayout" name="endpointLayout">
+    <item><widget class="caInclude" name="inputTiming">
+     <property name="minimumSize"><size><width>355</width><height>380</height></size></property>
+     <property name="macro"><string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),DIR=In</string></property>
+     <property name="filename" stdset="0"><string notr="true">ecmcEcTimingEndpoint.ui</string></property>
+    </widget></item>
+    <item><widget class="caInclude" name="outputTiming">
+     <property name="minimumSize"><size><width>355</width><height>380</height></size></property>
+     <property name="macro"><string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),DIR=Out</string></property>
+     <property name="filename" stdset="0"><string notr="true">ecmcEcTimingEndpoint.ui</string></property>
+    </widget></item>
+   </layout></item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget><class>caInclude</class><extends>QWidget</extends><header>caInclude</header></customwidget>
+  <customwidget><class>caLabel</class><extends>QLabel</extends><header>caLabel</header></customwidget>
+ </customwidgets>
+ <resources/><connections/>
+</ui>

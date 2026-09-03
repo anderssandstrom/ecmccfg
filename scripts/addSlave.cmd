@@ -68,6 +68,7 @@ epicsEnvUnset(ECMC_SUBST_TYPE)
 
 ecmcEpicsEnvSetCalcTernary(DEFAULT_SLAVE_PVS, "${DEFAULT_SLAVE_PVS=True}", "","#- ")
 ${DEFAULT_SLAVE_PVS}${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}applyTemplate.cmd" "TEMPLATE_FILE=ecmcEcSlave.template,ECMC_P=${ECMC_P},ECMC_G=${ECMC_G=}"
+${DEFAULT_SLAVE_PVS}${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}applySubstitutions.cmd" "SUBST_FILE=ecmcEcTiming.substitutions,ECMC_P=${ECMC_P}"
 epicsEnvUnset(DEFAULT_SLAVE_PVS)
 
 #- Do not set NxtSlv "pointer" if this is the first slave (ECMC_EC_PREVIOUS_SLAVE==-1)

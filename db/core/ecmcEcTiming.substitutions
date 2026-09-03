@@ -1,0 +1,6 @@
+file "ecmcEcTiming.template"
+{
+  pattern { DIR_PV, DIR_ASYN }
+          { "In",   "input"  }
+          { "Out",  "output" }
+}

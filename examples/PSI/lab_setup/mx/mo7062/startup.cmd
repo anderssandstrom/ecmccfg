@@ -1,7 +1,8 @@
-require ecmccfg sandst_a "ENG_MODE=1,ECMC_VER=sandst_a,MASTER_ID=1,MX_1=10,MX_REPORT=1"
+#require ecmccfg sandst_a "ENG_MODE=1,ECMC_VER=sandst_a,MASTER_ID=1,MX_1=10,MX_REPORT=1"
+require ecmccfg sandst_a "ENG_MODE=1,ECMC_VER=sandst_a,MASTER_ID=1"
 
 #- Stepper drive
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=6, HW_DESC=MO7062-0100"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=5, HW_DESC=MO7062-0100"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Motor-Generic-2Phase-Stepper, CH_ID=1, MACROS='I_MAX_MA=1000, I_STDBY_MA=100, U_NOM_MV=24000,L_COIL_UH=3050,R_COIL_MOHM=2630'"
 #- Use autotune to get the controller parameters, resistance, and inductance (trigger in hw expert panel)
 #- Then copy the MACROS field from panel and apply it with "Drive-Generic-Ctrl-Params" like below

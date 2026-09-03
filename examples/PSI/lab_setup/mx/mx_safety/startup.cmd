@@ -19,28 +19,29 @@ ecmcConfigOrDie "Cfg.SetEcStartupTimeout(100)"
 #  12  0:12  PREOP  +  MS4208-2003-1112 EtherCAT power output, EtherCAT, 24 V DC, 8 A,
 #
 
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=0, HW_DESC=MB1100-0002"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=2, HW_DESC=MO7062-0100"
-${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Motor-Generic-2Phase-Stepper, CH_ID=1, MACROS='I_MAX_MA=1000, I_STDBY_MA=100, U_NOM_MV=24000,L_COIL_UH=3050,R_COIL_MOHM=2630'"
-${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Drive-Generic-Ctrl-Params,    CH_ID=1, MACROS='L_COIL_UH=3100,R_COIL_MOHM=2620,I_TI=12,I_KP=59,V_TI=150,V_KP=176,P_KP=10'"
-${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Generic-Ch-Not-Used,          CH_ID=2'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd,   "FILE=./cfg/axis.yaml,              DEV=${IOC}, AX_NAME=M1, AXIS_ID=1, DRV_SID=${DRV_SID}, ENC_SID=${DRV_SID}, ENC_CH=01"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=3, HW_DESC=MO2338-0000-1112"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,         "SLAVE_ID=0, HW_DESC=MB1100-0002"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,         "SLAVE_ID=2, HW_DESC=MO7062-0100"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd    "COMP=Motor-Generic-2Phase-Stepper, CH_ID=1, MACROS='I_MAX_MA=1000, I_STDBY_MA=100, U_NOM_MV=24000,L_COIL_UH=3050,R_COIL_MOHM=2630'"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd    "COMP=Drive-Generic-Ctrl-Params,    CH_ID=1, MACROS='L_COIL_UH=3100,R_COIL_MOHM=2620,I_TI=12,I_KP=59,V_TI=150,V_KP=176,P_KP=10'"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd    "COMP=Generic-Ch-Not-Used,          CH_ID=2'"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,         "SLAVE_ID=3, HW_DESC=MO2338-0000-1112"
 
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=4, HW_DESC=MO1918-0000"
-${SCRIPTEXEC} ${ecmccfg_DIR}addFSoEConn.cmd,    "SFTY_MASTER_SID=4,SFTY_MASTER_CONN=01"
-${SCRIPTEXEC} ${ecmccfg_DIR}addFSoEConn.cmd,    "SFTY_MASTER_SID=4,SFTY_MASTER_CONN=02"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,         "SLAVE_ID=4, HW_DESC=MO1918-0000"
+${SCRIPTEXEC} ${ecmccfg_DIR}addFSoEConn.cmd,      "SFTY_MASTER_SID=4,SFTY_MASTER_CONN=01"
+${SCRIPTEXEC} ${ecmccfg_DIR}addFSoEConn.cmd,      "SFTY_MASTER_SID=4,SFTY_MASTER_CONN=02"
 ${SCRIPTEXEC} ${ecmccfg_DIR}finishFSoEMaster.cmd, "SFTY_MASTER_SID=4"
 
-epicsEnvSet(SAFETY_MST_SID,${ECMC_EC_SLAVE_NUM})
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=7, HW_DESC=MS1010-1002-1334"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=8, HW_DESC=MO7221-9016-1114"
-${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Motor-Beckhoff-AM8111-XFX0, MACROS='I_MAX_MA=1355'"
-epicsEnvSet(DRV_1_SID,${ECMC_EC_SLAVE_NUM})
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=9, HW_DESC=MO7221-9016-1124"
-${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Motor-Beckhoff-AM8121-XFX0, MACROS='I_MAX_MA=1355'"
-epicsEnvSet(DRV_2_SID,${ECMC_EC_SLAVE_NUM})
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,         "SLAVE_ID=7, HW_DESC=MS1010-1002-1334"
+
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,         "SLAVE_ID=8, HW_DESC=MO7221-9016-1114"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd    "COMP=Motor-Beckhoff-AM8111-XFX0, MACROS='I_MAX_MA=1355'"
+$(SCRIPTEXEC) $(ecmccfg_DIR)loadYamlAxis.cmd      "FILE=./cfg/axis.yaml, DRV_ID=$(ECMC_EC_SLAVE_NUM), AX_NAME='M1', AX_ID=1"
+
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,         "SLAVE_ID=9, HW_DESC=MO7221-9016-1114"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd    "COMP=Motor-Beckhoff-AM8121-XFX0, MACROS='I_MAX_MA=1355'"
+$(SCRIPTEXEC) $(ecmccfg_DIR)loadYamlAxis.cmd      "FILE=./cfg/axis.yaml, DRV_ID=$(ECMC_EC_SLAVE_NUM), AX_NAME='M2', AX_ID=2"
 
 #- Setup FSoE com
-${SCRIPTEXEC} ${ecmccfg_DIR}linkFSoEConn.cmd, "SFTY_MASTER_SID=4,SFTY_MASTER_CONN=01,SFTY_SLAVE_SID=8,SFTY_SLAVE_CONN=01"
-${SCRIPTEXEC} ${ecmccfg_DIR}linkFSoEConn.cmd, "SFTY_MASTER_SID=4,SFTY_MASTER_CONN=02,SFTY_SLAVE_SID=9,SFTY_SLAVE_CONN=01"
+${SCRIPTEXEC} ${ecmccfg_DIR}linkFSoEConn.cmd,     "SFTY_MASTER_SID=4,SFTY_MASTER_CONN=01,SFTY_SLAVE_SID=8,SFTY_SLAVE_CONN=01"
+${SCRIPTEXEC} ${ecmccfg_DIR}linkFSoEConn.cmd,     "SFTY_MASTER_SID=4,SFTY_MASTER_CONN=02,SFTY_SLAVE_SID=9,SFTY_SLAVE_CONN=01"
+

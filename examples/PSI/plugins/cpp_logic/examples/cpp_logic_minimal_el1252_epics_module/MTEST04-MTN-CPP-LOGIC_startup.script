@@ -1,7 +1,7 @@
 
 require ecmccfg sandst_a "MASTER_ID=0, ECMC_VER=sandst_a"
 
-epicsEnvSet(EL1252_SID,28)
-
-require ecmc_cpp_logic_as_module sandst_a "ASYN_PORT=MY_PORT,S_ID=${EL1252_SID}"
-
+require ecmc_cpp_logic_as_module sandst_a 
+${SCRIPTEXEC} ${ecmc_cpp_logic_as_module_DIR}addSlaveAndCPPModule.cmd "ASYN_PORT=MY_PORT_28,S_ID=28"
+${SCRIPTEXEC} ${ecmc_cpp_logic_as_module_DIR}addSlaveAndCPPModule.cmd "ASYN_PORT=MY_PORT_29,S_ID=29"
+${SCRIPTEXEC} ${ecmc_cpp_logic_as_module_DIR}addSlaveAndCPPModule.cmd "ASYN_PORT=MY_PORT_30,S_ID=30"

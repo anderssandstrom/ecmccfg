@@ -7,7 +7,7 @@ EXCLUDE_VERSIONS = 3 7.0.5 7.0.6 7.0.7
 
 ARCH_FILTER=deb10% deb12% deb13%
 
-SCRIPTS+=startup.cmd
+SCRIPTS+=addSlaveAndCPPModule.cmd
 
 
 TEMPLATES+=$(wildcard ./db/*.db)

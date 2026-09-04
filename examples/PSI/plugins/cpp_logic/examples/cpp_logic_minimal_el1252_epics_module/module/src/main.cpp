@@ -46,7 +46,7 @@ struct MiniEL1252Example : public ecmcCpp::LogicBase {
 
     if ((cycle_counter % 1000) == 0) {
       ecmcCpp::publishDebugText("cpp logic example running");
-      std::cout << "Timestamp: "  << timestampLatchPositive01 << "\n";
+      std::cout << "Timestamp: "  << timestampLatchPositive01 << " (slave Id: " <<  slave_id << ")\n";
     }
   }
 };

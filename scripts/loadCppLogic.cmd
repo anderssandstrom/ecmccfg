@@ -14,7 +14,10 @@
 #-d   \param DIR       Directory prefix for `FILE`, default `./bin/`.
 #-d   \param LOGIC_ID  C++ logic instance index, default 0. Incremented for
 #-d                  the next call after a successful load.
-#-d   \param ASYN_PORT Optional dedicated asyn port, default CPP.LOGIC<LOGIC_ID>.
+#-d   \param ASYN_PORT Optional short dedicated asyn port name. `MY_PORT`
+#-d                  creates asyn port `CPP.MY_PORT`. If omitted, the port
+#-d                  defaults to `CPP.LOGIC<LOGIC_ID>`. Built-in PVs always
+#-d                  use a two-digit index, for example `CPP00` or `CPP01`.
 #-d   \param SAMPLE_RATE_MS Optional execution rate in milliseconds.
 #-d   \param UPDATE_RATE_MS Optional EPICS/asyn publish rate in milliseconds.
 #-d   \param MACROS    Optional free-form text string passed through to the C++ logic and available in user code through `ecmcCpp::getMacrosString()`.
@@ -26,17 +29,18 @@
 #-d */
 
 epicsEnvSet("ECMC_CPP_LOGIC_ID", "${LOGIC_ID=0}")
+ecmcEpicsEnvSetCalc("ECMC_CPP_LOGIC_ID_2_CHARS", "${ECMC_CPP_LOGIC_ID}", "%02d")
 epicsEnvSet("ECMC_CPP_LOGIC_FILE", "${DIR=./bin/}${FILE=libmain.so}")
 
 ecmcIf("'${ASYN_PORT=EMPTY}'='EMPTY'",ECMC_CPP_LOGIC_PORT_EMPTY_TRUE,ECMC_CPP_LOGIC_PORT_EMPTY_FALSE)
 ${ECMC_CPP_LOGIC_PORT_EMPTY_TRUE}epicsEnvSet("ECMC_CPP_LOGIC_PORT", "CPP.LOGIC${ECMC_CPP_LOGIC_ID}")
 #else
-${ECMC_CPP_LOGIC_PORT_EMPTY_FALSE}epicsEnvSet("ECMC_CPP_LOGIC_PORT", "${ASYN_PORT=''}")
+${ECMC_CPP_LOGIC_PORT_EMPTY_FALSE}epicsEnvSet("ECMC_CPP_LOGIC_PORT", "CPP.${ASYN_PORT=''}")
 ecmcEndIf(ECMC_CPP_LOGIC_PORT_EMPTY_TRUE,ECMC_CPP_LOGIC_PORT_EMPTY_FALSE)
 
 epicsEnvSet("ECMC_CPP_LOGIC_CONFIG", "asyn_port=${ECMC_CPP_LOGIC_PORT};sample_rate_ms=${SAMPLE_RATE_MS=};update_rate_ms=${UPDATE_RATE_MS=};macros=${MACROS=}")
 epicsEnvSet("ECMC_CPP_LOGIC_CORE_EPICS_SUBST", "ecmcCppLogicCore.substitutions")
-epicsEnvSet("ECMC_CPP_LOGIC_DB_MACROS_BASE", "P=${DB_PREFIX=$(IOC):},PORT=${ECMC_CPP_LOGIC_PORT},CPP_ID=${ECMC_CPP_LOGIC_ID}")
+epicsEnvSet("ECMC_CPP_LOGIC_DB_MACROS_BASE", "P=${DB_PREFIX=$(IOC):},PORT=${ECMC_CPP_LOGIC_PORT},CPP_ID=${ECMC_CPP_LOGIC_ID},CPP_ID_2_CHARS=${ECMC_CPP_LOGIC_ID_2_CHARS}")
 
 ecmcFileExist("${ECMC_CPP_LOGIC_FILE}",1)
 ecmcConfigOrDie "Cfg.LoadCppLogic(${ECMC_CPP_LOGIC_ID},${ECMC_CPP_LOGIC_FILE},${ECMC_CPP_LOGIC_CONFIG})"
@@ -71,4 +75,4 @@ ecmcEndIf(CPP_LOGIC_APP_SKIP_TRUE,CPP_LOGIC_APP_SKIP_FALSE)
 
 ecmcEpicsEnvSetCalc(ECMC_CPP_LOGIC_COUNT, "$(ECMC_CPP_LOGIC_COUNT=0)+1")
 ecmcEpicsEnvSetCalc(LOGIC_ID, "${ECMC_CPP_LOGIC_ID}+1", "%d")
-
+epicsEnvUnset(ECMC_CPP_LOGIC_ID_2_CHARS)

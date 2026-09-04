@@ -156,7 +156,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic0-RateMsAct</string>
+    <string notr="true">$(IOC):CPP00-RateMsAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -181,7 +181,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic0-CntAct</string>
+    <string notr="true">$(IOC):CPP00-CntAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -206,7 +206,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic0-DbgTxtAct</string>
+    <string notr="true">$(IOC):CPP00-DbgTxtAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -263,7 +263,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic1-RateMsAct</string>
+    <string notr="true">$(IOC):CPP01-RateMsAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -288,7 +288,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic1-CntAct</string>
+    <string notr="true">$(IOC):CPP01-CntAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -313,7 +313,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic1-DbgTxtAct</string>
+    <string notr="true">$(IOC):CPP01-DbgTxtAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -370,7 +370,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic2-RateMsAct</string>
+    <string notr="true">$(IOC):CPP02-RateMsAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -395,7 +395,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic2-CntAct</string>
+    <string notr="true">$(IOC):CPP02-CntAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -420,7 +420,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic2-DbgTxtAct</string>
+    <string notr="true">$(IOC):CPP02-DbgTxtAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -477,7 +477,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic3-RateMsAct</string>
+    <string notr="true">$(IOC):CPP03-RateMsAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -502,7 +502,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic3-CntAct</string>
+    <string notr="true">$(IOC):CPP03-CntAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -527,7 +527,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic3-DbgTxtAct</string>
+    <string notr="true">$(IOC):CPP03-DbgTxtAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -584,7 +584,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic4-RateMsAct</string>
+    <string notr="true">$(IOC):CPP04-RateMsAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -609,7 +609,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic4-CntAct</string>
+    <string notr="true">$(IOC):CPP04-CntAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -634,7 +634,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic4-DbgTxtAct</string>
+    <string notr="true">$(IOC):CPP04-DbgTxtAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -691,7 +691,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic5-RateMsAct</string>
+    <string notr="true">$(IOC):CPP05-RateMsAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -716,7 +716,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic5-CntAct</string>
+    <string notr="true">$(IOC):CPP05-CntAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -741,7 +741,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic5-DbgTxtAct</string>
+    <string notr="true">$(IOC):CPP05-DbgTxtAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -798,7 +798,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic6-RateMsAct</string>
+    <string notr="true">$(IOC):CPP06-RateMsAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -823,7 +823,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic6-CntAct</string>
+    <string notr="true">$(IOC):CPP06-CntAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -848,7 +848,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic6-DbgTxtAct</string>
+    <string notr="true">$(IOC):CPP06-DbgTxtAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -905,7 +905,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic7-RateMsAct</string>
+    <string notr="true">$(IOC):CPP07-RateMsAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -930,7 +930,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic7-CntAct</string>
+    <string notr="true">$(IOC):CPP07-CntAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>
@@ -955,7 +955,7 @@
     </rect>
    </property>
    <property name="channel" stdset="0">
-    <string notr="true">$(IOC):CppLogic7-DbgTxtAct</string>
+    <string notr="true">$(IOC):CPP07-DbgTxtAct</string>
    </property>
    <property name="colorMode">
     <enum>caLineEdit::Static</enum>

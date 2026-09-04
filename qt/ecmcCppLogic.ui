@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>610</width>
-    <height>364</height>
+    <width>602</width>
+    <height>312</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,178 +19,550 @@
   <widget class="caLabel" name="caLabelTitle">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>10</y>
+     <x>-140</x>
+     <y>5</y>
      <width>420</width>
      <height>21</height>
     </rect>
    </property>
-   <property name="text">
-    <string>C++ Logic Runtime</string>
-   </property>
    <property name="font">
     <font>
      <pointsize>12</pointsize>
+     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
+   <property name="text">
+    <string>C++ Logic Runtime with id $(CPP_ID)</string>
+   </property>
   </widget>
-  <widget class="caShellCommand" name="caShellCommandOverview">
-   <property name="geometry"><rect><x>470</x><y>10</y><width>100</width><height>22</height></rect></property>
-   <property name="label"><string notr="true">Overview</string></property>
-   <property name="labels"><string>Open cpp_logic overview</string></property>
-   <property name="files"><string>bash /ioc/modules/ecmccfg/qt/ecmcOpenObject.sh</string></property>
-   <property name="args"><string>CPP_LOGIC_OVERVIEW $(IOC)</string></property>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>30</y>
+     <width>261</width>
+     <height>181</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Time measurement</string>
+   </property>
+   <widget class="caLineEdit" name="caLineEditTot">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>150</y>
+      <width>100</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):CPP0$(CPP_ID=0)-TotMsAct</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="limitsMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="unitsEnabled">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caLabel" name="caLabelOut">
+    <property name="geometry">
+     <rect>
+      <x>-50</x>
+      <y>124</y>
+      <width>190</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Output copy time [ms]</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="caLabelExec">
+    <property name="geometry">
+     <rect>
+      <x>-50</x>
+      <y>64</y>
+      <width>190</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Logic exec time [ms]</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="caLineEditExec">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>60</y>
+      <width>100</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):CPP0$(CPP_ID=0)-ExeMsAct</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="limitsMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="unitsEnabled">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caLabel" name="caLabelTot">
+    <property name="geometry">
+     <rect>
+      <x>-50</x>
+      <y>154</y>
+      <width>190</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Total logic time [ms]</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="caLineEditOut">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>120</y>
+      <width>100</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):CPP0$(CPP_ID=0)-OutMsAct</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="limitsMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="unitsEnabled">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="caLineEditIn">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>90</y>
+      <width>100</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):CPP0$(CPP_ID=0)-InMsAct</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="limitsMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="unitsEnabled">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caLabel" name="caLabelIn">
+    <property name="geometry">
+     <rect>
+      <x>-50</x>
+      <y>94</y>
+      <width>190</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Input copy time [ms]</string>
+    </property>
+   </widget>
+   <widget class="caByteController" name="caByteControllerCtrlWord_2">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>30</y>
+      <width>20</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):CPP0$(CPP_ID=0)-CtrlWord-RB</string>
+    </property>
+    <property name="direction">
+     <enum>caByteController::Right</enum>
+    </property>
+    <property name="startBit">
+     <number>1</number>
+    </property>
+    <property name="endBit">
+     <number>1</number>
+    </property>
+   </widget>
+   <widget class="caLabel" name="caLabelTot_2">
+    <property name="geometry">
+     <rect>
+      <x>-50</x>
+      <y>30</y>
+      <width>190</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Enable</string>
+    </property>
+   </widget>
   </widget>
-  <widget class="caLabel" name="caLabelCtrl">
-   <property name="geometry"><rect><x>10</x><y>48</y><width>190</width><height>18</height></rect></property>
-   <property name="text"><string>Control word</string></property>
+  <widget class="QGroupBox" name="groupBox_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>30</y>
+     <width>311</width>
+     <height>271</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Execution and update rate</string>
+   </property>
+   <widget class="caLineEdit" name="caLineEditUpdateAct">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>210</y>
+      <width>100</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):CPP0$(CPP_ID=0)-UpdMsAct</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="limitsMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="unitsEnabled">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caLabel" name="caLabelRateSet">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>64</y>
+      <width>190</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Requested sample rate [ms]</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="caLineEditDiv">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>120</y>
+      <width>100</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):CPP0$(CPP_ID=0)-DivAct</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="limitsMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="unitsEnabled">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caTextEntry" name="caTextEntryUpdateSet">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>180</y>
+      <width>100</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):CPP0$(CPP_ID=0)-UpdMs-RB</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="caLabelRateAct">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>96</y>
+      <width>190</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Actual sample rate [ms]</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="caLineEditCnt">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>150</y>
+      <width>100</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):CPP0$(CPP_ID=0)-CntAct</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="limitsMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="unitsEnabled">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="caLineEditRateAct">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>92</y>
+      <width>100</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):CPP0$(CPP_ID=0)-RateMsAct</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="limitsMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="unitsEnabled">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caTextEntry" name="caTextEntryRateSet">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>60</y>
+      <width>100</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):CPP0$(CPP_ID=0)-RateMs-RB</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="caLabelCnt">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>154</y>
+      <width>120</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Execute count</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="caLabelUpdateSet">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>184</y>
+      <width>190</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Requested PV update rate [ms]</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="caLabelUpdateAct">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>214</y>
+      <width>190</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Actual PV update rate [ms]</string>
+    </property>
+   </widget>
+   <widget class="caLabel" name="caLabelDiv">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>124</y>
+      <width>120</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Execute divider</string>
+    </property>
+   </widget>
+   <widget class="caByteController" name="caByteControllerCtrlWord_4">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>30</y>
+      <width>20</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):CPP0$(CPP_ID=0)-CtrlWord-RB</string>
+    </property>
+    <property name="direction">
+     <enum>caByteController::Right</enum>
+    </property>
+    <property name="startBit">
+     <number>0</number>
+    </property>
+    <property name="endBit">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="caLabel" name="caLabelTot_4">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>30</y>
+      <width>190</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Enable</string>
+    </property>
+   </widget>
   </widget>
-  <widget class="caByteController" name="caByteControllerCtrlWord">
-   <property name="geometry"><rect><x>210</x><y>44</y><width>24</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):CPP0$(CPP_ID=0)-CtrlWord-RB</string></property>
-   <property name="endBit"><number>2</number></property>
-  </widget>
-  <widget class="caLabel" name="caLabelCtrlHint">
-   <property name="geometry"><rect><x>250</x><y>48</y><width>320</width><height>18</height></rect></property>
-   <property name="text"><string>bit0 enable, bit1 timing, bit2 debug text</string></property>
-  </widget>
-  <widget class="caLabel" name="caLabelRateSet">
-   <property name="geometry"><rect><x>10</x><y>82</y><width>190</width><height>18</height></rect></property>
-   <property name="text"><string>Requested sample rate [ms]</string></property>
-  </widget>
-  <widget class="caTextEntry" name="caTextEntryRateSet">
-   <property name="geometry"><rect><x>210</x><y>78</y><width>100</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):CPP0$(CPP_ID=0)-RateMs-RB</string></property>
-  </widget>
-  <widget class="caLabel" name="caLabelRateAct">
-   <property name="geometry"><rect><x>10</x><y>112</y><width>190</width><height>18</height></rect></property>
-   <property name="text"><string>Actual sample rate [ms]</string></property>
-  </widget>
-  <widget class="caLineEdit" name="caLineEditRateAct">
-   <property name="geometry"><rect><x>210</x><y>108</y><width>100</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):CPP0$(CPP_ID=0)-RateMsAct</string></property>
-   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
-   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="unitsEnabled"><bool>true</bool></property>
-  </widget>
-  <widget class="caLabel" name="caLabelUpdateSet">
-   <property name="geometry"><rect><x>10</x><y>146</y><width>190</width><height>18</height></rect></property>
-   <property name="text"><string>Requested PV update rate [ms]</string></property>
-  </widget>
-  <widget class="caTextEntry" name="caTextEntryUpdateSet">
-   <property name="geometry"><rect><x>210</x><y>142</y><width>100</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):CPP0$(CPP_ID=0)-UpdMs-RB</string></property>
-  </widget>
-  <widget class="caLabel" name="caLabelUpdateAct">
-   <property name="geometry"><rect><x>10</x><y>176</y><width>190</width><height>18</height></rect></property>
-   <property name="text"><string>Actual PV update rate [ms]</string></property>
-  </widget>
-  <widget class="caLineEdit" name="caLineEditUpdateAct">
-   <property name="geometry"><rect><x>210</x><y>172</y><width>100</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):CPP0$(CPP_ID=0)-UpdMsAct</string></property>
-   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
-   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="unitsEnabled"><bool>true</bool></property>
-  </widget>
-  <widget class="caLabel" name="caLabelExec">
-   <property name="geometry"><rect><x>10</x><y>210</y><width>190</width><height>18</height></rect></property>
-   <property name="text"><string>Logic exec time [ms]</string></property>
-  </widget>
-  <widget class="caLineEdit" name="caLineEditExec">
-   <property name="geometry"><rect><x>210</x><y>206</y><width>100</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):CPP0$(CPP_ID=0)-ExeMsAct</string></property>
-   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
-   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="unitsEnabled"><bool>true</bool></property>
-  </widget>
-  <widget class="caLabel" name="caLabelIn">
-   <property name="geometry"><rect><x>10</x><y>240</y><width>190</width><height>18</height></rect></property>
-   <property name="text"><string>Input copy time [ms]</string></property>
-  </widget>
-  <widget class="caLineEdit" name="caLineEditIn">
-   <property name="geometry"><rect><x>210</x><y>236</y><width>100</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):CPP0$(CPP_ID=0)-InMsAct</string></property>
-   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
-   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="unitsEnabled"><bool>true</bool></property>
-  </widget>
-  <widget class="caLabel" name="caLabelOut">
-   <property name="geometry"><rect><x>10</x><y>270</y><width>190</width><height>18</height></rect></property>
-   <property name="text"><string>Output copy time [ms]</string></property>
-  </widget>
-  <widget class="caLineEdit" name="caLineEditOut">
-   <property name="geometry"><rect><x>210</x><y>266</y><width>100</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):CPP0$(CPP_ID=0)-OutMsAct</string></property>
-   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
-   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="unitsEnabled"><bool>true</bool></property>
-  </widget>
-  <widget class="caLabel" name="caLabelTot">
-   <property name="geometry"><rect><x>10</x><y>300</y><width>190</width><height>18</height></rect></property>
-   <property name="text"><string>Total logic time [ms]</string></property>
-  </widget>
-  <widget class="caLineEdit" name="caLineEditTot">
-   <property name="geometry"><rect><x>210</x><y>296</y><width>100</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):CPP0$(CPP_ID=0)-TotMsAct</string></property>
-   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
-   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="unitsEnabled"><bool>true</bool></property>
-  </widget>
-  <widget class="caLabel" name="caLabelDiv">
-   <property name="geometry"><rect><x>340</x><y>94</y><width>120</width><height>18</height></rect></property>
-   <property name="text"><string>Execute divider</string></property>
-  </widget>
-  <widget class="caLineEdit" name="caLineEditDiv">
-   <property name="geometry"><rect><x>470</x><y>90</y><width>100</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):CPP0$(CPP_ID=0)-DivAct</string></property>
-   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
-   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="unitsEnabled"><bool>true</bool></property>
-  </widget>
-  <widget class="caLabel" name="caLabelCnt">
-   <property name="geometry"><rect><x>340</x><y>124</y><width>120</width><height>18</height></rect></property>
-   <property name="text"><string>Execute count</string></property>
-  </widget>
-  <widget class="caLineEdit" name="caLineEditCnt">
-   <property name="geometry"><rect><x>470</x><y>120</y><width>100</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):CPP0$(CPP_ID=0)-CntAct</string></property>
-   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
-   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="unitsEnabled"><bool>true</bool></property>
-  </widget>
-  <widget class="caLabel" name="caLabelDbg">
-   <property name="geometry"><rect><x>340</x><y>158</y><width>120</width><height>18</height></rect></property>
-   <property name="text"><string>Debug text</string></property>
-  </widget>
-  <widget class="caLineEdit" name="caLineEditDbg">
-   <property name="geometry"><rect><x>340</x><y>180</y><width>230</width><height>22</height></rect></property>
-   <property name="channel" stdset="0"><string notr="true">$(IOC):CPP0$(CPP_ID=0)-DbgTxtAct</string></property>
-   <property name="colorMode"><enum>caLineEdit::Static</enum></property>
-   <property name="precisionMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="limitsMode"><enum>caLineEdit::Channel</enum></property>
-   <property name="unitsEnabled"><bool>true</bool></property>
+  <widget class="QGroupBox" name="groupBox_3">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>210</y>
+     <width>261</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Debug</string>
+   </property>
+   <widget class="caLineEdit" name="caLineEditDbg">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>241</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):CPP0$(CPP_ID=0)-DbgTxtAct</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+    <property name="precisionMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="limitsMode">
+     <enum>caLineEdit::Channel</enum>
+    </property>
+    <property name="unitsEnabled">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="caLabel" name="caLabelTot_3">
+    <property name="geometry">
+     <rect>
+      <x>-140</x>
+      <y>30</y>
+      <width>190</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Enable</string>
+    </property>
+   </widget>
+   <widget class="caByteController" name="caByteControllerCtrlWord_3">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>30</y>
+      <width>20</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="channel" stdset="0">
+     <string notr="true">$(IOC):CPP0$(CPP_ID=0)-CtrlWord-RB</string>
+    </property>
+    <property name="direction">
+     <enum>caByteController::Right</enum>
+    </property>
+    <property name="startBit">
+     <number>2</number>
+    </property>
+    <property name="endBit">
+     <number>2</number>
+    </property>
+   </widget>
   </widget>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>caLabel</class>
-   <extends>QWidget</extends>
-   <header>caLabel</header>
-  </customwidget>
-  <customwidget>
-   <class>caLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>caLineEdit</header>
-  </customwidget>
   <customwidget>
    <class>caTextEntry</class>
    <extends>caLineEdit</extends>
@@ -202,9 +574,14 @@
    <header>caByteController</header>
   </customwidget>
   <customwidget>
-   <class>caShellCommand</class>
-   <extends>QPushButton</extends>
-   <header>caShellCommand</header>
+   <class>caLabel</class>
+   <extends>QLabel</extends>
+   <header>caLabel</header>
+  </customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>caLineEdit</header>
   </customwidget>
  </customwidgets>
  <resources/>

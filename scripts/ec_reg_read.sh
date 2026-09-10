@@ -6,7 +6,7 @@ TYPE="$3"
 ADDR="$4"
 VAR="$5"
 OUT="$6"
-FORMAT="${7:-HEX}"
+FORMAT="${7:-DEC}"
 
 case "$FORMAT" in
     HEX|hex) FIELD=1 ;;

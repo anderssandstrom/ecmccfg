@@ -23,7 +23,7 @@
 #- Optional arguments:
 #-
 #-   FORMAT
-#-       HEX (default) or DEC. Selects the hexadecimal or decimal value
+#-       DEC (default) or HEX. Selects the decimal or hexadecimal value
 #-       from the ethercat integer register read output.
 #-
 #-   MASTER_ID
@@ -49,6 +49,6 @@
 #-
 #-##############################################################################
 
-system("${ecmc_DIR}ec_reg_read.sh '${MASTER_ID=${ECMC_EC_MASTER_ID}}' ${SLAVE_ID} ${TYPE} ${ADDR} ${ENV_VAR} ${ECMC_TMP_DIR}ecReg_${SLAVE_ID}.cmd '${FORMAT=HEX}'")
+system("sh ${ecmccfg_DIR}ec_reg_read.sh '${MASTER_ID=${ECMC_EC_MASTER_ID}}' ${SLAVE_ID} ${TYPE} ${ADDR} ${ENV_VAR} ${ECMC_TMP_DIR}ecReg_${SLAVE_ID}.cmd '${FORMAT=DEC}'")
 
 < ${ECMC_TMP_DIR}ecReg_${SLAVE_ID}.cmd

@@ -1,5 +1,12 @@
 ##############################################################################
-## Example config for EL7041 and EL5042
+## EL7062/ED7062 + EL2252 position-compare/touch-probe DC timing verification
+##
+## This startup is for the closed-loop BiSS-C lab setup, but the active test is:
+##   axis position compare -> EL2252 timed output -> ED7062/EL7062 touch probe
+##
+## Use this when verifying that the EL2252 output edge arrives at the configured
+## position and that the EL7062/ED7062 touch-probe timestamp agrees with the
+## reconstructed encoder position.
 
 require ecmccfg dc_timing "ENG_MODE=1,ECMC_VER=dc_timing"
 
@@ -24,6 +31,7 @@ ecmcConfig "Cfg.EcSetSlaveTimingOverride(${ECMC_EC_SLAVE_NUM},2,-1,0,100000)"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Encoder-RLS-LA11-26bit-BISS-C,CH_ID=1"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Encoder-RLS-LA11-26bit-BISS-C,CH_ID=2"
 epicsEnvSet(ENC_SID,${ECMC_EC_SLAVE_NUM})
+
 ${SCRIPTEXEC} ${ecmccfg_DIR}setRecordUpdateRate.cmd "RATE_MS=1"
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=25,HW_DESC=EL2252"
 ${SCRIPTEXEC} ${ecmccfg_DIR}setRecordUpdateRate.cmd "RATE_MS=10"
@@ -46,7 +54,6 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=29,HW_DESC=EL1252"
 #${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL7211-9014"
 #${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL9576"
 
-
 ${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=20,DS_SIZE=100,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='TP sequence'"
 ${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=21,DS_SIZE=100,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='TP raw timestamp'"
 ${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=22,DS_SIZE=100,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='TP event time'"
@@ -60,34 +67,11 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=29,DS_SIZE=100,SAMPLE_RATE
 
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd, "PLC_ID=10,FILE=./cfg/dc.plc,PLC_MACROS='AX_ID=1,ENC_ID=1,MASTER_ID=0,TP_SID=22,ENC_CH=01,DS_BASE=20,PUSH_ASYN=1'"
 
-# Optional EL5042 relative delay verification. Enable instead of, or in
-# parallel with, the touch-probe reconstruction PLC when comparing the EL5042
-# BiSS-C encoder against the ED7062/EL7062 open-loop encoder.
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=40,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='EL5042 delay sequence'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=41,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Reference sample time'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=42,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='EL5042 sample time'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=43,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Reference position'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=44,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='EL5042-reference diff'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=45,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Reference velocity'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=46,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='EL5042 velocity'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=47,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Mean diff positive'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=48,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Mean diff negative'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=49,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Relative delay ns'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd, "PLC_ID=11,FILE=./cfg/el5042_delay.plc,PLC_MACROS='AX_ID=1,ENC_REF_ID=1,ENC_BISS_ID=2,REF_SID=22,BISS_SID=9,DS_BASE=40,PRINT_EVERY=100,PUSH_ASYN=1'"
-
 afterInit "ecmcConfig 'AxisTouchProbeArm(1,1,1)'"
 afterInit "ecmcConfig 'AxisPositionCompareArm(1,5,1,1)'"
 
-# axis 1 and encoder 1
-# ecmcConfig "AxisTouchProbeArm(1,1,1)"
-# 24V on TP1 input
-# ecmcConfig "AxisPrintTouchProbe(1,1)"  
-# ecmcConfig "AxisTouchProbeArm(1,1,0)"
-
+# Useful commands:
 # ecmcConfig "AxisPositionCompareArm(1,5,1,1)"
-# ecmcConfig "AxisPrintPositionCompare(1)"
-
-
 # ecmcConfig "AxisPositionCompareArm(1,5,0,1)"
 # ecmcConfig "AxisPrintPositionCompare(1)"
-
+# ecmcConfig "AxisPrintTouchProbe(1,1)"

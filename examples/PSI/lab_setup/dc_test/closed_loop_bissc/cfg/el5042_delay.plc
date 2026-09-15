@@ -26,7 +26,7 @@
 #   BISS_SID                EL5042 slave index (default 9)
 #   DS_BASE                 first of ten data storages (default 20)
 #   SAMPLE_DIV              append every N PLC cycles (default 1)
-#   PRINT_EVERY             print summary every N appended samples (default 100)
+#   PRINT_EVERY             print summary every N accepted samples (default 100)
 #   MIN_VEL                 minimum abs velocity for segment averaging (default 8)
 #   PRINT_RESULT            print periodic summary (default 1)
 #   PUSH_ASYN               push storages after each append (default 0)
@@ -176,8 +176,12 @@ if(static.cycleCounter >= ${SAMPLE_DIV=1}) {
     ds_push_asyn(${DS_BASE=20}+9);
   };
 
-  static.printCounter := static.printCounter + 1;
-  if(${PRINT_RESULT=1} and static.printCounter >= ${PRINT_EVERY=100}) {
+  if(static.sampleDir != 0) {
+    static.printCounter := static.printCounter + 1;
+  };
+  if(${PRINT_RESULT=1} and
+     static.sampleDir != 0 and
+     static.printCounter >= ${PRINT_EVERY=100}) {
     static.printCounter := 0;
     println('EL5042 delay seq=', static.sequence,
             ' ref=', static.refPos,

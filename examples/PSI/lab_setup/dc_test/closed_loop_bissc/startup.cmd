@@ -63,17 +63,19 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd, "PLC_ID=10,FILE=./cfg/dc.plc,PLC_MA
 # Optional EL5042 relative delay verification. Enable instead of, or in
 # parallel with, the touch-probe reconstruction PLC when comparing the EL5042
 # BiSS-C encoder against the ED7062/EL7062 open-loop encoder.
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=40,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='EL5042 delay sequence'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=41,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Reference sample time'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=42,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='EL5042 sample time'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=43,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Reference position'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=44,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='EL5042-reference diff'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=45,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Reference velocity'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=46,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='EL5042 velocity'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=47,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Mean diff positive'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=48,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Mean diff negative'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=49,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Relative delay ns'"
-#${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd, "PLC_ID=11,FILE=./cfg/el5042_delay.plc,PLC_MACROS='AX_ID=1,ENC_REF_ID=1,ENC_BISS_ID=2,REF_SID=22,BISS_SID=9,DS_BASE=40,PRINT_EVERY=100,PUSH_ASYN=1'"
+# Reuse DS 20..29 if this PLC is enabled, since the IOC has a limited number
+# of data storages. Do not run both timing PLCs with the same DS_BASE.
+#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=20,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='EL5042 delay sequence'"
+#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=21,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Reference sample time'"
+#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=22,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='EL5042 sample time'"
+#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=23,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Reference position'"
+#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=24,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='EL5042-reference diff'"
+#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=25,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Reference velocity'"
+#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=26,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='EL5042 velocity'"
+#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=27,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Mean diff positive'"
+#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=28,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Mean diff negative'"
+#${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=29,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Relative delay ns'"
+#${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd, "PLC_ID=11,FILE=./cfg/el5042_delay.plc,PLC_MACROS='AX_ID=1,ENC_REF_ID=1,ENC_BISS_ID=2,REF_SID=22,BISS_SID=9,DS_BASE=20,PRINT_EVERY=100,PUSH_ASYN=1'"
 
 afterInit "ecmcConfig 'AxisTouchProbeArm(1,1,1)'"
 afterInit "ecmcConfig 'AxisPositionCompareArm(1,5,1,1)'"
@@ -90,4 +92,3 @@ afterInit "ecmcConfig 'AxisPositionCompareArm(1,5,1,1)'"
 
 # ecmcConfig "AxisPositionCompareArm(1,5,0,1)"
 # ecmcConfig "AxisPrintPositionCompare(1)"
-

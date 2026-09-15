@@ -12,7 +12,7 @@
 # each direction:
 #   diff_pos = mean(encoder2 - encoder1) while moving positive
 #   diff_neg = mean(encoder2 - encoder1) while moving negative
-#   relative_delay = (diff_pos - diff_neg) / (2 * speed)
+#   relative_delay = (diff_neg - diff_pos) / (2 * speed)
 #
 # A positive relative_delay means encoder 2 appears delayed relative to encoder 1.
 # This still includes mechanics/following error, so use it as a plausibility
@@ -147,7 +147,7 @@ if(static.cycleCounter >= ${SAMPLE_DIV=1}) {
        static.negVelSum/static.negCount) / 2;
     if(abs(static.meanAbsSpeed) > 1E-12) {
       static.relativeDelayNs :=
-        (static.meanPosDiff-static.meanNegDiff) /
+        (static.meanNegDiff-static.meanPosDiff) /
         (2*static.meanAbsSpeed) * 1E9;
     };
   };

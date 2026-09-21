@@ -15,6 +15,11 @@ record(stringout,"$(P)MCU-Cfg-Naming") {
     field(VAL,  "${MCU_NAME=""}")
 }
 
+record(stringout,"$(P)MCU-Cfg-Hostname") {
+    field(DESC, "Host name")
+    field(VAL,  "${HOSTNAME=${IOC}}")
+}
+
 record(ao,"$(P)MCU-Cfg-Rate") {
     field(DESC, "RT loop sample rate")
     field(EGU, "Hz")

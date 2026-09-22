@@ -376,7 +376,7 @@ record(calcout,"$(PREFIX)$(MOTOR_NAME)-MR-SyncTrgL2H"){
 
 record(seq, "$(PREFIX)$(MOTOR_NAME)-MR-SyncTrgSeq") {
     field(DESC, "Trigg MR Sync")
-    field(PINI, "1")
+    # Process on interlock transitions, not automatically at IOC initialization.
 
     field(DO1,  "0")
     field(DO2,  "1")
@@ -437,48 +437,58 @@ record(mbbiDirect,"${PREFIX}${MOTOR_NAME}-ECMC2MR-Cmd"){
   field(FLNK, "${PREFIX}${MOTOR_NAME}-ECMC2MR-Stop.PROC")
 }
 
-record(calc,  "${PREFIX}${MOTOR_NAME}-ECMC2MR-Stop") {
+record(calcout,  "${PREFIX}${MOTOR_NAME}-ECMC2MR-Stop") {
   field(DESC, "${MOTOR_NAME}: MR Stop")
   field(PINI, "$(PINI=1)")
   field(CALC, "A & 0x1")
+  # Zero at initialization is not a command; both toggle edges are commands.
+  field(OOPT, "On Change")
+  field(OUT, "${PREFIX}${MOTOR_NAME}-ECMC2MR-Stop_.PROC PP")
   field(INPA, "${PREFIX}${MOTOR_NAME}-ECMC2MR-Cmd")
   field(FLNK, "${PREFIX}${MOTOR_NAME}-ECMC2MR-Sync.PROC")
 }
 
-record(calc,  "${PREFIX}${MOTOR_NAME}-ECMC2MR-Sync") {
+record(calcout,  "${PREFIX}${MOTOR_NAME}-ECMC2MR-Sync") {
   field(DESC, "${MOTOR_NAME}: MR Sync")
   field(PINI, "$(PINI=1)")
   field(CALC, "A >> 2 & 0x1")
+  field(OOPT, "On Change")
+  field(OUT, "${PREFIX}${MOTOR_NAME}-ECMC2MR-Sync_.PROC PP")
   field(INPA, "${PREFIX}${MOTOR_NAME}-ECMC2MR-Cmd")
   field(FLNK, "${PREFIX}${MOTOR_NAME}-ECMC2MR-Cnen.PROC")
 }
 
-record(calc,  "${PREFIX}${MOTOR_NAME}-ECMC2MR-Cnen") {
+record(calcout,  "${PREFIX}${MOTOR_NAME}-ECMC2MR-Cnen") {
   field(DESC, "${MOTOR_NAME}: MR Cnen")
   field(PINI, "$(PINI=1)")
   field(CALC, "A >> 4 & 0x1")
+  field(OOPT, "On Change")
+  field(OUT, "${PREFIX}${MOTOR_NAME}-ECMC2MR-Cnen_.PROC PP")
   field(INPA, "${PREFIX}${MOTOR_NAME}-ECMC2MR-Cmd")
 }
 
 record(seq,   "${PREFIX}${MOTOR_NAME}-ECMC2MR-Stop_") {
   field(DESC, "Axis: STOP")    
-  field(DOL1, "${PREFIX}${MOTOR_NAME}-ECMC2MR-Stop CP")
   field(DOL2, "${PREFIX}${MOTOR_NAME}-ECMC2MR-Cmd.B1")
   field(LNK2, "${PREFIX}${MOTOR_NAME}.STOP PP")
 }
 
 record(seq,   "${PREFIX}${MOTOR_NAME}-ECMC2MR-Sync_") {
   field(DESC, "Axis: SYNC")    
-  field(DOL1, "${PREFIX}${MOTOR_NAME}-ECMC2MR-Sync CP")
   field(DOL2, "${PREFIX}${MOTOR_NAME}-ECMC2MR-Cmd.B3")
   field(LNK2, "${PREFIX}${MOTOR_NAME}.SYNC PP")
 }
 
-record(seq,   "${PREFIX}${MOTOR_NAME}-ECMC2MR-Cnen_") {
+record(calcout, "${PREFIX}${MOTOR_NAME}-ECMC2MR-Cnen_") {
   field(DESC, "Axis: CNEN")    
-  field(DOL1, "${PREFIX}${MOTOR_NAME}-ECMC2MR-Cnen CP")
-  field(DOL2, "${PREFIX}${MOTOR_NAME}-ECMC2MR-Cmd.B5")
-  field(LNK2, "${PREFIX}${MOTOR_NAME}.CNEN PP")
+  # Do not process the motor record if CNEN already has the requested value.
+  field(INPA, "${PREFIX}${MOTOR_NAME}-ECMC2MR-Cmd.B5 NPP")
+  field(INPB, "${PREFIX}${MOTOR_NAME}.CNEN NPP")
+  field(CALC, "A != B")
+  field(OOPT, "When Non-zero")
+  field(DOPT, "Use OCAL")
+  field(OCAL, "A")
+  field(OUT, "${PREFIX}${MOTOR_NAME}.CNEN PP")
 }
 
 record(longout,"$(PREFIX)$(MOTOR_NAME)-CfgDHLM-En") {

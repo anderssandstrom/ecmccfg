@@ -13,22 +13,6 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="caInclude" name="cainclude">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>125</width>
-     <height>500</height>
-    </rect>
-   </property>
-   <property name="macro">
-    <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string>
-   </property>
-   <property name="filename" stdset="0">
-    <string notr="true">A_RF_LLRF_ELETTRATUNING_include_E_slave_frame.ui</string>
-   </property>
-  </widget>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
@@ -216,7 +200,7 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>11</pointsize>
+          <pointsize>10</pointsize>
          </font>
         </property>
         <property name="text">
@@ -468,7 +452,7 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>11</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="text">
@@ -550,6 +534,47 @@
     </widget>
    </widget>
   </widget>
+  <widget class="caInclude" name="cainclude">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>128</width>
+     <height>500</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string>
+   </property>
+   <property name="filename" stdset="0">
+    <string notr="true">ecmcE_slave_frame.ui</string>
+   </property>
+  </widget>
+  <widget class="caShellCommand" name="cashellcommand_2">
+   <property name="geometry">
+    <rect>
+     <x>5</x>
+     <y>5</y>
+     <width>26</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="label">
+    <string notr="true">HW</string>
+   </property>
+   <property name="labels">
+    <string>Open first axis</string>
+   </property>
+   <property name="files">
+    <string>bash /ioc/modules/qt/ecmcOpenObject.sh</string>
+   </property>
+   <property name="args">
+    <string>OPEN_EC_TOOL_HW_DIAG_MAIN $(IOC) $(MasterID)  $(SlaveID)</string>
+   </property>
+  </widget>
+  <zorder>cainclude</zorder>
+  <zorder>tabWidget</zorder>
+  <zorder>cashellcommand_2</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -592,6 +617,11 @@
    <class>caByte</class>
    <extends>QWidget</extends>
    <header>caByte</header>
+  </customwidget>
+  <customwidget>
+   <class>caShellCommand</class>
+   <extends>QWidget</extends>
+   <header>caShellCommand</header>
   </customwidget>
  </customwidgets>
  <resources/>

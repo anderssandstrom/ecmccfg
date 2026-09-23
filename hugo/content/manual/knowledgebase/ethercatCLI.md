@@ -165,6 +165,22 @@ Set value of register `0x8010`, sub-register `0x07` from slave `7` to `314`.
 ethercat download  -m0 -p7 0x8010 0x07 314
 ```
 
+### `ethercat reg_read` and `ethercat reg_write`
+
+These commands access EtherCAT slave controller registers by byte address.
+For example, read an unsigned 16-bit value from slave 0:
+
+```bash
+ethercat reg_read -m0 -p0 -t uint16 0x1000
+```
+
+Use `-t int16` for a signed 16-bit interpretation. For a register documented as
+writable at `${REG_ADDR}`, an unsigned write is:
+
+```bash
+ethercat reg_write -m0 -p0 -t uint16 ${REG_ADDR} 0x1234
+```
+
 ### `ethercat states`
 With this command a specific state of a slave can be forced, or at least an attempt to enter the specific state is made.
 

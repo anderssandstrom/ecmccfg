@@ -13,6 +13,7 @@
 epicsEnvSet("ECMC_EC_HWTYPE"             "EL4732")
 epicsEnvSet("ECMC_EC_VENDOR_ID"          "0x2")
 epicsEnvSet("ECMC_EC_PRODUCT_ID"         "0x127c3052")
+epicsEnvSet("ECMC_HW_PANEL"              "EL4732")
 
 #- verify slave, including reset
 ecmcFileExist(${ecmccfg_DIR}slaveVerify.cmd,1)

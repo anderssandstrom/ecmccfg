@@ -2,8 +2,8 @@
 record(ai,"${ECMC_P}Dev-NxtTime"){
   field(DESC, "${HWTYPE}: Next latch time l32 [ns]")
   field(PINI, "${PINI=1}")
-  field(DTYP, "asynInt32")
-  field(INP,  "@asyn(${PORT},${ADDR=0},${TIMEOUT=1})T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynInt32/ec${MASTER_ID}.s${SLAVE_POS}.nextSyncTime?")
+  field(DTYP, "asynFloat64")
+  field(INP,  "@asyn(${PORT},${ADDR=0},${TIMEOUT=1})CMD=UINT32TOFLOAT64/T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynFloat64/ec${MASTER_ID}.s${SLAVE_POS}.nextSyncTime?")
   field(SCAN, "I/O Intr")
   field(TSE,  "${TSE=-2}")
 }

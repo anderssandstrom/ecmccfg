@@ -22,7 +22,7 @@ ecmcConfigOrDie "Cfg.EcAddEntryComplete(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID
 ecmcConfigOrDie "Cfg.EcAddEntryComplete(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a00,0x6010,0x11,32,positionActual01)"
 
 #- Default panel
-epicsEnvSet("ECMC_HW_PANEL"              "Ex5xx1")
+epicsEnvSet("ECMC_HW_PANEL"              "Ex5001")
 
 #- Cleanup
 epicsEnvUnset(ECMC_SLAVE_RESET)

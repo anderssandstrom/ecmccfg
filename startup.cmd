@@ -40,6 +40,8 @@
 #- PNL_COLOR_ID      = Panel color ID, defaults to 0
 #- ECMC_REQUIRE_ECMC = Command used to load ecmc. Defaults to "require ecmc".
 #-                    Set to "#-" when ecmc is already registered by a classic IOC.
+#- ECMC_STARTUP_GATE = 1/0, default 0 (legacy startup). Set to 1 to hold
+#-                     axes/PLCs until IOC readiness and bus stabilization.
 #- START_EPICS_FIRST  = 1/0, default 0 (ecmc starts first). Set to 1 to let
 #-                      EPICS initialization/autosave restore run before ECMC
 #-                      runtime and EtherCAT are started asynchronously.
@@ -121,6 +123,7 @@ ecmcEpicsEnvSetCalcTernary(ECMC_PVA, "${PVA=0}", "Pva","")
 #-------------------------------------------------------------------------------
 # Set EtherCAT frequency (defaults to 1000)
 ecmcConfigOrDie "Cfg.SetSampleRate(${EC_RATE=1000})"
+
 #-
 #- Set current EtherCAT sample rate
 #- Note: Not the same as ECMC_SAMPLE_RATE_MS which is for record update

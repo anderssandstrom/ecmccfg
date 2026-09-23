@@ -11,6 +11,7 @@
 #-d     PROC_HOOK      : Forward link pf MCU-Updated PV
 #-d     ECMC_PROC_HOOK : Same as PROC_HOOK
 #-d     T_SMP_MS       : Maximum sample time of other records loaded by this script [ms]
+#-d     ECMC_STARTUP_GATE : Hold axes/PLCs until IOC/bus readiness (0/1, default 0)
 #-d 
 #-d   \file
 #-d */
@@ -39,6 +40,7 @@ epicsEnvUnset(EC_DELAY_CYCLES)
 epicsEnvUnset(ECMC_EC_STARTUP_DELAY)
 
 #- Start RT thread
+ecmcConfigOrDie "Cfg.SetStartupGate(${ECMC_STARTUP_GATE=1})"
 ${ECMC_START_ECMC_FIRST_CMD}ecmcConfigOrDie "Cfg.SetAppMode(1)"
 #- Postpone ecmc start if EPICS should start first
 ${ECMC_START_EPICS_FIRST_CMD}afterIocRunning "ecmcStartAppModeAsync(${ECMC_EC_STABILIZATION_TIME=2})"

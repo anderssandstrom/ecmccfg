@@ -4,4 +4,3 @@
 require ecmccfg sandst_a  "ECMC_VER=sandst_a,MASTER_ID=1"
 
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=3, HW_DESC=ED2504"
-

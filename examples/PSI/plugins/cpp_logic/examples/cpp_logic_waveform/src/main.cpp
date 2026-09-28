@@ -39,6 +39,11 @@ struct WaveformGenerator : public ecmcCpp::LogicBase {
     if ((cycle_counter % 1000) == 0) {
       ecmcCpp::publishDebugText("cpp waveform logic example running");
     }
+    int count=0;
+    for(int i=0; i < samples.size(); i++){
+      samples[i]=cycle_counter+count;
+      count++;
+    }
   }
 };
 

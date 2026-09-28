@@ -116,6 +116,23 @@ def type_to_ftvl(value_type: int) -> str:
     return "DOUBLE"
 
 
+def type_to_asyn_array(value_type: int, writable: bool) -> str:
+    direction = "Out" if writable else "In"
+    if value_type in (
+        ECMC_CPP_TYPE_BOOL,
+        ECMC_CPP_TYPE_S8,
+        ECMC_CPP_TYPE_U8,
+    ):
+        return f"asynInt8Array{direction}"
+    if value_type in (ECMC_CPP_TYPE_S16, ECMC_CPP_TYPE_U16):
+        return f"asynInt16Array{direction}"
+    if value_type in (ECMC_CPP_TYPE_S32, ECMC_CPP_TYPE_U32):
+        return f"asynInt32Array{direction}"
+    if value_type == ECMC_CPP_TYPE_F32:
+        return f"asynFloat32Array{direction}"
+    return f"asynFloat64Array{direction}"
+
+
 def scalar_template(value_type: int, writable: bool) -> str:
     if value_type == ECMC_CPP_TYPE_BOOL:
         return "ecmcCppLogicBo.template" if writable else "ecmcCppLogicBi.template"
@@ -153,8 +170,9 @@ def build_template_spec(param_prefix: str, export_var: ExportedVar) -> TemplateS
             "DESC": name,
             "NELM": str(export_var.bytes // max(type_size(export_var.type), 1)),
             "FTVL": type_to_ftvl(export_var.type),
+            "DTYP": type_to_asyn_array(export_var.type, bool(export_var.writable)),
         }
-        return TemplateSpec(template, ("REC", "PARAM", "DESC", "NELM", "FTVL"), values)
+        return TemplateSpec(template, ("REC", "PARAM", "DESC", "NELM", "FTVL", "DTYP"), values)
 
     template = scalar_template(export_var.type, bool(export_var.writable))
     values = {

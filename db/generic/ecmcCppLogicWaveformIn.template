@@ -1,5 +1,6 @@
 record(waveform, "$(P)$(REC)") {
   field(DESC, "$(DESC=)")
+  field(DTYP, "$(DTYP=asynInt32ArrayIn)")
   field(SCAN, "I/O Intr")
   field(FTVL, "$(FTVL=LONG)")
   field(NELM, "$(NELM=1)")

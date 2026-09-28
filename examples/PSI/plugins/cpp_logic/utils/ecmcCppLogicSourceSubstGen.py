@@ -96,6 +96,19 @@ def type_to_ftvl(value_type: int) -> str:
     return "DOUBLE"
 
 
+def type_to_asyn_array(value_type: int, writable: bool) -> str:
+    direction = "Out" if writable else "In"
+    if value_type in (1, 2, 3):
+        return f"asynInt8Array{direction}"
+    if value_type in (4, 5):
+        return f"asynInt16Array{direction}"
+    if value_type in (6, 7):
+        return f"asynInt32Array{direction}"
+    if value_type == 8:
+        return f"asynFloat32Array{direction}"
+    return f"asynFloat64Array{direction}"
+
+
 def scalar_template(value_type: int, writable: bool) -> str:
     if value_type == 1:
         return "ecmcCppLogicBo.template" if writable else "ecmcCppLogicBi.template"
@@ -143,13 +156,14 @@ def build_specs(source_path: Path, param_prefix: str, logic_name: str) -> tuple[
             specs.append(
                 TemplateSpec(
                     template=template,
-                    columns=("REC", "PARAM", "DESC", "NELM", "FTVL"),
+                    columns=("REC", "PARAM", "DESC", "NELM", "FTVL", "DTYP"),
                     values={
                         "REC": rec_name,
                         "PARAM": param_name,
                         "DESC": export_name,
                         "NELM": str(info.count),
                         "FTVL": type_to_ftvl(value_type),
+                        "DTYP": type_to_asyn_array(value_type, writable),
                     },
                 )
             )

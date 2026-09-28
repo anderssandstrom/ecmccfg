@@ -14,7 +14,8 @@
 #   caqtdm -macro "IOC=MTEST04-MTN-CPP-LOGIC,CPP_ID=0" ecmcCppLogic.ui
 #   caqtdm MTEST04-MTN-CPP-LOGIC_cpp_logic.ui
 
-require ecmccfg v11.0.7_RC1 "ECMC_VER=v11.0.7_RC1"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=${S_ID=23},HW_DESC=EL4732"
-${SCRIPTEXEC} ${ecmccfg_DIR}loadCppLogic.cmd, "MACROS='S_ID=${S_ID=23}',REPORT=1"
+require ecmccfg v11.1.0_RC1 "ECMC_VER=v11.1.0_RC1"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=${S_ID=26},HW_DESC=EL4732,NELM=100"
+${SCRIPTEXEC} ${ecmccfg_DIR}loadCppLogic.cmd, "MACROS='S_ID=${S_ID=26}',REPORT=1"
+
 

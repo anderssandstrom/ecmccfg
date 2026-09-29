@@ -65,7 +65,14 @@ epicsEnvUnset(ECMC_AXIS_GRP_ID)
 
 ecmcFileExist("ecmcEnc.db",1,1)
 dbLoadRecords("ecmcEnc.db","P=${ECMC_PREFIX},AXIS_NAME='{{ epicsName }}',AXIS_NO=${ECMC_AXIS_NO},ENC_NO=1,PORT=${ECMC_ASYN_PORT},ADDR=0,TIMEOUT=1,T_SMP_MS=${ECMC_SAMPLE_RATE_MS},TSE=${ECMC_TSE},EGU=${ENC_EGU=},DESC=${ENC_DESC=},HOME_PROC=${HOME_PROC=0},VEL_TO_CAM=${VEL_TO_CAM=0},VEL_FRM_CAM=${VEL_FRM_CAM=0},ACC=${ACC=-1},DEC=${DEC=-1},REF_HME=${REF_HME=-1},REF_STRT=${REF_STRT=-1},POST_ENA=${POST_ENA=-1},POST_POS=${POST_POS=0},POS=${HOME_POS=0},PREC=${ECMC_AXIS_PREC=3}")
-{%- if ((encoder is defined) and (encoder.touchProbe is defined)) or (touchProbe is defined) %}
+{%- set _touchProbeDefined = false %}
+{%- if touchProbe is defined %}
+    {%- set _touchProbeDefined = true %}
+{%- endif %}
+{%- if (encoder is defined) and (encoder.touchProbe is defined) %}
+    {%- set _touchProbeDefined = true %}
+{%- endif %}
+{%- if _touchProbeDefined %}
 ecmcFileExist("ecmcEncTouchProbe.db",1,1)
 dbLoadRecords("ecmcEncTouchProbe.db","P=${ECMC_PREFIX},AXIS_NAME='{{ epicsName }}',AXIS_NO=${ECMC_AXIS_NO},ENC_NO=1,PORT=${ECMC_ASYN_PORT},ADDR=0,TIMEOUT=1,T_SMP_MS=${ECMC_SAMPLE_RATE_MS},TSE=${ECMC_TSE},EGU=${ENC_EGU=},PREC=${ECMC_AXIS_PREC=3}")
 ecmcFileExist("ecmcEncTouchProbeCfg.db",1,1)

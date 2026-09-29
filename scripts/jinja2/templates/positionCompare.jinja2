@@ -2,11 +2,14 @@
 #- Position compare
 #- =============================================================================
 {%- if positionCompare is defined %}
-{%- set minLeadNs = (positionCompare.minLeadMs|default(2)|float * 1000000)|round(0, 'common')|int %}
-{%- set maxLeadNs = (positionCompare.maxLeadMs|default(100)|float * 1000000)|round(0, 'common')|int %}
-{%- set pulseWidthNs = (positionCompare.pulseWidthMs|default(0)|float * 1000000)|round(0, 'common')|int %}
+    ecmcEpicsEnvSetCalc(ECMC_PC_MIN_LEAD_NS,"{{ positionCompare.minLeadMs }}*1000000","%d")
+    ecmcEpicsEnvSetCalc(ECMC_PC_MAX_LEAD_NS,"{{ positionCompare.maxLeadMs }}*1000000","%d")
+    ecmcEpicsEnvSetCalc(ECMC_PC_PULSE_WIDTH_NS,"{{ positionCompare.pulseWidthMs }}*1000000","%d")
     ecmcConfigOrDie "Cfg.LinkEcEntryToAxisPositionCompare({{ positionCompare.output }},${ECMC_AXIS_NO},0)"
     ecmcConfigOrDie "Cfg.LinkEcEntryToAxisPositionCompare({{ positionCompare.activate }},${ECMC_AXIS_NO},1)"
     ecmcConfigOrDie "Cfg.LinkEcEntryToAxisPositionCompare({{ positionCompare.startTime }},${ECMC_AXIS_NO},2)"
-    ecmcConfigOrDie "Cfg.AxisPositionCompareConfigure(${ECMC_AXIS_NO},{{ minLeadNs }},{{ maxLeadNs }},{{ positionCompare.activateIdle|default(3)|int }},{{ positionCompare.activateSchedule|default(0)|int }},{{ pulseWidthNs }},{{ positionCompare.resetValue|default(0)|int }})"
+    ecmcConfigOrDie "Cfg.AxisPositionCompareConfigure(${ECMC_AXIS_NO},${ECMC_PC_MIN_LEAD_NS},${ECMC_PC_MAX_LEAD_NS},{{ positionCompare.activateIdle }},{{ positionCompare.activateSchedule }},${ECMC_PC_PULSE_WIDTH_NS},{{ positionCompare.resetValue }})"
+    epicsEnvUnset(ECMC_PC_MIN_LEAD_NS)
+    epicsEnvUnset(ECMC_PC_MAX_LEAD_NS)
+    epicsEnvUnset(ECMC_PC_PULSE_WIDTH_NS)
 {%- endif %}

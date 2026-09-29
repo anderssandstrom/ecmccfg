@@ -4,7 +4,14 @@
 
 {%- set axisFlags = 6 %}
 {%- if axis.autoEnable is defined %}
-    {%- if (axis.autoEnable.enableTimeout is defined) or (axis.autoEnable.disableTime is defined) %}
+    {%- set _autoEnableTimeoutDefined = false %}
+    {%- if axis.autoEnable.enableTimeout is defined %}
+        {%- set _autoEnableTimeoutDefined = true %}
+    {%- endif %}
+    {%- if axis.autoEnable.disableTime is defined %}
+        {%- set _autoEnableTimeoutDefined = true %}
+    {%- endif %}
+    {%- if _autoEnableTimeoutDefined %}
          #- turn of motor record auto enable (bit 1 = 0)
          {%- set axisFlags = 4 %}
     {%- endif %}
@@ -127,10 +134,13 @@ epicsEnvSet(ECMC_MR_DCOF,0)
     {%- set epicsPrecision = 3 %}
 {%- endif %}
 
-{%- if (epics is defined) and (epics.motorRecord is defined) and (epics.motorRecord.description is defined) %}
-    {%- set epicsmotorRecordDescription = epics.motorRecord.description %}
+{%- if (epics is defined) and (epics.description is defined) %}
+    {%- set epicsmotorRecordDescription = epics.description %}
 {%- else %}
     {%- set epicsmotorRecordDescription = "" %}
+{%- endif %}
+{%- if (epics is defined) and (epics.motorRecord is defined) and (epics.motorRecord.description is defined) %}
+    {%- set epicsmotorRecordDescription = epics.motorRecord.description %}
 {%- endif %}
 
 {%- if (epics is defined) and (epics.motorRecord is defined) and (epics.motorRecord.fieldInit is defined) %}
@@ -186,7 +196,14 @@ epicsEnvUnset(ECMC_MR_DCOF)
    ecmcExit
 {%- endif %}
 
-{%- if (encoder.homing is defined) or (homing is defined) %}
+{%- set _homingDefined = false %}
+{%- if homing is defined %}
+    {%- set _homingDefined = true %}
+{%- endif %}
+{%- if encoder.homing is defined %}
+    {%- set _homingDefined = true %}
+{%- endif %}
+{%- if _homingDefined %}
     ecmcFileExist(ecmcMotorRecordhome.template,1,1)
     dbLoadRecords(ecmcMotorRecordhome.template, "PREFIX=${ECMC_PREFIX}, MOTOR_NAME='{{ epicsName }}', MOTOR_PORT=${ECMC_MOTOR_PORT}, AXIS_NO=${ECMC_AXIS_NO},HOMEPOS=${HOME_POS=0},HVELTO=${VEL_TO_CAM=0},HVELFRM=${VEL_FRM_CAM=0},HOMEACC=${ACC=0},HOMEDEC=${DEC=0}")
 {%- endif %}

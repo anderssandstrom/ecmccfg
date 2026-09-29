@@ -221,6 +221,7 @@ class Schema:
         'required': False,
         'schema': {
             'name': {'default': 'axis'},
+            'description': {'type': 'string'},
             'precision': {'type': 'integer', 'min': 0, 'default': 3},
             'unit': {'type': 'string', 'default': 'mm'},
             'motorRecord': {

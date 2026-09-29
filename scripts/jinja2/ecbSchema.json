@@ -194,6 +194,10 @@
         "default": "axis",
         "required": false
       },
+      "epics.description": {
+        "type": "string",
+        "required": false
+      },
       "epics.precision": {
         "type": "integer",
         "default": 3,

@@ -32,6 +32,7 @@ ecmcConfigOrDie "Cfg.SetAxisCntrlFreezeIAtRmp(${ECMC_AXIS_NO},{{ controller.free
         ecmcConfigOrDie "Cfg.SetAxisCntrlInnerParams(${ECMC_AXIS_NO},{{ controller.inner.Kp|default(0) }},{{ controller.inner.Ki|default(0) }},{{ controller.inner.Kd|default(0) }},{{ controller.inner.tol }})"
     {%- else  %}
          # WARNING: Controller inner tolerance not defined.
+         ecmcLogBufferWrite("WARNING","Controller inner tolerance not defined.")
     {%- endif  %}
 {%- else  %}
     # INFO: Inner controller not used.

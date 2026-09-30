@@ -89,6 +89,7 @@ ecmcConfigOrDie "Cfg.SetAxisEncOffset(${ECMC_AXIS_NO},{{ encoder.absOffset }})"
     {%- endif %}
     {%- if encoder.filter.trajectory is defined %}
         # WARNING:  Use "encoder.filter.position" instead of "encoder.filter.trajectory"
+        ecmcLogBufferWrite("WARNING","Use encoder.filter.position instead of encoder.filter.trajectory.")
         ecmcConfigOrDie "Cfg.SetAxisEncPosFilterEnable(${ECMC_AXIS_NO},{{ encoder.filter.trajectory.enable|default(1)|int }})"
         ecmcConfigOrDie "Cfg.SetAxisEncPosFilterSize(${ECMC_AXIS_NO},{{ encoder.filter.trajectory.size|default(10) }})"
     {%- endif %}

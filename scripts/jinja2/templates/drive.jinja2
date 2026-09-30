@@ -14,21 +14,25 @@
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("{{ drive.control }}.{{ drive.enable|int }}","ax${ECMC_AXIS_NO}.drv.control")"
     {%- else %}
         # WARNING: enable bit not defined. Using Beckhoff default bit, 0, for enable in control word
+        ecmcLogBufferWrite("WARNING","Drive enable bit not defined. Using Beckhoff default bit, 0, for enable in control word.")
         ecmcConfigOrDie "Cfg.LinkEcEntryToObject("{{ drive.control }}.0","ax${ECMC_AXIS_NO}.drv.control")"
     {%- endif %}
     {%- if drive.enabled is defined %}
        ecmcConfigOrDie "Cfg.LinkEcEntryToObject("{{ drive.status }}.{{ drive.enabled|int }}","ax${ECMC_AXIS_NO}.drv.status")"
     {%- else %}
         # WARNING: status bit not defined. Using Beckhoff default bit, 1, for enabled in status word
+        ecmcLogBufferWrite("WARNING","Drive status bit not defined. Using Beckhoff default bit, 1, for enabled in status word.")
         ecmcConfigOrDie "Cfg.LinkEcEntryToObject("{{ drive.status }}.1","ax${ECMC_AXIS_NO}.drv.status")"
     {%- endif %}
 {%- else %}
     {#- DS402 #}
     {%- if drive.enable is defined %}
         # WARNING: enable control bit defined but not used in DS402 mode.
+        ecmcLogBufferWrite("WARNING","Drive enable control bit defined but not used in DS402 mode.")
     {%- endif %}
     {%- if drive.enabled is defined %}
         # WARNING: enabled status bit defined but not used in DS402 mode.
+        ecmcLogBufferWrite("WARNING","Drive enabled status bit defined but not used in DS402 mode.")
     {%- endif %}
     ecmcConfigOrDie "Cfg.LinkEcEntryToObject("{{ drive.control }}","ax${ECMC_AXIS_NO}.drv.control")"
     ecmcConfigOrDie "Cfg.LinkEcEntryToObject("{{ drive.status }}","ax${ECMC_AXIS_NO}.drv.status")"

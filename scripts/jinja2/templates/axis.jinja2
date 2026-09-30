@@ -40,6 +40,7 @@ ecmcConfigOrDie "Cfg.LinkEcEntryToObject("{{ axis.healthOutput|default("") }}","
         # 'SetAxisEnableAlarmAtHardLimits' feature.
         # ==> ecmcConfig "Cfg.SetAxisEnableAlarmAtHardLimits(${ECMC_AXIS_NO},0)"
         # -------------------------------------
+        ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO} will go into error state upon limit switch trigger. Recovery requires manually disabling SetAxisEnableAlarmAtHardLimits.")
     {%- endif %}
     {#- the `axis.features.blockCom` key is handled in the top-level template #}
     {%- if axis.features.allowedFunctions is defined %}

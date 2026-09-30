@@ -50,3 +50,6 @@ ${ECMC_START_ECMC_FIRST_CMD}epicsThreadSleep ${ECMC_EC_STABILIZATION_TIME=2}
 
 #- For check in finalize.cmd if executed
 epicsEnvSet(ECMC_SET_APP_MODE_DONE,1)
+
+#- Dump cfg diags
+afterInit "ecmcLogBufferPrint"

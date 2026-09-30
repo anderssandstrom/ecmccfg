@@ -12,5 +12,6 @@
 ecmcEpicsEnvSetCalcTernary(BEC_MODE_EXE, "${ECMC_BEC_MODE=0}=1","","#-")
 ${BEC_MODE_EXE="#-"}ecmcEpicsEnvSetCalcTernary(RATE_MS, "${RATE_MS=${ECMC_EC_SAMPLE_RATE_MS}}<100","100","${RATE_MS=${ECMC_EC_SAMPLE_RATE_MS}}")
 ${BEC_MODE_EXE="#-"}WARNING: ecmc runs is BEC_MODE and will not allow faster updates than 10Hz.
+${BEC_MODE_EXE="#-"}ecmcLogBufferWrite("WARNING","ecmc runs is BEC_MODE and will not allow faster updates than 10Hz.")
 
 epicsEnvSet(ECMC_SAMPLE_RATE_MS,${RATE_MS=${ECMC_EC_SAMPLE_RATE_MS}})

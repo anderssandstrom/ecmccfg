@@ -22,6 +22,7 @@ ecmcEpicsEnvSetCalcTernary(WRITE_WARNING, "${ALLOW_OFFLINE=0}>0","","#-")
 ${WRITE_WARNING="#-"}# 
 ${WRITE_WARNING="#-"}# WARNING: Domains/slaves going on/off-line can affect other domains and DC-clocks. 
 ${WRITE_WARNING="#-"}#
+${WRITE_WARNING="#-"}ecmcLogBufferWrite("WARNING","Domains/slaves going on/off-line can affect other domains and DC-clocks.")
 epicsEnvUnset(WRITE_WARNING)
 
 #- Increase index of current domain

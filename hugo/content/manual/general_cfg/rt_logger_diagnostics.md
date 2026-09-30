@@ -10,9 +10,30 @@ The RT logger diagnostics provide two related tools:
 
 - filtered realtime messages showing what ecmc most recently reported
 - motion diagnostics for determining where an axis command stopped progressing
+- retained log buffers for configuration and runtime warnings/messages
 
 Open **RT logger diagnostics** from `ecmcMain.ui`. Open the axis-specific
 **Troubleshooting** panel from the axis expert or error/interlock panel.
+
+## Retained Log Buffers
+
+ecmc keeps retained log buffers for messages that should remain easy to inspect
+after startup or during runtime troubleshooting. The buffers are independent of
+the normal IOC console output:
+
+- the configuration log buffer keeps messages generated while the IOC is in
+  configuration mode
+- the runtime log buffer keeps messages generated after ecmc has entered runtime
+
+Each buffer stores timestamped messages with severity `INFO`, `WARNING`, or
+`ERROR`. The buffers have a fixed size of 1024 rows; when a buffer is full, the
+oldest row in that buffer is overwritten. This avoids unbounded memory growth
+while preserving the most recent relevant diagnostics.
+
+Use the iocsh command `ecmcLogBufferWrite(level,message)` to write a manual
+message. The command writes to the configuration buffer before runtime and to
+the runtime buffer after runtime has started. Use `ecmcLogBufferPrint()` and
+`ecmcRtLogBufferPrint()` to print the configuration and runtime buffers.
 
 ## Realtime Messages
 
@@ -168,4 +189,3 @@ $(IOC):MCU-RTLog-DiagFile
 - [Troubleshooting]({{< relref "/manual/knowledgebase/troubleshooting.md" >}})
 - [Motion troubleshooting]({{< relref "/manual/knowledgebase/motion.md" >}})
 - [Master/slave state machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}})
-

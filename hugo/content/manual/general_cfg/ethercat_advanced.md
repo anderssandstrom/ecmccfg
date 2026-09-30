@@ -15,6 +15,7 @@ Use it when you need:
 - runtime read/write access to individual SDOs
 - explicit distributed-clock setup
 - slave identity verification
+- firmware update over FoE
 - topology gaps where one or more slave positions should be skipped
 - longer EtherCAT OP-state startup timeout during commissioning
 
@@ -300,6 +301,57 @@ This is useful when:
 - identical stations may have different hardware revisions
 - you want startup to fail early on the wrong terminal
 - you are commissioning replacement hardware
+
+## Firmware Update Over FoE
+
+Some EtherCAT slaves can be updated with Beckhoff firmware files (`.efw`) over
+FoE, File over EtherCAT. Do this only during commissioning or maintenance, with
+motion disabled and the affected hardware in a safe state.
+
+{{% notice warning %}}
+Use the firmware file that exactly matches the terminal type and revision. Do
+not interrupt power or the EtherCAT connection while `foe_write` is running.
+The write can take a few minutes.
+{{% /notice %}}
+
+General procedure:
+
+1. Identify the EtherCAT master and slave position.
+2. Read the current firmware version from SDO `0x100A:0`.
+3. Confirm the expected terminal is at the selected slave position.
+4. Put the slave in `BOOT`.
+5. Write the `.efw` file with `ethercat foe_write`.
+6. Put the slave in `INIT`, then `PREOP`.
+7. Read `0x100A:0` again and verify that the firmware version changed.
+
+Example for an `EL7062` on master `0`, slave position `23`:
+
+```bash
+# Read current firmware version.
+ethercat upload -m0 -p23 0x100A 0x0
+
+# Confirm that slave position 23 is the expected terminal.
+ethercat slaves | grep EL7062
+
+# Enter BOOT mode.
+ethercat states -m0 -p23 BOOT
+ethercat slaves | grep EL7062
+
+# Write firmware. This can take a few minutes.
+ethercat foe_write -m0 -p23 /ioc/NeedfulThings/beckhoff_firmwares/EL7062-0000_REV0017_SW03.efw
+
+# Return to INIT and then PREOP.
+ethercat states -m0 -p23 INIT
+ethercat slaves | grep EL7062
+ethercat states -m0 -p23 PREOP
+ethercat slaves | grep EL7062
+
+# Read back firmware version.
+ethercat upload -m0 -p23 0x100A 0x0
+```
+
+Typical firmware readback for this example changes from `02` before the update
+to `03` after the update.
 
 ## Skipping Slave Positions
 

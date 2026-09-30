@@ -20,9 +20,10 @@ special PLC-based limit logic.
 1. [ERROR_MON_TOL_OUT_OF_RANGE](#error_mon_tol_out_of_range)
 2. [both_limits error](#both_limits-error)
 3. [position lag error, (following error)](#position-lag-error)
-4. [drive refuses to enable](#drive-refuses-to-enable)
-5. [force manual motion](#force-manual-motion)
-6. [double limit switches](#double-limit-switches)
+4. [ERROR_MON_STALL](#error_mon_stall)
+5. [drive refuses to enable](#drive-refuses-to-enable)
+6. [force manual motion](#force-manual-motion)
+7. [double limit switches](#double-limit-switches)
 
 ---
 
@@ -106,6 +107,29 @@ If a velocity outside the velocity range is requested, the velocity setpoint wil
 
 For EL70xx drives the velocity range can be configured to other values than the default +-2000full-steps/s. See
 [el70x1 speed range](../hardware/el70x1#speed-range) for setting other velocity range.
+
+## ERROR_MON_STALL
+`ERROR_MON_STALL` means that stall monitoring was enabled and the axis did not
+reach `atTarget` within the configured stall timeout after motion finished.
+
+Typical causes:
+
+1. The motor really stalled, for example because the requested velocity or load
+   is too high.
+2. The controller output close to target is too small to create an effective
+   drive command. In CSV with an integer velocity setpoint, a low `Kp` together
+   with a small at-target tolerance can round the velocity setpoint to zero.
+   See [tuning: axis stops close to target]({{< relref "/manual/knowledgebase/tuning.md#axis-stops-close-to-target" >}}).
+3. The mechanics are unstable or compliant and fall to different positions
+   without really settling inside the at-target window.
+4. The at-target tolerance, at-target time, stall minimum timeout, or stall time
+   factor is too tight for the mechanics and controller tuning.
+
+Start by checking whether the axis is actually moving after the trajectory has
+finished, whether `atTarget` ever becomes true, and whether the final position
+is stable. If the position jumps between different values and never settles,
+fix the mechanical instability or increase/tune the settling window before
+relaxing stall monitoring.
 
 ## drive refuses to enable
 First check the dedicated hardware drive panel for diagnostics and errors/warnings.

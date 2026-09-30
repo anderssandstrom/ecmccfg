@@ -103,7 +103,8 @@ does not decrease over time. This can happen when the position error is so small
 that, after multiplication by `Kp` and conversion to the drive's velocity
 setpoint, the controller output is rounded or quantized to zero. With no
 effective velocity command, proportional control alone cannot remove the
-remaining error.
+remaining error. If stall monitoring is enabled, this condition can also lead
+to `ERROR_MON_STALL`.
 
 Possible remedies are:
 * Increase `Kp` so the remaining error produces a non-zero drive command.

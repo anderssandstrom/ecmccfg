@@ -98,7 +98,8 @@ position controller output is converted to the drive velocity setpoint. If
 `Kp * monitoring.target.tolerance * abs(drive.denominator / drive.numerator)`
 is below about `0.5` raw counts, the velocity setpoint may round to zero. The
 axis can then stop near the target because the remaining error no longer
-produces an effective velocity command.
+produces an effective velocity command. If stall monitoring is enabled, this
+can also result in `ERROR_MON_STALL`.
 
 Mitigate this by increasing `monitoring.target.tolerance`, increasing the
 active `Kp`, or using suitable inner controller parameters for final

@@ -25,7 +25,7 @@ ecmcAsynPortDriverConfigure(${ECMC_ASYN_PORT},${ECMC_ASYN_PORT_MAX_PARAMS=1800},
 
 asynOctetSetOutputEos(${ECMC_ASYN_PORT}, -1, ";\n")
 asynOctetSetInputEos(${ECMC_ASYN_PORT}, -1, ";\n")
-asynSetTraceMask(${ECMC_ASYN_PORT}, -1, 0x41)
+asynSetTraceMask(${ECMC_ASYN_PORT}, -1, ${ECMC_ASYN_TRACE_MASK=0x1})
 asynSetTraceIOMask(${ECMC_ASYN_PORT}, -1, 6)
 asynSetTraceInfoMask(${ECMC_ASYN_PORT}, -1, 1)
 

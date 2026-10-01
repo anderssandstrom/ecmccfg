@@ -26,6 +26,7 @@ startup.cmd takes the following arguments:
  EC_TOOL_PATH      = Path to ethercat tool defaults to ethercat tool in ECmasterECMC_DIR,
  otherwise            "/opt/etherlab/bin/ethercat"
  MAX_PARAM_COUNT   = Maximum asyn param count, defaults to 1500
+ ECMC_ASYN_TRACE_MASK = asyn trace mask for the main ecmc asyn port, defaults to 0x1
  START_EPICS_FIRST = 1/0, default 0. Start EPICS records before ECMC runtime
                      and EtherCAT when set to 1.
 
@@ -48,6 +49,24 @@ startup.cmd takes the following arguments:
 Normally these arguments are set when the module is required:
 ```
 require ecmccfg "ENG_MODE=1,MASTER_ID=2"
+```
+
+## Asyn trace output
+
+The main ecmc asyn port trace mask is set in `initAll.cmd`:
+
+```bash
+asynSetTraceMask(${ECMC_ASYN_PORT}, -1, ${ECMC_ASYN_TRACE_MASK=0x1})
+```
+
+The `asynSetTraceMask(...)` command above can also be copied and executed
+directly in `iocsh` to change the trace mask for a running IOC.
+
+The default value is `0x1`. To revert to the old, more verbose asyn trace
+information, set `ECMC_ASYN_TRACE_MASK` when loading `ecmccfg`:
+
+```bash
+require ecmccfg "ECMC_ASYN_TRACE_MASK=0x41"
 ```
 
 ## Start EPICS before EtherCAT

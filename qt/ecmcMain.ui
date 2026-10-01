@@ -423,13 +423,13 @@
         </rect>
        </property>
        <property name="label">
-        <string notr="true">Open Cmd Parser App</string>
+        <string notr="true">Open IOC browser</string>
        </property>
        <property name="labels">
         <string>Open Config Editor</string>
        </property>
        <property name="files">
-        <string>bash /ioc/NeedfulThings/ecmc_cfg_tool/start.sh $(IOC)</string>
+        <string>bash /ioc/NeedfulThings/ecmc_cfg_tool/start_ioc.sh $(IOC)</string>
        </property>
        <property name="args">
         <string/>

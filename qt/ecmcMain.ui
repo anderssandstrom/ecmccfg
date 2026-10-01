@@ -462,7 +462,7 @@
         <rect>
          <x>25</x>
          <y>205</y>
-         <width>206</width>
+         <width>91</width>
          <height>26</height>
         </rect>
        </property>
@@ -470,7 +470,7 @@
         <string notr="true">RT logger diagnostics</string>
        </property>
        <property name="labels">
-        <string>RT logger diagnostics</string>
+        <string>RT log diag</string>
        </property>
        <property name="files">
         <string>ecmcRtLogDiag.ui</string>

@@ -48,6 +48,9 @@ ${ECMC_EP7211_OPT_CSP}${SCRIPTEXEC} ${ecmccfg_DIR}ecmcEX72XX_CSP.cmd
 ${ECMC_EP7211_OPT_CST}${SCRIPTEXEC} ${ecmccfg_DIR}ecmcEX72XX_CST_OPT.cmd
 ecmcConfigOrDie "Cfg.EcSetSlavePortWiringCheckEnable(${ECMC_EC_SLAVE_NUM},1)"
 
+#- Actual torque is common to every option profile (already mapped by CST).
+${ECMC_EP7211_OPT_NOT_CST}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a03,0x6010,0x08,S16,torqueActual01)"
+
 #- Info data 2 is already mapped by the CST base profile; add the same PDO for
 #- CSV/CSP. Selection 10 is defined by the EP7211-0034 ESI as: bit 0 input 1,
 #- bit 1 input 2, bit 8 HWE/STO level. Selection 4 is PCB temperature.
@@ -82,10 +85,22 @@ ${ECMC_EP7211_OPT_INFO2_INPUTS}${SCRIPTEXEC} ${ecmccfg_DIR}applySubstitutions.cm
 ${SCRIPTEXEC} ${ecmccfg_DIR}applySubstitutions.cmd "SUBST_FILE=ecmcEP7211-0034_OPT_encoder.substitutions,ECMC_P=${ECMC_P}"
 ${ECMC_EP7211_OPT_TP}${SCRIPTEXEC} ${ecmccfg_DIR}applySubstitutions.cmd "SUBST_FILE=ecmcEP7211-0034_OPT_touchProbe.substitutions,ECMC_P=${ECMC_P}"
 
+#- Publish the resolved startup configuration, independent of optional PDOs.
+${ECMC_EP7211_OPT_CSV}epicsEnvSet(ECMC_EP7211_CFG_MODE,0)
+${ECMC_EP7211_OPT_CSP}epicsEnvSet(ECMC_EP7211_CFG_MODE,1)
+${ECMC_EP7211_OPT_CST}epicsEnvSet(ECMC_EP7211_CFG_MODE,2)
+ecmcEpicsEnvSetCalc(ECMC_EP7211_CFG_TP,"${TP=0}==1","%d")
+${ECMC_EP7211_OPT_INFO2_INPUTS}epicsEnvSet(ECMC_EP7211_CFG_INFO2,0)
+${ECMC_EP7211_OPT_INFO2_TEMP}epicsEnvSet(ECMC_EP7211_CFG_INFO2,1)
+${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmcEP7211-0034_OPT_config.template,ECMC_P=${ECMC_P},PARAM='CFG_MODE=${ECMC_EP7211_CFG_MODE},CFG_TP=${ECMC_EP7211_CFG_TP},CFG_INFO2=${ECMC_EP7211_CFG_INFO2}'"
+${SCRIPTEXEC} ${ecmccfg_DIR}applySubstitutions.cmd "SUBST_FILE=ecmcEP7211-0034_OPT_common.substitutions,ECMC_P=${ECMC_P}"
+epicsEnvUnset(ECMC_EP7211_CFG_MODE)
+epicsEnvUnset(ECMC_EP7211_CFG_TP)
+epicsEnvUnset(ECMC_EP7211_CFG_INFO2)
+
 #- Suppress the legacy monolithic substitution lookup in addSlave.cmd.
 epicsEnvSet("DEFAULT_SUBS"                "false")
-${ECMC_EP7211_OPT_NOT_CST}epicsEnvSet("ECMC_HW_PANEL", "Ex72x1")
-${ECMC_EP7211_OPT_CST}epicsEnvSet("ECMC_HW_PANEL", "Ex72x1_CST_STD")
+epicsEnvSet("ECMC_HW_PANEL", "EP7211-0034_OPT")
 
 epicsEnvUnset(ECMC_EP7211_OPT_CSV)
 epicsEnvUnset(ECMC_EP7211_OPT_NOT_CSV)

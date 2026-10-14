@@ -1,0 +1,459 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>128</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>EP7211-0034 options</string>
+  </property>
+  <widget class="caInclude" name="slaveFrame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>128</width>
+     <height>500</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string>
+   </property>
+   <property name="filename">
+    <string>ecmcE_slave_frame.ui</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label0">
+   <property name="geometry">
+    <rect>
+     <x>6</x>
+     <y>60</y>
+     <width>116</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PDO mode</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="value0">
+   <property name="geometry">
+    <rect>
+     <x>6</x>
+     <y>79</y>
+     <width>116</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Alarm</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label1">
+   <property name="geometry">
+    <rect>
+     <x>6</x>
+     <y>104</y>
+     <width>116</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Touch probe</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="value1">
+   <property name="geometry">
+    <rect>
+     <x>6</x>
+     <y>123</y>
+     <width>116</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgTouchProbe</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Alarm</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label2">
+   <property name="geometry">
+    <rect>
+     <x>6</x>
+     <y>148</y>
+     <width>116</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Info2 source</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="value2">
+   <property name="geometry">
+    <rect>
+     <x>6</x>
+     <y>167</y>
+     <width>116</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgInfo2</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Alarm</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label3">
+   <property name="geometry">
+    <rect>
+     <x>6</x>
+     <y>192</y>
+     <width>116</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Actual torque [%]</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="value3">
+   <property name="geometry">
+    <rect>
+     <x>6</x>
+     <y>211</y>
+     <width>116</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv01-TrqAct</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Alarm</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label4">
+   <property name="geometry">
+    <rect>
+     <x>6</x>
+     <y>236</y>
+     <width>116</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Encoder position</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="value4">
+   <property name="geometry">
+    <rect>
+     <x>6</x>
+     <y>255</y>
+     <width>116</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Enc01-PosAct</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Alarm</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label5">
+   <property name="geometry">
+    <rect>
+     <x>6</x>
+     <y>280</y>
+     <width>116</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Drive status</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="value5">
+   <property name="geometry">
+    <rect>
+     <x>6</x>
+     <y>299</y>
+     <width>116</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv01-Stat</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Alarm</enum>
+   </property>
+  </widget>
+  <widget class="caFrame" name="featurecsv">
+   <property name="geometry">
+    <rect>
+     <x>4</x>
+     <y>330</y>
+     <width>120</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==0</string>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode</string>
+   </property>
+   <widget class="caRelatedDisplay" name="opencsv">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>120</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="labels">
+     <string>CSV details</string>
+    </property>
+    <property name="files">
+     <string>ecmcEP7211-0034_OPT_csv.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="featurecsp">
+   <property name="geometry">
+    <rect>
+     <x>4</x>
+     <y>330</y>
+     <width>120</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==1</string>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode</string>
+   </property>
+   <widget class="caRelatedDisplay" name="opencsp">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>120</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="labels">
+     <string>CSP details</string>
+    </property>
+    <property name="files">
+     <string>ecmcEP7211-0034_OPT_csp.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="featurecst">
+   <property name="geometry">
+    <rect>
+     <x>4</x>
+     <y>330</y>
+     <width>120</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==2</string>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode</string>
+   </property>
+   <widget class="caRelatedDisplay" name="opencst">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>120</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="labels">
+     <string>CST details</string>
+    </property>
+    <property name="files">
+     <string>ecmcEP7211-0034_OPT_cst.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="featureinputs">
+   <property name="geometry">
+    <rect>
+     <x>4</x>
+     <y>360</y>
+     <width>120</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==0</string>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgInfo2</string>
+   </property>
+   <widget class="caRelatedDisplay" name="openinputs">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>120</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="labels">
+     <string>Inputs / STO</string>
+    </property>
+    <property name="files">
+     <string>ecmcEP7211-0034_OPT_inputs.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="featuretemp">
+   <property name="geometry">
+    <rect>
+     <x>4</x>
+     <y>360</y>
+     <width>120</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==1</string>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgInfo2</string>
+   </property>
+   <widget class="caRelatedDisplay" name="opentemp">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>120</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="labels">
+     <string>Temperature</string>
+    </property>
+    <property name="files">
+     <string>ecmcEP7211-0034_OPT_temp.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="featuretp">
+   <property name="geometry">
+    <rect>
+     <x>4</x>
+     <y>390</y>
+     <width>120</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==1</string>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgTouchProbe</string>
+   </property>
+   <widget class="caRelatedDisplay" name="opentp">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>120</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="labels">
+     <string>Touch probe</string>
+    </property>
+    <property name="files">
+     <string>ecmcEP7211-0034_OPT_tp.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caFrame</class>
+   <extends>QWidget</extends>
+   <header>caFrame</header>
+  </customwidget>
+  <customwidget>
+   <class>caInclude</class>
+   <extends>QWidget</extends>
+   <header>caInclude</header>
+  </customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QWidget</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+  <customwidget>
+   <class>caRelatedDisplay</class>
+   <extends>QWidget</extends>
+   <header>caRelatedDisplay</header>
+  </customwidget>
+ </customwidgets>
+ <resources />
+ <connections />
+</ui>

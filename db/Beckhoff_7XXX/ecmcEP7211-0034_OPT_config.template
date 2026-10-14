@@ -1,0 +1,24 @@
+# Startup configuration only: these input records do not change PDO mapping.
+# Keep numeric values stable: panels use them for feature visibility.
+record(mbbi, "${ECMC_P}CfgMode") {
+  field(DESC, "Configured PDO motion mode")
+  field(PINI, "YES")
+  field(INP, "${CFG_MODE}")
+  field(ZRST, "CSV")
+  field(ONST, "CSP")
+  field(TWST, "CST")
+}
+record(bi, "${ECMC_P}CfgTouchProbe") {
+  field(DESC, "Touch probe PDO configured")
+  field(PINI, "YES")
+  field(INP, "${CFG_TP}")
+  field(ZNAM, "Not mapped")
+  field(ONAM, "Mapped")
+}
+record(mbbi, "${ECMC_P}CfgInfo2") {
+  field(DESC, "Configured Info data 2 source")
+  field(PINI, "YES")
+  field(INP, "${CFG_INFO2}")
+  field(ZRST, "INPUTS")
+  field(ONST, "TEMP")
+}

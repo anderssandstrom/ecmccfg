@@ -1,0 +1,264 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>180</width>
+    <height>126</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Encoder status — channel $(ChID)</string>
+  </property>
+  <widget class="QLabel" name="heading">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>8</y>
+     <width>156</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Encoder status</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="validityLabel">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>38</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Position valid</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>Status bit 13: 0 = valid position data; 1 = invalid position data.</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="positionValidLed">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>41</y>
+     <width>14</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Enc$(ChID)-Stat.BD</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLed::Static</enum>
+   </property>
+   <property name="rectangular">
+    <bool>false</bool>
+   </property>
+   <property name="gradientEnabled">
+    <bool>false</bool>
+   </property>
+   <property name="ledWidth">
+    <number>14</number>
+   </property>
+   <property name="ledHeight">
+    <number>14</number>
+   </property>
+   <property name="toolTip">
+    <string>Green: position data valid (bit 13 = 0). Red: position data invalid (bit 13 = 1).</string>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>208</red>
+     <green>46</green>
+     <blue>46</blue>
+    </color>
+   </property>
+  </widget>
+  <widget class="QLabel" name="cycleLabel">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>64</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Cycle [1:0]</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>Two-bit input cycle counter, 0–3. Left LED = bit 15 (MSB); right LED = bit 14 (LSB). It advances each process-data cycle and may look static at GUI update rates.</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="cycleMsbLed">
+   <property name="geometry">
+    <rect>
+     <x>122</x>
+     <y>67</y>
+     <width>14</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Enc$(ChID)-Stat.BF</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLed::Static</enum>
+   </property>
+   <property name="rectangular">
+    <bool>false</bool>
+   </property>
+   <property name="gradientEnabled">
+    <bool>false</bool>
+   </property>
+   <property name="ledWidth">
+    <number>14</number>
+   </property>
+   <property name="ledHeight">
+    <number>14</number>
+   </property>
+   <property name="toolTip">
+    <string>MSB: cycle-counter bit 1, status bit 15. Blue = 1; grey = 0. This is a counter bit, not an error.</string>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>180</red>
+     <green>187</green>
+     <blue>194</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>55</red>
+     <green>126</green>
+     <blue>184</blue>
+    </color>
+   </property>
+  </widget>
+  <widget class="caLed" name="cycleLsbLed">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>67</y>
+     <width>14</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Enc$(ChID)-Stat.BE</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLed::Static</enum>
+   </property>
+   <property name="rectangular">
+    <bool>false</bool>
+   </property>
+   <property name="gradientEnabled">
+    <bool>false</bool>
+   </property>
+   <property name="ledWidth">
+    <number>14</number>
+   </property>
+   <property name="ledHeight">
+    <number>14</number>
+   </property>
+   <property name="toolTip">
+    <string>LSB: cycle-counter bit 0, status bit 14. Blue = 1; grey = 0. This is a counter bit, not an error.</string>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>180</red>
+     <green>187</green>
+     <blue>194</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>55</red>
+     <green>126</green>
+     <blue>184</blue>
+    </color>
+   </property>
+  </widget>
+  <widget class="QLabel" name="statusWordLabel">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>90</y>
+     <width>84</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Status word</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="statusWord">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>90</y>
+     <width>66</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Enc$(ChID)-Stat</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Alarm</enum>
+   </property>
+   <property name="toolTip">
+    <string>Raw word: bits 0–12 padding, bit 13 invalid, bits 14–15 cycle counter.</string>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caLed</class>
+   <extends>QWidget</extends>
+   <header>caLed</header>
+  </customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+ </customwidgets>
+ <resources />
+ <connections />
+</ui>

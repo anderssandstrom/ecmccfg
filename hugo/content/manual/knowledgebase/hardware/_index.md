@@ -45,6 +45,7 @@ Use the pages below for terminal/drive-specific diagnostics:
 - [EL/EP70x1]({{< relref "/manual/knowledgebase/hardware/EL70x1.md" >}})
 - [EL7062]({{< relref "/manual/knowledgebase/hardware/EL7062.md" >}})
 - [EL72xx]({{< relref "/manual/knowledgebase/hardware/EL72xx.md" >}})
+- [Ex72xx option configurations]({{< relref "/manual/knowledgebase/hardware/EX72xx_OPT.md" >}})
 - [EL9xxx]({{< relref "/manual/knowledgebase/hardware/EL9xxx.md" >}})
 - [Beckhoff MX-System]({{< relref "/manual/knowledgebase/hardware/MX-System.md" >}})
 - [Hardware issues]({{< relref "/manual/knowledgebase/hardware/hardware_issues.md" >}})

@@ -1,0 +1,695 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>350</width>
+    <height>260</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>CST drive — channel $(ChID)</string>
+  </property>
+  <widget class="QLabel" name="heading">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>7</y>
+     <width>326</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>CST drive</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="targetSetpointLabel">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>36</y>
+     <width>160</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Target torque [%]</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="caTextEntry" name="targetSetpoint">
+   <property name="geometry">
+    <rect>
+     <x>185</x>
+     <y>36</y>
+     <width>153</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Trq</string>
+   </property>
+   <property name="readOnly">
+    <bool>false</bool>
+   </property>
+   <property name="toolTip">
+    <string>Press Enter to write the target in the record's configured units.</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="readbackLabel">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>66</y>
+     <width>160</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Demand readback [%]</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="demandReadback">
+   <property name="geometry">
+    <rect>
+     <x>185</x>
+     <y>66</y>
+     <width>153</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Trq-RB</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Alarm</enum>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="stateLabel">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>96</y>
+     <width>76</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>State</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="driveState">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>96</y>
+     <width>248</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-DS402State</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Alarm</enum>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>Decoded from status bits 0, 1, 2, 3, 5 and 6. Open State guide for meanings.</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="controlLabel">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>127</y>
+     <width>50</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Control</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="controlWord">
+   <property name="geometry">
+    <rect>
+     <x>67</x>
+     <y>126</y>
+     <width>70</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Cmd-RB</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Alarm</enum>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="statusLabel">
+   <property name="geometry">
+    <rect>
+     <x>175</x>
+     <y>127</y>
+     <width>48</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Status</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="statusWord">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>126</y>
+     <width>108</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Stat</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Alarm</enum>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="caLed" name="readyLed">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>163</y>
+     <width>12</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Stat.B0</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLed::Static</enum>
+   </property>
+   <property name="rectangular">
+    <bool>false</bool>
+   </property>
+   <property name="gradientEnabled">
+    <bool>false</bool>
+   </property>
+   <property name="ledWidth">
+    <number>12</number>
+   </property>
+   <property name="ledHeight">
+    <number>12</number>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>180</red>
+     <green>187</green>
+     <blue>194</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+   <property name="toolTip">
+    <string>Ready to switch on: status bit 0.</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="readyLedLabel">
+   <property name="geometry">
+    <rect>
+     <x>29</x>
+     <y>160</y>
+     <width>70</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Ready</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>Ready to switch on: status bit 0.</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="switchedOnLed">
+   <property name="geometry">
+    <rect>
+     <x>98</x>
+     <y>163</y>
+     <width>12</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Stat.B1</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLed::Static</enum>
+   </property>
+   <property name="rectangular">
+    <bool>false</bool>
+   </property>
+   <property name="gradientEnabled">
+    <bool>false</bool>
+   </property>
+   <property name="ledWidth">
+    <number>12</number>
+   </property>
+   <property name="ledHeight">
+    <number>12</number>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>180</red>
+     <green>187</green>
+     <blue>194</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+   <property name="toolTip">
+    <string>Switched on: status bit 1.</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="switchedOnLedLabel">
+   <property name="geometry">
+    <rect>
+     <x>115</x>
+     <y>160</y>
+     <width>70</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>On</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>Switched on: status bit 1.</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="enabledLed">
+   <property name="geometry">
+    <rect>
+     <x>174</x>
+     <y>163</y>
+     <width>12</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Stat.B2</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLed::Static</enum>
+   </property>
+   <property name="rectangular">
+    <bool>false</bool>
+   </property>
+   <property name="gradientEnabled">
+    <bool>false</bool>
+   </property>
+   <property name="ledWidth">
+    <number>12</number>
+   </property>
+   <property name="ledHeight">
+    <number>12</number>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>180</red>
+     <green>187</green>
+     <blue>194</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+   <property name="toolTip">
+    <string>Operation enabled: status bit 2. The drive accepts the selected mode's setpoint.</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="enabledLedLabel">
+   <property name="geometry">
+    <rect>
+     <x>191</x>
+     <y>160</y>
+     <width>70</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Enabled</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>Operation enabled: status bit 2. The drive accepts the selected mode's setpoint.</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="faultLed">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>163</y>
+     <width>12</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Stat.B3</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLed::Static</enum>
+   </property>
+   <property name="rectangular">
+    <bool>false</bool>
+   </property>
+   <property name="gradientEnabled">
+    <bool>false</bool>
+   </property>
+   <property name="ledWidth">
+    <number>12</number>
+   </property>
+   <property name="ledHeight">
+    <number>12</number>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>180</red>
+     <green>187</green>
+     <blue>194</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>208</red>
+     <green>46</green>
+     <blue>46</blue>
+    </color>
+   </property>
+   <property name="toolTip">
+    <string>Fault: status bit 3. See the state readback and resolve the fault cause.</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="faultLedLabel">
+   <property name="geometry">
+    <rect>
+     <x>287</x>
+     <y>160</y>
+     <width>51</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Fault</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>Fault: status bit 3. See the state readback and resolve the fault cause.</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="warningLed">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>193</y>
+     <width>12</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Stat.B7</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLed::Static</enum>
+   </property>
+   <property name="rectangular">
+    <bool>false</bool>
+   </property>
+   <property name="gradientEnabled">
+    <bool>false</bool>
+   </property>
+   <property name="ledWidth">
+    <number>12</number>
+   </property>
+   <property name="ledHeight">
+    <number>12</number>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>180</red>
+     <green>187</green>
+     <blue>194</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>225</red>
+     <green>157</green>
+     <blue>20</blue>
+    </color>
+   </property>
+   <property name="toolTip">
+    <string>Warning: status bit 7. A warning can coexist with operation enabled.</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="warningLedLabel">
+   <property name="geometry">
+    <rect>
+     <x>29</x>
+     <y>190</y>
+     <width>70</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Warning</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>Warning: status bit 7. A warning can coexist with operation enabled.</string>
+   </property>
+  </widget>
+  <widget class="caRelatedDisplay" name="stateGuideLink">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>187</y>
+     <width>108</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="labels">
+    <string>State guide …</string>
+   </property>
+   <property name="files">
+    <string>ecmcEX72XX_OPT_ds402.ui</string>
+   </property>
+   <property name="toolTip">
+    <string>DS402 states and the meaning of the status LEDs.</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="caMessageButton" name="enableDrive">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>222</y>
+     <width>158</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-TrgDS402Ena.PROC</string>
+   </property>
+   <property name="label">
+    <string>DS402 enable</string>
+   </property>
+   <property name="pressMessage">
+    <string />
+   </property>
+   <property name="releaseMessage">
+    <string>1</string>
+   </property>
+   <property name="toolTip">
+    <string>Enable writes 128, 6, 7, 15 with fixed delays; disable writes 0. Follow the decoded state readback.</string>
+   </property>
+  </widget>
+  <widget class="caMessageButton" name="disableDrive">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>222</y>
+     <width>158</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-TrgDS402Dis.PROC</string>
+   </property>
+   <property name="label">
+    <string>Disable</string>
+   </property>
+   <property name="pressMessage">
+    <string />
+   </property>
+   <property name="releaseMessage">
+    <string>1</string>
+   </property>
+   <property name="toolTip">
+    <string>Enable writes 128, 6, 7, 15 with fixed delays; disable writes 0. Follow the decoded state readback.</string>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caLed</class>
+   <extends>QWidget</extends>
+   <header>caLed</header>
+  </customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+  <customwidget>
+   <class>caMessageButton</class>
+   <extends>QWidget</extends>
+   <header>caMessageButton</header>
+  </customwidget>
+  <customwidget>
+   <class>caRelatedDisplay</class>
+   <extends>QWidget</extends>
+   <header>caRelatedDisplay</header>
+  </customwidget>
+  <customwidget>
+   <class>caTextEntry</class>
+   <extends>QLineEdit</extends>
+   <header>caTextEntry</header>
+  </customwidget>
+ </customwidgets>
+ <resources />
+ <connections />
+</ui>

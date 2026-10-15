@@ -1,0 +1,5 @@
+file "ecmcEL72XX_DRV_CST.template"
+{
+  pattern {CH_ID, ESLO, EGU}
+          {"$(OPT_CH_ID=01)", 0.1, "%"}
+}

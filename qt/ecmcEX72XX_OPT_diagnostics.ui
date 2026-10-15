@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>410</width>
+    <height>181</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Drive diagnostics — channel $(ChID)</string>
+  </property>
+  <widget class="QLabel" name="heading">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>10</y>
+     <width>386</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Drive diagnostics</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label0">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>48</y>
+     <width>190</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Actual torque [%]</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="value0">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>48</y>
+     <width>165</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-TrqAct</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Alarm</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label1">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>80</y>
+     <width>190</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Actual velocity</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="value1">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>80</y>
+     <width>165</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-VelAct</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Alarm</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label2">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>112</y>
+     <width>190</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>DC voltage [V]</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="value2">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>112</y>
+     <width>165</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-VolAct</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLineEdit::Alarm</enum>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QWidget</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+ </customwidgets>
+ <resources />
+ <connections />
+</ui>

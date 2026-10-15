@@ -1,0 +1,24 @@
+#- OPT-only DS402 state decoding from the existing status record.
+#- State masks ignore voltage, warning and mode/manufacturer-specific bits.
+#- Local links preserve input INVALID alarms; refresh at 10 Hz for display.
+record(calc,"${ECMC_P}Drv${CH_ID}-DS402StateCode") {
+  field(DESC,"Decoded DS402 state code")
+  field(INPA,"${ECMC_P}Drv${CH_ID}-Stat NPP MS")
+  field(SCAN,".1 second")
+  field(PINI,"YES")
+  field(CALC,"(A&79)=0?0:(A&79)=64?1:(A&111)=33?2:(A&111)=35?3:(A&111)=39?4:(A&111)=7?5:(A&79)=15?6:(A&79)=8?7:8")
+  field(FLNK,"${ECMC_P}Drv${CH_ID}-DS402State.PROC")
+}
+record(mbbi,"${ECMC_P}Drv${CH_ID}-DS402State") {
+  field(DESC,"Decoded DS402 drive state")
+  field(INP,"${ECMC_P}Drv${CH_ID}-DS402StateCode NPP MS")
+  field(ZRST,"Not ready to switch on")
+  field(ONST,"Switch on disabled")
+  field(TWST,"Ready to switch on")
+  field(THST,"Switched on")
+  field(FRST,"Operation enabled")
+  field(FVST,"Quick stop active")
+  field(SXST,"Fault reaction active")
+  field(SVST,"Fault")
+  field(EIST,"Unknown")
+}

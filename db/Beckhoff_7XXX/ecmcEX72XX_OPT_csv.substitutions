@@ -1,0 +1,5 @@
+file "ecmcEL72XX_DRV.template"
+{
+  pattern {CH_ID, ESLO, EGU}
+          {"$(OPT_CH_ID=01)", "$(OPT_VEL_ESLO=2.3406E-5)", "$(OPT_VEL_EGU=rad/s)"}
+}

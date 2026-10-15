@@ -1,0 +1,989 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="windowTitle">
+   <string>Drive channel $(ChID)</string>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>128</width>
+    <height>365</height>
+   </rect>
+  </property>
+  <property name="styleSheet">
+   <string>QWidget#Form { background: #f4f6f8; }
+QLabel { color: #425466; }
+QTabWidget::pane { border: 1px solid #b9c3ce; background: #ffffff; }
+QTabBar::tab { padding: 4px 7px; min-width: 42px; background: #e5eaf0; color: #425466; border: 1px solid #b9c3ce; }
+QTabBar::tab:selected { background: #ffffff; color: #1b3652; border-bottom-color: #ffffff; }</string>
+  </property>
+  <widget class="caLabel" name="channelHeading">
+   <property name="geometry">
+    <rect>
+     <x>7</x>
+     <y>0</y>
+     <width>110</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>$(ChannelTitle)</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+  </widget>
+  <widget class="QTabWidget" name="channelTabs">
+   <property name="geometry">
+    <rect>
+     <x>1</x>
+     <y>22</y>
+     <width>126</width>
+     <height>340</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+   <widget class="QWidget" name="driveTab">
+    <attribute name="title">
+     <string>Drive</string>
+    </attribute>
+    <widget class="QLabel" name="label0">
+     <property name="text">
+      <string>Motion mode</string>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>6</y>
+       <width>108</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="value0">
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode$(CfgSuffix)</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Alarm</enum>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>23</y>
+       <width>108</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label3">
+     <property name="text">
+      <string>Encoder position</string>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>50</y>
+       <width>108</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="value3">
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-Enc$(ChID)-PosAct</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Alarm</enum>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>67</y>
+       <width>108</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label4">
+     <property name="text">
+      <string>Drive state</string>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>94</y>
+       <width>108</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="value4">
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-DS402State</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Alarm</enum>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>111</y>
+       <width>108</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>7</pointsize>
+      </font>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="toolTip">
+      <string>Decoded DS402 state. Open the mode details for the raw status word and State guide.</string>
+     </property>
+    </widget>
+    <widget class="caFrame" name="featurecsv">
+     <property name="visibility">
+      <enum>caFrame::Calc</enum>
+     </property>
+     <property name="visibilityCalc">
+      <string>A==0</string>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode$(CfgSuffix)</string>
+     </property>
+     <widget class="caRelatedDisplay" name="opencsv">
+      <property name="files">
+       <string>ecmcEX72XX_OPT_csv.ui</string>
+      </property>
+      <property name="args">
+       <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>112</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="labels">
+       <string>CSV details</string>
+      </property>
+      <property name="toolTip">
+       <string>Read back CSV demand, control word, warning and error.</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+     </widget>
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>157</y>
+       <width>112</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="caFrame" name="featurecsp">
+     <property name="visibility">
+      <enum>caFrame::Calc</enum>
+     </property>
+     <property name="visibilityCalc">
+      <string>A==1</string>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode$(CfgSuffix)</string>
+     </property>
+     <widget class="caRelatedDisplay" name="opencsp">
+      <property name="files">
+       <string>ecmcEX72XX_OPT_csp.ui</string>
+      </property>
+      <property name="args">
+       <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>112</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="labels">
+       <string>CSP details</string>
+      </property>
+      <property name="toolTip">
+       <string>Read back CSP demand, control word, warning and error.</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+     </widget>
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>157</y>
+       <width>112</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="caFrame" name="featurecst">
+     <property name="visibility">
+      <enum>caFrame::Calc</enum>
+     </property>
+     <property name="visibilityCalc">
+      <string>A==2</string>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode$(CfgSuffix)</string>
+     </property>
+     <widget class="caRelatedDisplay" name="opencst">
+      <property name="files">
+       <string>ecmcEX72XX_OPT_cst.ui</string>
+      </property>
+      <property name="args">
+       <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>112</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="labels">
+       <string>CST details</string>
+      </property>
+      <property name="toolTip">
+       <string>Read back CST demand, control word, warning and error.</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+     </widget>
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>157</y>
+       <width>112</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="caFrame" name="featurediagnostics">
+     <property name="visibility">
+      <enum>caFrame::Calc</enum>
+     </property>
+     <property name="visibilityCalc">
+      <string>A==1</string>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgDiagnostics$(CfgSuffix)</string>
+     </property>
+     <widget class="caRelatedDisplay" name="opendiagnostics">
+      <property name="files">
+       <string>ecmcEX72XX_OPT_diagnostics.ui</string>
+      </property>
+      <property name="args">
+       <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>112</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="labels">
+       <string>Diagnostics</string>
+      </property>
+      <property name="toolTip">
+       <string>Actual torque, velocity and DC link voltage.</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+     </widget>
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>187</y>
+       <width>112</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="caFrame" name="featuretorqueOffset">
+     <property name="visibility">
+      <enum>caFrame::Calc</enum>
+     </property>
+     <property name="visibilityCalc">
+      <string>A==1</string>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgTorqueOffset$(CfgSuffix)</string>
+     </property>
+     <widget class="caRelatedDisplay" name="opentorqueOffset">
+      <property name="files">
+       <string>ecmcEX72XX_OPT_torqueOffset.ui</string>
+      </property>
+      <property name="args">
+       <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>112</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="labels">
+       <string>Torque offset</string>
+      </property>
+      <property name="toolTip">
+       <string>Read back the configured torque offset.</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+     </widget>
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>217</y>
+       <width>112</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="caFrame" name="featurefollowingError">
+     <property name="visibility">
+      <enum>caFrame::Calc</enum>
+     </property>
+     <property name="visibilityCalc">
+      <string>A==1</string>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgFollowingError$(CfgSuffix)</string>
+     </property>
+     <widget class="caRelatedDisplay" name="openfollowingError">
+      <property name="files">
+       <string>ecmcEX72XX_OPT_followingError.ui</string>
+      </property>
+      <property name="args">
+       <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>112</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="labels">
+       <string>Following error</string>
+      </property>
+      <property name="toolTip">
+       <string>Read back the difference between commanded and actual position.</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+     </widget>
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>247</y>
+       <width>112</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="caFrame" name="featureencoderStatus">
+     <property name="visibility">
+      <enum>caFrame::Calc</enum>
+     </property>
+     <property name="visibilityCalc">
+      <string>A==1</string>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgEncoderStatus$(CfgSuffix)</string>
+     </property>
+     <widget class="caRelatedDisplay" name="openencoderStatus">
+      <property name="files">
+       <string>ecmcEX72XX_OPT_encoderStatus.ui</string>
+      </property>
+      <property name="args">
+       <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>112</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="labels">
+       <string>Encoder status</string>
+      </property>
+      <property name="toolTip">
+       <string>Encoder status and validity.</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+     </widget>
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>277</y>
+       <width>112</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="caLed" name="overviewFaultLed">
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>140</y>
+       <width>10</width>
+       <height>10</height>
+      </rect>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Stat.B3</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLed::Static</enum>
+     </property>
+     <property name="rectangular">
+      <bool>false</bool>
+     </property>
+     <property name="gradientEnabled">
+      <bool>false</bool>
+     </property>
+     <property name="ledWidth">
+      <number>10</number>
+     </property>
+     <property name="ledHeight">
+      <number>10</number>
+     </property>
+     <property name="toolTip">
+      <string>Fault status bit 3.</string>
+     </property>
+     <property name="falseColor">
+      <color alpha="255">
+       <red>180</red>
+       <green>187</green>
+       <blue>194</blue>
+      </color>
+     </property>
+     <property name="trueColor">
+      <color alpha="255">
+       <red>208</red>
+       <green>46</green>
+       <blue>46</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="QLabel" name="overviewFaultLabel">
+     <property name="geometry">
+      <rect>
+       <x>22</x>
+       <y>137</y>
+       <width>38</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Fault</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="caLed" name="overviewWarningLed">
+     <property name="geometry">
+      <rect>
+       <x>64</x>
+       <y>140</y>
+       <width>10</width>
+       <height>10</height>
+      </rect>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Stat.B7</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLed::Static</enum>
+     </property>
+     <property name="rectangular">
+      <bool>false</bool>
+     </property>
+     <property name="gradientEnabled">
+      <bool>false</bool>
+     </property>
+     <property name="ledWidth">
+      <number>10</number>
+     </property>
+     <property name="ledHeight">
+      <number>10</number>
+     </property>
+     <property name="toolTip">
+      <string>Warning status bit 7.</string>
+     </property>
+     <property name="falseColor">
+      <color alpha="255">
+       <red>180</red>
+       <green>187</green>
+       <blue>194</blue>
+      </color>
+     </property>
+     <property name="trueColor">
+      <color alpha="255">
+       <red>225</red>
+       <green>157</green>
+       <blue>20</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="QLabel" name="overviewWarningLabel">
+     <property name="geometry">
+      <rect>
+       <x>78</x>
+       <y>137</y>
+       <width>38</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Warn</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="setupTab">
+    <attribute name="title">
+     <string>Setup</string>
+    </attribute>
+    <widget class="QLabel" name="startupHeading">
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>9</y>
+       <width>110</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Startup mapping</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label1">
+     <property name="text">
+      <string>Touch probe PDO</string>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>39</y>
+       <width>108</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="value1">
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgTouchProbe$(CfgSuffix)</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Alarm</enum>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>56</y>
+       <width>108</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label2">
+     <property name="text">
+      <string>Info2 source</string>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>91</y>
+       <width>108</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="value2">
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgInfo2$(CfgSuffix)</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Alarm</enum>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>108</y>
+       <width>108</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="caFrame" name="featuretp">
+     <property name="visibility">
+      <enum>caFrame::Calc</enum>
+     </property>
+     <property name="visibilityCalc">
+      <string>A==1</string>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgTouchProbe$(CfgSuffix)</string>
+     </property>
+     <widget class="caRelatedDisplay" name="opentp">
+      <property name="files">
+       <string>ecmcEX72XX_OPT_tp.ui</string>
+      </property>
+      <property name="args">
+       <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>112</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="labels">
+       <string>Touch probe</string>
+      </property>
+      <property name="toolTip">
+       <string>Touch-probe status and digital input levels; available when mapped.</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+     </widget>
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>151</y>
+       <width>112</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="caFrame" name="featureinputs">
+     <property name="visibility">
+      <enum>caFrame::Calc</enum>
+     </property>
+     <property name="visibilityCalc">
+      <string>A==0</string>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgInfo2$(CfgSuffix)</string>
+     </property>
+     <widget class="caRelatedDisplay" name="openinputs">
+      <property name="files">
+       <string>ecmcEX72XX_OPT_inputs.ui</string>
+      </property>
+      <property name="args">
+       <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>112</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="labels">
+       <string>Inputs / STO</string>
+      </property>
+      <property name="toolTip">
+       <string>Digital inputs and STO feedback.</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+     </widget>
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>183</y>
+       <width>112</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="caFrame" name="featuretemp">
+     <property name="visibility">
+      <enum>caFrame::Calc</enum>
+     </property>
+     <property name="visibilityCalc">
+      <string>A==1</string>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgInfo2$(CfgSuffix)</string>
+     </property>
+     <widget class="caRelatedDisplay" name="opentemp">
+      <property name="files">
+       <string>ecmcEX72XX_OPT_temp.ui</string>
+      </property>
+      <property name="args">
+       <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>112</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="labels">
+       <string>Temperature</string>
+      </property>
+      <property name="toolTip">
+       <string>PCB temperature selected through Info2.</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+     </widget>
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>183</y>
+       <width>112</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="caFrame" name="featureerrors">
+     <property name="visibility">
+      <enum>caFrame::Calc</enum>
+     </property>
+     <property name="visibilityCalc">
+      <string>A==2</string>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgInfo2$(CfgSuffix)</string>
+     </property>
+     <widget class="caRelatedDisplay" name="openerrors">
+      <property name="files">
+       <string>ecmcEX72XX_OPT_errors.ui</string>
+      </property>
+      <property name="args">
+       <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>112</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="labels">
+       <string>Drive errors</string>
+      </property>
+      <property name="toolTip">
+       <string>Raw drive error bitmap selected through Info2.</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+     </widget>
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>183</y>
+       <width>112</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="startupNote">
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>229</y>
+       <width>108</width>
+       <height>78</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Mapping is selected
+at IOC startup.
+
+Links appear for
+mapped features.</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caFrame</class>
+   <extends>QWidget</extends>
+   <header>caFrame</header>
+  </customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QWidget</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+  <customwidget>
+   <class>caRelatedDisplay</class>
+   <extends>QWidget</extends>
+   <header>caRelatedDisplay</header>
+  </customwidget>
+  <customwidget>
+   <class>caLabel</class>
+   <extends>QLabel</extends>
+   <header>caLabel</header>
+  </customwidget>
+  <customwidget>
+   <class>caLed</class>
+   <extends>QWidget</extends>
+   <header>caLed</header>
+  </customwidget>
+ </customwidgets>
+ <resources />
+ <connections />
+</ui>

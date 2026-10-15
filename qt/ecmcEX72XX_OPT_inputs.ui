@@ -1,0 +1,237 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>180</width>
+    <height>126</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Inputs / STO — channel $(ChID)</string>
+  </property>
+  <widget class="QLabel" name="heading">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>8</y>
+     <width>156</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Inputs / STO</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="input1Label">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>38</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Input 1</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="caLed" name="input1Led">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>41</y>
+     <width>14</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-BI01</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLed::Static</enum>
+   </property>
+   <property name="rectangular">
+    <bool>false</bool>
+   </property>
+   <property name="gradientEnabled">
+    <bool>false</bool>
+   </property>
+   <property name="ledWidth">
+    <number>14</number>
+   </property>
+   <property name="ledHeight">
+    <number>14</number>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>180</red>
+     <green>187</green>
+     <blue>194</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+   <property name="toolTip">
+    <string>Green: input high (1). Grey: input low (0).</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="input2Label">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>64</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Input 2</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="caLed" name="input2Led">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>67</y>
+     <width>14</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-BI02</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLed::Static</enum>
+   </property>
+   <property name="rectangular">
+    <bool>false</bool>
+   </property>
+   <property name="gradientEnabled">
+    <bool>false</bool>
+   </property>
+   <property name="ledWidth">
+    <number>14</number>
+   </property>
+   <property name="ledHeight">
+    <number>14</number>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>180</red>
+     <green>187</green>
+     <blue>194</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+   <property name="toolTip">
+    <string>Green: input high (1). Grey: input low (0).</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="stoLabel">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>90</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>STO OK</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>STO feedback: green = OK; red = STO active.</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="stoLed">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>93</y>
+     <width>14</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-STO01</string>
+   </property>
+   <property name="colorMode">
+    <enum>caLed::Static</enum>
+   </property>
+   <property name="rectangular">
+    <bool>false</bool>
+   </property>
+   <property name="gradientEnabled">
+    <bool>false</bool>
+   </property>
+   <property name="ledWidth">
+    <number>14</number>
+   </property>
+   <property name="ledHeight">
+    <number>14</number>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>208</red>
+     <green>46</green>
+     <blue>46</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+   <property name="toolTip">
+    <string>Green: STO feedback OK (1). Red: STO active (0).</string>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caLed</class>
+   <extends>QWidget</extends>
+   <header>caLed</header>
+  </customwidget>
+ </customwidgets>
+ <resources />
+ <connections />
+</ui>

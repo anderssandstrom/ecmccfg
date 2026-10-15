@@ -1,0 +1,54 @@
+#- Startup configuration readbacks. Numeric values form the panel interface.
+#- Channel 1 retains the original unsuffixed names; channel 2 uses suffix 02.
+record(mbbi,"${ECMC_P}CfgMode${CFG_SUFFIX=}") {
+  field(DESC,"Configured motion mode")
+  field(PINI,"YES")
+  field(INP,"${CFG_MODE}")
+  field(ZRST,"CSV")
+  field(ONST,"CSP")
+  field(TWST,"CST")
+}
+record(mbbi,"${ECMC_P}CfgInfo2${CFG_SUFFIX=}") {
+  field(DESC,"Configured Info2 source")
+  field(PINI,"YES")
+  field(INP,"${CFG_INFO2}")
+  field(ZRST,"INPUTS")
+  field(ONST,"TEMP")
+  field(TWST,"ERRORS")
+  field(THST,"NONE")
+}
+record(bi,"${ECMC_P}CfgTouchProbe${CFG_SUFFIX=}") {
+  field(DESC,"TouchProbe PDO configured")
+  field(PINI,"YES")
+  field(INP,"${CFG_TP}")
+  field(ZNAM,"Not mapped")
+  field(ONAM,"Mapped")
+}
+record(bi,"${ECMC_P}CfgDiagnostics${CFG_SUFFIX=}") {
+  field(DESC,"Diagnostics PDO configured")
+  field(PINI,"YES")
+  field(INP,"${CFG_DIAG}")
+  field(ZNAM,"Not mapped")
+  field(ONAM,"Mapped")
+}
+record(bi,"${ECMC_P}CfgTorqueOffset${CFG_SUFFIX=}") {
+  field(DESC,"TorqueOffset PDO configured")
+  field(PINI,"YES")
+  field(INP,"${CFG_OFFSET}")
+  field(ZNAM,"Not mapped")
+  field(ONAM,"Mapped")
+}
+record(bi,"${ECMC_P}CfgFollowingError${CFG_SUFFIX=}") {
+  field(DESC,"FollowingError PDO configured")
+  field(PINI,"YES")
+  field(INP,"${CFG_FOLLOWING}")
+  field(ZNAM,"Not mapped")
+  field(ONAM,"Mapped")
+}
+record(bi,"${ECMC_P}CfgEncoderStatus${CFG_SUFFIX=}") {
+  field(DESC,"EncoderStatus PDO configured")
+  field(PINI,"YES")
+  field(INP,"${CFG_ENCODER_STATUS}")
+  field(ZNAM,"Not mapped")
+  field(ONAM,"Mapped")
+}

@@ -1,0 +1,471 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>410</width>
+    <height>392</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>DS402 state guide</string>
+  </property>
+  <widget class="QLabel" name="heading">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>8</y>
+     <width>386</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>DS402 drive states</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="state0">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>41</y>
+     <width>190</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Not ready to switch on</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="meaning0">
+   <property name="geometry">
+    <rect>
+     <x>205</x>
+     <y>41</y>
+     <width>193</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Drive is initializing.</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="state1">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>73</y>
+     <width>190</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Switch on disabled</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="meaning1">
+   <property name="geometry">
+    <rect>
+     <x>205</x>
+     <y>73</y>
+     <width>193</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Output stage is disabled.</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="state2">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>105</y>
+     <width>190</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Ready to switch on</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="meaning2">
+   <property name="geometry">
+    <rect>
+     <x>205</x>
+     <y>105</y>
+     <width>193</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Shutdown command accepted.</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="state3">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>137</y>
+     <width>190</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Switched on</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="meaning3">
+   <property name="geometry">
+    <rect>
+     <x>205</x>
+     <y>137</y>
+     <width>193</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Ready for operation enable.</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="state4">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>169</y>
+     <width>190</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Operation enabled</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="meaning4">
+   <property name="geometry">
+    <rect>
+     <x>205</x>
+     <y>169</y>
+     <width>193</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Accepts the selected mode's setpoint.</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="state5">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>201</y>
+     <width>190</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Quick stop active</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="meaning5">
+   <property name="geometry">
+    <rect>
+     <x>205</x>
+     <y>201</y>
+     <width>193</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Handling a quick-stop request.</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="state6">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>233</y>
+     <width>190</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Fault reaction active</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="meaning6">
+   <property name="geometry">
+    <rect>
+     <x>205</x>
+     <y>233</y>
+     <width>193</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Executing the configured fault response.</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="state7">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>265</y>
+     <width>190</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Fault</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="meaning7">
+   <property name="geometry">
+    <rect>
+     <x>205</x>
+     <y>265</y>
+     <width>193</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Fault response complete; resolve cause.</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="state8">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>297</y>
+     <width>190</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Unknown</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="meaning8">
+   <property name="geometry">
+    <rect>
+     <x>205</x>
+     <y>297</y>
+     <width>193</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Status bits do not match a defined state.</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="guideNote">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>335</y>
+     <width>386</width>
+     <height>48</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>LEDs show individual status bits; use the decoded state for transitions.
+Warning can coexist with Enabled. Enable uses fixed delays.</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets />
+ <resources />
+ <connections />
+</ui>

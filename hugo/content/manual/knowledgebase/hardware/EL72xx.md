@@ -8,6 +8,9 @@ chapter = false
 Use this page for EL72xx servo-drive issues such as diagnostics, warning/fault
 states, tuning, and installation-related OCT problems.
 
+For the shared OPT profiles, supported devices, startup options and Qt panels, see
+[Ex72xx option configurations]({{< relref "/manual/knowledgebase/hardware/EX72xx_OPT.md" >}}).
+
 ## Topics
 1. [Diagnostics](#diagnostics)
 2. [Error/warning](#errorwarning)

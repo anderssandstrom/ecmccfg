@@ -1,0 +1,5 @@
+file "ecmcEL72XX_DRV_CSP.template"
+{
+  pattern {CH_ID, ESLO, EGU}
+          {"$(OPT_CH_ID=01)", "$(OPT_POS_ESLO=2.3406E-5)", "$(OPT_POS_EGU=rad/s)"}
+}

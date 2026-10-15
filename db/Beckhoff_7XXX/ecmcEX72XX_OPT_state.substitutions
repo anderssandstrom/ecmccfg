@@ -1,0 +1,5 @@
+file "ecmcEX72XX_OPT_state.template"
+{
+  pattern {CH_ID}
+          {"$(OPT_CH_ID=01)"}
+}

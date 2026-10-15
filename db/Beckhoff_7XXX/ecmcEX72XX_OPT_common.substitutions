@@ -1,0 +1,8 @@
+file "ecmc_analogInput-chX.template"
+{
+  pattern {CH_ID, sourceName,       KEY,    suffix,     DESC,              EGU,       ESLO,       PREC, LOPR, HOPR, LOLO, LOW,  HIGH, HIHI, HYST, LLSV,       LSV,        HSV,        HHSV}
+          {"$(OPT_CH_ID=01)",    "velocityActual", "Drv",  "-VelAct",  "Actual Vel",      "$(OPT_VEL_EGU=rad/s)", "$(OPT_VEL_ESLO=2.3406E-5)",   3,    0,    0,    0,    0,    0,    0,    0,    "NO_ALARM", "NO_ALARM", "NO_ALARM", "NO_ALARM"  }
+          {"$(OPT_CH_ID=01)",    "torqueActual",   "Drv",  "-TrqAct",  "Actual Trq",      "%",       0.1,        1,    -100, 100,  0,    -80,  80,   0,    0,    "NO_ALARM", "NO_ALARM", "MINOR",    "NO_ALARM"  }
+          {"$(OPT_CH_ID=01)",    "voltageActual",  "Drv",  "-VolAct",  "Actual Voltage",  "V",       0.001,      3,    0,    60,   8,    20,   49,   50,   0.25, "MAJOR",    "MINOR",    "MINOR",    "MAJOR"  }
+}
+

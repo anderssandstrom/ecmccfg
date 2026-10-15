@@ -1,0 +1,9 @@
+#- Raw Info2 error bitmap: bit meanings differ between EL revisions.
+record(mbbiDirect,"${ECMC_P}Drv${CH_ID}-Errors") {
+  field(DESC,"Drive error bitmap")
+  field(DTYP,"asynUInt32Digital")
+  field(PINI,"$(PINI=1)")
+  field(INP,"@asynMask($(PORT),$(ADDR=0),0xFFFF,$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ec$(MASTER_ID).s$(SLAVE_POS).driveErrors${CH_ID}?")
+  field(SCAN,"I/O Intr")
+  field(TSE,"$(TSE=-2)")
+}

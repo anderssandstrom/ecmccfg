@@ -1,0 +1,5 @@
+file "ecmcEL7221-9014_STD_INPUTS.template"
+{
+  pattern {CH_ID}
+          {"$(OPT_CH_ID=01)"}
+}

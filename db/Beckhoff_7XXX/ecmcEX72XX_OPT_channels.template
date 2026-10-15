@@ -1,0 +1,5 @@
+record(longin,"${ECMC_P}CfgChannels") {
+  field(DESC,"Configured drive channels")
+  field(PINI,"YES")
+  field(INP,"${CHANNELS}")
+}

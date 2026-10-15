@@ -1,0 +1,5 @@
+file "ecmcEL72XX_FB_STAT.template"
+{
+  pattern {CH_ID}
+          {"$(OPT_CH_ID=01)"}
+}

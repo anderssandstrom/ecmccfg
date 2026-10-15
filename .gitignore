@@ -37,3 +37,4 @@ hugo/public
 .codex/
 **/.codex
 **/.codex/
+.iocsh_history

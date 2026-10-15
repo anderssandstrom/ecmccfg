@@ -200,7 +200,7 @@ By default, the wrapper also loads a matching EPICS record for the item.
 
 ## Runtime SDO Objects
 
-Use `addEcSdoRT.cmd` when you need on-demand access to one EtherCAT SDO while the IOC is already running in realtime.
+Use `addEcSdoRT.cmd` during startup to configure on-demand access to one EtherCAT SDO. Trigger uploads and downloads through its PVs after the IOC enters realtime operation.
 
 This is useful for:
 
@@ -208,7 +208,7 @@ This is useful for:
 - writing one non-cyclic setting without rebuilding the full slave setup
 - exposing one SDO as a small EPICS control object with read/write commands
 
-`addEcSdoRT.cmd` wraps `Cfg.EcAddSdoAsync(...)`.
+`addEcSdoRT.cmd` wraps `Cfg.EcAddSdoAsync(...)` for scalar values and `Cfg.EcAddSdoAsyncArray(...)` for byte arrays. Omit `BYTE_SIZE` or set it to `0` to retain the existing scalar command, PV names and record types.
 
 ### What It Creates
 
@@ -220,7 +220,7 @@ For a name like `HW_ENABLE`, the underlying asyn object path becomes:
 ec<master>.s<slave>.sdo.HW_ENABLE
 ```
 
-The script then creates these PVs:
+In scalar mode, the script creates these PVs:
 
 - `...SDO-HW_ENABLE-Val`
 - `...SDO-HW_ENABLE-RdCmd`
@@ -248,7 +248,8 @@ Supported parameters:
 - `SLAVE_ID`: EtherCAT slave position. Optional, defaults to `0`
 - `INDEX`: SDO index, for example `0x8010`
 - `SUBINDEX`: SDO subindex, for example `0x07`
-- `DT`: data type string such as `U8`, `S16`, `U32`, `S32`, `F32`, `F64`
+- `DT`: scalar data type such as `U8`, `S16`, `U32`, `S32`, `F32`, `F64`. Required in scalar mode; ignored and optional in array mode
+- `BYTE_SIZE`: optional, defaults to `0` (scalar mode). A nonzero value selects array mode; valid array sizes are `1..1048576` bytes
 - `NAME`: logical object name used in both the asyn path and EPICS PV names
 - `P_SCRIPT`: optional naming-prefix script; defaults to `${ECMC_P_SCRIPT}`
 
@@ -268,7 +269,7 @@ Typical usage from EPICS:
 
 ### Datatype Behavior
 
-The script chooses the value record template from `DT`:
+In scalar mode, the script chooses the value record template from `DT`:
 
 - `F32` and `F64` use the floating-point template and `asynFloat64`
 - all other supported types use the integer template and `asynInt32`
@@ -278,6 +279,79 @@ That means:
 - integer-like SDOs are exposed through one EPICS `ao`
 - float SDOs are also exposed through one EPICS `ao`
 - `Val` is always the central EPICS value record, while `RdCmd` and `WrtCmd` control when the actual SDO transfer happens
+
+### Runtime SDO Byte Arrays
+
+Set `BYTE_SIZE` to transfer a raw byte payload at one index/subindex. The
+endpoint does not iterate subindices or perform SDO Complete Access. The slave
+must support that object and payload length.
+
+```bash
+${SCRIPTEXEC} ${ecmccfg_DIR}addEcSdoRT.cmd \
+  "SLAVE_ID=3,INDEX=0x2000,SUBINDEX=0x01,BYTE_SIZE=4096,NAME=payload"
+```
+
+Replace the slave and object address with the values for your device. `payload`
+is a chosen endpoint alias, not the data to send. `DT` is not needed here.
+This calls:
+
+```text
+Cfg.EcAddSdoAsyncArray(3,0x2000,0x01,4096,payload)
+```
+
+The script loads `ecmcSDOAsyncArray.template`, which includes the waveform,
+command and status records. It applies the same naming-prefix convention as
+scalar mode.
+
+| PV suffix after the resolved prefix | Purpose |
+| --- | --- |
+| `SDO-payload-Data` | Stage bytes for download from IOC to slave |
+| `SDO-payload-WrtCmd` | Write `1` to download staged data |
+| `SDO-payload-RdCmd` | Write `1` to upload data from slave to IOC |
+| `SDO-payload-Data-RB` | Last successful upload waveform |
+| `SDO-payload-Bytes-RB` | Received upload length in bytes, including an oversized response |
+| `SDO-payload-Bsy` | Transfer pending until its completion is processed |
+| `SDO-payload-ErrId` | `0` or the ecmc SDO error code |
+
+Both waveforms use **`FTVL=UCHAR`**, an array of unsigned bytes (`0..255`), and
+`NELM=BYTE_SIZE`. Readback uses `DTYP=asynInt8ArrayIn`; download staging uses
+`DTYP=asynInt8ArrayOut`. Despite the asyn Int8 name, `UCHAR` exposes unsigned byte
+values. Readback `NORD` is the actual uploaded byte count, which may be smaller
+than `NELM`.
+
+`BYTE_SIZE` counts bytes, not multibyte numeric elements. Encode/decode integers,
+floats and strings using the device's format and byte order; no automatic
+conversion is performed.
+
+To download:
+
+1. Wait for `Bsy` to be `0`.
+2. Write exactly `BYTE_SIZE` bytes to `Data` and check that the write succeeds.
+   This stages data without starting a transfer.
+3. Write `1` to `WrtCmd`.
+4. Wait for completion (`Bsy` clears) and check `ErrId`.
+
+To upload, write `1` to `RdCmd`, wait for completion, and check `ErrId` before
+using `Data-RB` and its `NORD`. The command records automatically reset to zero;
+clients using the underlying parameters directly must provide a new `0`-to-`1`
+edge for each request.
+
+Uploads may return `0..BYTE_SIZE` bytes. An oversized response reports
+`ERROR_EC_SDO_ASYNC_SIZE` (`0x23504`), preserves the previous good readback, and
+reports the received length in `Bytes-RB`. Partial or oversized staging writes,
+and staging while busy, are rejected. Do not trigger a download after a failed
+staging write: the previous staged data is retained.
+
+Downloads always send exactly `BYTE_SIZE` bytes. Uploads use a separate buffer
+and request, so a short upload does not overwrite staged output or shorten the
+next download. Configure a different endpoint size before runtime if the device
+requires a different download length.
+
+For large Channel Access waveforms, set `EPICS_CA_MAX_ARRAY_BYTES` on both the
+IOC and client above the payload size, allowing protocol overhead. The existing
+SDO timeout is 2000 ms. Large mailbox transfers and waveform copies cost time;
+use cyclic PDOs for deterministic process data. The configured capacity bounds
+ecmc's copy; the EtherCAT master may allocate more memory for an oversized upload.
 
 ### When To Use This
 

@@ -264,6 +264,7 @@ chapter = false
 | `Cfg.EcAddSdo(<int>,0x<hex>,0x<hex>,0x<hex>,<int>)` | Adds a Service Data Object for writing. |
 | `Cfg.EcAddSdo(<int>,0x<hex>,0x<hex>,<int>,<int>)` | Adds a Service Data Object for writing. |
 | `Cfg.EcAddSdoAsync(<int>,0x<hex>,0x<hex>,<str>,<str>)` | Adds an async SDO object. For the normal ecmccfg wrapper and resulting PVs, see [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
+| `Cfg.EcAddSdoAsyncArray(<slave>,0x<index>,0x<subindex>,<byteSize>,<alias>)` | Configure one runtime byte-payload SDO before activation. Size is 1..1048576 bytes: maximum upload and exact download length. Use `addEcSdoRT.cmd` with `BYTE_SIZE` to load the UCHAR waveform PVs; see [Runtime SDO Byte Arrays]({{< relref "/manual/general_cfg/ethercat_advanced.md#runtime-sdo-byte-arrays" >}}). |
 | `Cfg.EcAddSdoBuffer(<int>,0x<hex>,0x<hex>,<str>,<int>)` | Adds a Service Data Object for writing. |
 | `Cfg.EcAddSdoComplete(<int>,0x<hex>,<str>,<int>)` | Adds a Service Data Object for writing. |
 | `Cfg.EcAddSdoDT(<int>,0x<hex>,0x<hex>,<str>,<str>)` | Adds a Service Data Object for writing. |

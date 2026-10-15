@@ -1,0 +1,565 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>300</width>
+    <height>246</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Ex7062 — touch probes channel $(ChID)</string>
+  </property>
+  <widget class="QLabel" name="heading">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>7</y>
+     <width>280</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Probe 1                      Probe 2</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="enable1Label">
+   <property name="geometry">
+    <rect>
+     <x>28</x>
+     <y>32</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Armed</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="enable1">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>35</y>
+     <width>12</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ChID)-EnaAct01</string>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>185</red>
+     <green>190</green>
+     <blue>195</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+  </widget>
+  <widget class="QLabel" name="enable2Label">
+   <property name="geometry">
+    <rect>
+     <x>178</x>
+     <y>32</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Armed</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="enable2">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>35</y>
+     <width>12</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ChID)-EnaAct02</string>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>185</red>
+     <green>190</green>
+     <blue>195</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pos1Label">
+   <property name="geometry">
+    <rect>
+     <x>28</x>
+     <y>53</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Pos latched</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="pos1">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>56</y>
+     <width>12</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ChID)-PosLtch01</string>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>185</red>
+     <green>190</green>
+     <blue>195</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pos2Label">
+   <property name="geometry">
+    <rect>
+     <x>178</x>
+     <y>53</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Pos latched</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="pos2">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>56</y>
+     <width>12</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ChID)-PosLtch02</string>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>185</red>
+     <green>190</green>
+     <blue>195</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+  </widget>
+  <widget class="QLabel" name="neg1Label">
+   <property name="geometry">
+    <rect>
+     <x>28</x>
+     <y>74</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Neg latched</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="neg1">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>77</y>
+     <width>12</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ChID)-NegLtch01</string>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>185</red>
+     <green>190</green>
+     <blue>195</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+  </widget>
+  <widget class="QLabel" name="neg2Label">
+   <property name="geometry">
+    <rect>
+     <x>178</x>
+     <y>74</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Neg latched</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="neg2">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>77</y>
+     <width>12</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ChID)-NegLtch02</string>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>185</red>
+     <green>190</green>
+     <blue>195</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+  </widget>
+  <widget class="QLabel" name="input1Label">
+   <property name="geometry">
+    <rect>
+     <x>28</x>
+     <y>95</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Input</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="input1">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>98</y>
+     <width>12</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ChID)-BI01</string>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>185</red>
+     <green>190</green>
+     <blue>195</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+  </widget>
+  <widget class="QLabel" name="input2Label">
+   <property name="geometry">
+    <rect>
+     <x>178</x>
+     <y>95</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Input</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="input2">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>98</y>
+     <width>12</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ChID)-BI02</string>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>185</red>
+     <green>190</green>
+     <blue>195</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+  </widget>
+  <widget class="QLabel" name="posLatchLabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>122</y>
+     <width>135</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TP1 pos [counts]</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="posLatch">
+   <property name="geometry">
+    <rect>
+     <x>145</x>
+     <y>122</y>
+     <width>130</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ChID)-PosLtchPosAct01</string>
+   </property>
+  </widget>
+  <widget class="caRelatedDisplay" name="posLatchTrend">
+   <property name="geometry">
+    <rect>
+     <x>277</x>
+     <y>124</y>
+     <width>15</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="labels">
+    <string>&gt;</string>
+   </property>
+   <property name="files">
+    <string>ecmcGraph_v1.ui</string>
+   </property>
+   <property name="args">
+    <string>IOC=$(IOC),TITLE=Channel $(ChID): TP1 pos [counts],PV=$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ChID)-PosLtchPosAct01</string>
+   </property>
+   <property name="toolTip">
+    <string>Trend: TP1 pos [counts]</string>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QLabel" name="negLatchLabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>147</y>
+     <width>135</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TP1 neg [counts]</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="negLatch">
+   <property name="geometry">
+    <rect>
+     <x>145</x>
+     <y>147</y>
+     <width>130</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ChID)-NegLtchPosAct01</string>
+   </property>
+  </widget>
+  <widget class="caRelatedDisplay" name="negLatchTrend">
+   <property name="geometry">
+    <rect>
+     <x>277</x>
+     <y>149</y>
+     <width>15</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="labels">
+    <string>&gt;</string>
+   </property>
+   <property name="files">
+    <string>ecmcGraph_v1.ui</string>
+   </property>
+   <property name="args">
+    <string>IOC=$(IOC),TITLE=Channel $(ChID): TP1 neg [counts],PV=$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ChID)-NegLtchPosAct01</string>
+   </property>
+   <property name="toolTip">
+    <string>Trend: TP1 neg [counts]</string>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="caFrame" name="dcFrame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>172</y>
+     <width>300</width>
+     <height>64</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgTpDc$(CfgSuffix)</string>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==1</string>
+   </property>
+   <widget class="QLabel" name="positiveTimeLabel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>135</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TP1 pos DC [raw32]</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="positiveTime">
+    <property name="geometry">
+     <rect>
+      <x>145</x>
+      <y>0</y>
+      <width>145</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ChID)-PosTimestamp01</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="negativeTimeLabel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>25</y>
+      <width>135</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TP1 neg DC [raw32]</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="negativeTime">
+    <property name="geometry">
+     <rect>
+      <x>145</x>
+      <y>25</y>
+      <width>145</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-Tp$(ChID)-NegTimestamp01</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caFrame</class>
+   <extends>QWidget</extends>
+   <header>caFrame</header>
+  </customwidget>
+  <customwidget>
+   <class>caLed</class>
+   <extends>QWidget</extends>
+   <header>caLed</header>
+  </customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QWidget</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+  <customwidget>
+   <class>caRelatedDisplay</class>
+   <extends>QWidget</extends>
+   <header>caRelatedDisplay</header>
+  </customwidget>
+ </customwidgets>
+ <resources />
+ <connections />
+</ui>

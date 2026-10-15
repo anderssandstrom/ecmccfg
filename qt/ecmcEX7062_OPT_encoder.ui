@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>260</width>
+    <height>53</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Ex7062 — encoder channel $(ChID)</string>
+  </property>
+  <widget class="QLabel" name="secondaryLabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>16</y>
+     <width>135</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Encoder [counts]</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="secondary">
+   <property name="geometry">
+    <rect>
+     <x>145</x>
+     <y>16</y>
+     <width>90</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Enc$(ChID)-PosAct02</string>
+   </property>
+  </widget>
+  <widget class="caRelatedDisplay" name="secondaryTrend">
+   <property name="geometry">
+    <rect>
+     <x>237</x>
+     <y>18</y>
+     <width>15</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="labels">
+    <string>&gt;</string>
+   </property>
+   <property name="files">
+    <string>ecmcGraph_v1.ui</string>
+   </property>
+   <property name="args">
+    <string>IOC=$(IOC),TITLE=Channel $(ChID): Encoder [counts],PV=$(IOC):m$(MasterID)s$(SlaveID)-Enc$(ChID)-PosAct02</string>
+   </property>
+   <property name="toolTip">
+    <string>Trend: Encoder [counts]</string>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QWidget</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+  <customwidget>
+   <class>caRelatedDisplay</class>
+   <extends>QWidget</extends>
+   <header>caRelatedDisplay</header>
+  </customwidget>
+ </customwidgets>
+ <resources />
+ <connections />
+</ui>

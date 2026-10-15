@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>260</width>
+    <height>86</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Ex7062 — supply diagnostics</string>
+  </property>
+  <widget class="QLabel" name="voltageLabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>15</y>
+     <width>135</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>DC link [V]</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="voltage">
+   <property name="geometry">
+    <rect>
+     <x>145</x>
+     <y>15</y>
+     <width>90</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv01-VltAct</string>
+   </property>
+  </widget>
+  <widget class="caRelatedDisplay" name="voltageTrend">
+   <property name="geometry">
+    <rect>
+     <x>237</x>
+     <y>17</y>
+     <width>15</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="labels">
+    <string>&gt;</string>
+   </property>
+   <property name="files">
+    <string>ecmcGraph_v1.ui</string>
+   </property>
+   <property name="args">
+    <string>IOC=$(IOC),TITLE=Shared supply: DC link [V],PV=$(IOC):m$(MasterID)s$(SlaveID)-Drv01-VltAct</string>
+   </property>
+   <property name="toolTip">
+    <string>Trend: DC link [V]</string>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QLabel" name="temperatureLabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>48</y>
+     <width>135</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PCB temp [C]</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="temperature">
+   <property name="geometry">
+    <rect>
+     <x>145</x>
+     <y>48</y>
+     <width>90</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv01-TmpAct</string>
+   </property>
+  </widget>
+  <widget class="caRelatedDisplay" name="temperatureTrend">
+   <property name="geometry">
+    <rect>
+     <x>237</x>
+     <y>50</y>
+     <width>15</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="labels">
+    <string>&gt;</string>
+   </property>
+   <property name="files">
+    <string>ecmcGraph_v1.ui</string>
+   </property>
+   <property name="args">
+    <string>IOC=$(IOC),TITLE=Shared supply: PCB temp [C],PV=$(IOC):m$(MasterID)s$(SlaveID)-Drv01-TmpAct</string>
+   </property>
+   <property name="toolTip">
+    <string>Trend: PCB temp [C]</string>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QWidget</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+  <customwidget>
+   <class>caRelatedDisplay</class>
+   <extends>QWidget</extends>
+   <header>caRelatedDisplay</header>
+  </customwidget>
+ </customwidgets>
+ <resources />
+ <connections />
+</ui>

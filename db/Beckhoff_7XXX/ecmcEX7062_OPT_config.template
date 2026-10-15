@@ -1,0 +1,50 @@
+#- Read-only resolved startup choices used by the optional panels.
+record(mbbi,"${ECMC_P}CfgMode${CFG_SUFFIX=}") {
+  field(PINI,"YES")
+  field(INP,"${MODE_VALUE}")
+  field(ZRST,"CSV")
+  field(ONST,"CSP")
+  field(TWST,"CST")
+}
+record(bi,"${ECMC_P}CfgTouchProbe${CFG_SUFFIX=}") {
+  field(PINI,"YES")
+  field(INP,"${TP}")
+  field(ZNAM,"Not mapped")
+  field(ONAM,"Mapped")
+}
+record(bi,"${ECMC_P}CfgInputs${CFG_SUFFIX=}") {
+  field(PINI,"YES")
+  field(INP,"${INPUTS}")
+  field(ZNAM,"Not mapped")
+  field(ONAM,"Mapped")
+}
+record(bi,"${ECMC_P}CfgEncoder2${CFG_SUFFIX=}") {
+  field(PINI,"YES")
+  field(INP,"${ENC2}")
+  field(ZNAM,"Not mapped")
+  field(ONAM,"Mapped")
+}
+record(bi,"${ECMC_P}CfgDiagnostics${CFG_SUFFIX=}") {
+  field(PINI,"YES")
+  field(INP,"${EXT_DIAG}")
+  field(ZNAM,"Not mapped")
+  field(ONAM,"Mapped")
+}
+record(bi,"${ECMC_P}CfgTpDc${CFG_SUFFIX=}") {
+  field(PINI,"YES")
+  field(INP,"${TP_DC}")
+  field(ZNAM,"Not mapped")
+  field(ONAM,"Mapped")
+}
+record(bi,"${ECMC_P}CfgAutoTune${CFG_SUFFIX=}") {
+  field(PINI,"YES")
+  field(INP,"${AUTOTUNE}")
+  field(ZNAM,"Not mapped")
+  field(ONAM,"Mapped")
+}
+record(bi,"${ECMC_P}CfgFollowingError${CFG_SUFFIX=}") {
+  field(PINI,"YES")
+  field(INP,"${FOLLOWING}")
+  field(ZNAM,"Not mapped")
+  field(ONAM,"Mapped")
+}

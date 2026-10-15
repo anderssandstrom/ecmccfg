@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>200</width>
+    <height>70</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Ex7062 — inputs channel $(ChID)</string>
+  </property>
+  <widget class="QLabel" name="heading">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>5</y>
+     <width>180</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Digital inputs</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="input1Label">
+   <property name="geometry">
+    <rect>
+     <x>28</x>
+     <y>34</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Input 1</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="input1">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>37</y>
+     <width>12</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-BI01</string>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>185</red>
+     <green>190</green>
+     <blue>195</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+  </widget>
+  <widget class="QLabel" name="input2Label">
+   <property name="geometry">
+    <rect>
+     <x>126</x>
+     <y>34</y>
+     <width>64</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Input 2</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="input2">
+   <property name="geometry">
+    <rect>
+     <x>108</x>
+     <y>37</y>
+     <width>12</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-BI02</string>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>185</red>
+     <green>190</green>
+     <blue>195</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caLed</class>
+   <extends>QWidget</extends>
+   <header>caLed</header>
+  </customwidget>
+ </customwidgets>
+ <resources />
+ <connections />
+</ui>

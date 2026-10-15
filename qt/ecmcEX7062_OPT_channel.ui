@@ -1,0 +1,670 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>260</width>
+    <height>348</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Ex7062 — channel $(ChID)</string>
+  </property>
+  <widget class="QLabel" name="heading">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>7</y>
+     <width>240</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Drive channel $(ChID)</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="positionLabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>34</y>
+     <width>135</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Position [counts]</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="position">
+   <property name="geometry">
+    <rect>
+     <x>145</x>
+     <y>34</y>
+     <width>90</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Enc$(ChID)-PosAct</string>
+   </property>
+  </widget>
+  <widget class="caRelatedDisplay" name="positionTrend">
+   <property name="geometry">
+    <rect>
+     <x>237</x>
+     <y>36</y>
+     <width>15</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="labels">
+    <string>&gt;</string>
+   </property>
+   <property name="files">
+    <string>ecmcGraph_v1.ui</string>
+   </property>
+   <property name="args">
+    <string>IOC=$(IOC),TITLE=Channel $(ChID): Position [counts],PV=$(IOC):m$(MasterID)s$(SlaveID)-Enc$(ChID)-PosAct</string>
+   </property>
+   <property name="toolTip">
+    <string>Trend: Position [counts]</string>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QLabel" name="stateLabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>59</y>
+     <width>135</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>DS402 state</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="state">
+   <property name="geometry">
+    <rect>
+     <x>145</x>
+     <y>59</y>
+     <width>105</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-DS402State</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="enabledLabel">
+   <property name="geometry">
+    <rect>
+     <x>28</x>
+     <y>84</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Enabled</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="enabled">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>87</y>
+     <width>12</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Stat.B2</string>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>185</red>
+     <green>190</green>
+     <blue>195</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>46</red>
+     <green>160</green>
+     <blue>67</blue>
+    </color>
+   </property>
+  </widget>
+  <widget class="QLabel" name="faultLabel">
+   <property name="geometry">
+    <rect>
+     <x>158</x>
+     <y>84</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Fault</string>
+   </property>
+  </widget>
+  <widget class="caLed" name="fault">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>87</y>
+     <width>12</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Stat.B3</string>
+   </property>
+   <property name="falseColor">
+    <color alpha="255">
+     <red>185</red>
+     <green>190</green>
+     <blue>195</blue>
+    </color>
+   </property>
+   <property name="trueColor">
+    <color alpha="255">
+     <red>208</red>
+     <green>46</green>
+     <blue>46</blue>
+    </color>
+   </property>
+  </widget>
+  <widget class="caFrame" name="csvFrame">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>110</y>
+     <width>240</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode$(CfgSuffix)</string>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==0</string>
+   </property>
+   <widget class="caRelatedDisplay" name="csvLink">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>240</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="labels">
+     <string>CSV controls / DS402</string>
+    </property>
+    <property name="files">
+     <string>ecmcEX72XX_OPT_csv.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="cspFrame">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>110</y>
+     <width>240</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode$(CfgSuffix)</string>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==1</string>
+   </property>
+   <widget class="caRelatedDisplay" name="cspLink">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>240</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="labels">
+     <string>CSP controls / DS402</string>
+    </property>
+    <property name="files">
+     <string>ecmcEX72XX_OPT_csp.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="cstFrame">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>110</y>
+     <width>240</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode$(CfgSuffix)</string>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==2</string>
+   </property>
+   <widget class="caFrame" name="cstDiag0">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>240</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgDiagnostics$(CfgSuffix)</string>
+    </property>
+    <property name="visibility">
+     <enum>caFrame::Calc</enum>
+    </property>
+    <property name="visibilityCalc">
+     <string>A==0</string>
+    </property>
+    <widget class="caRelatedDisplay" name="cstLink0">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>240</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="labels">
+      <string>CST controls / DS402</string>
+     </property>
+     <property name="files">
+      <string>ecmcEX72XX_OPT_cst.ui</string>
+     </property>
+     <property name="args">
+      <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix),ActualTorquePV=</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="caFrame" name="cstDiag1">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>240</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgDiagnostics$(CfgSuffix)</string>
+    </property>
+    <property name="visibility">
+     <enum>caFrame::Calc</enum>
+    </property>
+    <property name="visibilityCalc">
+     <string>A==1</string>
+    </property>
+    <widget class="caRelatedDisplay" name="cstLink1">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>240</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="labels">
+      <string>CST controls / DS402</string>
+     </property>
+     <property name="files">
+      <string>ecmcEX72XX_OPT_cst.ui</string>
+     </property>
+     <property name="args">
+      <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix),ActualTorquePV=$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-TrqAct</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="InputsFrame">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>138</y>
+     <width>240</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgInputs$(CfgSuffix)</string>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==1</string>
+   </property>
+   <widget class="caRelatedDisplay" name="InputsLink">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>240</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="labels">
+     <string>Inputs</string>
+    </property>
+    <property name="files">
+     <string>ecmcEX7062_OPT_inputs.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="TouchProbeFrame">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>165</y>
+     <width>240</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgTouchProbe$(CfgSuffix)</string>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==1</string>
+   </property>
+   <widget class="caRelatedDisplay" name="TouchProbeLink">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>240</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="labels">
+     <string>Touch probes</string>
+    </property>
+    <property name="files">
+     <string>ecmcEX7062_OPT_tp.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="Encoder2Frame">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>192</y>
+     <width>240</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgEncoder2$(CfgSuffix)</string>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==1</string>
+   </property>
+   <widget class="caRelatedDisplay" name="Encoder2Link">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>240</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="labels">
+     <string>Secondary encoder</string>
+    </property>
+    <property name="files">
+     <string>ecmcEX7062_OPT_encoder.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="DiagnosticsFrame">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>219</y>
+     <width>240</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgDiagnostics$(CfgSuffix)</string>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==1</string>
+   </property>
+   <widget class="caRelatedDisplay" name="DiagnosticsLink">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>240</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="labels">
+     <string>Torque / velocity</string>
+    </property>
+    <property name="files">
+     <string>ecmcEX7062_OPT_diagnostics.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="FollowingErrorFrame">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>246</y>
+     <width>240</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgFollowingError$(CfgSuffix)</string>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==1</string>
+   </property>
+   <widget class="caRelatedDisplay" name="FollowingErrorLink">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>240</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="labels">
+     <string>Following error</string>
+    </property>
+    <property name="files">
+     <string>ecmcEX72XX_OPT_followingError.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="AutoTuneFrame">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>273</y>
+     <width>240</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgAutoTune$(CfgSuffix)</string>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==1</string>
+   </property>
+   <widget class="caRelatedDisplay" name="AutoTuneLink">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>240</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="labels">
+     <string>Motor tuning</string>
+    </property>
+    <property name="files">
+     <string>ecmcEX7062_OPT_tune.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="supplyFrame">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>300</y>
+     <width>240</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgSupplyDiagnostics</string>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==1</string>
+   </property>
+   <widget class="caRelatedDisplay" name="supplyLink">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>240</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="labels">
+     <string>Voltage / temperature</string>
+    </property>
+    <property name="files">
+     <string>ecmcEX7062_OPT_supply.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QLabel" name="units">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>326</y>
+     <width>240</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Raw demand units; torque in %.</string>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caFrame</class>
+   <extends>QWidget</extends>
+   <header>caFrame</header>
+  </customwidget>
+  <customwidget>
+   <class>caLed</class>
+   <extends>QWidget</extends>
+   <header>caLed</header>
+  </customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QWidget</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+  <customwidget>
+   <class>caRelatedDisplay</class>
+   <extends>QWidget</extends>
+   <header>caRelatedDisplay</header>
+  </customwidget>
+ </customwidgets>
+ <resources />
+ <connections />
+</ui>

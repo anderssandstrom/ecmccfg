@@ -1,0 +1,15 @@
+record(longin,"${ECMC_P}Tp${CH_ID}-PosTimestamp01") {
+  field(DESC,"TP1 pos edge DC time [ns]")
+  field(DTYP,"asynInt32")
+  field(INP,"@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).touchProbeTimestampPos${CH_ID}_1?")
+  field(SCAN,"I/O Intr")
+  field(TSE,"$(TSE=-2)")
+}
+
+record(longin,"${ECMC_P}Tp${CH_ID}-NegTimestamp01") {
+  field(DESC,"TP1 neg edge DC time [ns]")
+  field(DTYP,"asynInt32")
+  field(INP,"@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).touchProbeTimestampNeg${CH_ID}_1?")
+  field(SCAN,"I/O Intr")
+  field(TSE,"$(TSE=-2)")
+}

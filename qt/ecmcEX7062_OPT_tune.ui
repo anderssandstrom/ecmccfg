@@ -1,0 +1,283 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>300</width>
+    <height>276</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Ex7062 — motor tuning channel $(ChID)</string>
+  </property>
+  <widget class="QLabel" name="warning">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>7</y>
+     <width>280</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Tuning can move the motor. Disable first.</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="tune0Label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>35</y>
+     <width>135</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Coil R [mOhm]</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="tune0">
+   <property name="geometry">
+    <rect>
+     <x>145</x>
+     <y>35</y>
+     <width>145</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Tune-R</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="tune1Label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>60</y>
+     <width>135</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Coil L [uH]</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="tune1">
+   <property name="geometry">
+    <rect>
+     <x>145</x>
+     <y>60</y>
+     <width>145</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Tune-L</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="tune2Label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>85</y>
+     <width>135</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Current Kp</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="tune2">
+   <property name="geometry">
+    <rect>
+     <x>145</x>
+     <y>85</y>
+     <width>145</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Tune-C-Kp</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="tune3Label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>110</y>
+     <width>135</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Current Ti</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="tune3">
+   <property name="geometry">
+    <rect>
+     <x>145</x>
+     <y>110</y>
+     <width>145</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Tune-C-Ti</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="tune4Label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>135</y>
+     <width>135</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Velocity Kp</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="tune4">
+   <property name="geometry">
+    <rect>
+     <x>145</x>
+     <y>135</y>
+     <width>145</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Tune-V-Kp</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="tune5Label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>160</y>
+     <width>135</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Velocity Ti</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="tune5">
+   <property name="geometry">
+    <rect>
+     <x>145</x>
+     <y>160</y>
+     <width>145</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Tune-V-Ti</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="tune6Label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>185</y>
+     <width>135</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Position Kp</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="tune6">
+   <property name="geometry">
+    <rect>
+     <x>145</x>
+     <y>185</y>
+     <width>145</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Tune-P-Kp</string>
+   </property>
+  </widget>
+  <widget class="caMessageButton" name="tuneButton0">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>226</y>
+     <width>135</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="label">
+    <string>Read parameters</string>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-TuneTrgRB.PROC</string>
+   </property>
+   <property name="pressMessage">
+    <string />
+   </property>
+   <property name="releaseMessage">
+    <string>1</string>
+   </property>
+  </widget>
+  <widget class="caMessageButton" name="tuneButton1">
+   <property name="geometry">
+    <rect>
+     <x>155</x>
+     <y>226</y>
+     <width>135</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="label">
+    <string>Run tuning</string>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-TuneTrg.PROC</string>
+   </property>
+   <property name="pressMessage">
+    <string />
+   </property>
+   <property name="releaseMessage">
+    <string>1</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="hint">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>253</y>
+     <width>280</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Requires OP, motor power and disabled drive.</string>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QWidget</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+  <customwidget>
+   <class>caMessageButton</class>
+   <extends>QWidget</extends>
+   <header>caMessageButton</header>
+  </customwidget>
+ </customwidgets>
+ <resources />
+ <connections />
+</ui>

@@ -63,12 +63,14 @@ class Startup:
     def __init__(self, model, options=None, rate=1000):
         self.env = dict(SCRIPTEXEC='iocshLoad', ecmccfg_DIR='', ECMC_P='TEST:',
                         ECMC_EC_SLAVE_NUM='1', ECMC_EC_SAMPLE_RATE=str(rate),
-                        ECMC_SYNC_0_OFFSET_NS='0', ECMC_SYNC_1_OFFSET_NS='0')
+                        ECMC_SYNC_0_OFFSET_NS='0', ECMC_SYNC_1_OFFSET_NS='0',
+                        ECMC_PREFIX='TEST:')
         self.commands = []
         self.substitutions = []
         self.templates = []
-        family = 'ELM' if model.startswith('ELM') else model[:2]
-        self.run(HW / family / f'ecmc{model}_OPT.cmd', options or {})
+        family = 'ELM' if model.startswith('ELM') else ('EL' if model.startswith('ED') else model[:2])
+        directory = ROOT / 'hardware/Beckhoff_MX' if family == 'MO' else HW / family
+        self.run(directory / f'ecmc{model}_OPT.cmd', options or {})
 
     def run(self, path, scope):
         for raw in path.read_text().splitlines():
@@ -115,7 +117,7 @@ class Startup:
                     macros = dict(item.split('=', 1) for item in arguments(child.get('PARAM', '')))
                     self.templates.append((child['TEMPLATE_FILE'], macros))
                 else:
-                    self.run(HW / filename, child)
+                    self.run(HW / filename if (HW / filename).exists() else HW / 'EL' / filename, child)
                 continue
             raise AssertionError(f'Unsupported command: {line}')
 
@@ -191,13 +193,16 @@ class OptTests(unittest.TestCase):
                         self.assertIn(pv, config)
                         if not expression(props['visibilityCalc'].replace('A', str(config[pv]))):
                             return
+                # Shell-command args are positional CLI arguments, not display macros.
+                if widget.get('class') == 'caShellCommand':
+                    return
                 child_macros = dict(macros)
                 for item in expand(props.get('macro', props.get('args', '')), macros).split(','):
                     if item.strip():
                         key, value = item.split('=', 1)
                         child_macros[key.strip()] = value.strip()
                 target = props.get('filename', props.get('files'))
-                if target and target.startswith('ecmcEX72XX_OPT'):
+                if target and target.startswith(('ecmcEX72XX_OPT', 'ecmcEX7062_OPT')):
                     check_panel(target, child_macros)
                 elif target == 'ecmcGraph_v1.ui':
                     self.assertTrue((ROOT / 'qt' / target).exists())

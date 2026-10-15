@@ -677,6 +677,31 @@
     </property>
    </widget>
   </widget>
+  <widget class="caShellCommand" name="hardwareDiagnostics">
+   <property name="geometry">
+    <rect>
+     <x>5</x>
+     <y>5</y>
+     <width>26</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="label">
+    <string notr="true">HW</string>
+   </property>
+   <property name="labels">
+    <string>Read hardware diagnostic buffer</string>
+   </property>
+   <property name="files">
+    <string>bash /ioc/modules/qt/ecmcOpenObject.sh</string>
+   </property>
+   <property name="args">
+    <string>OPEN_EC_TOOL_HW_DIAG_MAIN $(IOC) $(MasterID) $(SlaveID)</string>
+   </property>
+   <property name="toolTip">
+    <string>Open EtherCAT tool and read this drive's hardware diagnostic buffer.</string>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -698,6 +723,11 @@
    <class>caLed</class>
    <extends>QWidget</extends>
    <header>caLed</header>
+  </customwidget>
+  <customwidget>
+   <class>caShellCommand</class>
+   <extends>QWidget</extends>
+   <header>caShellCommand</header>
   </customwidget>
  </customwidgets>
  <resources />

@@ -225,10 +225,25 @@ separate PDO demand readback:
 | CSP | `Drv01-PosCmd` | `Drv01-PosCmd-RB` |
 | CST | `Drv01-Trq` | `Drv01-Trq-RB` |
 
+The CST panel also shows actual torque (`Drv01-TrqAct` / `Drv02-TrqAct`), in
+percent, alongside the demand readback. It uses the existing `DIAG=1` telemetry;
+with `DIAG=0` the panel says **Not mapped** and does not subscribe to that absent
+record. Both readbacks fit on one row, retaining the 350 x 260 panel size.
+
 Channel 2 uses `Drv02`. Enter the target in the record's configured units and
 press Enter to write. Torque is in percent; velocity and position use the
 scaling described above. These records do not require an axis object. When an
 axis controls the drive, use the axis panel for motion commands.
+
+Small **>** buttons beside readbacks open the existing `ecmcGraph_v1.ui` trend
+panel, using the same `IOC`, `TITLE` and `PV` macros as the MO7221 panels.
+They are available for actual position in the channel/two-channel overviews,
+actual torque, velocity and DC link voltage in Diagnostics, CST torque demand
+readback and actual torque, CSP position demand readback, CSV velocity demand
+readback, following error, PCB temperature, and torque offset readback.
+Each graph targets the selected channel's exact readback PV. Links are available
+only for mapped features; `DIAG=0` does not offer trends for absent diagnostic
+records. Panel dimensions are unchanged.
 
 ### DS402 state and LEDs
 

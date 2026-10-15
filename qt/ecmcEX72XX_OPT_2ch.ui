@@ -122,7 +122,7 @@
      <rect>
       <x>8</x>
       <y>79</y>
-      <width>104</width>
+      <width>87</width>
       <height>22</height>
      </rect>
     </property>
@@ -318,6 +318,40 @@
      </font>
     </property>
    </widget>
+   <widget class="caRelatedDisplay" name="channel1PositionTrend">
+    <property name="geometry">
+     <rect>
+      <x>97</x>
+      <y>82</y>
+      <width>15</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="labels">
+     <string>&gt;</string>
+    </property>
+    <property name="files">
+     <string>ecmcGraph_v1.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),TITLE=m$(MasterID)s$(SlaveID): Channel 01 actual position,PV=$(IOC):m$(MasterID)s$(SlaveID)-Enc01-PosAct</string>
+    </property>
+    <property name="toolTip">
+     <string>Trend: Channel 01 actual position</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QFrame" name="channel2Overview">
    <property name="geometry">
@@ -412,7 +446,7 @@
      <rect>
       <x>8</x>
       <y>79</y>
-      <width>104</width>
+      <width>87</width>
       <height>22</height>
      </rect>
     </property>
@@ -606,6 +640,40 @@
      <font>
       <pointsize>8</pointsize>
      </font>
+    </property>
+   </widget>
+   <widget class="caRelatedDisplay" name="channel2PositionTrend">
+    <property name="geometry">
+     <rect>
+      <x>97</x>
+      <y>82</y>
+      <width>15</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="labels">
+     <string>&gt;</string>
+    </property>
+    <property name="files">
+     <string>ecmcGraph_v1.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),TITLE=m$(MasterID)s$(SlaveID): Channel 02 actual position,PV=$(IOC):m$(MasterID)s$(SlaveID)-Enc02-PosAct</string>
+    </property>
+    <property name="toolTip">
+     <string>Trend: Channel 02 actual position</string>
     </property>
    </widget>
   </widget>

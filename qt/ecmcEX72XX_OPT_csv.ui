@@ -97,7 +97,7 @@
     <rect>
      <x>185</x>
      <y>66</y>
-     <width>153</width>
+     <width>136</width>
      <height>22</height>
     </rect>
    </property>
@@ -660,6 +660,40 @@
    </property>
    <property name="toolTip">
     <string>Enable writes 128, 6, 7, 15 with fixed delays; disable writes 0. Follow the decoded state readback.</string>
+   </property>
+  </widget>
+  <widget class="caRelatedDisplay" name="demandReadbackTrend">
+   <property name="geometry">
+    <rect>
+     <x>323</x>
+     <y>69</y>
+     <width>15</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="labels">
+    <string>&gt;</string>
+   </property>
+   <property name="files">
+    <string>ecmcGraph_v1.ui</string>
+   </property>
+   <property name="args">
+    <string>IOC=$(IOC),TITLE=m$(MasterID)s$(SlaveID): Channel $(ChID) CSV velocity demand readback,PV=$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Spd-RB</string>
+   </property>
+   <property name="toolTip">
+    <string>Trend: Channel $(ChID) CSV velocity demand readback</string>
    </property>
   </widget>
  </widget>

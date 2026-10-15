@@ -44,7 +44,7 @@
     <rect>
      <x>230</x>
      <y>48</y>
-     <width>165</width>
+     <width>148</width>
      <height>22</height>
     </rect>
    </property>
@@ -69,12 +69,51 @@
 Input/STO feedback is not supplied by Info2.</string>
    </property>
   </widget>
+  <widget class="caRelatedDisplay" name="value0Trend">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>51</y>
+     <width>15</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="labels">
+    <string>&gt;</string>
+   </property>
+   <property name="files">
+    <string>ecmcGraph_v1.ui</string>
+   </property>
+   <property name="args">
+    <string>IOC=$(IOC),TITLE=m$(MasterID)s$(SlaveID): Channel $(ChID) PCB temperature,PV=$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-TmpAct</string>
+   </property>
+   <property name="toolTip">
+    <string>Trend: Channel $(ChID) PCB temperature</string>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
    <class>caLineEdit</class>
    <extends>QWidget</extends>
    <header>caLineEdit</header>
+  </customwidget>
+  <customwidget>
+   <class>caRelatedDisplay</class>
+   <extends>QWidget</extends>
+   <header>caRelatedDisplay</header>
   </customwidget>
  </customwidgets>
  <resources />

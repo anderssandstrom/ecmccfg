@@ -75,32 +75,24 @@
    </property>
   </widget>
   <widget class="QLabel" name="readbackLabel">
-   <property name="geometry">
-    <rect>
-     <x>12</x>
-     <y>66</y>
-     <width>160</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Demand readback [%]</string>
-   </property>
    <property name="font">
     <font>
      <pointsize>9</pointsize>
     </font>
    </property>
-  </widget>
-  <widget class="caLineEdit" name="demandReadback">
+   <property name="text">
+    <string>Demand [%]</string>
+   </property>
    <property name="geometry">
     <rect>
-     <x>185</x>
+     <x>12</x>
      <y>66</y>
-     <width>153</width>
-     <height>22</height>
+     <width>78</width>
+     <height>20</height>
     </rect>
    </property>
+  </widget>
+  <widget class="caLineEdit" name="demandReadback">
    <property name="channel">
     <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Trq-RB</string>
    </property>
@@ -109,8 +101,16 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>9</pointsize>
+     <pointsize>8</pointsize>
     </font>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>66</y>
+     <width>55</width>
+     <height>22</height>
+    </rect>
    </property>
   </widget>
   <widget class="QLabel" name="stateLabel">
@@ -662,6 +662,175 @@
     <string>Enable writes 128, 6, 7, 15 with fixed delays; disable writes 0. Follow the decoded state readback.</string>
    </property>
   </widget>
+  <widget class="QLabel" name="actualTorqueLabel">
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Actual [%]</string>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>177</x>
+     <y>66</y>
+     <width>84</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="caFrame" name="actualTorqueNotMapped">
+   <property name="geometry">
+    <rect>
+     <x>265</x>
+     <y>66</y>
+     <width>73</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgDiagnostics$(CfgSuffix)</string>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==0</string>
+   </property>
+   <widget class="QLabel" name="actualTorqueUnavailable">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>73</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Not mapped</string>
+    </property>
+    <property name="toolTip">
+     <string>Actual torque is not mapped when DIAG=0.</string>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>8</pointsize>
+     </font>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caFrame" name="actualTorqueMapped">
+   <property name="geometry">
+    <rect>
+     <x>265</x>
+     <y>66</y>
+     <width>73</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgDiagnostics$(CfgSuffix)</string>
+   </property>
+   <property name="visibility">
+    <enum>caFrame::Calc</enum>
+   </property>
+   <property name="visibilityCalc">
+    <string>A==1</string>
+   </property>
+   <widget class="caLineEdit" name="actualTorque">
+    <property name="colorMode">
+     <enum>caLineEdit::Alarm</enum>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>8</pointsize>
+     </font>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>56</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel">
+     <string>$(ActualTorquePV)</string>
+    </property>
+    <property name="toolTip">
+     <string>Measured actual torque in percent.</string>
+    </property>
+   </widget>
+   <widget class="caRelatedDisplay" name="actualTorqueTrend">
+    <property name="geometry">
+     <rect>
+      <x>58</x>
+      <y>3</y>
+      <width>15</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>15</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="labels">
+     <string>&gt;</string>
+    </property>
+    <property name="files">
+     <string>ecmcGraph_v1.ui</string>
+    </property>
+    <property name="args">
+     <string>IOC=$(IOC),TITLE=m$(MasterID)s$(SlaveID): Channel $(ChID) actual torque,PV=$(ActualTorquePV)</string>
+    </property>
+    <property name="toolTip">
+     <string>Trend: Channel $(ChID) actual torque</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="caRelatedDisplay" name="demandReadbackTrend">
+   <property name="geometry">
+    <rect>
+     <x>147</x>
+     <y>69</y>
+     <width>15</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="labels">
+    <string>&gt;</string>
+   </property>
+   <property name="files">
+    <string>ecmcGraph_v1.ui</string>
+   </property>
+   <property name="args">
+    <string>IOC=$(IOC),TITLE=m$(MasterID)s$(SlaveID): Channel $(ChID) CST torque demand readback,PV=$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-Trq-RB</string>
+   </property>
+   <property name="toolTip">
+    <string>Trend: Channel $(ChID) CST torque demand readback</string>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -688,6 +857,11 @@
    <class>caTextEntry</class>
    <extends>QLineEdit</extends>
    <header>caTextEntry</header>
+  </customwidget>
+  <customwidget>
+   <class>caFrame</class>
+   <extends>QWidget</extends>
+   <header>caFrame</header>
   </customwidget>
  </customwidgets>
  <resources />

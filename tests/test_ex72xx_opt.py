@@ -199,6 +199,10 @@ class OptTests(unittest.TestCase):
                 target = props.get('filename', props.get('files'))
                 if target and target.startswith('ecmcEX72XX_OPT'):
                     check_panel(target, child_macros)
+                elif target == 'ecmcGraph_v1.ui':
+                    self.assertTrue((ROOT / 'qt' / target).exists())
+                    self.assertIn(child_macros['PV'].replace('TEST:m0s1-', 'TEST:'), names,
+                                  (filename, 'trend PV', child_macros['PV']))
                 for child in widget.findall('widget'):
                     check_widget(child)
             check_widget(root.find('widget'))

@@ -131,7 +131,7 @@ QTabBar::tab:selected { background: #ffffff; color: #1b3652; border-bottom-color
       <rect>
        <x>8</x>
        <y>67</y>
-       <width>108</width>
+       <width>91</width>
        <height>22</height>
       </rect>
      </property>
@@ -291,33 +291,6 @@ QTabBar::tab:selected { background: #ffffff; color: #1b3652; border-bottom-color
      <property name="channel">
       <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode$(CfgSuffix)</string>
      </property>
-     <widget class="caRelatedDisplay" name="opencst">
-      <property name="files">
-       <string>ecmcEX72XX_OPT_cst.ui</string>
-      </property>
-      <property name="args">
-       <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix)</string>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>112</width>
-        <height>26</height>
-       </rect>
-      </property>
-      <property name="labels">
-       <string>CST details</string>
-      </property>
-      <property name="toolTip">
-       <string>Read back CST demand, control word, warning and error.</string>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>8</pointsize>
-       </font>
-      </property>
-     </widget>
      <property name="geometry">
       <rect>
        <x>6</x>
@@ -326,6 +299,98 @@ QTabBar::tab:selected { background: #ffffff; color: #1b3652; border-bottom-color
        <height>26</height>
       </rect>
      </property>
+     <widget class="caFrame" name="cstWithoutDiagnostics">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>112</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="channel">
+       <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgDiagnostics$(CfgSuffix)</string>
+      </property>
+      <property name="visibility">
+       <enum>caFrame::Calc</enum>
+      </property>
+      <property name="visibilityCalc">
+       <string>A==0</string>
+      </property>
+      <widget class="caRelatedDisplay" name="opencstWithoutDiagnostics">
+       <property name="files">
+        <string>ecmcEX72XX_OPT_cst.ui</string>
+       </property>
+       <property name="args">
+        <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix),ActualTorquePV=</string>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>112</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="labels">
+        <string>CST details</string>
+       </property>
+       <property name="toolTip">
+        <string>Read back CST demand, control word, warning and error.</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+      </widget>
+     </widget>
+     <widget class="caFrame" name="cstWithDiagnostics">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>112</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="channel">
+       <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgDiagnostics$(CfgSuffix)</string>
+      </property>
+      <property name="visibility">
+       <enum>caFrame::Calc</enum>
+      </property>
+      <property name="visibilityCalc">
+       <string>A==1</string>
+      </property>
+      <widget class="caRelatedDisplay" name="opencstWithDiagnostics">
+       <property name="files">
+        <string>ecmcEX72XX_OPT_cst.ui</string>
+       </property>
+       <property name="args">
+        <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix),ActualTorquePV=$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-TrqAct</string>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>112</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="labels">
+        <string>CST details</string>
+       </property>
+       <property name="toolTip">
+        <string>Read back CST demand, control word, warning and error.</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+      </widget>
+     </widget>
     </widget>
     <widget class="caFrame" name="featurediagnostics">
      <property name="visibility">
@@ -635,6 +700,40 @@ QTabBar::tab:selected { background: #ffffff; color: #1b3652; border-bottom-color
       <font>
        <pointsize>8</pointsize>
       </font>
+     </property>
+    </widget>
+    <widget class="caRelatedDisplay" name="value3Trend">
+     <property name="geometry">
+      <rect>
+       <x>101</x>
+       <y>70</y>
+       <width>15</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>15</width>
+       <height>16</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>15</width>
+       <height>16</height>
+      </size>
+     </property>
+     <property name="labels">
+      <string>&gt;</string>
+     </property>
+     <property name="files">
+      <string>ecmcGraph_v1.ui</string>
+     </property>
+     <property name="args">
+      <string>IOC=$(IOC),TITLE=m$(MasterID)s$(SlaveID): Channel $(ChID) actual position,PV=$(IOC):m$(MasterID)s$(SlaveID)-Enc$(ChID)-PosAct</string>
+     </property>
+     <property name="toolTip">
+      <string>Trend: Channel $(ChID) actual position</string>
      </property>
     </widget>
    </widget>

@@ -225,6 +225,12 @@ separate PDO demand readback:
 | CSP | `Drv01-PosCmd` | `Drv01-PosCmd-RB` |
 | CST | `Drv01-Trq` | `Drv01-Trq-RB` |
 
+The torque-offset detail panel also has a writable target, `Drv01-TrqOff`,
+and a separate `Drv01-TrqOff-RB` readback with a trend button. Enter the offset
+in percent and press Enter to write. This link is available for the EL72XX
+PDO family (EL/EP) in CSV and CSP, where the offset is mapped. The current
+ELM72XX and 7062 OPT configurations do not map a torque offset.
+
 The CST panel also shows actual torque (`Drv01-TrqAct` / `Drv02-TrqAct`), in
 percent, alongside the demand readback. It uses the existing `DIAG=1` telemetry;
 with `DIAG=0` the panel says **Not mapped** and does not subscribe to that absent

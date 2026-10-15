@@ -30,20 +30,20 @@
    <property name="geometry">
     <rect>
      <x>12</x>
-     <y>48</y>
+     <y>80</y>
      <width>190</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>Torque offset [%]</string>
+    <string>Offset readback [%]</string>
    </property>
   </widget>
   <widget class="caLineEdit" name="value0">
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>48</y>
+     <y>80</y>
      <width>148</width>
      <height>22</height>
     </rect>
@@ -59,7 +59,7 @@
    <property name="geometry">
     <rect>
      <x>380</x>
-     <y>51</y>
+     <y>83</y>
      <width>15</width>
      <height>16</height>
     </rect>
@@ -89,6 +89,43 @@
     <string>Trend: Channel $(ChID) torque offset readback</string>
    </property>
   </widget>
+  <widget class="QLabel" name="targetOffsetLabel">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>48</y>
+     <width>190</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Target offset [%]</string>
+   </property>
+  </widget>
+  <widget class="caTextEntry" name="targetOffset">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>48</y>
+     <width>165</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-TrqOff</string>
+   </property>
+   <property name="readOnly">
+    <bool>false</bool>
+   </property>
+   <property name="toolTip">
+    <string>Press Enter to write the torque offset in percent.</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -100,6 +137,11 @@
    <class>caRelatedDisplay</class>
    <extends>QWidget</extends>
    <header>caRelatedDisplay</header>
+  </customwidget>
+  <customwidget>
+   <class>caTextEntry</class>
+   <extends>QLineEdit</extends>
+   <header>caTextEntry</header>
   </customwidget>
  </customwidgets>
  <resources />

@@ -121,12 +121,12 @@ the following showed that the output was operating correctly:
 Do not use the BO02 LED alone to determine the electrical output state. Verify
 `BO-Arr-RB`, the BO diagnostics, and the voltage between pin 2 and pin 3.
 
-## MO1008 with missing SII SyncManager and PDO information
+## Restoring missing SII data: MO1008 example
 
 One MO1008-0000-1112 was found with an incomplete or corrupt SII EEPROM. The
 terminal identity could still be read, but its descriptive and process-data
 information was absent. In this condition, `ethercat slaves` showed only the
-numeric vendor ID, product code, and revision instead of the terminal name:
+numeric vendor ID and product code instead of the terminal name:
 
 ```text
 8  0:8  PREOP  +  0x00000002:0x811fbc0b
@@ -160,17 +160,90 @@ ESI or read from an identical working MO1008-0000-1112. Back up the existing
 EEPROM before writing anything. The XML ESI file cannot be passed directly to
 `ethercat sii_write`; that command expects a compiled binary SII image.
 
-In the observed case, no working terminal was available from which to copy the
-SII. The issue therefore could not be repaired by cloning a known-good EEPROM
-image and remained a hardware/EEPROM provisioning issue rather than a CFG PDO
-mapping issue.
+### Write the matching binary SII image
+
+SII means **Slave Information Interface** (not SSI). The following field example
+restored the device name of an MO1008-0000-1112 on **master 1, slave position 7**.
+The earlier diagnostic example used position 8; always select the position from
+the current bus listing.
 
 {{% notice warning %}}
-The generic MO1008-0000 and MO1008-0000-1112 ecmccfg configurations are
-untested. Their mappings were prepared from the matching Beckhoff ESI, but the
-incomplete SII in the available terminal prevented the slave from reaching a
-state in which the configuration and process data could be validated.
+Carry out EEPROM maintenance with the machine stopped and motion disabled.
+Confirm the physical module, variant, revision, master ID and slave position
+before writing. Use a binary SII image matching that hardware; do not copy an
+image from a different module or bypass image checks with `--force`.
 {{% /notice %}}
+
+1. Inspect the target and save its existing SII contents, even if incomplete:
+
+   ```bash
+   ethercat -m1 slaves
+   ethercat -m1 -p7 slaves -v
+   ethercat -m1 -p7 sii_read > MO1008-0000-1112-m1-p7-before.bin
+   ```
+
+   Check that the read succeeded before proceeding. Omit `-v` from `sii_read`
+   when saving a binary backup; verbose output is text.
+
+   Before the repair, the relevant line was:
+
+   ```text
+   7  0:7   PREOP  +  0x00000002:0x811fbc0b
+   ```
+
+2. Write the matching binary image. In this installation it was stored at:
+
+   ```bash
+   ethercat -m1 -p7 sii_write /ioc/NeedfulThings/beckhoff_firmwares/p05_sii_MO1008-0000-1112.bin
+   ```
+
+   Replace the path with the location of your verified image. The `p05` in this
+   filename does not select the destination: `-m1 -p7` selects master 1,
+   slave position 7. Use the permissions required by the local EtherCAT setup.
+
+3. Rescan the selected master to refresh its cached slave information:
+
+   ```bash
+   ethercat -m1 rescan
+   ethercat -m1 slaves
+   ```
+
+   In the reported sequence, `ethercat slaves` immediately after `sii_write`
+   still showed the numeric identity. After the rescan it showed:
+
+   ```text
+   7  0:7   PREOP  +  MO1008-0000-1112 8-channel digital input, 24 V DC, M12
+   ```
+
+   The rescan rereads slave information; an unchanged name before rescan does
+   not by itself mean the write failed. Do not repeat the write just to refresh
+   the displayed name.
+
+4. Check the restored PDO and SyncManager descriptions:
+
+   ```bash
+   ethercat -m1 -p7 sii_read -v
+   ethercat -m1 -p7 pdos
+   ethercat -m1 -p7 xml
+   ```
+
+   Confirm that the expected descriptions are present, then validate the ecmc
+   configuration, slave state and input data on the hardware.
+
+The observed rescan restored the MO1008 name, but did not establish that the
+whole bus was healthy. Other positions still showed `INIT E`, and positions 10
+and 11 showed zero identities or an unknown state in the subsequent listing.
+Check every expected slave after rescanning and resolve those issues before
+returning the machine to operation. Restoring the name alone does not validate
+PDO operation or prove that all SII data are correct.
+
+The generic MO1008-0000 and MO1008-0000-1112 ecmccfg mappings use the matching
+Beckhoff ESI's default Synchron mode (`AssignActivate=0x100`): RX `0x1680`
+(EFU control) on SM2, and TX `0x1a00` (inputs), `0x1a01` (input diagnosis), and
+`0x1a80` (EFU status/current) on SM3. Earlier configurations omitted the required
+RX PDO and incorrectly assigned EFU inputs to `0x1a10`. Use the corrected
+configuration after restoring SII. The reported SII write and rescan confirm device-name
+recovery; process-data validation remains a separate commissioning step.
 
 ## MS1010-1002-1334 rail shutdown and recovery
 

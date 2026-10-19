@@ -7,6 +7,8 @@ epicsEnvSet("ECMC_EC_VENDOR_ID",     "0x00000002")
 epicsEnvSet("ECMC_EC_PRODUCT_ID",    "0x04564cd2")
 epicsEnvSet("ECMC_EC_REVISION",      "0x00010000")
 
+epicsEnvSet("ECMC_HW_PANEL",         "NoProcessData")
+
 #- Verify slave identity without attempting an SDO reset; the ESI has no mailbox.
 ecmcFileExist(${ecmccfg_DIR}slaveVerify.cmd,1)
 ${SCRIPTEXEC} ${ecmccfg_DIR}slaveVerify.cmd "RESET=0"

@@ -124,6 +124,13 @@ ethercat slaves
 37  0:37  PREOP  +  EP7211-0034 1K. MDP742 Servo-Motor-Endstufe mit OCT (50V, 4,5A
 ```
 
+### `ethercat sii_read`, `sii_write` and `rescan`
+
+Use `sii_read` to back up a slave's binary SII EEPROM, `sii_write` to write a
+matching binary image, and `rescan` to refresh the master's slave information.
+For the complete procedure and an MO1008 before/after example, see
+[Restoring missing SII data]({{< relref "/manual/knowledgebase/hardware/MX-System.md#restoring-missing-sii-data-mo1008-example" >}}).
+
 ### `ethercat sdos`
 Download and display the **service data objects**.
 

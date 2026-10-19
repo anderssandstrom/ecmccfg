@@ -143,12 +143,38 @@
     <number>7</number>
    </property>
   </widget>
+  <widget class="QLabel" name="sharedPinsNote">
+   <property name="geometry">
+    <rect>
+     <x>5</x>
+     <y>250</y>
+     <width>115</width>
+     <height>95</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Multifunctional I/O
+Inputs and outputs share the same pins.</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
   <zorder>cainclude</zorder>
   <zorder>cashellcommand_2</zorder>
   <zorder>cabyte_auto_01_03</zorder>
   <zorder>calabel_auto_01_01</zorder>
   <zorder>CiA402_2</zorder>
   <zorder>cabytecontroller</zorder>
+  <zorder>sharedPinsNote</zorder>
  </widget>
  <customwidgets>
   <customwidget>

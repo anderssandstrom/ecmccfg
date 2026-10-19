@@ -1,41 +1,42 @@
 #- Internal: resolved channel options and object addresses.
+#- EcAddEntryDT requires PDO indices with a literal 0x prefix.
 ${SCRIPTEXEC} ${ecmccfg_DIR}ecmcEX7062_OPT_validate.cmd
-ecmcEpicsEnvSetCalc(EX7062_PDO,"5632+${PDO_OFFSET}","%d")
+ecmcEpicsEnvSetCalc(EX7062_PDO,"5632+${PDO_OFFSET}","0x%04x")
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,${EX7062_PDO},${DRV_OUT},0x01,U16,driveControl${CH_ID})"
-ecmcEpicsEnvSetCalc(EX7062_PDO,"5633+${PDO_OFFSET}","%d")
+ecmcEpicsEnvSetCalc(EX7062_PDO,"5633+${PDO_OFFSET}","0x%04x")
 ${EX7062_CSV}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,${EX7062_PDO},${DRV_OUT},0x06,S32,velocitySetpoint${CH_ID})"
-ecmcEpicsEnvSetCalc(EX7062_PDO,"5634+${PDO_OFFSET}","%d")
+ecmcEpicsEnvSetCalc(EX7062_PDO,"5634+${PDO_OFFSET}","0x%04x")
 ${EX7062_CST}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,${EX7062_PDO},${DRV_OUT},0x09,S16,torqueSetpoint${CH_ID})"
-ecmcEpicsEnvSetCalc(EX7062_PDO,"5638+${PDO_OFFSET}","%d")
+ecmcEpicsEnvSetCalc(EX7062_PDO,"5638+${PDO_OFFSET}","0x%04x")
 ${EX7062_CSP}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,${EX7062_PDO},${DRV_OUT},0x05,S32,positionSetpoint${CH_ID})"
-ecmcEpicsEnvSetCalc(EX7062_PDO,"5639+${PDO_OFFSET}","%d")
+ecmcEpicsEnvSetCalc(EX7062_PDO,"5639+${PDO_OFFSET}","0x%04x")
 ${EX7062_TP}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,${EX7062_PDO},${TP_OUT},0x01,U16,touchProbeControl${CH_ID})"
-ecmcEpicsEnvSetCalc(EX7062_PDO,"6656+${PDO_OFFSET}","%d")
+ecmcEpicsEnvSetCalc(EX7062_PDO,"6656+${PDO_OFFSET}","0x%04x")
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,${EX7062_PDO},${FB_IN},0x11,U32,positionActual${CH_ID})"
-ecmcEpicsEnvSetCalc(EX7062_PDO,"6657+${PDO_OFFSET}","%d")
+ecmcEpicsEnvSetCalc(EX7062_PDO,"6657+${PDO_OFFSET}","0x%04x")
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,${EX7062_PDO},${DRV_IN},0x01,U16,driveStatus${CH_ID})"
-ecmcEpicsEnvSetCalc(EX7062_PDO,"6658+${PDO_OFFSET}","%d")
+ecmcEpicsEnvSetCalc(EX7062_PDO,"6658+${PDO_OFFSET}","0x%04x")
 ${EX7062_EXT_DIAG}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,${EX7062_PDO},${DRV_IN},0x07,S32,velocityActual${CH_ID})"
-ecmcEpicsEnvSetCalc(EX7062_PDO,"6659+${PDO_OFFSET}","%d")
+ecmcEpicsEnvSetCalc(EX7062_PDO,"6659+${PDO_OFFSET}","0x%04x")
 ${EX7062_EXT_DIAG}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,${EX7062_PDO},${DRV_IN},0x08,S16,torqueActual${CH_ID})"
 ecmcEpicsEnvSetCalcTernary(EX7062_SUPPLY,"${CH_NUM}==1 and ${DIAG=1}==1","","#-")
 ${EX7062_SUPPLY}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a04,0x6010,0x11,U16,voltageActual01)"
 ${EX7062_SUPPLY}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a05,0x6010,0x13,U16,temperatureActual01)"
-ecmcEpicsEnvSetCalc(EX7062_PDO,"6663+${PDO_OFFSET}","%d")
+ecmcEpicsEnvSetCalc(EX7062_PDO,"6663+${PDO_OFFSET}","0x%04x")
 ${EX7062_TP}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,${EX7062_PDO},${TP_IN},0x01,U16,touchProbeStatus${CH_ID})"
-ecmcEpicsEnvSetCalc(EX7062_PDO,"6664+${PDO_OFFSET}","%d")
+ecmcEpicsEnvSetCalc(EX7062_PDO,"6664+${PDO_OFFSET}","0x%04x")
 ${EX7062_TP}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,${EX7062_PDO},${TP_IN},0x11,U32,touchProbePositionPos${CH_ID}_1)"
-ecmcEpicsEnvSetCalc(EX7062_PDO,"6665+${PDO_OFFSET}","%d")
+ecmcEpicsEnvSetCalc(EX7062_PDO,"6665+${PDO_OFFSET}","0x%04x")
 ${EX7062_TP}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,${EX7062_PDO},${TP_IN},0x12,U32,touchProbePositionNeg${CH_ID}_1)"
-ecmcEpicsEnvSetCalc(EX7062_PDO,"6672+${PDO_OFFSET}","%d")
+ecmcEpicsEnvSetCalc(EX7062_PDO,"6672+${PDO_OFFSET}","0x%04x")
 ${EX7062_INPUTS}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,${EX7062_PDO},${BI_IN},0x01,U16,binaryInputs${CH_ID})"
-ecmcEpicsEnvSetCalc(EX7062_PDO,"6673+${PDO_OFFSET}","%d")
+ecmcEpicsEnvSetCalc(EX7062_PDO,"6673+${PDO_OFFSET}","0x%04x")
 ${EX7062_TP_DC}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,${EX7062_PDO},${TP_IN},0x15,U32,touchProbeTimestampPos${CH_ID}_1)"
-ecmcEpicsEnvSetCalc(EX7062_PDO,"6674+${PDO_OFFSET}","%d")
+ecmcEpicsEnvSetCalc(EX7062_PDO,"6674+${PDO_OFFSET}","0x%04x")
 ${EX7062_TP_DC}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,${EX7062_PDO},${TP_IN},0x16,U32,touchProbeTimestampNeg${CH_ID}_1)"
-ecmcEpicsEnvSetCalc(EX7062_PDO,"6677+${PDO_OFFSET}","%d")
+ecmcEpicsEnvSetCalc(EX7062_PDO,"6677+${PDO_OFFSET}","0x%04x")
 ${EX7062_ENC2}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,${EX7062_PDO},${FB_IN},0x15,U32,positionActual${CH_ID}_2)"
-ecmcEpicsEnvSetCalc(EX7062_PDO,"6662+${PDO_OFFSET}","%d")
+ecmcEpicsEnvSetCalc(EX7062_PDO,"6662+${PDO_OFFSET}","0x%04x")
 ${EX7062_FOLLOWING}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,${EX7062_PDO},${DRV_IN},0x06,S32,followingError${CH_ID})"
 ${EX7062_CSV}epicsEnvSet(EX7062_MODE_CODE,9)
 ${EX7062_CSV}epicsEnvSet(EX7062_MODE_VALUE,0)

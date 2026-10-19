@@ -1,7 +1,8 @@
 #- Internal family mapping. See hugo/content/manual/knowledgebase/hardware/EX72xx_OPT.md for source documentation.
 ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1600,${DRV_OUT},0x01,U16,driveControl${CH_ID})"
 ${ECMC_EX72XX_OPT_CSV}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1601,${DRV_OUT},0x06,S32,velocitySetpoint${CH_ID})"
-${ECMC_EX72XX_OPT_CST}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1602,${DRV_OUT},0x09,S16,torqueSetpoint${CH_ID})"
+${ECMC_EX72XX_OPT_TORQUE}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1602,${DRV_OUT},0x09,S16,torqueSetpoint${CH_ID})"
+${ECMC_EX72XX_OPT_CSTCA}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1603,${DRV_OUT},0x0E,U16,commutationAngle${CH_ID})"
 ${ECMC_EX72XX_OPT_OFFSET}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1605,${DRV_OUT},0x0A,S16,torqueOffset${CH_ID})"
 ${ECMC_EX72XX_OPT_CSP}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1606,${DRV_OUT},0x05,S32,positionSetpoint${CH_ID})"
 

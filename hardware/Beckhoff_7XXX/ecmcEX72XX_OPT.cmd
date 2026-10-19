@@ -1,6 +1,6 @@
 #-d /**
 #-d   \brief Shared option dispatcher for supported MDP742 EL/EP/ELM72xx drives
-#-d   \param MODE CSV (default), CSP or CST
+#-d   \param MODE CSV (default), CSP, CST or CSTCA
 #-d   \param TP 0 or 1, device default
 #-d   \param INFO2 INPUTS, TEMP, ERRORS or NONE, subject to device capabilities
 #-d   \param DIAG 0 or 1, device default (velocity, torque, DC voltage)
@@ -54,6 +54,8 @@ epicsEnvUnset(ECMC_EX72XX_OPT_BAD_CH2_OPTIONS)
 epicsEnvUnset(ECMC_EX72XX_OPT_CSV)
 epicsEnvUnset(ECMC_EX72XX_OPT_CSP)
 epicsEnvUnset(ECMC_EX72XX_OPT_CST)
+epicsEnvUnset(ECMC_EX72XX_OPT_CSTCA)
+epicsEnvUnset(ECMC_EX72XX_OPT_TORQUE)
 epicsEnvUnset(ECMC_EX72XX_OPT_TP)
 epicsEnvUnset(ECMC_EX72XX_OPT_DIAG)
 epicsEnvUnset(ECMC_EX72XX_OPT_INFO2_INPUTS)

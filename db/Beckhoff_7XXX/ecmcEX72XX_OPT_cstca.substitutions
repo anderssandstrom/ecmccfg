@@ -1,0 +1,6 @@
+#- Electrical commutation angle: 65536 counts per 360 degrees (UINT16).
+file "ecmc_analogOutput-chX.template"
+{
+  pattern {CH_ID, sourceName, KEY, suffix, DESC, EGU, ESLO, PREC, DRVL, DRVH}
+          {"$(OPT_CH_ID=01)", "commutationAngle", "Drv", "-ComAngle", "Commutation angle", "deg", 0.0054931640625, 3, 0, 359.9945068359375}
+}

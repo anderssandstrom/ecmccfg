@@ -1,4 +1,4 @@
-#- TESTED
+#- Uses the ESI-corrected generic mapping; validation on hardware is pending.
 #- ecmc hardware config for: MO1008-0000-1112 | 8-channel digital input, 24 V DC, M12
 #- source ESI file: Beckhoff MOxxxx.xml
 #- product code: 0x811fbc0b, revision: 0x02000458

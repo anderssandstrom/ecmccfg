@@ -3,8 +3,8 @@
 set -euo pipefail
 
 PVS=(
-  #"c6025a-08:TR_HI"
-  #"c6025a-08:TR_LO"
+  "c6025a-08:TR_HI"
+  "c6025a-08:TR_LO"
   "c6025a-08:CENTERY"
   "c6025a-08:GAPY"
 )

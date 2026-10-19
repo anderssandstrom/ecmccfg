@@ -9,7 +9,7 @@ share one two-channel dispatcher. Existing descriptors, substitutions and panels
 remain unchanged. The default PDO set matches the existing CSV configuration:
 control word, velocity demand, primary position and drive status on each channel;
 touch-probe control/status and probe 1 positive/negative latch positions;
-digital inputs; secondary encoder position; and one shared voltage/temperature
+digital inputs (EL/ED only); secondary encoder position; and one shared voltage/temperature
 pair exposed on channel 1. Existing default PV names and scaling are retained.
 
 ## Startup examples
@@ -21,7 +21,7 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "HW_DESC=EL7062_OPT"
 # Independent channel modes, with extra diagnostics and TP1 DC timestamps.
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "HW_DESC=ED7062_OPT, OPT='MODE_1=CSP,MODE_2=CSV,EXT_DIAG=1,TP_DC=1'"
 
-# MO currently uses the known working fixed CSV process image.
+# MO uses a fixed CSV process image without digital inputs.
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "HW_DESC=MO7062-0100_OPT"
 ```
 
@@ -43,7 +43,7 @@ and validated on both channels before resetting or configuring the device.
 | --- | --- | --- | --- |
 | `MODE` | `CSV` | `CSV`, `CSP`, `CST`, independently per channel | `CSV` only |
 | `TP` | `1` | Touch-probe control/status and TP1 positive/negative latch positions | Must remain `1` |
-| `INPUTS` | `1` | Digital-input PDO and records | Must remain `1` |
+| `INPUTS` | `1` (EL/ED), `0` (MO) | Digital-input PDO and records | Must remain `0`; no digital inputs |
 | `ENC2` | `1` | Secondary incremental encoder position | Must remain `1` |
 | `DIAG` | `1` | Shared voltage and PCB temperature; global option, no channel suffix | Must remain `1` |
 | `EXT_DIAG` | `0` | Actual velocity and torque; following error in CSP | Must remain `0` |
@@ -54,8 +54,8 @@ and validated on both channels before resetting or configuring the device.
 the matching PDOs are configured. `AUTOTUNE` only controls record loading;
 it does not start tuning at startup.
 
-MO support deliberately retains the process image used by the existing tested
-`MO7062-0100` descriptor. Its PDO mappings are fixed/read-only and may produce
+MO support uses a fixed CSV process image without digital-input PDOs or records.
+`INPUTS=1`, including per-channel overrides, is rejected before configuring the device. Its PDO mappings are fixed/read-only and may produce
 mapping warnings, as noted in that legacy configuration. Alternative modes,
 timestamps and additional PDO selections are rejected until the particular MO
 process image has been verified; EL/ED mapping flexibility is not assumed.

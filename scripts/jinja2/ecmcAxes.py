@@ -3,6 +3,7 @@ import pathlib
 import ecmcYamlHandler
 import ecmcJinja2
 import ecmcConfigValidator
+from ecmcHardwareProfiles import resolve_profiles
 import ecmcPlc
 
 
@@ -33,7 +34,7 @@ class EcmcAxis:
         axis object
         """
         self.yamlHandler.loadYamlData(self.config_file, lint=True)
-        self.v.document = self.yamlHandler.yamlData
+        self.v.document = resolve_profiles(self.yamlHandler.yamlData)
         self.axisType = self.v.get_axis_type()  # obtain axis type from data, this pre-validates the 'axis' key
 
     def make(self):

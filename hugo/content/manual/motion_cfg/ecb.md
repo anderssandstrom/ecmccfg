@@ -32,3 +32,10 @@ The ecb module startup file sets this automatically.
   `controller.freezeIAtRmp`, use the same generated configuration commands with
   either the `ecb` or `jinja` backend.
 - For CLI details and schema behavior, see the `ecb` repository documentation.
+
+Hardware profiles are expanded by ecmccfg's native `ecmcExpandHwProfiles`
+IOC-shell command, automatically called by `loadYamlAxis.cmd` and
+`loadYamlEnc.cmd`. The expanded YAML is stored temporarily under `ECMC_TMP_DIR`
+and passed to the unchanged ECB backend. Rebuild ecmccfg for the new command;
+no ECB source changes or Python are required. See
+[hardware profiles]({{< relref "/manual/motion_cfg/hardware_profiles.md" >}}).

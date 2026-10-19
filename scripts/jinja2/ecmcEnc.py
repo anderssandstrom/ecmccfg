@@ -3,6 +3,7 @@ import pathlib
 import ecmcYamlHandler
 import ecmcJinja2
 import ecmcConfigValidator
+from ecmcHardwareProfiles import resolve_profiles
 
 class EcmcEnc:
     encTemplates = 'add_encoder.jinja2'
@@ -24,7 +25,7 @@ class EcmcEnc:
         enc object
         """
         self.yamlHandler.loadYamlData(self.config_file, lint=True)
-        self.v.document = self.yamlHandler.yamlData
+        self.v.document = resolve_profiles(self.yamlHandler.yamlData)
 
     def make(self):
         """

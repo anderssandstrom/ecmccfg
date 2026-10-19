@@ -142,3 +142,12 @@ process image, expand the selected databases, follow visible panel/trend links,
 check per-channel options and startup SDOs, and compile the Qt panels. These
 checks do not connect to a drive; the added EL/ED modes and optional PDO
 combinations still require commissioning on the target hardware.
+
+## Hardware profile discovery
+
+After setup, `ecmcListHwProfiles` lists the installed YAML profiles and
+`ecmcListCompatibleProfiles(master, slave, channel)` compares them with this
+channel's resolved `_OPT` options. This initial catalogue declares EL7062_OPT
+compatibility only; ED/MO descriptors are recorded but have no supported profile
+match yet. Checks use startup metadata, not a live bus scan, and do not verify
+touch-probe trigger/source configuration. See [hardware profiles](/manual/motion_cfg/hardware_profiles/).

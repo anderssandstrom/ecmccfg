@@ -1,3 +1,4 @@
+ECMCCFG_SOURCE_ROOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 include /ioc/tools/driver.makefile
 
 MODULE=ecmccfg
@@ -49,5 +50,10 @@ TEMPLATES+=$(wildcard ./db/*/*.template)
 TEMPLATES+=$(wildcard ./db/*/*.substitutions)
 TEMPLATES+=$(wildcard ./db/*/*.subs)
 
+# Native hardware profile compiler and IOC-shell registrar are included below.
+# C++17 filesystem needs the compatibility library on the supported GCC 8 builds.
+USR_CXXFLAGS += -std=c++17
+USR_INCLUDES += -I$(ECMCCFG_SOURCE_ROOT)/src
+USR_SYS_LIBS += stdc++fs
 SOURCES += $(wildcard ./src/*.cpp)
 DBDS    += $(wildcard ./dbd/*.dbd)

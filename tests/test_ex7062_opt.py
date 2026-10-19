@@ -23,6 +23,13 @@ class Ex7062OptTests(unittest.TestCase):
     def check(self, startup):
         return self.helper.check_records_and_panels(startup)
 
+    def test_profile_channel_metadata(self):
+        s = Startup('EL7062', {'MODE_2': 'CSP', 'TP_1': '0', 'INPUTS_2': '0', 'ENC2_2': '0'})
+        self.assertEqual(s.profile_channels[(0, 1, 1)], ('EL7062_OPT',
+                         {'MODE': 'CSV', 'TP': 0, 'INPUTS': 1, 'ENC2': 1}))
+        self.assertEqual(s.profile_channels[(0, 1, 2)], ('EL7062_OPT',
+                         {'MODE': 'CSP', 'TP': 1, 'INPUTS': 0, 'ENC2': 0}))
+
     def test_defaults_match_legacy_process_image(self):
         # Ignore commented-out entries when extracting the legacy baseline.
         source = (HW / 'EL/ecmcEX7062.cmd').read_text()

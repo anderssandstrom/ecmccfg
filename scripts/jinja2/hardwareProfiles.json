@@ -1,0 +1,124 @@
+{
+  "version": 1,
+  "drive": {
+    "beckhoff/EL7041/CSV": {
+      "channels": [
+        1
+      ],
+      "mode": "CSV",
+      "defaults": {
+        "type": 0,
+        "denominator": 32768,
+        "setpoint": "{prefix}.velocitySetpoint{channel}",
+        "control": "{prefix}.driveControl{channel}",
+        "status": "{prefix}.driveStatus{channel}",
+        "enable": 0,
+        "enabled": 1,
+        "reset": 1,
+        "reduceTorque": 2,
+        "warning": 2,
+        "error": [
+          3,
+          7,
+          14
+        ],
+        "reduceTorqueEnable": true
+      },
+      "digitalInputs": {
+        "1": "{prefix}.driveStatus{channel}.11",
+        "2": "{prefix}.driveStatus{channel}.12"
+      },
+      "inputDefaults": {
+        "limit": {
+          "backward": {
+            "driveInput": 1
+          },
+          "forward": {
+            "driveInput": 2
+          }
+        }
+      },
+      "compatibility": {
+        "hardware": [
+          "EL7041"
+        ],
+        "requires": {
+          "MODE": "CSV"
+        }
+      }
+    },
+    "beckhoff/EL7062/CSV": {
+      "channels": [
+        1,
+        2
+      ],
+      "mode": "CSV",
+      "defaults": {
+        "type": 1,
+        "denominator": 2147483648,
+        "setpoint": "{prefix}.velocitySetpoint{channel}",
+        "control": "{prefix}.driveControl{channel}",
+        "status": "{prefix}.driveStatus{channel}"
+      },
+      "digitalInputs": {
+        "1": "{prefix}.binaryInputs{channel}.0",
+        "2": "{prefix}.binaryInputs{channel}.1"
+      },
+      "inputDefaults": {
+        "limit": {
+          "backward": {
+            "driveInput": 1
+          },
+          "forward": {
+            "driveInput": 2
+          }
+        }
+      },
+      "compatibility": {
+        "hardware": [
+          "EL7062_OPT"
+        ],
+        "requires": {
+          "MODE": "CSV",
+          "INPUTS": 1
+        }
+      }
+    }
+  },
+  "encoder": {
+    "beckhoff/EL7062/incremental": {
+      "channels": [
+        1,
+        2
+      ],
+      "defaults": {
+        "type": 0,
+        "bits": 32,
+        "position": "{prefix}.positionActual{channel}_2"
+      },
+      "index": {
+        "control": "{prefix}.touchProbeControl{channel}",
+        "status": "{prefix}.touchProbeStatus{channel}",
+        "latch": {
+          "position": "{prefix}.touchProbePositionPos{channel}_1",
+          "control": 0,
+          "status": 1,
+          "armCmd": 17,
+          "armBits": 5
+        }
+      },
+      "homing": {
+        "low-limit-index": 11,
+        "high-limit-index": 12
+      },
+      "compatibility": {
+        "hardware": [
+          "EL7062_OPT"
+        ],
+        "requires": {
+          "ENC2": 1
+        }
+      }
+    }
+  }
+}

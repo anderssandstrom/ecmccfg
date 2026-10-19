@@ -1,0 +1,18 @@
+# Standalone alternative for loadYamlEnc.cmd, not loaded by startup.cmd.
+# Use on an axis that does not already have this encoder configured.
+encoder:
+  profile: beckhoff/EL7062/incremental
+  slave: ${DRV_SID}
+  channel: 1
+  desc: Incremental
+  unitsPerMotorRev: 360
+  countsPerMotorRev: 1048576
+  homing:
+    method: low-limit-index
+    position: 0
+    velocity:
+      to: 36
+      from: 3.6
+    acceleration: 36
+    deceleration: 36
+    latchCount: 1

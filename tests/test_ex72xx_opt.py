@@ -66,6 +66,7 @@ class Startup:
                         ECMC_SYNC_0_OFFSET_NS='0', ECMC_SYNC_1_OFFSET_NS='0',
                         ECMC_PREFIX='TEST:')
         self.commands = []
+        self.profile_channels = {}
         self.substitutions = []
         self.templates = []
         family = 'ELM' if model.startswith('ELM') else ('EL' if model.startswith('ED') else model[:2])
@@ -96,6 +97,14 @@ class Startup:
                     result = expression(args[1])
                     self.env[args[0]] = (args[2] % int(result) if len(args) > 2
                                          else format(float(result), '.15g'))
+                continue
+            m = re.fullmatch(r'(ecmcClearHwProfileSlave|ecmcRegisterHwProfileChannel)\((.*)\)', line)
+            if m:
+                args = arguments(m[2])
+                if m[1] == 'ecmcClearHwProfileSlave':
+                    self.profile_channels.clear()
+                else:
+                    self.profile_channels[tuple(map(int, args[:3]))] = (args[3], {k: (v if k == 'MODE' else int(v)) for k, v in (pair.split('=') for pair in args[4].split(','))})
                 continue
             words = shlex.split(line)
             if words[0] == 'ecmcConfigOrDie':

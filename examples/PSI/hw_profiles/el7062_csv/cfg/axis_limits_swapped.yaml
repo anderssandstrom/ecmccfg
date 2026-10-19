@@ -1,0 +1,79 @@
+# Alternative: swapped digital limit inputs with low-limit homing (sequence 1).
+# Load this instead of axis.yaml; do not load both for the same axis.
+axis:
+  id: ${AXIS_ID=1}
+  tweakDist: 360
+  autoEnable:
+    enableTimeout: 2
+    disableTimeout: 2
+epics:
+  name: ${AX_NAME=M1}
+  precision: 3
+  description: Test cfg
+  unit: deg
+  motorRecord:
+    fieldInit: RTRY=0,FOFF=Frozen
+    syncSoftLimits: true
+drive:
+  profile: beckhoff/EL7062/CSV
+  slave: ${DRV_SID}
+  channel: 1
+  maxVelocity: 2880000
+encoder:
+  profile: beckhoff/EL7062/incremental
+  slave: ${DRV_SID}
+  channel: 1
+  desc: Incremental
+  unitsPerMotorRev: 360
+  countsPerMotorRev: 1048576
+  homing:
+    position: 0
+    velocity:
+      to: 36
+      from: 3.6
+    acceleration: 36
+    deceleration: 36
+    type: 1
+controller:
+  Kp: 10
+  Ki: 0
+  Kd: 0
+trajectory:
+  axis:
+    velocity: 36
+    acceleration: 72
+    deceleration: 72
+    emergencyDeceleration: 7200
+    jerk: 10000
+  jog:
+    velocity: 1
+input:
+  limit:
+    backward: {driveInput: 2}  # DI2 -> low limit (binaryInputs01.1)
+    forward: {driveInput: 1}   # DI1 -> high limit (binaryInputs01.0)
+    # Optional electrical polarity override, independent of swapping inputs:
+    # backwardPolarity: 1     # 0 = normally closed (default), 1 = normally open
+    # forwardPolarity: 1
+  home: ec0.s$(DRV_SID).ONE.0
+  interlock: ec0.s$(DRV_SID).ONE.0
+softlimits:
+  enable: true
+  forward: 10000
+  forwardEnable: true
+  backward: -10000
+  backwardEnable: true
+monitoring:
+  lag:
+    enable: true
+    tolerance: 10
+    time: 100
+  velocity:
+    enable: false
+    max: 8
+    time:
+      trajectory: 100
+      drive: 200
+  target:
+    enable: true
+    tolerance: 0.5
+    time: 10

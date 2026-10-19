@@ -1,0 +1,74 @@
+# EL7041 drive profile with an explicit external EL5042 encoder.
+# maxVelocity=10 assumes 2000 fullsteps/s, 200 steps/rev, 1 mm/rev.
+# Match terminal range, encoder resolution, mechanics and limits to your machine.
+# Low/high limit links are supplied by the drive profile.
+axis:
+  id: ${AXIS_ID=1}
+  autoEnable:
+    enableTimeout: 5.0
+    disableTimeout: 5.0
+  tweakDist: 0.5
+epics:
+  name: ${AX_NAME=M1}
+  precision: 3
+  description: Test cfg
+  unit: mm
+  motorRecord:
+    syncSoftLimits: false
+    fieldInit: RTRY=0,FOFF=Frozen
+drive:
+  profile: beckhoff/EL7041/CSV
+  slave: ${DRV_SID}
+  channel: 1
+  maxVelocity: 10
+encoder:
+  desc: BISS-C
+  numerator: 1
+  denominator: 4096
+  type: 1
+  bits: 32
+  absBits: 26
+  absOffset: 0
+  position: ec0.s$(ENC_SID).positionActual${ENC_CH=01}
+  status: ec0.s$(ENC_SID).encoderStatus${ENC_CH=01}
+  ready: 2
+  warning: 0
+  error:
+  - 1
+controller:
+  Kp: 1
+  Ki: 0
+  Kd: 0
+trajectory:
+  axis:
+    velocity: 2
+    acceleration: 2
+    deceleration: 2
+    emergencyDeceleration: 5
+    jerk: 10
+  jog:
+    velocity: 1
+input:
+  home: ec0.s$(DRV_SID).ONE.0
+  interlock: ec0.s$(DRV_SID).ONE.0
+softlimits:
+  enable: true
+  forward: 10
+  forwardEnable: true
+  backward: -10
+  backwardEnable: true
+monitoring:
+  lag:
+    enable: true
+    tolerance: 0.1
+    time: 10
+  velocity:
+    enable: false
+    max: 8
+    time:
+      trajectory: 100
+      drive: 200
+  target:
+    enable: true
+    tolerance: 0.01
+    time: 10

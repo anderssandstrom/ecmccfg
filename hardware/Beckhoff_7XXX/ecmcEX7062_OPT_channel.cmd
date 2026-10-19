@@ -62,3 +62,5 @@ ${EX7062_EXT_DIAG}${SCRIPTEXEC} ${ecmccfg_DIR}applySubstitutions.cmd "SUBST_FILE
 ${EX7062_FOLLOWING}${SCRIPTEXEC} ${ecmccfg_DIR}applySubstitutions.cmd "SUBST_FILE=ecmcEX72XX_OPT_followingError.substitutions,ECMC_P=${ECMC_P},MACROS='OPT_CH_ID=${CH_ID},OPT_POS_ESLO=1,OPT_POS_EGU=Counts'"
 ecmcEpicsEnvSetCalc(EX7062_FOLLOWING_VALUE,"'${MODE}'='CSP' and ${EXT_DIAG}==1","%d")
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmcEX7062_OPT_config.template,ECMC_P=${ECMC_P},PARAM='CH_ID=${CH_ID},CFG_SUFFIX=${CFG_SUFFIX},MODE_VALUE=${EX7062_MODE_VALUE},TP=${TP},INPUTS=${INPUTS},ENC2=${ENC2},EXT_DIAG=${EXT_DIAG},TP_DC=${TP_DC},AUTOTUNE=${AUTOTUNE},FOLLOWING=${EX7062_FOLLOWING_VALUE}'"
+#- Publish resolved options for profile discovery (no bus probing).
+ecmcRegisterHwProfileChannel(${ECMC_EC_MASTER_ID=0},${ECMC_EC_SLAVE_NUM},${CH_NUM},"${ECMC_EC_HWTYPE}","MODE=${MODE},TP=${TP},INPUTS=${INPUTS},ENC2=${ENC2}")

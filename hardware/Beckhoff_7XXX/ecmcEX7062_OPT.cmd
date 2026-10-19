@@ -1,3 +1,5 @@
+#- Clear earlier metadata even if this reconfiguration fails validation.
+ecmcClearHwProfileSlave(${ECMC_EC_MASTER_ID=0},${ECMC_EC_SLAVE_NUM})
 #- Shared EL/ED7062 and constrained MO7062-0100 OPT dispatcher.
 #- Default EL/ED process image matches ecmcEX7062.cmd (CSV); MO has no inputs.
 ecmcEpicsEnvSetCalcTernary(EX7062_BAD_DIAG,"'${DIAG=1}'!='0' and '${DIAG=1}'!='1'","","#-")

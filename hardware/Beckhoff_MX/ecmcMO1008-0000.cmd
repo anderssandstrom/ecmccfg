@@ -1,3 +1,5 @@
+#- Shared PDO mapping, database and panel for the -1111 and -1112 connector types.
+#- Can also be selected directly with HW_DESC=MO1008-0000.
 #- PDO assignment corrected against Beckhoff MOxxxx.xml, revision 0x02000458.
 #- Corrected mapping requires validation on hardware.
 epicsEnvSet("ECMC_EC_HWTYPE",        "MO1008-0000")

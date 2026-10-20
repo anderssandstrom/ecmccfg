@@ -4,6 +4,23 @@ weight = 24
 chapter = false
 +++
 
+## MO1008, MO2008 and MO2338 connector variants
+
+For MO1008, MO2008 and MO2338, the `-1111` and `-1112` suffixes select the connector
+type. Both variants use the same PDO configuration, database records and panel.
+The suffix is optional when selecting the hardware configuration:
+
+```text
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=MO1008-0000,SLAVE_ID=7"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=MO2008-0000,SLAVE_ID=8"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=MO2338-0000,SLAVE_ID=9"
+```
+
+Each descriptor also accepts either suffix, for example
+`HW_DESC=MO2008-0000-1112`. These explicit variants reuse the generic
+`ecmcMO1008-0000.substitutions`, `ecmcMO2008-0000.substitutions` or
+`ecmcMO2338-0000-common.substitutions` database, respectively.
+
 ## Enable a second baseplate with EtherLab
 
 ### Issue

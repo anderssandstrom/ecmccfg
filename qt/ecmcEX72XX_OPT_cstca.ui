@@ -899,9 +899,43 @@
     <rect>
      <x>185</x>
      <y>298</y>
-     <width>153</width>
+     <width>136</width>
      <height>22</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="caRelatedDisplay" name="commutationAngleReadbackTrend">
+   <property name="geometry">
+    <rect>
+     <x>323</x>
+     <y>301</y>
+     <width>15</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="labels">
+    <string>&gt;</string>
+   </property>
+   <property name="files">
+    <string>ecmcGraph_v1.ui</string>
+   </property>
+   <property name="args">
+    <string>IOC=$(IOC),TITLE=m$(MasterID)s$(SlaveID): Channel $(ChID) commutation angle demand,PV=$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-ComAngle-RB</string>
+   </property>
+   <property name="toolTip">
+    <string>Trend: electrical commutation-angle demand</string>
    </property>
   </widget>
  </widget>

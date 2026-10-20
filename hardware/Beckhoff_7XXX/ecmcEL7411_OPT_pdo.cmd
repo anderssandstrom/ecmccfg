@@ -1,0 +1,17 @@
+#- EL7411-specific PDO mapping. See the EL7411_OPT Hugo page for sources.
+#- EL7411 has no torque-offset or EL72xx encoder-status PDO.
+ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1600,${DRV_OUT},0x01,U16,driveControl${CH_ID})"
+${ECMC_EX72XX_OPT_CSV}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1601,${DRV_OUT},0x06,S32,velocitySetpoint${CH_ID})"
+${ECMC_EX72XX_OPT_TORQUE}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1602,${DRV_OUT},0x09,S16,torqueSetpoint${CH_ID})"
+${ECMC_EX72XX_OPT_CSTCA}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1603,${DRV_OUT},0x0E,U16,commutationAngle${CH_ID})"
+${ECMC_EX72XX_OPT_CSP}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1606,${DRV_OUT},0x05,S32,positionSetpoint${CH_ID})"
+
+ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a00,${FB_IN},0x11,U32,positionActual${CH_ID})"
+ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a01,${DRV_IN},0x01,U16,driveStatus${CH_ID})"
+${ECMC_EX72XX_OPT_DIAG}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a02,${DRV_IN},0x07,S32,velocityActual${CH_ID})"
+${ECMC_EX72XX_OPT_DIAG}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a03,${DRV_IN},0x08,S16,torqueActual${CH_ID})"
+${ECMC_EX72XX_OPT_DIAG}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a04,${DRV_IN},0x12,U16,voltageActual${CH_ID})"
+${ECMC_EX72XX_OPT_INFO2_INPUTS}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a05,${DRV_IN},0x13,U16,binaryInputs${CH_ID})"
+${ECMC_EX72XX_OPT_INFO2_TEMP}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a05,${DRV_IN},0x13,U16,temperatureActual${CH_ID})"
+${ECMC_EX72XX_OPT_FOLLOWING}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a06,${DRV_IN},${FOLLOWING_SUB},S32,followingError${CH_ID})"
+${ECMC_EX72XX_OPT_TP}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a07,${TP_IN},0x01,U16,touchProbeStatus${CH_ID})"

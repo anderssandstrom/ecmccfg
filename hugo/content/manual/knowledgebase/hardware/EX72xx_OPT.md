@@ -8,6 +8,10 @@ The OPT wrappers use a common dispatcher and per-channel record/panel interface,
 with separate PDO mappings and timing policies for EL/EP72xx and ELM72xx.
 All existing non-OPT hardware configurations, databases and panels are unchanged.
 
+For the EL7411-specific mapping, defaults and CSTCA input diagnostics, see
+[EL7411 OPT]({{< relref "/manual/knowledgebase/hardware/EL7411_OPT.md" >}}).
+The existing EL/EP/ELM72xx CSTCA behaviour described here is unchanged.
+
 ## Devices and defaults
 
 | `HW_DESC` | Channels | PDO family | Default `MODE` | `TP` | `INFO2` | `DIAG` |

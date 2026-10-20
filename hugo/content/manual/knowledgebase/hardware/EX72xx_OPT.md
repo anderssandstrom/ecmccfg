@@ -83,7 +83,8 @@ part of this option.
 records. `DIAG=0` omits them. ELM CSP additionally maps following error when
 `DIAG=1`. EL/EP CSP always maps following error, as in CSP_STD. EL/EP CSV and CSP
 map torque offset; ELM does not map torque offset. CST and CSTCA use torque demand.
-`ENC_STAT=1` is now the default on every listed wrapper, in CSV, CSP, CST and CSTCA.
+`ENC_STAT=1` is the default on every listed wrapper in CSV, CSP and CST.
+CSTCA omits feedback PDOs regardless of this option.
 It maps encoder feedback status and loads its records. `ENC_STAT=0` omits the
 PDO and records; `ENC_STAT_1` / `ENC_STAT_2` can override each channel separately.
 `CfgEncoderStatus` and the panel link reflect the resolved selection.
@@ -128,6 +129,16 @@ EtherCAT. `MODE_1=CSTCA` and `MODE_2=CSTCA` select it independently on ELM7222.
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "HW_DESC=EL7211-9014_OPT,OPT='MODE=CSTCA'"
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "HW_DESC=ELM7222-0010_OPT,OPT='MODE_1=CST,MODE_2=CSTCA'"
 ```
+
+CSTCA uses a minimal TxPDO configuration: only `0x1A01` DRV Statusword on
+EL/EP, plus `0x1A05` Info2 inputs when `INFO2=INPUTS` is selected on a supported
+wrapper. `INFO2=NONE` selects statusword only. ELM uses its corresponding drive
+statusword PDO (`0x1A10` / `0x1A50`); ELM does not support `INFO2=INPUTS`.
+Position feedback, encoder status, touch probe, velocity, torque and voltage
+telemetry are omitted in CSTCA, even when `ENC_STAT`, `TP` or `DIAG` are enabled.
+`INFO2=TEMP` and `INFO2=ERRORS` are also omitted in this mode. Configuration PVs
+report the effective selection, and position widgets and unavailable feature
+links are hidden. Other channels retain their own selected mode's mappings.
 
 The torque PDO and `Drv01-Trq` / `Drv01-Trq-RB` records are shared with CST.
 CSTCA additionally maps `commutationAngle01` (`commutationAngle02` on channel 2)

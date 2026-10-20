@@ -7,7 +7,7 @@ ${ECMC_EX72XX_OPT_TORQUE}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},
 ${ECMC_EX72XX_OPT_CSTCA}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x16${ECMC_EX72XX_OPT_DRV_SUFFIX}4,${DRV_OUT},0x0E,U16,commutationAngle${CH_ID})"
 ${ECMC_EX72XX_OPT_CSP}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x16${ECMC_EX72XX_OPT_DRV_SUFFIX}1,${DRV_OUT},0x05,S32,positionSetpoint${CH_ID})"
 
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a${ECMC_EX72XX_OPT_PDO_SUFFIX}0,${FB_IN},0x11,U32,positionActual${CH_ID})"
+${ECMC_EX72XX_OPT_FEEDBACK}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a${ECMC_EX72XX_OPT_PDO_SUFFIX}0,${FB_IN},0x11,U32,positionActual${CH_ID})"
 #- Aggregate the 16-bit feedback-status PDO, as in the EL family: bit 13
 #- is position invalid, and bits 14-15 are the input cycle counter.
 ${ECMC_EX72XX_OPT_ENCODER_STATUS}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a${ECMC_EX72XX_OPT_PDO_SUFFIX}2,${FB_IN},0x01,U16,encoderStatus${CH_ID})"

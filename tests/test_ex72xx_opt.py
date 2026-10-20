@@ -249,12 +249,43 @@ class OptTests(unittest.TestCase):
                     self.check_records_and_panels(startup)
                     for ch in range(1, 3 if model == 'ELM7222-0010' else 2):
                         suffix = f'{ch:02}'
-                        self.assertEqual('touchProbeStatus'+suffix in entries, bool(tp))
-                        self.assertEqual('voltageActual'+suffix in entries, bool(diag))
+                        self.assertEqual('touchProbeStatus'+suffix in entries, bool(tp) and mode != 'CSTCA')
+                        self.assertEqual('voltageActual'+suffix in entries, bool(diag) and mode != 'CSTCA')
                         demand = dict(CSV='velocitySetpoint', CSP='positionSetpoint', CST='torqueSetpoint', CSTCA='torqueSetpoint')[mode]
                         self.assertIn(demand+suffix, entries)
                         self.assertIn(f'Cfg.EcAddSdo(1,0x{0x7010+(ch-1)*0x100:x},0x03,{dict(CSV=9,CSP=8,CST=10,CSTCA=11)[mode]},1)', startup.commands)
                     self.assertFalse(any(key.startswith('ECMC_EX72XX_OPT_') for key in startup.env))
+
+    def test_cstca_minimal_tx_with_optional_inputs(self):
+        for model in MODELS:
+            infos = ['NONE', 'TEMP'] if model.startswith('ELM') else ['NONE', 'TEMP', 'ERRORS']
+            if model in MODELS[:2]:
+                infos.append('INPUTS')
+            for info in infos:
+                with self.subTest(model=model, info=info):
+                    startup = Startup(model, dict(MODE='CSTCA', INFO2=info, DIAG='1',
+                                      TP='0' if model == 'EL7201' else '1', ENC_STAT='1'))
+                    config = self.check_records_and_panels(startup)
+                    tx = {name: value for name, value in startup.entries().items() if value[0][0] == 2}
+                    expected = {}
+                    for ch in range(1, 3 if model == 'ELM7222-0010' else 2):
+                        suffix = f'{ch:02}'
+                        pdo = 0x1a10+(ch-1)*0x40 if model.startswith('ELM') else 0x1a01
+                        expected['driveStatus'+suffix] = ((2, 3, pdo, 0x6010+(ch-1)*0x100, 1), 'U16')
+                        if info == 'INPUTS':
+                            expected['binaryInputs'+suffix] = ((2, 3, 0x1a05, 0x6010, 0x13), 'U16')
+                        cfgsuffix = '02' if ch == 2 else ''
+                        for feature in ['TouchProbe', 'Diagnostics', 'EncoderStatus', 'FollowingError']:
+                            self.assertEqual(config['TEST:Cfg'+feature+cfgsuffix], 0)
+                        self.assertEqual(config['TEST:CfgInfo2'+cfgsuffix], 0 if info == 'INPUTS' else 3)
+                    self.assertEqual(tx, expected)
+        # One channel's CSTCA mode must not suppress the other channel's feedback.
+        startup = Startup('ELM7222-0010', dict(MODE_1='CSTCA', MODE_2='CSV', DIAG='1', TP='1'))
+        self.assertNotIn('positionActual01', startup.entries())
+        self.assertIn('positionActual02', startup.entries())
+        self.assertIn('encoderStatus02', startup.entries())
+        self.assertIn('voltageActual02', startup.entries())
+        self.check_records_and_panels(startup)
 
     def test_cstca_angle_mapping_and_records(self):
         for model in MODELS:
@@ -292,14 +323,15 @@ class OptTests(unittest.TestCase):
                 config = self.check_records_and_panels(startup)
                 for ch in range(1, 3 if model == 'ELM7222-0010' else 2):
                     name = f'encoderStatus{ch:02}'
-                    self.assertEqual(name in startup.entries(), bool(enabled))
-                    self.assertEqual(config['TEST:CfgEncoderStatus'+('02' if ch == 2 else '')], enabled)
-                    if enabled:
+                    mapped = bool(enabled) and mode != 'CSTCA'
+                    self.assertEqual(name in startup.entries(), mapped)
+                    self.assertEqual(config['TEST:CfgEncoderStatus'+('02' if ch == 2 else '')], int(mapped))
+                    if mapped:
                         pdo = (0x1a02+(ch-1)*0x40) if model.startswith('ELM') else 0x1a0c
                         self.assertEqual(startup.entries()[name],
                                          ((2, 3, pdo, 0x6000+(ch-1)*0x100, 1), 'U16'))
                 default = Startup(model, dict(MODE=mode))
-                self.assertIn('encoderStatus01', default.entries())
+                self.assertEqual('encoderStatus01' in default.entries(), mode != 'CSTCA')
         override = Startup('ELM7222-0010', dict(ENC_STAT='0', ENC_STAT_2='1'))
         self.assertNotIn('encoderStatus01', override.entries())
         self.assertIn('encoderStatus02', override.entries())
@@ -323,7 +355,7 @@ class OptTests(unittest.TestCase):
             config = self.check_records_and_panels(startup)
             self.assertEqual(config['TEST:CfgMode'], ['CSV', 'CSP', 'CST', 'CSTCA'].index(mode1))
             self.assertEqual(config['TEST:CfgMode02'], ['CSV', 'CSP', 'CST', 'CSTCA'].index(mode2))
-            self.assertIn('temperatureActual02', startup.entries())
+            self.assertEqual('temperatureActual02' in startup.entries(), mode2 != 'CSTCA')
             self.assertNotIn('temperatureActual01', startup.entries())
 
     def test_unsupported_options_fail_before_reset(self):

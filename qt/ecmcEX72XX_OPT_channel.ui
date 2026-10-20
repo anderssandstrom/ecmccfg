@@ -102,48 +102,6 @@ QTabBar::tab:selected { background: #ffffff; color: #1b3652; border-bottom-color
       <set>Qt::AlignRight|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="label3">
-     <property name="text">
-      <string>Encoder position</string>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>8</x>
-       <y>50</y>
-       <width>108</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>8</pointsize>
-      </font>
-     </property>
-    </widget>
-    <widget class="caLineEdit" name="value3">
-     <property name="channel">
-      <string>$(IOC):m$(MasterID)s$(SlaveID)-Enc$(ChID)-PosAct</string>
-     </property>
-     <property name="colorMode">
-      <enum>caLineEdit::Alarm</enum>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>8</x>
-       <y>67</y>
-       <width>91</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>9</pointsize>
-      </font>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignVCenter</set>
-     </property>
-    </widget>
     <widget class="QLabel" name="label4">
      <property name="text">
       <string>Drive state</string>
@@ -813,7 +771,87 @@ QTabBar::tab:selected { background: #ffffff; color: #1b3652; border-bottom-color
       </font>
      </property>
     </widget>
-    <widget class="caRelatedDisplay" name="value3Trend">
+    <widget class="caFrame" name="label3WhenMapped">
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>50</y>
+       <width>108</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode$(CfgSuffix)</string>
+     </property>
+     <property name="visibility">
+      <enum>caFrame::Calc</enum>
+     </property>
+     <property name="visibilityCalc">
+      <string>A!=3</string>
+     </property>
+     <widget class="QLabel" name="label3">
+      <property name="text">
+       <string>Encoder position</string>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>108</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+     </widget>
+    </widget>
+    <widget class="caFrame" name="value3WhenMapped">
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>67</y>
+       <width>91</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode$(CfgSuffix)</string>
+     </property>
+     <property name="visibility">
+      <enum>caFrame::Calc</enum>
+     </property>
+     <property name="visibilityCalc">
+      <string>A!=3</string>
+     </property>
+     <widget class="caLineEdit" name="value3">
+      <property name="channel">
+       <string>$(IOC):m$(MasterID)s$(SlaveID)-Enc$(ChID)-PosAct</string>
+      </property>
+      <property name="colorMode">
+       <enum>caLineEdit::Alarm</enum>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>91</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </widget>
+    <widget class="caFrame" name="value3TrendWhenMapped">
      <property name="geometry">
       <rect>
        <x>101</x>
@@ -822,30 +860,49 @@ QTabBar::tab:selected { background: #ffffff; color: #1b3652; border-bottom-color
        <height>16</height>
       </rect>
      </property>
-     <property name="minimumSize">
-      <size>
-       <width>15</width>
-       <height>16</height>
-      </size>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode$(CfgSuffix)</string>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>15</width>
-       <height>16</height>
-      </size>
+     <property name="visibility">
+      <enum>caFrame::Calc</enum>
      </property>
-     <property name="labels">
-      <string>&gt;</string>
+     <property name="visibilityCalc">
+      <string>A!=3</string>
      </property>
-     <property name="files">
-      <string>ecmcGraph_v1.ui</string>
-     </property>
-     <property name="args">
-      <string>IOC=$(IOC),TITLE=m$(MasterID)s$(SlaveID): Channel $(ChID) actual position,PV=$(IOC):m$(MasterID)s$(SlaveID)-Enc$(ChID)-PosAct</string>
-     </property>
-     <property name="toolTip">
-      <string>Trend: Channel $(ChID) actual position</string>
-     </property>
+     <widget class="caRelatedDisplay" name="value3Trend">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>15</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>15</width>
+        <height>16</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>15</width>
+        <height>16</height>
+       </size>
+      </property>
+      <property name="labels">
+       <string>&gt;</string>
+      </property>
+      <property name="files">
+       <string>ecmcGraph_v1.ui</string>
+      </property>
+      <property name="args">
+       <string>IOC=$(IOC),TITLE=m$(MasterID)s$(SlaveID): Channel $(ChID) actual position,PV=$(IOC):m$(MasterID)s$(SlaveID)-Enc$(ChID)-PosAct</string>
+      </property>
+      <property name="toolTip">
+       <string>Trend: Channel $(ChID) actual position</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="setupTab">

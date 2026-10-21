@@ -16,8 +16,8 @@ ${EX7062_BAD_BOOL}ecmcExit Error: AUTOTUNE must be 0 or 1
 ecmcEpicsEnvSetCalcTernary(EX7062_BAD_TP_DC,"${TP_DC}==1 and (${TP}==0 or ${CAP_TP_DC}==0)","","#-")
 ${EX7062_BAD_TP_DC}ecmcExit Error: TP_DC requires TP=1 and a supported EL/ED7062
 #- MO support deliberately retains the known working fixed CSV process image.
-ecmcEpicsEnvSetCalcTernary(EX7062_BAD_FIXED,"${FIXED_PDOS}==1 and ('${MODE}'!='CSV' or ${TP}!=1 or ${INPUTS}!=1 or ${ENC2}!=1 or ${DIAG=1}!=1 or ${EXT_DIAG}!=0 or ${TP_DC}!=0)","","#-")
-${EX7062_BAD_FIXED}ecmcExit Error: MO7062 OPT requires CSV, TP=1, INPUTS=1, ENC2=1, DIAG=1, EXT_DIAG=0 and TP_DC=0
+ecmcEpicsEnvSetCalcTernary(EX7062_BAD_FIXED,"${FIXED_PDOS}==1 and ('${MODE}'!='CSV' or ${TP}!=1 or ${INPUTS}!=0 or ${ENC2}!=1 or ${DIAG=1}!=1 or ${EXT_DIAG}!=0 or ${TP_DC}!=0)","","#-")
+${EX7062_BAD_FIXED}ecmcExit Error: MO7062 OPT requires CSV, TP=1, INPUTS=0 (no digital inputs), ENC2=1, DIAG=1, EXT_DIAG=0 and TP_DC=0
 ecmcEpicsEnvSetCalcTernary(EX7062_CSV,"'${MODE}'='CSV'","","#-")
 ecmcEpicsEnvSetCalcTernary(EX7062_CSP,"'${MODE}'='CSP'","","#-")
 ecmcEpicsEnvSetCalcTernary(EX7062_CST,"'${MODE}'='CST'","","#-")

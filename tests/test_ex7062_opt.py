@@ -33,17 +33,51 @@ class Ex7062OptTests(unittest.TestCase):
         for model in ['EL7062', 'ED7062', 'MO7062-0100']:
             with self.subTest(model=model):
                 s = Startup(model)
-                self.assertEqual(s.entries(), expected)
+                model_expected = {name: value for name, value in expected.items()
+                                  if model != 'MO7062-0100' or not name.startswith('binaryInputs')}
+                self.assertEqual(s.entries(), model_expected)
                 self.check(s)
                 db = self.helper.database(s)
                 for channel in ['01','02']:
-                    for suffix in ['Spd', 'Spd-RB', 'Cmd', 'Stat', 'BI01', 'BI02',
+                    for suffix in ['Spd', 'Spd-RB', 'Cmd', 'Stat',
                                    'TrgDS402Ena', 'TrgDS402Dis', 'TuneTrg', 'Tune-Arr']:
                         self.assertIn(f'"TEST:Drv{channel}-{suffix}"', db)
                     self.assertIn(f'"TEST:Enc{channel}-PosAct02"', db)
+                    for suffix in ['BI01', 'BI02']:
+                        self.assertEqual(f'"TEST:Drv{channel}-{suffix}"' in db, model != 'MO7062-0100')
                 self.assertIn('"TEST:Drv01-VltAct"', db)
                 self.assertIn('"TEST:Drv01-TmpAct"', db)
                 self.assertFalse(any(k.startswith('EX7062_') for k in s.env))
+
+    def test_mo_inputs_disabled(self):
+        for options in [{}, dict(INPUTS='0'), dict(INPUTS_1='0', INPUTS_2='0')]:
+            with self.subTest(options=options):
+                startup = Startup('MO7062-0100', options)
+                config = self.check(startup)
+                for channel, suffix in [('01', ''), ('02', '02')]:
+                    self.assertNotIn('binaryInputs' + channel, startup.entries())
+                    self.assertEqual(config['TEST:CfgInputs' + suffix], 0)
+                self.assertFalse(any(name == 'ecmcEX7062_OPT_inputs.template'
+                                     for name, _ in startup.templates))
+
+    def test_entry_commands_match_parser_syntax(self):
+        # The ECMC sscanf parser requires literal 0x prefixes on addresses.
+        pattern = (r'Cfg\.EcAddEntryDT\(\d+,0x[0-9a-fA-F]+,0x[0-9a-fA-F]+,'
+                   r'[12],\d+,0x[0-9a-fA-F]+,0x[0-9a-fA-F]+,'
+                   r'0x[0-9a-fA-F]+,[US]\d+,\w+\)')
+        cases = [('MO7062-0100', {})]
+        cases += [(model, dict(MODE=mode, EXT_DIAG='1', TP_DC='1'))
+                  for model in ['EL7062', 'ED7062'] for mode in ['CSV', 'CSP', 'CST']]
+        for model, options in cases:
+            with self.subTest(model=model, options=options):
+                startup = Startup(model, options)
+                commands = [c for c in startup.commands if c.startswith('Cfg.EcAddEntryDT(')]
+                self.assertTrue(commands)
+                for command in commands:
+                    self.assertRegex(command, '^' + pattern + '$')
+                for channel, pdo in [('01', '0x1600'), ('02', '0x1680')]:
+                    control = next(c for c in commands if c.endswith(',driveControl' + channel + ')'))
+                    self.assertEqual(control.split(',')[5], pdo)
 
     def test_el_ed_option_matrix(self):
         # Combine modes and each independent boolean pair with other features on/off.
@@ -92,7 +126,8 @@ class Ex7062OptTests(unittest.TestCase):
                      dict(INFO2='INPUTS'),dict(ENC_STAT='1'),dict(ENC_STAT_2='0')]:
             with self.subTest(opts=opts):
                 with self.assertRaises(InvalidConfiguration):Startup('ED7062',opts)
-        for opts in [dict(MODE='CSP'),dict(MODE_2='CST'),dict(TP='0'),dict(INPUTS='0'),
+        for opts in [dict(MODE='CSP'),dict(MODE_2='CST'),dict(TP='0'),dict(INPUTS='1'),
+                     dict(INPUTS_1='1'),dict(INPUTS_2='1'),
                      dict(ENC2='0'),dict(DIAG='0'),dict(EXT_DIAG='1'),dict(TP_DC='1')]:
             with self.subTest(mo=opts):
                 with self.assertRaises(InvalidConfiguration):Startup('MO7062-0100',opts)

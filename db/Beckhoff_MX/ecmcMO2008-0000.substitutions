@@ -1,0 +1,35 @@
+file "ecmc_ESI_mbboDirect.template" {
+    pattern { REC_NAME, DESC , SRC_NAME}
+        #- BO_Arr B0..B7=Output
+        {"BO-Arr", "BO Outputs packed bits", "BO_Arr"}
+        #- EFU_Ctrl B0=Enable
+        #- EFU_Ctrl B1=Control via Process Data
+        #- EFU_Ctrl B2=Reset
+        #- EFU_Ctrl B3..B15=gap
+        {"EFU-Ctrl", "EFU Outputs packed bits", "EFU_Ctrl"}
+}
+
+file "ecmc_ESI_mbbiDirect.template" {
+    pattern { REC_NAME, DESC, FLNK , SRC_NAME}
+        {"BO-Stat01", "BO Diagnosis packed bits", "", "BO_Stat01"}
+        #- BO_Stat02 B0..B3=Ch4: Overload, gap, Short to 24V, Power Supply Missing
+        #- BO_Stat02 B4..B8=Ch5: Overcurrent, Overload, gap, Short to 24V, Power Supply Missing
+        #- BO_Stat02 B9..B13=Ch6: Overcurrent, Overload, gap, Short to 24V, Power Supply Missing
+        #- BO_Stat02 B14..B15=Ch7: Overcurrent, Overload
+        {"BO-Stat02", "BO Diagnosis packed bits", "", "BO_Stat02"}
+        #- BO_Stat03 B0..B2=Ch7: gap, Short to 24V, Power Supply Missing
+        #- BO_Stat03 B3..B7=Ch8: Overcurrent, Overload, gap, Short to 24V, Power Supply Missing
+        {"BO-Stat03", "BO Diagnosis packed bits", "", "BO_Stat03"}
+        #- EFU_Stat B0=Warning
+        #- EFU_Stat B1=Error
+        #- EFU_Stat B2=Tripped
+        #- EFU_Stat B3=Enabled
+        #- EFU_Stat B4..B13=gap
+        #- EFU_Stat B14..B15=Input Cycle Counter
+        {"EFU-Stat", "EFU Inputs packed bits", "", "EFU_Stat"}
+}
+
+file "ecmc_ESI_ai.template" {
+    pattern { REC_NAME, DESC , SRC_NAME, DTYP}
+        {"EFU-Curr", "Current", "EFU_Curr", "asynFloat64"}
+}

@@ -1,7 +1,8 @@
 #- TESTED
 #- Generic ecmc hardware config for MO2338-0000-1111 and MO2338-0000-1112
-#- The connector-specific wrappers should be preferred when the exact variant
-#- is known. This wrapper intentionally does not constrain the ESI revision.
+#- Select with HW_DESC=MO2338-0000 for either connector type, or use the
+#- -1111/-1112 wrappers. All three share the PDO mapping, database and panel.
+#- This wrapper intentionally does not constrain the ESI revision.
 
 epicsEnvSet("ECMC_EC_HWTYPE"             "MO2338-0000")
 epicsEnvSet("ECMC_EC_VENDOR_ID"          "0x2")

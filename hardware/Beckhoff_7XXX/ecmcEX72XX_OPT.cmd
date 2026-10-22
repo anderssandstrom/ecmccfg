@@ -1,10 +1,10 @@
 #-d /**
-#-d   \brief Shared option dispatcher for supported MDP742 EL/EP/ELM72xx drives
-#-d   \param MODE CSV (default), CSP or CST
+#-d   \brief Shared option dispatcher for supported MDP742 EL/EP/ELM72xx and EL7411 drives
+#-d   \param MODE CSV (default), CSP, CST or CSTCA (capable wrappers only)
 #-d   \param TP 0 or 1, device default
 #-d   \param INFO2 INPUTS, TEMP, ERRORS or NONE, subject to device capabilities
 #-d   \param DIAG 0 or 1, device default (velocity, torque, DC voltage)
-#-d   \param ENC_STAT 0 or 1; default 1
+#-d   \param ENC_STAT 0 or 1; default 1 where supported, otherwise 0
 #-d   \note MODE_1/2, TP_1/2, INFO2_1/2, DIAG_1/2 and ENC_STAT_1/2 override a channel.
 #-d   \param SYNC_0_CYCLE Sync 0 period [ns], family default
 #-d   \param SYNC_0_SHIFT Sync 0 shift [ns], device default
@@ -18,7 +18,8 @@
 
 ecmcEpicsEnvSetCalcTernary(ECMC_EX72XX_OPT_EL,"'${PDO_FAMILY}'='EL72XX'","","#-")
 ecmcEpicsEnvSetCalcTernary(ECMC_EX72XX_OPT_ELM,"'${PDO_FAMILY}'='ELM72XX'","","#-")
-ecmcEpicsEnvSetCalcTernary(ECMC_EX72XX_OPT_BAD_FAMILY,"'${PDO_FAMILY}'!='EL72XX' and '${PDO_FAMILY}'!='ELM72XX'","","#-")
+ecmcEpicsEnvSetCalcTernary(ECMC_EX72XX_OPT_EL7411,"'${PDO_FAMILY}'='EL7411'","","#-")
+ecmcEpicsEnvSetCalcTernary(ECMC_EX72XX_OPT_BAD_FAMILY,"'${PDO_FAMILY}'!='EL72XX' and '${PDO_FAMILY}'!='ELM72XX' and '${PDO_FAMILY}'!='EL7411'","","#-")
 ${ECMC_EX72XX_OPT_BAD_FAMILY}ecmcExit Error: unsupported OPT PDO family
 ecmcEpicsEnvSetCalcTernary(ECMC_EX72XX_OPT_BAD_CHANNELS,"${CHANNELS}!=1 and (${CHANNELS}!=2 or '${PDO_FAMILY}'!='ELM72XX')","","#-")
 ${ECMC_EX72XX_OPT_BAD_CHANNELS}ecmcExit Error: unsupported OPT channel count
@@ -40,6 +41,7 @@ ${ECMC_EX72XX_OPT_CH2}${SCRIPTEXEC} ${ecmccfg_DIR}ecmcEX72XX_OPT_channel.cmd "CH
 #- Timing and current/nameplate policy belong to the PDO family.
 ${ECMC_EX72XX_OPT_EL}${SCRIPTEXEC} ${ecmccfg_DIR}ecmcEX72XX_OPT_EL72XX_timing.cmd
 ${ECMC_EX72XX_OPT_ELM}${SCRIPTEXEC} ${ecmccfg_DIR}ecmcEX72XX_OPT_ELM72XX_timing.cmd
+${ECMC_EX72XX_OPT_EL7411}${SCRIPTEXEC} ${ecmccfg_DIR}ecmcEL7411_OPT_timing.cmd
 ${SCRIPTEXEC} ${ecmccfg_DIR}ecmcWatchDog.cmd
 epicsEnvSet(ECMC_EC_STARTUP_DELAY,${ECMC_EC_STARTUP_DELAY_EL72XX=10})
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmcEX72XX_OPT_channels.template,ECMC_P=${ECMC_P},PARAM='CHANNELS=${CHANNELS}'"
@@ -65,3 +67,6 @@ epicsEnvUnset(ECMC_EX72XX_OPT_FOLLOWING)
 epicsEnvUnset(ECMC_EX72XX_OPT_ENCODER_STATUS)
 epicsEnvUnset(ECMC_EX72XX_OPT_ENC_DEFAULT)
 epicsEnvUnset(ECMC_EX72XX_OPT_ENC_VALUE)
+epicsEnvUnset(ECMC_EX72XX_OPT_EL7411)
+epicsEnvUnset(ECMC_EX72XX_OPT_CSTCA)
+epicsEnvUnset(ECMC_EX72XX_OPT_TORQUE)

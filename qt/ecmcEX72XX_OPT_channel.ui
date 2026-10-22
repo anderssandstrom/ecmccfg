@@ -736,6 +736,117 @@ QTabBar::tab:selected { background: #ffffff; color: #1b3652; border-bottom-color
       <string>Trend: Channel $(ChID) actual position</string>
      </property>
     </widget>
+    <widget class="caFrame" name="featurecstca">
+     <property name="visibility">
+      <enum>caFrame::Calc</enum>
+     </property>
+     <property name="visibilityCalc">
+      <string>A==3</string>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode$(CfgSuffix)</string>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>157</y>
+       <width>112</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <widget class="caFrame" name="cstcaWithoutDiagnostics">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>112</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="channel">
+       <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgDiagnostics$(CfgSuffix)</string>
+      </property>
+      <property name="visibility">
+       <enum>caFrame::Calc</enum>
+      </property>
+      <property name="visibilityCalc">
+       <string>A==0</string>
+      </property>
+      <widget class="caRelatedDisplay" name="opencstcaWithoutDiagnostics">
+       <property name="files">
+        <string>ecmcEX72XX_OPT_cstca.ui</string>
+       </property>
+       <property name="args">
+        <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix),ActualTorquePV=</string>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>112</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="labels">
+        <string>CSTCA details</string>
+       </property>
+       <property name="toolTip">
+        <string>Write torque and electrical commutation angle; read back demands and DS402 state.</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+      </widget>
+     </widget>
+     <widget class="caFrame" name="cstcaWithDiagnostics">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>112</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="channel">
+       <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgDiagnostics$(CfgSuffix)</string>
+      </property>
+      <property name="visibility">
+       <enum>caFrame::Calc</enum>
+      </property>
+      <property name="visibilityCalc">
+       <string>A==1</string>
+      </property>
+      <widget class="caRelatedDisplay" name="opencstcaWithDiagnostics">
+       <property name="files">
+        <string>ecmcEX72XX_OPT_cstca.ui</string>
+       </property>
+       <property name="args">
+        <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix),ActualTorquePV=$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-TrqAct</string>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>112</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="labels">
+        <string>CSTCA details</string>
+       </property>
+       <property name="toolTip">
+        <string>Write torque and electrical commutation angle; read back demands and DS402 state.</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+      </widget>
+     </widget>
+    </widget>
    </widget>
    <widget class="QWidget" name="setupTab">
     <attribute name="title">

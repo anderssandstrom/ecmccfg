@@ -8,6 +8,10 @@ The OPT wrappers use a common dispatcher and per-channel record/panel interface,
 with separate PDO mappings and timing policies for EL/EP72xx and ELM72xx.
 All existing non-OPT hardware configurations, databases and panels are unchanged.
 
+The dispatcher also supports [EL7411 OPT and CSTCA]({{< relref "/manual/knowledgebase/hardware/EL7411_OPT.md" >}})
+through a separate EL7411 PDO/timing policy. Its capabilities and defaults differ
+from the EL/EP/ELM72xx devices below. CSTCA is currently enabled only for EL7411.
+
 ## Devices and defaults
 
 | `HW_DESC` | Channels | PDO family | Default `MODE` | `TP` | `INFO2` | `DIAG` |
@@ -193,7 +197,7 @@ Configuration PVs use the slave's `ECMC_P`, normally
 | Suffix | Values |
 | --- | --- |
 | `CfgChannels` | 1 or 2 |
-| `CfgMode` | 0 = CSV, 1 = CSP, 2 = CST |
+| `CfgMode` | 0 = CSV, 1 = CSP, 2 = CST, 3 = CSTCA (EL7411 only) |
 | `CfgTouchProbe` | 0 = Not mapped, 1 = Mapped |
 | `CfgInfo2` | 0 = INPUTS, 1 = TEMP, 2 = ERRORS, 3 = NONE |
 | `CfgDiagnostics` | 0 = Not mapped, 1 = Mapped |

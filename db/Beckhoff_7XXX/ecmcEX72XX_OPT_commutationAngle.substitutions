@@ -1,0 +1,5 @@
+file "ecmc_analogOutput-chX.template"
+{
+  pattern {CH_ID, sourceName, KEY, suffix, DESC, EGU, ESLO, PREC, LOPR, HOPR, DRVL, DRVH}
+          {"$(OPT_CH_ID=01)", "commutationAngle", "Drv", "-ComAngle", "Electrical commutation angle", "deg", 0.0054931640625, 3, 0, 359.9945068359375, 0, 359.9945068359375}
+}

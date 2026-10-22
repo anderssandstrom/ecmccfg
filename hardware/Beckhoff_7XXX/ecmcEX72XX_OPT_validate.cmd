@@ -1,6 +1,6 @@
 #- Internal OPT feature validation; called with resolved MODE, TP, INFO2, DIAG and optional ENC_STAT.
 #- No hardware or database operations: validate every channel before reset.
-ecmcEpicsEnvSetCalcTernary(ECMC_EX72XX_OPT_BAD_MODE,"'${MODE}'!='CSV' and '${MODE}'!='CSP' and '${MODE}'!='CST'","","#-")
+ecmcEpicsEnvSetCalcTernary(ECMC_EX72XX_OPT_BAD_MODE,"'${MODE}'!='CSV' and '${MODE}'!='CSP' and '${MODE}'!='CST' and ('${MODE}'!='CSTCA' or '${PDO_FAMILY}'!='EL7411' or ${CAP_CSTCA=0}!=1)","","#-")
 ${ECMC_EX72XX_OPT_BAD_MODE}ecmcExit Error: ${ECMC_EC_HWTYPE} channel ${CH_ID}: BAD_MODE (MODE=${MODE},TP=${TP},INFO2=${INFO2},DIAG=${DIAG})
 epicsEnvUnset(ECMC_EX72XX_OPT_BAD_MODE)
 ecmcEpicsEnvSetCalcTernary(ECMC_EX72XX_OPT_BAD_TP,"${TP}!=0 and ${TP}!=1","","#-")
@@ -34,6 +34,8 @@ epicsEnvUnset(ECMC_EX72XX_OPT_UNSUPPORTED_ENC_STAT)
 ecmcEpicsEnvSetCalcTernary(ECMC_EX72XX_OPT_CSV,"'${MODE}'='CSV'","","#-")
 ecmcEpicsEnvSetCalcTernary(ECMC_EX72XX_OPT_CSP,"'${MODE}'='CSP'","","#-")
 ecmcEpicsEnvSetCalcTernary(ECMC_EX72XX_OPT_CST,"'${MODE}'='CST'","","#-")
+ecmcEpicsEnvSetCalcTernary(ECMC_EX72XX_OPT_CSTCA,"'${MODE}'='CSTCA'","","#-")
+ecmcEpicsEnvSetCalcTernary(ECMC_EX72XX_OPT_TORQUE,"'${MODE}'='CST' or '${MODE}'='CSTCA'","","#-")
 ecmcEpicsEnvSetCalcTernary(ECMC_EX72XX_OPT_TP,"${TP}==1","","#-")
 ecmcEpicsEnvSetCalcTernary(ECMC_EX72XX_OPT_DIAG,"${DIAG}==1","","#-")
 ecmcEpicsEnvSetCalcTernary(ECMC_EX72XX_OPT_INFO2_INPUTS,"'${INFO2}'='INPUTS'","","#-")

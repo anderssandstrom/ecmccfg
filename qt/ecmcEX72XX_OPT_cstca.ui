@@ -1,0 +1,170 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>350</width>
+    <height>330</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>CSTCA drive — channel $(ChID)</string>
+  </property>
+  <widget class="caInclude" name="torqueControls">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>350</width>
+     <height>260</height>
+    </rect>
+   </property>
+   <property name="filename">
+    <string>ecmcEX72XX_OPT_cst.ui</string>
+   </property>
+   <property name="macro">
+    <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=$(ChID),CfgSuffix=$(CfgSuffix),ActualTorquePV=$(ActualTorquePV)</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="heading">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>7</y>
+     <width>326</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>CSTCA drive</string>
+   </property>
+   <property name="styleSheet">
+    <string>background: palette(window); font-weight: bold;</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="angleTargetLabel">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>270</y>
+     <width>165</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Electrical angle [deg]</string>
+   </property>
+  </widget>
+  <widget class="caTextEntry" name="angleTarget">
+   <property name="geometry">
+    <rect>
+     <x>185</x>
+     <y>270</y>
+     <width>153</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-ComAngle</string>
+   </property>
+   <property name="readOnly">
+    <bool>false</bool>
+   </property>
+   <property name="toolTip">
+    <string>Press Enter to write electrical degrees (0 to 359.9945). 65536 raw counts = 360 degrees.</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="angleReadbackLabel">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>300</y>
+     <width>165</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Angle demand readback</string>
+   </property>
+  </widget>
+  <widget class="caLineEdit" name="angleReadback">
+   <property name="geometry">
+    <rect>
+     <x>185</x>
+     <y>300</y>
+     <width>136</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="channel">
+    <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-ComAngle-RB</string>
+   </property>
+  </widget>
+  <widget class="caRelatedDisplay" name="angleReadbackTrend">
+   <property name="geometry">
+    <rect>
+     <x>323</x>
+     <y>303</y>
+     <width>15</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>15</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="labels">
+    <string>&gt;</string>
+   </property>
+   <property name="files">
+    <string>ecmcGraph_v1.ui</string>
+   </property>
+   <property name="args">
+    <string>IOC=$(IOC),TITLE=m$(MasterID)s$(SlaveID): Channel $(ChID) commutation angle demand,PV=$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ChID)-ComAngle-RB</string>
+   </property>
+   <property name="toolTip">
+    <string>Trend: electrical commutation-angle demand</string>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caInclude</class>
+   <extends>QWidget</extends>
+   <header>caInclude</header>
+  </customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+  <customwidget>
+   <class>caTextEntry</class>
+   <extends>QLineEdit</extends>
+   <header>caTextEntry</header>
+  </customwidget>
+  <customwidget>
+   <class>caRelatedDisplay</class>
+   <extends>QWidget</extends>
+   <header>caRelatedDisplay</header>
+  </customwidget>
+ </customwidgets>
+ <resources />
+ <connections />
+</ui>

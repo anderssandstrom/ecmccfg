@@ -33,10 +33,10 @@ chapter = false
 | Command syntax | Description |
 |---|---|
 | `Cfg.AddAxisEnc(<int>)` | Add encoder object to axis. |
-| `Cfg.AddAxisGroup(<str>)` | Creates an axis group object. See [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}}). |
-| `Cfg.AddAxisToGroupByIndex(<int>,<int>)` | Adds an axis to a group. See [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}}). |
-| `Cfg.AddAxisToGroupByName(<int>,<str>)` | Adds an axis to a group. See [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}}). |
-| `Cfg.AddAxisToGroupByName(<int>,<str>,<int>)` | Adds an axis to a group. See [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}}). |
+| `Cfg.AddAxisGroup(<str>)` | Creates an axis group object. See [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}}). |
+| `Cfg.AddAxisToGroupByIndex(<int>,<int>)` | Adds an axis to a group. See [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}}). |
+| `Cfg.AddAxisToGroupByName(<int>,<str>)` | Adds an axis to a group. See [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}}). |
+| `Cfg.AddAxisToGroupByName(<int>,<str>,<int>)` | Adds an axis to a group. See [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}}). |
 | `Cfg.AppendAxisPLCExpr(<int>)=<str>` | Append axis sync. |
 | `Cfg.CompileAxisPLC(<int>)` | Compile Axis PLC code. For syntax and usage patterns, see [PLC syntax]({{< relref "/manual/PLC_cfg/syntax.md" >}}) and [PLC patterns]({{< relref "/manual/PLC_cfg/patterns.md" >}}). |
 | `Cfg.CreateAxis(<int>)` | Creates an axis object at index axisIndex. |
@@ -61,8 +61,8 @@ chapter = false
 | `GetAxisEncScaleDenom(<int>)` | Get the denominator part of the encoder scale. |
 | `GetAxisEncScaleNum(<int>)` | Get the numerator part of the encoder scale. |
 | `GetAxisEncSourceType(<int>)` | Get axis encoder data source. |
-| `GetAxisGroupCount()` | Get total axis-group count. See [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}}). |
-| `GetAxisGroupIndexByName(<str>)` | Get index of axis group by name. See [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}}). |
+| `GetAxisGroupCount()` | Get total axis-group count. See [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}}). |
+| `GetAxisGroupIndexByName(<str>)` | Get index of axis group by name. See [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}}). |
 | `GetAxisHomeVelOffCam(<int>)` | Get off cam referencing/homing velocity setpoint. |
 | `GetAxisHomeVelTowardsCam(<int>)` | Get Towards cam referencing/homing velocity setpoint. |
 | `GetAxisModRange(<int>)` | Get axis modulo range. |

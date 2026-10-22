@@ -2,6 +2,7 @@
 title = "Axis Groups"
 weight = 18
 chapter = false
+aliases = ["/manual/general_cfg/axis_groups/"]
 +++
 
 ## Scope

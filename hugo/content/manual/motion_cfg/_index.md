@@ -31,6 +31,8 @@ go directly to [legacy motion]({{< relref "/manual/motion_cfg/legacy.md" >}}).
   [scaling]({{< relref "/manual/motion_cfg/scaling.md" >}}),
   [direction]({{< relref "/manual/motion_cfg/direction.md" >}}),
   [homing]({{< relref "/manual/motion_cfg/homing.md" >}})
+- I need named collections of axes:
+  [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}})
 - I need synchronization or axis-local PLC logic:
   [axis PLC]({{< relref "/manual/motion_cfg/axisPLC.md" >}})
 - I need motor record behavior or PVT/profile moves:
@@ -55,9 +57,10 @@ go directly to [legacy motion]({{< relref "/manual/motion_cfg/legacy.md" >}}).
 
 ### Synchronization and axis logic
 
-1. [axis PLC]({{< relref "/manual/motion_cfg/axisPLC.md" >}})
-2. [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
-3. [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}})
+1. [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}})
+2. [axis PLC]({{< relref "/manual/motion_cfg/axisPLC.md" >}})
+3. [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
+4. [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}})
 
 ### Existing IOC with classic motion files
 

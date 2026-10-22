@@ -540,7 +540,7 @@ A shared memory buffer of 120 doubles can be accessed for read and write operati
 
 ### Motion Group
 
-Use [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}}) to define the groups that these functions operate on.
+Use [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}}) to define the groups that these functions operate on.
 
 ```text
  1.  mc_grp_get_enable(

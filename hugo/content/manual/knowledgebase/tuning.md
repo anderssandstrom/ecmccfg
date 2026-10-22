@@ -211,7 +211,7 @@ For synchronized systems, treat compensation features with extra care:
 
 For setup patterns, see:
 * [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}})
-* [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}})
+* [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}})
 * [Synchronization examples]({{< relref "/manual/examples.md" >}})
 
 #### Notes

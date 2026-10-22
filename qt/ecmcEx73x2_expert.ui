@@ -164,6 +164,21 @@
      <property name="keepFocus">
       <bool>true</bool>
      </property>
+     <property name="readOnly">
+      <bool>false</bool>
+     </property>
+     <property name="limitsMode">
+      <enum>caLineEdit::User</enum>
+     </property>
+     <property name="minValue">
+      <double>-32000.000000000000000</double>
+     </property>
+     <property name="maxValue">
+      <double>32000.000000000000000</double>
+     </property>
+     <property name="toolTip">
+      <string>Signed speed demand in configured PV units, range -32000 to +32000. Press Enter to write.</string>
+     </property>
     </widget>
     <widget class="caLineEdit" name="speedReadback">
      <property name="geometry">
@@ -1517,7 +1532,7 @@ Bit 3: Latch falling edge</string>
        <x>10</x>
        <y>10</y>
        <width>470</width>
-       <height>162</height>
+       <height>142</height>
       </rect>
      </property>
      <property name="Title">
@@ -1534,9 +1549,9 @@ Bit 3: Latch falling edge</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>182</y>
+       <y>162</y>
        <width>470</width>
-       <height>162</height>
+       <height>142</height>
       </rect>
      </property>
      <property name="Title">
@@ -1553,7 +1568,7 @@ Bit 3: Latch falling edge</string>
      <property name="geometry">
       <rect>
        <x>14</x>
-       <y>352</y>
+       <y>310</y>
        <width>468</width>
        <height>24</height>
       </rect>
@@ -1566,7 +1581,7 @@ Bit 3: Latch falling edge</string>
      <property name="geometry">
       <rect>
        <x>14</x>
-       <y>400</y>
+       <y>350</y>
        <width>150</width>
        <height>24</height>
       </rect>
@@ -1579,7 +1594,7 @@ Bit 3: Latch falling edge</string>
      <property name="geometry">
       <rect>
        <x>174</x>
-       <y>400</y>
+       <y>350</y>
        <width>126</width>
        <height>26</height>
       </rect>
@@ -1596,12 +1611,27 @@ Bit 3: Latch falling edge</string>
      <property name="keepFocus">
       <bool>true</bool>
      </property>
+     <property name="readOnly">
+      <bool>false</bool>
+     </property>
+     <property name="limitsMode">
+      <enum>caLineEdit::User</enum>
+     </property>
+     <property name="minValue">
+      <double>-32000.000000000000000</double>
+     </property>
+     <property name="maxValue">
+      <double>32000.000000000000000</double>
+     </property>
+     <property name="toolTip">
+      <string>Signed speed demand in configured PV units, range -32000 to +32000. Press Enter to write.</string>
+     </property>
     </widget>
     <widget class="caLineEdit" name="trendSpeedReadback">
      <property name="geometry">
       <rect>
        <x>316</x>
-       <y>400</y>
+       <y>350</y>
        <width>150</width>
        <height>26</height>
       </rect>
@@ -1620,13 +1650,99 @@ Bit 3: Latch falling edge</string>
      <property name="geometry">
       <rect>
        <x>14</x>
-       <y>440</y>
+       <y>442</y>
        <width>468</width>
        <height>24</height>
       </rect>
      </property>
      <property name="text">
-      <string>Enter a speed demand on either this tab or General.</string>
+      <string>Speed controls use PV units; range -32000 to +32000.</string>
+     </property>
+    </widget>
+    <widget class="caByteController" name="trendEnableReset">
+     <property name="geometry">
+      <rect>
+       <x>14</x>
+       <y>390</y>
+       <width>22</width>
+       <height>44</height>
+      </rect>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ID)-Cmd</string>
+     </property>
+     <property name="startBit">
+      <number>0</number>
+     </property>
+     <property name="endBit">
+      <number>1</number>
+     </property>
+     <property name="direction">
+      <enum>caByteController::Down</enum>
+     </property>
+     <property name="toolTip">
+      <string>Bit 0: Enable drive
+Bit 1: Reset errors (rising edge)</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="trendEnableLabel">
+     <property name="geometry">
+      <rect>
+       <x>44</x>
+       <y>390</y>
+       <width>100</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Enable</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="trendResetLabel">
+     <property name="geometry">
+      <rect>
+       <x>44</x>
+       <y>412</y>
+       <width>100</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Reset</string>
+     </property>
+    </widget>
+    <widget class="caSlider" name="trendSpeedSlider">
+     <property name="geometry">
+      <rect>
+       <x>174</x>
+       <y>394</y>
+       <width>292</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv$(ID)-Spd</string>
+     </property>
+     <property name="direction">
+      <enum>caSlider::Right</enum>
+     </property>
+     <property name="limitsMode">
+      <enum>caSlider::User</enum>
+     </property>
+     <property name="lowLimitMode">
+      <enum>caSlider::User</enum>
+     </property>
+     <property name="highLimitMode">
+      <enum>caSlider::User</enum>
+     </property>
+     <property name="minValue">
+      <double>-32000.000000000000000</double>
+     </property>
+     <property name="maxValue">
+      <double>32000.000000000000000</double>
+     </property>
+     <property name="toolTip">
+      <string>Signed speed demand in configured PV units. Drag left for negative values and right for positive values.</string>
      </property>
     </widget>
    </widget>
@@ -1667,6 +1783,16 @@ Bit 3: Latch falling edge</string>
    <class>QwtPlot</class>
    <extends>QFrame</extends>
    <header>qwt_plot.h</header>
+  </customwidget>
+  <customwidget>
+   <class>caSlider</class>
+   <extends>QwtSlider</extends>
+   <header>caSlider</header>
+  </customwidget>
+  <customwidget>
+   <class>QwtSlider</class>
+   <extends>QWidget</extends>
+   <header>qwt_slider.h</header>
   </customwidget>
  </customwidgets>
  <resources />

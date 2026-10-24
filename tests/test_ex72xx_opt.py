@@ -242,35 +242,96 @@ class OptTests(unittest.TestCase):
                             ['NONE', 'TEMP', 'ERRORS'] +
                             (['INPUTS'] if model in MODELS[:2] else []))
             tp_options = [0] if model == 'EL7201' else [0, 1]
-            for mode, tp, info, diag in itertools.product(['CSV', 'CSP', 'CST'], tp_options, info_options, [0, 1]):
+            for mode, tp, info, diag in itertools.product(['CSV', 'CSP', 'CST', 'CSTCA'], tp_options, info_options, [0, 1]):
                 with self.subTest(model=model, mode=mode, tp=tp, info=info, diag=diag):
                     startup = Startup(model, dict(MODE=mode, TP=str(tp), INFO2=info, DIAG=str(diag)))
                     entries = startup.entries()
                     self.check_records_and_panels(startup)
                     for ch in range(1, 3 if model == 'ELM7222-0010' else 2):
                         suffix = f'{ch:02}'
-                        self.assertEqual('touchProbeStatus'+suffix in entries, bool(tp))
-                        self.assertEqual('voltageActual'+suffix in entries, bool(diag))
-                        demand = dict(CSV='velocitySetpoint', CSP='positionSetpoint', CST='torqueSetpoint')[mode]
+                        self.assertEqual('touchProbeStatus'+suffix in entries, bool(tp) and mode != 'CSTCA')
+                        self.assertEqual('voltageActual'+suffix in entries, bool(diag) and mode != 'CSTCA')
+                        demand = dict(CSV='velocitySetpoint', CSP='positionSetpoint', CST='torqueSetpoint', CSTCA='torqueSetpoint')[mode]
                         self.assertIn(demand+suffix, entries)
-                        self.assertIn(f'Cfg.EcAddSdo(1,0x{0x7010+(ch-1)*0x100:x},0x03,{dict(CSV=9,CSP=8,CST=10)[mode]},1)', startup.commands)
+                        self.assertIn(f'Cfg.EcAddSdo(1,0x{0x7010+(ch-1)*0x100:x},0x03,{dict(CSV=9,CSP=8,CST=10,CSTCA=11)[mode]},1)', startup.commands)
                     self.assertFalse(any(key.startswith('ECMC_EX72XX_OPT_') for key in startup.env))
 
+    def test_cstca_minimal_tx_with_optional_inputs(self):
+        for model in MODELS:
+            infos = ['NONE', 'TEMP'] if model.startswith('ELM') else ['NONE', 'TEMP', 'ERRORS']
+            if model in MODELS[:2]:
+                infos.append('INPUTS')
+            for info in infos:
+                with self.subTest(model=model, info=info):
+                    startup = Startup(model, dict(MODE='CSTCA', INFO2=info, DIAG='1',
+                                      TP='0' if model == 'EL7201' else '1', ENC_STAT='1'))
+                    config = self.check_records_and_panels(startup)
+                    tx = {name: value for name, value in startup.entries().items() if value[0][0] == 2}
+                    expected = {}
+                    for ch in range(1, 3 if model == 'ELM7222-0010' else 2):
+                        suffix = f'{ch:02}'
+                        pdo = 0x1a10+(ch-1)*0x40 if model.startswith('ELM') else 0x1a01
+                        expected['driveStatus'+suffix] = ((2, 3, pdo, 0x6010+(ch-1)*0x100, 1), 'U16')
+                        if info == 'INPUTS':
+                            expected['binaryInputs'+suffix] = ((2, 3, 0x1a05, 0x6010, 0x13), 'U16')
+                        cfgsuffix = '02' if ch == 2 else ''
+                        for feature in ['TouchProbe', 'Diagnostics', 'EncoderStatus', 'FollowingError']:
+                            self.assertEqual(config['TEST:Cfg'+feature+cfgsuffix], 0)
+                        self.assertEqual(config['TEST:CfgInfo2'+cfgsuffix], 0 if info == 'INPUTS' else 3)
+                    self.assertEqual(tx, expected)
+        # One channel's CSTCA mode must not suppress the other channel's feedback.
+        startup = Startup('ELM7222-0010', dict(MODE_1='CSTCA', MODE_2='CSV', DIAG='1', TP='1'))
+        self.assertNotIn('positionActual01', startup.entries())
+        self.assertIn('positionActual02', startup.entries())
+        self.assertIn('encoderStatus02', startup.entries())
+        self.assertIn('voltageActual02', startup.entries())
+        self.check_records_and_panels(startup)
+
+    def test_cstca_angle_mapping_and_records(self):
+        for model in MODELS:
+            with self.subTest(model=model):
+                startup = Startup(model, dict(MODE='CSTCA'))
+                config = self.check_records_and_panels(startup)
+                database = self.database(startup)
+                for ch in range(1, 3 if model == 'ELM7222-0010' else 2):
+                    pdo = 0x1614 + (ch-1)*0x40 if model.startswith('ELM') else 0x1603
+                    self.assertEqual(startup.entries()[f'commutationAngle{ch:02}'],
+                                     ((1, 2, pdo, 0x7010+(ch-1)*0x100, 0x0e), 'U16'))
+                    self.assertEqual(config['TEST:CfgMode'+('02' if ch == 2 else '')], 3)
+                    self.assertEqual(config['TEST:CfgTorqueOffset'+('02' if ch == 2 else '')], 0)
+                    for record_type, suffix in [('ao', ''), ('ai', '-RB')]:
+                        body = re.search(r'record\('+record_type+r',\s*"TEST:Drv'+f'{ch:02}'+
+                                         r'-ComAngle'+suffix+r'"\)\s*\{(.*?)\n\}', database, re.S)[1]
+                        self.assertIn('field(ESLO, "0.0054931640625")', body)
+                        self.assertIn('field(EGU,  "deg")', body)
+                        if record_type == 'ao':
+                            self.assertIn('field(DRVH, "359.9945068359375")', body)
+                for mode in ['CSV', 'CSP', 'CST']:
+                    other = Startup(model, dict(MODE=mode))
+                    self.assertFalse(any(name.startswith('commutationAngle') for name in other.entries()))
+                    self.assertNotIn('-ComAngle', self.database(other))
+        panel = ET.parse(ROOT / 'qt/ecmcEX72XX_OPT_cstca.ui').getroot()
+        entry = panel.find(".//widget[@name='commutationAngle']")
+        self.assertEqual(entry.get('class'), 'caTextEntry')
+        self.assertEqual(entry.findtext("property[@name='readOnly']/bool"), 'false')
+        self.assertTrue(entry.findtext("property[@name='channel']/string").endswith('-Drv$(ChID)-ComAngle'))
+
     def test_encoder_status_independent_of_mode(self):
-        for model, mode, enabled in itertools.product(MODELS, ['CSV', 'CSP', 'CST'], [0, 1]):
+        for model, mode, enabled in itertools.product(MODELS, ['CSV', 'CSP', 'CST', 'CSTCA'], [0, 1]):
             with self.subTest(model=model, mode=mode, enabled=enabled):
                 startup = Startup(model, dict(MODE=mode, ENC_STAT=str(enabled)))
                 config = self.check_records_and_panels(startup)
                 for ch in range(1, 3 if model == 'ELM7222-0010' else 2):
                     name = f'encoderStatus{ch:02}'
-                    self.assertEqual(name in startup.entries(), bool(enabled))
-                    self.assertEqual(config['TEST:CfgEncoderStatus'+('02' if ch == 2 else '')], enabled)
-                    if enabled:
+                    mapped = bool(enabled) and mode != 'CSTCA'
+                    self.assertEqual(name in startup.entries(), mapped)
+                    self.assertEqual(config['TEST:CfgEncoderStatus'+('02' if ch == 2 else '')], int(mapped))
+                    if mapped:
                         pdo = (0x1a02+(ch-1)*0x40) if model.startswith('ELM') else 0x1a0c
                         self.assertEqual(startup.entries()[name],
                                          ((2, 3, pdo, 0x6000+(ch-1)*0x100, 1), 'U16'))
                 default = Startup(model, dict(MODE=mode))
-                self.assertIn('encoderStatus01', default.entries())
+                self.assertEqual('encoderStatus01' in default.entries(), mode != 'CSTCA')
         override = Startup('ELM7222-0010', dict(ENC_STAT='0', ENC_STAT_2='1'))
         self.assertNotIn('encoderStatus01', override.entries())
         self.assertIn('encoderStatus02', override.entries())
@@ -288,13 +349,13 @@ class OptTests(unittest.TestCase):
                     Startup(model, options)
 
     def test_independent_elm_channels(self):
-        for mode1, mode2 in itertools.product(['CSV', 'CSP', 'CST'], repeat=2):
+        for mode1, mode2 in itertools.product(['CSV', 'CSP', 'CST', 'CSTCA'], repeat=2):
             startup = Startup('ELM7222-0010', dict(MODE_1=mode1, MODE_2=mode2,
                               TP_1='0', TP_2='1', DIAG_1='0', DIAG_2='1', INFO2_1='NONE', INFO2_2='TEMP'))
             config = self.check_records_and_panels(startup)
-            self.assertEqual(config['TEST:CfgMode'], ['CSV', 'CSP', 'CST'].index(mode1))
-            self.assertEqual(config['TEST:CfgMode02'], ['CSV', 'CSP', 'CST'].index(mode2))
-            self.assertIn('temperatureActual02', startup.entries())
+            self.assertEqual(config['TEST:CfgMode'], ['CSV', 'CSP', 'CST', 'CSTCA'].index(mode1))
+            self.assertEqual(config['TEST:CfgMode02'], ['CSV', 'CSP', 'CST', 'CSTCA'].index(mode2))
+            self.assertEqual('temperatureActual02' in startup.entries(), mode2 != 'CSTCA')
             self.assertNotIn('temperatureActual01', startup.entries())
 
     def test_unsupported_options_fail_before_reset(self):
@@ -368,7 +429,7 @@ class OptTests(unittest.TestCase):
             args = button.findtext("property[@name='args']/string")
             self.assertIn(f'ChID={ch:02}', args)
             self.assertIn('CfgSuffix='+('02' if ch == 2 else ''), args)
-        for mode in ['csv', 'csp', 'cst']:
+        for mode in ['csv', 'csp', 'cst', 'cstca']:
             root = ET.parse(ROOT / f'qt/ecmcEX72XX_OPT_{mode}.ui').getroot()
             for name, suffix in [('enableDrive', 'TrgDS402Ena'), ('disableDrive', 'TrgDS402Dis')]:
                 button = root.find(f".//widget[@name='{name}']")
@@ -408,7 +469,7 @@ class OptTests(unittest.TestCase):
             self.assertEqual(result.value, expected, hex(word))
 
     def test_mode_setpoints_are_writable(self):
-        for mode, suffix in [('csv', 'Spd'), ('csp', 'PosCmd'), ('cst', 'Trq')]:
+        for mode, suffix in [('csv', 'Spd'), ('csp', 'PosCmd'), ('cst', 'Trq'), ('cstca', 'Trq')]:
             root = ET.parse(ROOT / f'qt/ecmcEX72XX_OPT_{mode}.ui').getroot()
             entry = root.find(".//widget[@name='targetSetpoint']")
             self.assertEqual(entry.get('class'), 'caTextEntry')

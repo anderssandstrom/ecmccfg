@@ -1,7 +1,7 @@
 #-d /**
 #-d   \brief Option-driven hardware script for EL7201-0010
 #-d   \details Uses the shared EL72XX PDO family, 1 channel(s).
-#-d   \param MODE CSV (default), CSP or CST; MODE_1/MODE_2 override per channel
+#-d   \param MODE CSV (default), CSP, CST or CSTCA; MODE_1/MODE_2 override per channel
 #-d   \param TP Touch-probe status PDO, default 1; supported: 1
 #-d   \param INFO2 Default ERRORS; see hugo/content/manual/knowledgebase/hardware/EX72xx_OPT.md for capabilities
 #-d   \param DIAG Actual velocity, torque and voltage PDOs, default 1

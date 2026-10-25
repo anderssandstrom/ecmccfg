@@ -87,7 +87,7 @@ epicsEnvUnset(ECMC_AXIS_FLAGS)
 {%- endif %}
 
 #- VMAX
-{%- if monitoring.velocity is defined %}
+{%- if (monitoring is defined) and (monitoring.velocity is defined) %}
     {%- if monitoring.velocity.enable|default(0)|int %}
         epicsEnvSet(ECMC_MR_TEMP_FIELDS,"${ECMC_MR_TEMP_FIELDS=""}VMAX={{ monitoring.velocity.max }},")
     {%- endif %}

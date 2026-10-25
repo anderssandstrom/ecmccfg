@@ -1,0 +1,93 @@
+# https://paulscherrerinstitute.github.io/ecmccfg/manual/axis/axisyaml/
+#
+# OrientalMotors PK267JB stepper --> 200 steps/turn
+# Posital OCD-S101B-1416-B080-PRQ --> 16 bits/turn
+#
+# One encoder bit seems to be missing resulting in 100 nm steps
+# Max tested velocity seems to be 0.05 mm/s
+
+axis:
+  id: 1
+  mode: CSV
+  feedSwitchesOutput: ec$(MASTER_ID).s$(BO_SID).binaryOutput$(BO_CH)
+  parameters: powerAutoOnOff=2;powerOnDelay=6.0;powerOffDelay=1.0;
+
+epics:
+  name: TRX
+  precision: 3
+  unit: steps
+  motorRecord:
+    enable: true
+    description: "User motor"
+    fieldInit: "RTRY=1,FOFF=Frozen"
+
+drive:
+  numerator: 2000               # Scaling factor and Vmax (equivalent distance of 2000 steps)
+  denominator: 32768            # Always MAX_INT16 for this stepper drive!
+  type: 0                       # Motor type (0=Stepper, 1=Other)
+  control: ec$(MASTER_ID).s$(DRV_SLAVE).driveControl01
+  status: ec$(MASTER_ID).s$(DRV_SLAVE).driveStatus01
+  setpoint: ec$(MASTER_ID).s$(DRV_SLAVE).velocitySetpoint01
+  reduceTorqueEnable: yes
+  reduceTorque: 2
+  reset: 1
+  warning: 7
+  error:
+    - 3              # Error 0 bit of status word
+
+# Ethercat entry for closed-loop
+encoder:
+  desc: "Open loop step counter"
+  numerator: 1        # 1 turn = 0.5mm (200 steps/turn)
+  denominator: 64       # Encoder is 16 bits/single turn
+  type: 1               # Encoder type (0=Incremental, 1=Absolute)
+  bits: 16              # Total bit count of encoder raw data
+  absBits: 16           # Absolute bit count (for absolute encoders)
+  absOffset: 0          # Encoder offset in eng units (for absolute encoders)
+  position: ec$(MASTER_ID).s$(DRV_SLAVE).positionActual01
+  primary: 0
+  useAsCSPDrvEnc: 1
+
+controller:
+  Kp: 1.0
+  Ki: 0.0001
+  Kd: 0.0
+
+trajectory:
+  axis:
+    velocity: 200.0         # Torque maxinum
+    acceleration: 1000.0    # Acc. time ~0.1s
+    deceleration: 1000.0   # Acc. time ~0.1s
+    emergencyDeceleration: 1500
+  jog:
+    acceleration: 25
+
+input:
+  limit:
+    forward: ec$(MASTER_ID).s$(DRV_SLAVE).driveStatus01.11
+    backward: ec$(MASTER_ID).s$(DRV_SLAVE).driveStatus01.12
+  home: ec$(MASTER_ID).s$(DRV_SLAVE).ONE.0
+  interlock: ec$(MASTER_ID).s$(DRV_SLAVE).ONE.0
+
+#softlimits:
+#  enable: yes
+#  backwardEnable: yes
+#  forwardEnable: yes
+#  forward: 7.2
+#  backward: -7.2
+
+monitoring:
+  lag:
+    enable: yes
+    tolerance: 5
+    time: 100
+  target:
+    enable: yes
+    tolerance: 1.0
+    time: 100
+  velocity:
+    enable: yes
+    max: 2000.0
+    time:
+      trajectory: 100
+      drive: 200

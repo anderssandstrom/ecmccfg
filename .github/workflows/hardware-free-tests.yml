@@ -28,16 +28,29 @@ jobs:
           environment-file: tests/environment.yml
           cache-environment: true
           init-shell: none
+      - name: Check out standalone ECB
+        uses: actions/checkout@v7
+        with:
+          repository: paulscherrerinstitute/ecb
+          ref: 79a9ef6c2c292efeb52adf7c45dbb30b114456b0
+          path: .ci-deps/ecb
+          persist-credentials: false
+          submodules: false
       - name: Install Qt tools
         run: |
           sudo apt-get update
-          sudo apt-get install --no-install-recommends -y qtbase5-dev-tools
+          sudo apt-get install --no-install-recommends -y qtbase5-dev-tools g++ make
+      - name: Build standalone ECB (no EPICS sources)
+        run: |
+          make -C .ci-deps/ecb -f Makefile -j2
+          echo "$GITHUB_WORKSPACE/.ci-deps/ecb/bin" >> "$GITHUB_PATH"
       - name: Show test dependencies
         shell: micromamba-shell {0}
         run: |
           python3 --version
           command -v msi
           command -v softIoc
+          command -v ecb
           /usr/lib/qt5/bin/uic -version
       - name: Run hardware-free tests (no skipped checks)
         shell: micromamba-shell {0}

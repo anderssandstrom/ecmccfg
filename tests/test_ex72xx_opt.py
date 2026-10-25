@@ -438,6 +438,12 @@ class OptTests(unittest.TestCase):
                 self.assertEqual(button.findtext("property[@name='releaseMessage']/string"), '1')
                 self.assertFalse(button.findtext("property[@name='pressMessage']/string"))
 
+    def test_ds402_expression_fits_calc_field(self):
+        expression = re.search(r'field\(CALC,"([^"]+)"\)',
+                               (DB / 'ecmcEX72XX_OPT_state.template').read_text())[1]
+        # Standard calcRecord CALC is char[80], including its terminator.
+        self.assertLessEqual(len(expression.encode('ascii')), 79)
+
     def test_ds402_decoder_all_statuswords(self):
         softioc = shutil.which('softIoc')
         if not softioc:
@@ -492,10 +498,14 @@ class OptTests(unittest.TestCase):
             database = Path(temp) / 'state.db'
             database.write_text('record(longin,"OPTTEST:Drv01-Stat") { field(INP,"39") }\n'+expansion.stdout)
             # Load and validate records without iocInit: no CA server or hardware.
-            process = subprocess.run([softioc], input=f'dbLoadRecords("{database}")\nexit\n',
+            process = subprocess.run([softioc], input=f'dbLoadRecords("{database}")\n'
+                                     'dbDumpRecord(0,"calc",2)\nexit\n',
                                      capture_output=True, text=True, timeout=15, check=True)
             self.assertNotIn('ERROR', process.stdout+process.stderr)
             self.assertNotIn('Illegal choice', process.stdout+process.stderr)
+            expression = re.search(r'field\(CALC,"([^"]+)"\)', expansion.stdout)[1]
+            # Older Base versions may truncate without reporting ERROR.
+            self.assertIn(expression, process.stdout)
 
     def test_qt_panels_compile(self):
         uic = shutil.which('uic-qt5') or shutil.which('uic')

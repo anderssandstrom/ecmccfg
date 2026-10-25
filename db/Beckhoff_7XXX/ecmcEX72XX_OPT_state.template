@@ -6,7 +6,8 @@ record(calc,"${ECMC_P}Drv${CH_ID}-DS402StateCode") {
   field(INPA,"${ECMC_P}Drv${CH_ID}-Stat NPP MS")
   field(SCAN,".1 second")
   field(PINI,"YES")
-  field(CALC,"(A&79)=0?0:(A&79)=64?1:(A&111)=33?2:(A&111)=35?3:(A&111)=39?4:(A&111)=7?5:(A&79)=15?6:(A&79)=8?7:8")
+  #- B and C cache the two masks to fit CALC's 79-character string limit.
+  field(CALC,"B:=A&79;C:=A&111;B=0?0:B=64?1:C=33?2:C=35?3:C=39?4:C=7?5:B=15?6:B=8?7:8")
   field(FLNK,"${ECMC_P}Drv${CH_ID}-DS402State.PROC")
 }
 record(mbbi,"${ECMC_P}Drv${CH_ID}-DS402State") {

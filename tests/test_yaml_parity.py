@@ -145,14 +145,17 @@ class YamlParityTests(unittest.TestCase):
         del missing['trajectory']
         wrong_type = copy.deepcopy(base)
         wrong_type['trajectory']['axis']['velocity'] = ['not', 'a', 'number']
-        for name, document in [('missing-trajectory', missing),
-                               ('wrong-type', wrong_type)]:
+        for name, document, diagnostic in [('missing-trajectory', missing, 'trajectory'),
+                                           ('wrong-type', wrong_type, 'velocity')]:
             with self.subTest(case=name), tempfile.TemporaryDirectory() as tmp:
                 directory = Path(tmp)
                 source = directory / 'invalid.yaml'
                 source.write_text(self.yaml.safe_dump(document))
                 for generator, process, _ in self.render(source, directory):
                     self.assertNotEqual(process.returncode, 0, f'{generator} accepted {name}')
+                    # An unrelated startup crash must not count as validation.
+                    self.assertIn(diagnostic, process.stdout + process.stderr,
+                                  f'{generator} failed without identifying the invalid field')
 
     def test_unknown_key_policy_difference(self):
         # Python deliberately uses purge_unknown=True; ECB rejects typos.

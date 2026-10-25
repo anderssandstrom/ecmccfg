@@ -34,6 +34,7 @@ jobs:
           repository: paulscherrerinstitute/ecb
           ref: 79a9ef6c2c292efeb52adf7c45dbb30b114456b0
           path: .ci-deps/ecb
+          fetch-depth: 0
           persist-credentials: false
           submodules: false
       - name: Install Qt tools
@@ -42,6 +43,10 @@ jobs:
           sudo apt-get install --no-install-recommends -y qtbase5-dev-tools g++ make
       - name: Build standalone ECB (no EPICS sources)
         run: |
+          # ECB derives its numeric build ID from `git rev-list --count main`.
+          # A SHA checkout is detached; name the pinned commit locally for that build.
+          git -C .ci-deps/ecb checkout -B main HEAD
+          test "$(git -C .ci-deps/ecb rev-list --count main)" -gt 0
           make -C .ci-deps/ecb -f Makefile -j2
           echo "$GITHUB_WORKSPACE/.ci-deps/ecb/bin" >> "$GITHUB_PATH"
       - name: Show test dependencies

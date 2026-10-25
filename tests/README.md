@@ -41,6 +41,9 @@ on PATH or set `ECB=/absolute/path/to/ecb`. CI pins ECB to commit
 `79a9ef6c2c292efeb52adf7c45dbb30b114456b0` (1.6.0) and builds it with GCC;
 this build does not require EPICS sources. On macOS, use `make -f Makefile LDLIBS=`
 because Apple's standard library does not provide Linux's `libstdc++fs`.
+ECB's Makefile calculates its build number from a local `main` branch. CI fetches
+the history and names the pinned checkout `main` before compiling; without that
+branch, ECB can build with an empty build number and abort when reading YAML.
 
 Run only the generator comparisons with:
 

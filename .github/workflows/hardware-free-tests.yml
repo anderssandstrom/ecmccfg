@@ -1,0 +1,48 @@
+name: Hardware-free regression tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hardware-free-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  regression:
+    name: Hardware mappings, databases and panels
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          submodules: false
+      - name: Install prebuilt EPICS tools
+        uses: mamba-org/setup-micromamba@v3
+        with:
+          environment-file: tests/environment.yml
+          cache-environment: true
+          init-shell: none
+      - name: Install Qt tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y qtbase5-dev-tools
+      - name: Show test dependencies
+        shell: micromamba-shell {0}
+        run: |
+          python3 --version
+          command -v msi
+          command -v softIoc
+          /usr/lib/qt5/bin/uic -version
+      - name: Run hardware-free tests (no skipped checks)
+        shell: micromamba-shell {0}
+        env:
+          QT_SELECT: qt5
+        run: |
+          export PATH="/usr/lib/qt5/bin:$PATH"
+          python3 tests/run_tests.py --verbose --strict

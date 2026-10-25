@@ -443,8 +443,10 @@ class OptTests(unittest.TestCase):
         if not softioc:
             self.skipTest('EPICS softIoc/libCom is not installed')
         binary = Path(softioc).resolve()
-        library = binary.parents[2] / 'lib' / binary.parent.name / 'libCom.so'
-        if not library.exists():
+        libdir = binary.parents[2] / 'lib' / binary.parent.name
+        library = next((libdir / name for name in ('libCom.so', 'libCom.dylib')
+                        if (libdir / name).exists()), None)
+        if library is None:
             self.skipTest('EPICS libCom is not installed')
         lib = ctypes.CDLL(str(library))
         lib.postfix.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_short)]

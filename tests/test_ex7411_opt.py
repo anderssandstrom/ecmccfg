@@ -74,7 +74,7 @@ class El7411OptTests(unittest.TestCase):
         self.assertEqual(scale*65536,360)
         self.assertEqual(scale*65535,359.9945068359375)
         root=ET.parse(ROOT/'qt/ecmcEX72XX_OPT_cstca.ui').getroot()
-        target=root.find(".//widget[@name='angleTarget']")
+        target=root.find(".//widget[@name='commutationAngle']")
         self.assertEqual(target.get('class'),'caTextEntry')
         self.assertEqual(target.findtext("property[@name='readOnly']/bool"),'false')
         self.assertTrue(target.findtext("property[@name='channel']/string").endswith('-ComAngle'))
@@ -91,12 +91,6 @@ class El7411OptTests(unittest.TestCase):
                         dict(ENC_STAT='1'),dict(ENC_STAT_1='1'),dict(TP='2'),dict(DIAG='2')]:
             with self.subTest(options=options):
                 with self.assertRaises(InvalidConfiguration):Startup('EL7411',options)
-        for model in MODELS:
-            with self.subTest(model=model):
-                with self.assertRaises(InvalidConfiguration):Startup(model,dict(MODE='CSTCA'))
-                # A user-supplied capability cannot enable an unmapped mode.
-                with self.assertRaises(InvalidConfiguration):Startup(model,dict(MODE='CSTCA',CAP_CSTCA='1'))
-
     def test_el7411_timing_and_overrides(self):
         for rate in [500,1000,2000]:
             s=Startup('EL7411',rate=rate)

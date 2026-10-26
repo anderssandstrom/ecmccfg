@@ -118,7 +118,7 @@ Related motion docs:
 - [homing](../homing/)
 - [axis PLC](../axisplc/)
 - [motor record](../motor/)
-- [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}})
+- [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}})
 - [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}})
 
 The configuration is separated into the following mandatory sections:

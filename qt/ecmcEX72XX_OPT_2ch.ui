@@ -99,45 +99,6 @@
      </font>
     </property>
    </widget>
-   <widget class="QLabel" name="channel1PositionLabel">
-    <property name="geometry">
-     <rect>
-      <x>8</x>
-      <y>62</y>
-      <width>104</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Encoder position</string>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>8</pointsize>
-     </font>
-    </property>
-   </widget>
-   <widget class="caLineEdit" name="channel1Position">
-    <property name="geometry">
-     <rect>
-      <x>8</x>
-      <y>79</y>
-      <width>87</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="channel">
-     <string>$(IOC):m$(MasterID)s$(SlaveID)-Enc01-PosAct</string>
-    </property>
-    <property name="colorMode">
-     <enum>caLineEdit::Alarm</enum>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>8</pointsize>
-     </font>
-    </property>
-   </widget>
    <widget class="caLineEdit" name="channel1Status">
     <property name="geometry">
      <rect>
@@ -318,7 +279,84 @@
      </font>
     </property>
    </widget>
-   <widget class="caRelatedDisplay" name="channel1PositionTrend">
+   <widget class="caFrame" name="channel1PositionLabelWhenMapped">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>62</y>
+      <width>104</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode</string>
+    </property>
+    <property name="visibility">
+     <enum>caFrame::Calc</enum>
+    </property>
+    <property name="visibilityCalc">
+     <string>A!=3</string>
+    </property>
+    <widget class="QLabel" name="channel1PositionLabel">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>104</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Encoder position</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+   </widget>
+   <widget class="caFrame" name="channel1PositionWhenMapped">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>79</y>
+      <width>87</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode</string>
+    </property>
+    <property name="visibility">
+     <enum>caFrame::Calc</enum>
+    </property>
+    <property name="visibilityCalc">
+     <string>A!=3</string>
+    </property>
+    <widget class="caLineEdit" name="channel1Position">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>87</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-Enc01-PosAct</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Alarm</enum>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+   </widget>
+   <widget class="caFrame" name="channel1PositionTrendWhenMapped">
     <property name="geometry">
      <rect>
       <x>97</x>
@@ -327,30 +365,49 @@
       <height>16</height>
      </rect>
     </property>
-    <property name="minimumSize">
-     <size>
-      <width>15</width>
-      <height>16</height>
-     </size>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode</string>
     </property>
-    <property name="maximumSize">
-     <size>
-      <width>15</width>
-      <height>16</height>
-     </size>
+    <property name="visibility">
+     <enum>caFrame::Calc</enum>
     </property>
-    <property name="labels">
-     <string>&gt;</string>
+    <property name="visibilityCalc">
+     <string>A!=3</string>
     </property>
-    <property name="files">
-     <string>ecmcGraph_v1.ui</string>
-    </property>
-    <property name="args">
-     <string>IOC=$(IOC),TITLE=m$(MasterID)s$(SlaveID): Channel 01 actual position,PV=$(IOC):m$(MasterID)s$(SlaveID)-Enc01-PosAct</string>
-    </property>
-    <property name="toolTip">
-     <string>Trend: Channel 01 actual position</string>
-    </property>
+    <widget class="caRelatedDisplay" name="channel1PositionTrend">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>15</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>15</width>
+       <height>16</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>15</width>
+       <height>16</height>
+      </size>
+     </property>
+     <property name="labels">
+      <string>&gt;</string>
+     </property>
+     <property name="files">
+      <string>ecmcGraph_v1.ui</string>
+     </property>
+     <property name="args">
+      <string>IOC=$(IOC),TITLE=m$(MasterID)s$(SlaveID): Channel 01 actual position,PV=$(IOC):m$(MasterID)s$(SlaveID)-Enc01-PosAct</string>
+     </property>
+     <property name="toolTip">
+      <string>Trend: Channel 01 actual position</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QFrame" name="channel2Overview">
@@ -413,45 +470,6 @@
     </property>
     <property name="channel">
      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode02</string>
-    </property>
-    <property name="colorMode">
-     <enum>caLineEdit::Alarm</enum>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>8</pointsize>
-     </font>
-    </property>
-   </widget>
-   <widget class="QLabel" name="channel2PositionLabel">
-    <property name="geometry">
-     <rect>
-      <x>8</x>
-      <y>62</y>
-      <width>104</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Encoder position</string>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>8</pointsize>
-     </font>
-    </property>
-   </widget>
-   <widget class="caLineEdit" name="channel2Position">
-    <property name="geometry">
-     <rect>
-      <x>8</x>
-      <y>79</y>
-      <width>87</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="channel">
-     <string>$(IOC):m$(MasterID)s$(SlaveID)-Enc02-PosAct</string>
     </property>
     <property name="colorMode">
      <enum>caLineEdit::Alarm</enum>
@@ -642,7 +660,84 @@
      </font>
     </property>
    </widget>
-   <widget class="caRelatedDisplay" name="channel2PositionTrend">
+   <widget class="caFrame" name="channel2PositionLabelWhenMapped">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>62</y>
+      <width>104</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode02</string>
+    </property>
+    <property name="visibility">
+     <enum>caFrame::Calc</enum>
+    </property>
+    <property name="visibilityCalc">
+     <string>A!=3</string>
+    </property>
+    <widget class="QLabel" name="channel2PositionLabel">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>104</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Encoder position</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+   </widget>
+   <widget class="caFrame" name="channel2PositionWhenMapped">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>79</y>
+      <width>87</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode02</string>
+    </property>
+    <property name="visibility">
+     <enum>caFrame::Calc</enum>
+    </property>
+    <property name="visibilityCalc">
+     <string>A!=3</string>
+    </property>
+    <widget class="caLineEdit" name="channel2Position">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>87</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-Enc02-PosAct</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Alarm</enum>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+   </widget>
+   <widget class="caFrame" name="channel2PositionTrendWhenMapped">
     <property name="geometry">
      <rect>
       <x>97</x>
@@ -651,30 +746,49 @@
       <height>16</height>
      </rect>
     </property>
-    <property name="minimumSize">
-     <size>
-      <width>15</width>
-      <height>16</height>
-     </size>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgMode02</string>
     </property>
-    <property name="maximumSize">
-     <size>
-      <width>15</width>
-      <height>16</height>
-     </size>
+    <property name="visibility">
+     <enum>caFrame::Calc</enum>
     </property>
-    <property name="labels">
-     <string>&gt;</string>
+    <property name="visibilityCalc">
+     <string>A!=3</string>
     </property>
-    <property name="files">
-     <string>ecmcGraph_v1.ui</string>
-    </property>
-    <property name="args">
-     <string>IOC=$(IOC),TITLE=m$(MasterID)s$(SlaveID): Channel 02 actual position,PV=$(IOC):m$(MasterID)s$(SlaveID)-Enc02-PosAct</string>
-    </property>
-    <property name="toolTip">
-     <string>Trend: Channel 02 actual position</string>
-    </property>
+    <widget class="caRelatedDisplay" name="channel2PositionTrend">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>15</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>15</width>
+       <height>16</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>15</width>
+       <height>16</height>
+      </size>
+     </property>
+     <property name="labels">
+      <string>&gt;</string>
+     </property>
+     <property name="files">
+      <string>ecmcGraph_v1.ui</string>
+     </property>
+     <property name="args">
+      <string>IOC=$(IOC),TITLE=m$(MasterID)s$(SlaveID): Channel 02 actual position,PV=$(IOC):m$(MasterID)s$(SlaveID)-Enc02-PosAct</string>
+     </property>
+     <property name="toolTip">
+      <string>Trend: Channel 02 actual position</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="caShellCommand" name="hardwareDiagnostics">
@@ -704,6 +818,12 @@
   </widget>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>caFrame</class>
+   <extends>QFrame</extends>
+   <header>caFrame</header>
+   <container>1</container>
+  </customwidget>
   <customwidget>
    <class>caInclude</class>
    <extends>QWidget</extends>

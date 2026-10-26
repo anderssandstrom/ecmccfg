@@ -77,10 +77,10 @@ so it can produce motor movement when enabled.
 The wrapper uses the existing 128 × 500 OPT overview, including its **HW**
 EtherCAT diagnostic-buffer shortcut. `CfgMode=3` identifies CSTCA; CSV/CSP/CST
 retain values 0/1/2. The channel panel shows a **CSTCA details** link only when
-that mode is configured. Other device wrappers continue to reject CSTCA.
+that mode is configured. The EL/EP/ELM72xx wrappers also support CSTCA, with a different input PDO policy.
 
-`ecmcEX72XX_OPT_cstca.ui` reuses the CST controls and adds a writable angle,
-angle demand readback and **>** trend button in a compact 350 × 330 panel.
+`ecmcEX72XX_OPT_cstca.ui` provides torque controls and a writable angle,
+angle demand readback and **>** trend button in a compact 350 × 332 panel.
 Press Enter to write torque or angle. With `DIAG=1`, actual torque is also
 shown. With `DIAG=0`, it displays **Not mapped** and does not subscribe to an
 absent actual-torque PV. DS402 enable/disable and the state guide remain

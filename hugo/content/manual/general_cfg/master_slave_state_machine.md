@@ -94,7 +94,7 @@ For most new systems, this is preferable to keeping equivalent switching logic i
 
 ## Related Pages
 
-- [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}})
+- [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}})
 - [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
 - [upgrades]({{< relref "/manual/upgrades.md#native-masterslave-state-machine" >}})
 - [knowledgebase: tuning]({{< relref "/manual/knowledgebase/tuning.md" >}})

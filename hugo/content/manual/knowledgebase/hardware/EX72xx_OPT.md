@@ -8,9 +8,9 @@ The OPT wrappers use a common dispatcher and per-channel record/panel interface,
 with separate PDO mappings and timing policies for EL/EP72xx and ELM72xx.
 All existing non-OPT hardware configurations, databases and panels are unchanged.
 
-The dispatcher also supports [EL7411 OPT and CSTCA]({{< relref "/manual/knowledgebase/hardware/EL7411_OPT.md" >}})
-through a separate EL7411 PDO/timing policy. Its capabilities and defaults differ
-from the EL/EP/ELM72xx devices below. CSTCA is currently enabled only for EL7411.
+For the EL7411-specific mapping, defaults and CSTCA input diagnostics, see
+[EL7411 OPT]({{< relref "/manual/knowledgebase/hardware/EL7411_OPT.md" >}}).
+The existing EL/EP/ELM72xx CSTCA behaviour described here is unchanged.
 
 ## Devices and defaults
 
@@ -74,8 +74,8 @@ overrides the maximum-current setting; the nominal-current setting remains
 
 ## Options and capabilities
 
-`MODE` accepts `CSV`, `CSP` or `CST` for every wrapper. Each channel explicitly
-selects its mode by a one-byte startup SDO: CSV = 9, CSP = 8, CST = 10. Channel 1
+`MODE` accepts `CSV`, `CSP`, `CST` or `CSTCA` for every wrapper. Each channel explicitly
+selects its mode by a one-byte startup SDO: CSV = 9, CSP = 8, CST = 10, CSTCA = 11. Channel 1
 uses `0x7010:03`; ELM channel 2 uses `0x7110:03`.
 
 `TP` accepts 0 or 1 and maps touch-probe **status**, including input levels.
@@ -86,8 +86,9 @@ part of this option.
 `DIAG=1` maps actual velocity, actual torque and DC link voltage, and loads their
 records. `DIAG=0` omits them. ELM CSP additionally maps following error when
 `DIAG=1`. EL/EP CSP always maps following error, as in CSP_STD. EL/EP CSV and CSP
-map torque offset; ELM does not map torque offset. CST uses torque demand.
-`ENC_STAT=1` is now the default on every listed wrapper, in CSV, CSP and CST.
+map torque offset; ELM does not map torque offset. CST and CSTCA use torque demand.
+`ENC_STAT=1` is the default on every listed wrapper in CSV, CSP and CST.
+CSTCA omits feedback PDOs regardless of this option.
 It maps encoder feedback status and loads its records. `ENC_STAT=0` omits the
 PDO and records; `ENC_STAT_1` / `ENC_STAT_2` can override each channel separately.
 `CfgEncoderStatus` and the panel link reflect the resolved selection.
@@ -122,6 +123,45 @@ ELM7222 also accepts the corresponding `_2` overrides. A channel-specific value
 wins over the shared value, which wins over the wrapper default. Second-channel
 options on a single-channel wrapper are rejected. All channels are validated
 before resetting or configuring the slave. No `ecmcIf` state is used.
+
+## CSTCA: external commutation angle
+
+Select `MODE=CSTCA` to send torque and the electrical commutation angle over
+EtherCAT. `MODE_1=CSTCA` and `MODE_2=CSTCA` select it independently on ELM7222.
+
+```iocsh
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "HW_DESC=EL7211-9014_OPT,OPT='MODE=CSTCA'"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "HW_DESC=ELM7222-0010_OPT,OPT='MODE_1=CST,MODE_2=CSTCA'"
+```
+
+CSTCA uses a minimal TxPDO configuration: only `0x1A01` DRV Statusword on
+EL/EP, plus `0x1A05` Info2 inputs when `INFO2=INPUTS` is selected on a supported
+wrapper. `INFO2=NONE` selects statusword only. ELM uses its corresponding drive
+statusword PDO (`0x1A10` / `0x1A50`); ELM does not support `INFO2=INPUTS`.
+Position feedback, encoder status, touch probe, velocity, torque and voltage
+telemetry are omitted in CSTCA, even when `ENC_STAT`, `TP` or `DIAG` are enabled.
+`INFO2=TEMP` and `INFO2=ERRORS` are also omitted in this mode. Configuration PVs
+report the effective selection, and position widgets and unavailable feature
+links are hidden. Other channels retain their own selected mode's mappings.
+
+The torque PDO and `Drv01-Trq` / `Drv01-Trq-RB` records are shared with CST.
+CSTCA additionally maps `commutationAngle01` (`commutationAngle02` on channel 2)
+as UINT16 at `0x7010:0E` (`0x7110:0E`). EL/EP use RxPDO `0x1603`; ELM uses
+`0x1614` / `0x1654`. Other modes do not map this output.
+
+`Drv01-ComAngle` is writable in electrical degrees; `Drv01-ComAngle-RB` reads
+back the PDO demand, not a measured rotor angle. Channel 2 uses `Drv02`.
+The scale is 360/65536 degrees per count, with a writable range of
+0 through 359.9945068359375 degrees. Real-time logic can write the raw
+`commutationAngle01/02` entry in counts (0–65535). The controller supplies the
+angle cyclically when running external commutation; the EPICS record is a
+manual setpoint. The CSTCA detail panel includes torque controls and the angle
+setpoint/readback. `CfgMode=3` selects that panel.
+
+Sources: [EL output objects](https://infosys.beckhoff.com/content/1033/el72x1/1976984331.html),
+[EP output objects](https://infosys.beckhoff.com/content/1033/ep7211/10637999883.html),
+[ELM output objects](https://infosys.beckhoff.com/content/1033/elm72xx/12672414859.html),
+and the family PDO references below.
 
 ## Timing and startup policy
 
@@ -197,7 +237,7 @@ Configuration PVs use the slave's `ECMC_P`, normally
 | Suffix | Values |
 | --- | --- |
 | `CfgChannels` | 1 or 2 |
-| `CfgMode` | 0 = CSV, 1 = CSP, 2 = CST, 3 = CSTCA (EL7411 only) |
+| `CfgMode` | 0 = CSV, 1 = CSP, 2 = CST, 3 = CSTCA |
 | `CfgTouchProbe` | 0 = Not mapped, 1 = Mapped |
 | `CfgInfo2` | 0 = INPUTS, 1 = TEMP, 2 = ERRORS, 3 = NONE |
 | `CfgDiagnostics` | 0 = Not mapped, 1 = Mapped |
@@ -211,7 +251,7 @@ requires restarting the IOC. Feature links appear only when the relevant PDOs
 and records are configured. Hidden links subscribe to configuration PVs only;
 feature records are subscribed when their detail panel is opened. A connection
 failure remains a connection failure, rather than implying a disabled feature.
-CSV, CSP and CST detail panels expose **DS402 enable** and **Disable** buttons.
+CSV, CSP, CST and CSTCA detail panels expose **DS402 enable** and **Disable** buttons.
 From the overview, open the desired channel and select its mode's detail link.
 The buttons process that channel's `Drv01-TrgDS402Ena.PROC` and
 `Drv01-TrgDS402Dis.PROC` records (channel 2 uses `Drv02`). The enable sequence
@@ -228,6 +268,7 @@ separate PDO demand readback:
 | CSV | `Drv01-Spd` | `Drv01-Spd-RB` |
 | CSP | `Drv01-PosCmd` | `Drv01-PosCmd-RB` |
 | CST | `Drv01-Trq` | `Drv01-Trq-RB` |
+| CSTCA | `Drv01-Trq`, `Drv01-ComAngle` | `Drv01-Trq-RB`, `Drv01-ComAngle-RB` |
 
 The torque-offset detail panel also has a writable target, `Drv01-TrqOff`,
 and a separate `Drv01-TrqOff-RB` readback with a trend button. Enter the offset

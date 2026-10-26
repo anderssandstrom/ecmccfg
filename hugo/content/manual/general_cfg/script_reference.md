@@ -181,7 +181,7 @@ should generally be seen as legacy entry points compared to the YAML-first path.
 - [Startup Validator]({{< relref "/manual/general_cfg/startup_validator.md" >}})
 - [ESI Parser]({{< relref "/manual/general_cfg/esi_parser.md" >}})
 - [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}})
-- [Axis Groups]({{< relref "/manual/general_cfg/axis_groups.md" >}})
+- [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}})
 - [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}})
 - [Lookup Tables]({{< relref "/manual/general_cfg/lut.md" >}})
 - [motion configuration]({{< relref "/manual/motion_cfg/_index.md" >}})

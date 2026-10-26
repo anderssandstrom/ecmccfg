@@ -35,7 +35,7 @@ Notes:
 | axis.id | Axis id | No |
 | axis.type | Axis type | No |
 | axis.mode | Supported mode, CSV and CSP, defaults CSV | Yes |
-| axis.parameters | Additional params to motor record driver | No |
+| axis.parameters | Additional motor driver options. `restoreMotorSoftLims=1;` lets initialized/autosave-restored motor dial limits override ECMC at startup and also enables ongoing synchronization. See [autosave]({{< relref "/manual/motion_cfg/autosave.md" >}}). | No |
 | axis.healthOutput | EtherCAT entry for health output | No |
 | axis.feedSwitchesOutput | EtherCAT entry for fed switches | No |
 | axis.feedSwitchesValue | Value to write to axis.feedSwitchesOutput. Defaults to 1 | No |
@@ -61,7 +61,7 @@ Notes:
 | epics.motorRecord.enable | Enable motor record | No |
 | epics.motorRecord.description | This is MR | No |
 | epics.motorRecord.fieldInit | Extra config for motor record | No |
-| epics.motorRecord.syncSoftLimits | Sync softlimits between motor and ecmc (default false). When false, motor record HLM/LLM and ecmc soft limits may differ. On false->true, ecmc soft limits are copied to the motor record; while true, later motor record soft-limit changes are written back to ecmc. | No |
+| epics.motorRecord.syncSoftLimits | Sync softlimits between motor and ecmc (default false; `restoreMotorSoftLims=1` overrides this to enabled). When synchronization is disabled, motor record HLM/LLM and ecmc soft limits may differ. On false->true, ecmc soft limits are copied to the motor record; while true, later motor record soft-limit changes are written back to ecmc. | No |
 | epics.motorRecord.pvt.npoints | Max number of target points for PVT/profile move | No |
 | epics.motorRecord.pvt.nreadback | Max number of readback points for PVT/profile move | No |
 | drive.numerator | Fastest speed in engineering units | No |

@@ -1,1 +1,13 @@
+# _pos.req selects PSI two-pass restore (autosave passes 0 and 1).
+# Position policy is controlled by the motor record RSTM field.
 MTEST04-MTN-ASM:Axis1.DVAL
+# Dial limits in engineering units; requires restoreMotorSoftLims=1.
+MTEST04-MTN-ASM:Axis1.DHLM
+MTEST04-MTN-ASM:Axis1.DLLM
+# Do not additionally restore the competing Cfg limit outputs below.
+# Independent limit-enable flags require their own restore ordering.
+
+#MTEST04-MTN-ASM:Axis1-CfgDLLM
+#MTEST04-MTN-ASM:Axis1-CfgDHLM
+#MTEST04-MTN-ASM:Axis1-SftLimBwdEna
+#MTEST04-MTN-ASM:Axis1-SftLimFwdEna

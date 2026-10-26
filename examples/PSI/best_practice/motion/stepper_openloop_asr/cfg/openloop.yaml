@@ -1,12 +1,20 @@
 axis:
   id: 1                                               # Axis id
   type: joint                                         # axis type selector for future use
+  # Restore initialized/autosave-restored DLLM/DHLM into ECMC at startup.
+  # This option also enables ongoing synchronization; see ../readme.md.
+  parameters: "restoreMotorSoftLims=1;"
 
 epics:
   name: Axis1                                         # Axis anme
   precision: 3                                        # Decimal count
   description: very important motor axis              # Axis description
   unit: mm                                            # Unit
+  motorRecord:
+    # Optional: restoreMotorSoftLims=1 already enables synchronization.
+#    syncSoftLimits: True
+    # Temporary restore diagnostics from record initialization.
+    fieldInit: "SPAM=8"
 
 drive:
   numerator: 3600                                     # Fastest speed in engineering units

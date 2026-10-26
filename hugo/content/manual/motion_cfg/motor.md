@@ -25,7 +25,7 @@ For example-driven setups, see
 ### Auto save restore
 
 Open-loop stepper systems with incremental encoders often use auto save restore
-through the motor record.
+through the motor record. For soft-limit restoration, the exact driver option, value precedence, startup gate and position policy, see [motor position and soft-limit autosave]({{< relref "/manual/motion_cfg/autosave.md" >}}).
 
 Important note:
 
@@ -41,8 +41,10 @@ Example:
 MTEST04-MTN-ASM:Axis1.DVAL
 ```
 
-If the request file does not end with `_pos.req`, then restore pass 2 must be
-enabled explicitly:
+Both autosave passes, 0 and 1, must be registered before `iocInit`. In the PSI
+`ioc install` workflow, a `_pos.req` filename selects the two-pass setup.
+For another filename, request it explicitly with the PSI directive below
+(the value `2` is not an autosave pass number):
 
 ```text
 #ENABLE-PASS=2

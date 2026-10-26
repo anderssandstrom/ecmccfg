@@ -39,6 +39,7 @@ record(motor,"$(PREFIX)$(MOTOR_NAME)")
     field(PCOF, "$(PCOF=0)")
     field(DCOF, "$(DCOF=0)")
     field(ICOF, "$(ICOF=0)")
+    field(MFLG, "$(MFLG=8)")
 }
 
 # The message text

@@ -29,7 +29,7 @@ For examples and configuration guidance, use [yaml configuration](../axisyaml/).
 - `id` (required) — Axis id.
 - `type` (optional) — Future selection of axis type; see type mapping in the axis section.
 - `mode` (optional) — Supported modes CSV or CSP; defaults to CSV.
-- `parameters` (optional) — Additional parameters for the motor record driver (e.g. powerAutoOnOff, powerOffDelay, powerOnDelay).
+- `parameters` (optional) — Additional motor driver options (e.g. powerAutoOnOff, powerOffDelay, powerOnDelay). `restoreMotorSoftLims=1;` enables startup restoration of motor dial limits and ongoing synchronization; see [autosave]({{< relref "/manual/motion_cfg/autosave.md" >}}).
 - `healthOutput` (optional) — EtherCAT entry for health output.
 - `feedSwitchesOutput` (optional) — EtherCAT entry for fed switches.
 - `feedSwitchesValue` (optional) — Value written to `axis.feedSwitchesOutput`; defaults to 1.
@@ -61,7 +61,7 @@ For examples and configuration guidance, use [yaml configuration](../axisyaml/).
   - `enable` — Enable motor record.
   - `description` — Motor record description.
   - `fieldInit` — Additional motor record fields.
-  - `syncSoftLimits` — Sync soft limits between motor record and ecmc (default false). When false, motor record `HLM`/`LLM` and ecmc soft limits may differ. On false-to-true, ecmc soft limits are copied to the motor record; while true, later motor record soft-limit changes are written back to ecmc.
+  - `syncSoftLimits` — Sync soft limits between motor record and ecmc (default false; `restoreMotorSoftLims=1` overrides this to enabled). When synchronization is disabled, motor record `HLM`/`LLM` and ecmc soft limits may differ. On false-to-true, ecmc soft limits are copied to the motor record; while true, later motor record soft-limit changes are written back to ecmc.
   - `pvt` — PVT/profile-move support.
     - `npoints` — Max number of target points.
     - `nreadback` — Max number of readback points.

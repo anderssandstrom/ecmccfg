@@ -149,7 +149,7 @@ mandatory
 optional
 - `type`: type of the axis
 - `mode`: operating mode of the drive
-- `parameters`: additional parameters
+- `parameters`: additional motor driver options, separated by semicolons. For autosave-restored dial limits use `restoreMotorSoftLims=1;`; this also enables ongoing soft-limit synchronization. See [autosave]({{< relref "/manual/motion_cfg/autosave.md" >}}).
 
 ```yaml
 axis:
@@ -224,7 +224,7 @@ optional
   * `enable`: set to false to disable motor record
   * `description`: DESC field; default ''
   * `fieldInit`: string with additional field initial values; default ''
-  * `syncSoftLimits`: sync motor record and ecmc soft limits; default false. When false, motor record `HLM`/`LLM` and ecmc soft limits can differ. When changed from false to true at runtime, the current ecmc soft limits are copied to the motor record. While enabled, later motor record soft-limit changes are written back to ecmc.
+  * `syncSoftLimits`: sync motor record and ecmc soft limits; default false. `axis.parameters: "restoreMotorSoftLims=1;"` also enables synchronization, even when this YAML setting is omitted or false. When synchronization is disabled, motor record `HLM`/`LLM` and ecmc soft limits can differ. When changed from false to true at runtime, the current ecmc soft limits are copied to the motor record. While enabled, later motor record soft-limit changes are written back to ecmc.
   * `pvt`
     * `npoints`: max number of target points for PVT/profile move
     * `nreadback`: max number of readback points for PVT/profile move
@@ -704,6 +704,8 @@ synchronized with `epics.motorRecord.syncSoftLimits`. When synchronization is
 enabled, the ecmc and motor-record limits are kept equal. If the synchronized
 motor-record soft limits are set to `0,0`, both the ecmc and motor-record soft
 limits are disabled.
+
+For startup restoration from autosave, use `restoreMotorSoftLims=1;` in `axis.parameters` and save the motor `.DLLM`/`.DHLM` fields. Without autosave restoring those fields, the standard generated motor record retains its YAML-derived limits. See [motor position and soft-limit autosave]({{< relref "/manual/motion_cfg/autosave.md" >}}) for precedence, restore passes and startup gating.
 
 If synchronization is not enabled, disable ecmc soft limits with the enable PVs:
 

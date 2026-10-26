@@ -27,6 +27,8 @@ startup.cmd takes the following arguments:
  otherwise            "/opt/etherlab/bin/ethercat"
  MAX_PARAM_COUNT   = Maximum asyn param count, defaults to 1500
  ECMC_ASYN_TRACE_MASK = asyn trace mask for the main ecmc asyn port, defaults to 0x1
+ ECMC_STARTUP_GATE = 1/0. Set explicitly to 1 to hold motion until complete
+                     native-axis and loaded motor-record startup.
  START_EPICS_FIRST = 1/0, default 0. Start EPICS records before ECMC runtime
                      and EtherCAT when set to 1.
 
@@ -96,13 +98,32 @@ require ecmccfg "START_EPICS_FIRST=1,ECMC_EC_STABILIZATION_TIME=5"
 
 The delay is a time window, not a completion handshake with autosave. Select a
 delay long enough for the IOC's restore workload and verify the startup log and
-restored values. If a configuration requires a strict guarantee, trigger ECMC
-startup from an explicit restore-complete mechanism instead of relying only on
-a fixed delay.
+restored values. For ECMC builds with the complete motor-record startup gate,
+set `ECMC_STARTUP_GATE=1` to hold cyclic motion producers until the motor
+handshake completes; do not rely on the fixed delay alone. Older builds need
+an explicit restore-complete mechanism for this guarantee.
 
 PLCs can use `epics_get_started()`, `ec_get_started()`, and
 `system_get_started()` to inspect startup readiness. See
 [PLC functions]({{< relref "/manual/PLC_cfg/functions.md" >}}).
+
+## Complete startup gate
+
+Set `ECMC_STARTUP_GATE=1` before `setAppMode.cmd`/`finalize.cmd` runs. With
+matching ECMC startup-restore support, the gate waits for IOC readiness, bus
+stabilization, native axis initialization, and startup of each loaded motor
+record, including any requested position load and its RT acknowledgement.
+Axes with no loaded motor record have no motor-record handshake to wait for.
+
+Ordinary PLC/plugin cyclic execution and other motion producers stay held,
+drives stay disabled, and early execute/enable commands are rejected. STOP,
+disable, coordinate loading and status polling remain available. The dedicated
+safety plugin and bus I/O continue; configuration/enter-RT initialization hooks
+still prepare runtime, with their supported motion requests held as well.
+Gate `0` explicitly selects legacy startup.
+
+See [motor position and soft-limit autosave]({{< relref "/manual/motion_cfg/autosave.md" >}})
+for the restore configuration and the narrow startup COMM-alarm workaround.
 
 ## EtherCAT startup timeout
 

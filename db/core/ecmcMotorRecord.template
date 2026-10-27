@@ -542,3 +542,37 @@ record(bo,"${PREFIX}${MOTOR_NAME}-CfgSyncSftLim"){
   field(TSE,  "0")
   field(VAL,  "${SYNC_DXLM=1}")
 }
+
+# Startup diagnostics (requires ECMC startup diagnostic parameters).
+record(bi, "$(PREFIX)$(MOTOR_NAME)-StartupHeld") {
+  field(DESC, "Controller startup command hold")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(MOTOR_PORT),$(AXIS_NO),1)STARTUP_COMMANDS_HELD")
+  field(SCAN, "I/O Intr")
+  field(ZNAM, "Released")
+  field(ONAM, "Held")
+}
+record(bi, "$(PREFIX)$(MOTOR_NAME)-StartupMotorReady") {
+  field(DESC, "Motor startup handshake complete")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(MOTOR_PORT),$(AXIS_NO),1)STARTUP_MOTOR_READY")
+  field(SCAN, "I/O Intr")
+  field(ZNAM, "Pending")
+  field(ONAM, "Ready")
+}
+record(bi, "$(PREFIX)$(MOTOR_NAME)-StartupLimitsReady") {
+  field(DESC, "Startup soft-limit init complete")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(MOTOR_PORT),$(AXIS_NO),1)STARTUP_LIMITS_READY")
+  field(SCAN, "I/O Intr")
+  field(ZNAM, "Pending")
+  field(ONAM, "Ready")
+}
+record(waveform, "$(PREFIX)$(MOTOR_NAME)-StartupRestoreStatus") {
+  field(DESC, "Startup soft-limit restore status")
+  field(DTYP, "asynOctetRead")
+  field(INP, "@asyn($(MOTOR_PORT),$(AXIS_NO),1)STARTUP_RESTORE_STATUS")
+  field(SCAN, "I/O Intr")
+  field(FTVL, "CHAR")
+  field(NELM, "256")
+}

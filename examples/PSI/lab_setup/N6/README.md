@@ -1,14 +1,76 @@
 # N6 drive-side pulse generator trial
 
-Run `startup_pulse_per_fullstep.cmd` from this directory instead of
-`startup.cmd`. It loads `cfg/pulse_per_fullstep.cmd` after the motor component
+## Current status: revised source-enable trial
+
+The drive rejected the trial's `3203:01=8` write with SDO abort `0x06040047`
+(general internal incompatibility). EtherCAT SDO configuration consequently
+failed. Subsequent readbacks were:
+
+| Object | Reported value |
+| --- | --- |
+| `100A:00` | `FIR-v2542-B1080909` |
+| `60E6:01` | `0` (internal/sensorless interface disabled) |
+| `60EB:01` | `1` |
+| `3202:00` | `0` (open-loop stepper) |
+
+The revision now configures `60EB:01=1` and `60E6:01=3276800` **before**
+selecting `3203:01=8`. This addresses the disabled-interface prerequisite.
+It is not yet verified to resolve the abort or produce pulses. The source
+may still require sensorless commissioning or be incompatible with this
+open-loop setup. The abort alone does not identify the exact cause.
+
+Do not simply skip the failed write and continue the trial: `205C` requires a valid
+position source. The candidate explicitly sets `205C:01=0` so an absent
+source cannot fall back to continuous free-running pulses.
+
+After retrying with the drive disabled, check these readbacks before motion:
+
+```sh
+ethercat upload -m1 -p0 --type string 0x100A 0
+ethercat upload -m1 -p0 --type uint32 0x60E6 1
+ethercat upload -m1 -p0 --type uint32 0x60EB 1
+ethercat upload -m1 -p0 --type uint32 0x3202 0
+ethercat upload -m1 -p0 --type uint8 0x3203 1
+ethercat upload -m1 -p0 --type uint16 0x3205 4
+```
+
+Expected configuration values are `60E6:01=3276800`, `60EB:01=1`,
+`3202:00=0`, `3203:01=8`. Inspect the selected sensor in `3205:04`.
+If the same abort persists despite the enabled interface, stop this trial
+and report the new error/readbacks. Do not switch to closed-loop or invent
+motor-model parameters to make the source work.
+
+The [FIR-v2542 manual, object 60E6](https://www.nanotec.com/fileadmin/files/Handbuecher/Motorsteuerungen/n6/fir-v2508/N6_EtherCAT_Technical-Manual_V1.2.1.pdf?1773317058=)
+documents that zero disables an interface and that nonzero enables sensor
+checks. Enabling interface 1 does not establish that its position is the same
+as the synthesized open-loop position. Verify normal `positionActual01`
+behavior and 3,276,800 counts per revolution before using the output.
+
+## Restore the original setup
+
+Restart the IOC using `startup.cmd` rather than the pulse trial, and load
+the following **before** applying the EtherCAT configuration:
+
+```text
+${SCRIPTEXEC} ./cfg/disable_pulse_source.cmd "N6_SID=${DRV_SID}"
+```
+
+This disarms the outputs, clears source selections, restores `60E6:01=0`,
+and returns outputs 1/2 to ordinary digital-output routing. Restarting with
+`startup.cmd` alone does not explicitly restore the interface resolution.
+Neither script saves settings to drive flash.
+
+## Candidate retained for investigation
+
+`startup_pulse_per_fullstep.cmd` loads `cfg/pulse_per_fullstep.cmd` after the motor component
 and before EtherCAT configuration is applied. The original `positionActual01`
 PDO, `6064` units, axis YAML and hardware descriptor are unchanged. No extra
 PDOs or `_OPT` descriptor are needed.
 
-**This is an untested commissioning example targeting one pulse per full
-step.** The pulse-generator source resolution and behavior in open-loop mode
-must be measured before treating the ratio as verified.
+The intended target is one pulse per full step. Source selection must first
+be resolved; source resolution and behavior in open-loop mode then need
+measurement before treating the ratio as verified. The measurement procedure
+below applies only after a supported source selection has been established.
 
 ## Configuration
 
@@ -19,6 +81,8 @@ The script queues SDO settings for startup and reconnection:
 | Object | Final value | Purpose |
 | --- | --- | --- |
 | `205C:01` | `0` | No free-running increments if no source is selected |
+| `60EB:01` | `1` | Internal-interface resolution denominator, revolutions |
+| `60E6:01` | `3276800` | Enable internal interface with nominal native counts/revolution |
 | `3203:01` | `8` | Select internal/sensorless interface for pulse generator |
 | `3203:02..04` | `0` | Clear other feedback selections for this open-loop example |
 | `205C:02` | `1` | Clock/direction on generator channels A/B |
@@ -37,7 +101,8 @@ initialization write to that gate.
 The source masks deliberately keep position/velocity selection bits 0 and 1
 clear, matching the original synthesized open-loop feedback setup. Do not
 apply this snippet to an axis using external or closed-loop feedback.
-It does not change encoder resolution or enable sensorless closed-loop mode.
+It configures the internal-interface resolution for this 200-step motor,
+retains native position/velocity units, and does not enable closed-loop mode.
 Whether the internal interface feeds usable open-loop position to this pulse
 generator remains an experimental question.
 

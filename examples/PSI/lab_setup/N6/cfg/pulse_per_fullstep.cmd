@@ -1,5 +1,8 @@
-# WARNING: EXPERIMENTAL, NOT HARDWARE TESTED
-#- N6 FIR-v2508, open-loop two-phase stepper; load after applyComponent
+# WARNING: REVISED SOURCE-ENABLE TRIAL, NOT YET VERIFIED ON HARDWARE
+#- Initial 0x3203:01=8 write failed while 0x60E6:01 was zero (disabled).
+#- This revision configures interface 1 before selecting it. It may still
+#- require sensorless commissioning; do not bypass a rejected source write.
+#- N6 FIR-v2542, 200-full-step open-loop motor; load after applyComponent
 #- and before applyConfig, with the drive disabled. N6_SID is the slave.
 #- Candidate ratio: 1 pulse per 16384 source increments = 1 full step IF
 #- the pulse generator uses the same native resolution as positionActual01.
@@ -14,12 +17,19 @@ ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x205C,0x03,0,2)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x205C,0x01,0,2)"
 
 #- Replace saved selections for this OPEN-LOOP example: bits 0..2 stay zero
-#- (original position/velocity feedback). Only interface 1 has bit 3 set,
-#- selecting the internal/sensorless interface for the pulse generator.
-#- This is a commissioning candidate; open-loop source behavior needs testing.
+#- (original position/velocity selection masks). Clear interface 1 before
+#- configuring its resolution; enable only its pulse-generator selection below.
+ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x3203,0x01,0,1)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x3203,0x02,0,1)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x3203,0x03,0,1)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x3203,0x04,0,1)"
+
+#- Reported 0x60E6:01=0 disables interface 1. Set its nominal native resolution
+#- for this 200-full-step motor: (200/4 pole pairs) * 65536 = 3276800 incr/rev.
+#- These are U32 fields. Do not use this value for a different motor setup.
+#- 0x3202 stays at zero (open-loop); no unit or motor-model settings are changed.
+ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x60EB,0x01,1,4)"
+ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x60E6,0x01,3276800,4)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x3203,0x01,8,1)"
 
 #- Clock/direction (A/B), denominator 16384; all 0x205C fields are S16.

@@ -1,5 +1,6 @@
 #- Experimental drive-side pulse generator; see README.md before use.
-#- Run from this directory instead of startup.cmd.
+#- Revised trial: configure the disabled internal interface before selecting it.
+#- Initial source selection failed with 0x06040047; this revision is unverified.
 require ecmccfg sandst_a "ENG_MODE=1,ECMC_VER=sandst_a,MASTER_ID=1"
 require ecmccomp sandst_a
 

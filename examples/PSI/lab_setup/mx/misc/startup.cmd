@@ -1,5 +1,5 @@
-require ecmccfg sandst_a "ENG_MODE=1,ECMC_VER=sandst_a,MASTER_ID=1,MX_1=10,MX_REPORT=1"
-#require ecmccfg sandst_a "ENG_MODE=1,ECMC_VER=sandst_a,MASTER_ID=1"
+#require ecmccfg v11.2.0_RC1 "ENG_MODE=1,ECMC_VER=v11.2.0_RC1,MASTER_ID=1,MX_1=10,MX_REPORT=1"
+require ecmccfg sandst_a "ENG_MODE=1,ECMC_VER=v11.2.0_RC2,MASTER_ID=1"
 require ecmccomp sandst_a
 ecmcConfigOrDie "Cfg.SetEcStartupTimeout(100)"
 

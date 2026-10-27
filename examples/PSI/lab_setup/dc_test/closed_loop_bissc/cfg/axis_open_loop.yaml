@@ -9,7 +9,7 @@ axis:
 epics:
   name: ${AX_NAME=M1}                                 # Axis anme
   precision: 3                                        # Decimal count
-  description: Test cfg                               # Axis description
+  desc: Test cfg                               # Axis description
   unit: mm                                            # Unit
   motorRecord:
     fieldInit: 'RTRY=0,FOFF=Frozen,TWV=5'            # Extra config for Motor record

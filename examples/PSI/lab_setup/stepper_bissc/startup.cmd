@@ -1,7 +1,7 @@
 ##############################################################################
 ## Example config for EL7041 and EL5042
 
-require ecmccfg "ENG_MODE=1"
+require ecmccfg sandst_a "ENG_MODE=1,ECMC_VER=sandst_a"
 
 #- ############################################################################
 #- Master0

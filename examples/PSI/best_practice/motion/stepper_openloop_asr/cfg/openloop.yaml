@@ -74,11 +74,11 @@ softlimits:
 monitoring:
   lag:
     enable: true                                      # Enable position lag monitoring (following error)
-    tolerance: 3                                      # Allowed tolerance
+    tolerance: 5                                      # Allowed tolerance
     time: 10                                          # Allowed time outside tolerance  target:
   velocity:
-    enable: false                                     # Enable velocity monitoring
-    max: 100                                          # Allowed max velocity
+    enable: true                                     # Enable velocity monitoring
+    max: 1000                                          # Allowed max velocity
     time:
       trajectory: 100                                 # Time allowed outside max velo before system init halt
       drive: 200                                      # Time allowed outside max velo before system disables drive

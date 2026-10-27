@@ -1,7 +1,7 @@
 ##############################################################################
 ## Example config for EL7041 and EL5042
-
-require ecmccfg v11.0.9_RC2 "ENG_MODE=1,MASTER_ID=0,ECMC_VER=v11.0.9_RC2"
+#require ecmccfg sandst_a "ENG_MODE=1,MASTER_ID=0,ECMC_VER=sandst_a"
+require ecmccfg v11.2.0_RC1 "ENG_MODE=1,MASTER_ID=0,ECMC_VER=v11.2.0_RC1"
 #require ecmccfg "ENG_MODE=1,MASTER_ID=0"
 
 # 0:7 - EL7041    1Ch Stepper
@@ -27,4 +27,8 @@ epicsEnvShow(MY_REG_VALUE)
 
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd,   "FILE=./cfg/axis.yaml,          DEV=${IOC}, AX_NAME=M1, AXIS_ID=1, DRV_SID=${DRV_SID}, ENC_SID=${ENC_SID}, ENC_CH=01"
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlEnc.cmd,    "FILE=./cfg/enc_open_loop.yaml, DEV=${IOC}, ENC_SID=${DRV_SID}"
+
+
+#${SCRIPTEXEC} ${ecmccfg_DIR}addEcSdoRT.cmd,     "INDEX=0x1008,SUBINDEX=0x0,BYTE_SIZE=,NAME=Name,SLAVE_ID=${ECMC_EC_SLAVE_NUM}"
+${SCRIPTEXEC} ${ecmccfg_DIR}addEcSdoRT.cmd,     "INDEX=0x1008,SUBINDEX=0x0,BYTE_SIZE=100,NAME=Name,SLAVE_ID=14"
 

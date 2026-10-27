@@ -1,7 +1,10 @@
 ##############################################################################
 ## Example config for EL7041 and EL5042
 
-require ecmccfg dc_timing "ENG_MODE=1,ECMC_VER=dc_timing"
+require ecmccfg sandst_a "ENG_MODE=1,ECMC_VER=sandst_a"
+require ecb
+# New startup gate (default)
+epicsEnvSet("ECMC_STARTUP_GATE", "1")
 
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=2,HW_DESC=EL2819"
 epicsEnvSet("SYNC_0_SHIFT","-20000")
@@ -27,6 +30,7 @@ epicsEnvSet(ENC_SID,${ECMC_EC_SLAVE_NUM})
 ${SCRIPTEXEC} ${ecmccfg_DIR}setRecordUpdateRate.cmd "RATE_MS=1"
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=25,HW_DESC=EL2252"
 ${SCRIPTEXEC} ${ecmccfg_DIR}setRecordUpdateRate.cmd "RATE_MS=10"
+
 
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd,   "FILE=./cfg/axis_open_loop.yaml,   DEV=${IOC}, AX_NAME=M1, AXIS_ID=1, DRV_SID=${DRV_SID}, ENC_SID=${DRV_SID}, ENC_CH=01,PC_SLAVE=25"
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlEnc.cmd,    "FILE=./cfg/enc_biss.yaml, DEV=${IOC}, ENC_SID=${ENC_SID}"
@@ -77,8 +81,8 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd, "PLC_ID=10,FILE=./cfg/dc.plc,PLC_MA
 #${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=29,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Relative delay ns'"
 #${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd, "PLC_ID=11,FILE=./cfg/el5042_delay.plc,PLC_MACROS='AX_ID=1,ENC_REF_ID=1,ENC_BISS_ID=2,REF_SID=22,BISS_SID=9,DS_BASE=20,PRINT_EVERY=100,PUSH_ASYN=1'"
 
-afterInit "ecmcConfig 'AxisTouchProbeArm(1,1,1)'"
-afterInit "ecmcConfig 'AxisPositionCompareArm(1,5,1,1)'"
+ecmcConfig "AxisTouchProbeArm(1,1,1)"
+ecmcConfig "AxisPositionCompareArm(1,5,1,1)"
 
 # axis 1 and encoder 1
 # ecmcConfig "AxisTouchProbeArm(1,1,1)"

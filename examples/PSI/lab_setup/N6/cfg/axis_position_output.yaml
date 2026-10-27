@@ -1,0 +1,77 @@
+# Dedicated to startup_position_output_100_steps.cmd and its raw 0x6063 PDO.
+axis:
+  id: ${AXIS_ID=1}
+  tweakDist: 10
+  autoEnable:
+    enableTimeout: 1.0
+    disableTimeout: 5.0
+
+epics:
+  name: ${AX_NAME=M1}
+  precision: 3
+  description: N6 position output trial
+  unit: deg
+  motorRecord:
+    fieldInit: 'RTRY=0,FOFF=Frozen'
+    syncSoftLimits: true
+
+drive:
+  numerator: 360
+  denominator: 3276800
+  type: 1
+  setpoint: ec0.s$(DRV_SID).velocitySetpoint01
+  control: ec0.s$(DRV_SID).driveControl01
+  status: ec0.s$(DRV_SID).driveStatus01
+
+encoder:
+  desc: Native internal position
+  unit: deg
+  numerator: 360
+  denominator: 3276800
+  type: 0
+  bits: 32
+  position: ec0.s$(ENC_SID).positionActualRaw01
+  homing:
+    refToEncIDAtStartup: 1
+  useAsCSPDrvEnc: 1
+
+controller:
+  Kp: 10
+  Ki: 0
+  Kd: 0
+
+trajectory:
+  type: 1
+  axis:
+    velocity: 18
+    acceleration: 36
+    deceleration: 36
+    emergencyDeceleration: 360
+    jerk: 1000
+  jog:
+    velocity: 18
+
+# Lab setup only: these constant inputs match the original example.
+input:
+  limit:
+    forward: ec0.s$(DRV_SID).ONE.0
+    backward: ec0.s$(DRV_SID).ONE.1
+  home: ec0.s$(DRV_SID).ONE.0
+  interlock: ec0.s$(DRV_SID).ONE.0
+
+softlimits:
+  enable: false
+  forward: 100
+  forwardEnable: false
+  backward: -100
+  backwardEnable: false
+
+monitoring:
+  lag:
+    enable: true
+    tolerance: 5
+    time: 100
+  target:
+    enable: true
+    tolerance: 0.01
+    time: 10

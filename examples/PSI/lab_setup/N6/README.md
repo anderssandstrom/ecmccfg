@@ -1,6 +1,26 @@
 # N6 drive-side pulse generator trial
 
-## Current status: order-corrected diagnostic trial
+For the separate **scaled-position output trial**, use
+[startup_position_output_100_steps.cmd](startup_position_output_100_steps.cmd)
+and [its dedicated instructions](README_position_output_100_steps.md).
+The files below describe the earlier `205C` pulse-generator approach.
+
+## Current status: source selection rejected after all three trials
+
+The final, order-corrected script also failed with abort `0x06040047` at
+`3203:01`. That script writes this subindex exactly once, with value `8`,
+after the interface-resolution settings. Thus neither configuring the
+disabled interface nor removing the early zero write resolved the failure.
+The proposed internal pulse source is incompatible with the tested
+configuration. This does not establish that every pulse-generator source
+or every N6 firmware has the same limitation.
+
+**Stop this trial.** It is retained as a reproducer for Nanotec, not a working
+one-pulse-per-full-step configuration. Use the recovery procedure below to
+return to the original open-loop setup. Further SDO guesses are not justified
+by the evidence collected so far.
+
+## Test evidence
 
 The drive rejected the trial's `3203:01=8` write with SDO abort `0x06040047`
 (general internal incompatibility). EtherCAT SDO configuration consequently
@@ -26,12 +46,11 @@ which write was rejected or prove that the resolution writes were reached.
 Read back `60E6:01` and `3203:01` after the failure to narrow that down.
 Even a nonzero resolution would not prove support for the proposed source.
 
-The current revision removes the redundant `3203:01=0` write that preceded
+The final revision removed the redundant `3203:01=0` write that preceded
 interface setup. It now configures the interface first and writes `3203:01`
 exactly once, with value `8`. This corrects the setup order without trying
-another source mask. It has not been verified on hardware. If it still aborts
-at `3203:01`, the rejection is unambiguously for the pulse-source selection;
-collect the readbacks below before any further configuration changes.
+another source mask. The reported abort at kernel time `19145.605130`
+confirms that this final revision also failed at source selection.
 
 Do not simply skip the failed write and continue the trial: `205C` requires a valid
 position source. The candidate explicitly sets `205C:01=0` so an absent
@@ -50,15 +69,16 @@ ethercat upload -m1 -p0 --type uint16 0x3205 4
 
 The attempted final configuration values were `60E6:01=3276800`,
 `60EB:01=1`, `3202:00=0`, `3203:01=8`. They must not be assumed to have been
-applied after an aborted startup. Stop further trials if the corrected order
-still fails. Do not
+applied after an aborted startup. The corrected order still failed. Do not
 switch to closed-loop or invent motor-model parameters to make the source work.
 
 The question for Nanotec is: on N6-1-1-1-S with FIR-v2542-B1080909 and
 `3202=0`, can the `205C` pulse generator use synthesized open-loop motor
 position while `6064` remains in native units? Is `3203:01` bit 3 supported,
-and what prerequisites apply? Both attempted configurations above should
-be included with the abort and fresh readbacks.
+and what prerequisites apply? Include all three attempts (initial selection,
+interface-enable revision, and order-corrected revision) with the abort and
+fresh readbacks. Firmware-specific source restrictions or an alternative
+documented SDO path are needed before trying another configuration.
 
 The [FIR-v2542 manual, object 60E6](https://www.nanotec.com/fileadmin/files/Handbuecher/Motorsteuerungen/n6/fir-v2508/N6_EtherCAT_Technical-Manual_V1.2.1.pdf?1773317058=)
 documents that zero disables an interface and that nonzero enables sensor

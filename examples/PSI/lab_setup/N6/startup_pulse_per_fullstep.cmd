@@ -1,6 +1,6 @@
-#- Experimental drive-side pulse generator; see README.md before use.
-#- Order-corrected diagnostic trial: a single 0x3203:01 write follows interface
-#- setup. Earlier trials aborted at that object; see README.md for details.
+#- FAILED on FIR-v2542-B1080909: 0x3203:01=8 aborts with 0x06040047,
+#- including after interface setup and removal of the early zero write.
+#- Retained as a reproducer, not a working startup. See README.md for recovery.
 require ecmccfg sandst_a "ENG_MODE=1,ECMC_VER=sandst_a,MASTER_ID=1"
 require ecmccomp sandst_a
 

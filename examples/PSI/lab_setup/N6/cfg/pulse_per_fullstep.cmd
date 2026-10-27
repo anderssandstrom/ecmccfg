@@ -1,8 +1,7 @@
-# WARNING: ORDER-CORRECTED DIAGNOSTIC TRIAL, NOT YET VERIFIED
-#- Previous revision wrote 0x3203:01=0 before enabling the interface, so its
-#- repeated abort could have occurred before the interface-enable writes.
-#- This version writes 0x3203:01 exactly once, after configuring interface 1.
-#- Initial 0x3203:01=8 write failed while 0x60E6:01 was zero (disabled).
+# WARNING: FAILED ON FIR-v2542-B1080909; NOT A WORKING CONFIGURATION
+#- The order-corrected trial also rejected its sole 0x3203:01=8 write with
+#- 0x06040047, after queuing interface resolution before source selection.
+#- Retained as a reproducer for Nanotec; no further masks are proposed.
 #- Do not bypass a rejected source write; see README.md for test history.
 #- N6 FIR-v2542, 200-full-step open-loop motor; load after applyComponent
 #- and before applyConfig, with the drive disabled. N6_SID is the slave.

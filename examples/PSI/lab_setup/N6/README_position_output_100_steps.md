@@ -63,60 +63,89 @@ This is the generated open-loop motor counter, not measured rotor position;
 it does not detect lost motor steps. Raw `6063` does not reset during drive
 homing; use ecmc axis referencing when setting the axis coordinate.
 
-## Optional drive homing interface (method 35)
+## Axis-triggered drive homing (method 35)
 
-The example enables `HOMING=1` in `_OPT`. This maps parameters for a PLC or
-C++ logic state machine; **it does not execute homing at startup**. Without
-this option the original RxPDO layout is unchanged. The two extra entries
-are appended to existing RxPDO `1603` (9 bytes total); no additional RxPDO
-assignment slot is used. The initialized method is 35 and home offset is 0.
+The example enables `HOMING=1` and configures the normal axis homing
+sequence **26**, as used for SmarAct MCS2. The drive's homing method is
+**35** (reference current position), with home offset 0. These are two
+different settings: sequence 26 coordinates the axis; method 35 runs in
+the drive. Homing does not run automatically at IOC startup.
 
-| EtherCAT entry | Object | Type | Purpose |
-| --- | --- | --- | --- |
-| `homingMethod01` | `6098:00` | S8 | Homing method; initialized to 35 |
-| `homeOffset01` | `607C:00` | S32 | Home offset in configured `6064` units; initialized to 0 |
-| `modeControl01` | `6060:00` | S8 | Already mapped; 6 = homing, 9 = CSV |
-| `modeActual01` | `6061:00` | S8 | Already mapped; confirms the selected mode |
-| `driveControl01` | `6040:00` | U16 | Already mapped; bit 4 starts homing |
-| `driveStatus01` | `6041:00` | U16 | Already mapped; bits 12/13 report attained/error |
+The option appends `homingMethod01` (S8, `6098:00`) and `homeOffset01`
+(S32, `607C:00`) to RxPDO `1603`, increasing it to nine bytes. It also adds
+a B1 output-data alias, `driveCmdExe01`, over controlword bit 4; that alias
+adds no PDO bytes. Initial values are method 35, offset 0 and trigger 0.
+Mode control/display and drive control/status are already mapped.
 
-With `HOMING=1`, additional diagnostic/control PVs are `Drv01-HomeMethod`,
-`Drv01-HomeOffset`, `Drv01-ModeCmd` (each with `-RB`) and `Drv01-ModeAct`.
-Output records use `PINI=0` so IOC initialization does not overwrite the
-method 35, zero offset or CSV mode initialized in the process image.
-The OPT panels have a Home tab. With `HOMING=1`, the compact tab displays
-method, offset and actual mode; the expert tab adds edits and homing status
-bits. `CfgHoming` hides these fields when the PDOs are not mapped.
-These PVs are low-level controls, not a coordinated homing trigger.
+The axis YAML uses:
 
-A drive-referencing state machine should:
+```yaml
+axis:
+  mode: CSV
+  autoMode:
+    modeSet: ec0.s$(DRV_SID).modeControl01
+    modeAct: ec0.s$(DRV_SID).modeActual01
+    modeCmdMotion: 9
+    modeCmdHome: 6
 
-1. Obtain exclusive ownership of the drive command PDOs, stop motion, hold
-   target velocity at zero, and disable the position-output gate.
-2. Write method 35 and offset 0, clear controlword bit 4, select mode 6, and
-   wait for `modeActual01=6`.
-3. Start homing with a rising edge on controlword bit 4. Method 35 does not
-   require Operation enabled; do not energize the motor merely to reference.
-4. Check completion for this request (statusword bits 12 and 10 set), bit 13
-   clear and fault bit 3 clear, with a timeout. Do not accept an old attained
-   bit as proof that a new request has executed. Check scaled `6064` as well.
-5. Clear bit 4, restore mode 9, wait for `modeActual01=9`, then release command
-   ownership. Leave the drive disabled on errors; re-arm the output only after
-   successful referencing and application checks.
+encoder:
+  homing:
+    type: 26
+    position: 0
+    trigg: ec0.s$(DRV_SID).driveCmdExe01.0
+    ready: ec0.s$(DRV_SID).driveStatus01.12
+    refAtHome: 1
+    timeout: 10
+    postMoveEnable: true
+    postMovePosition: 0
+```
 
-**Disabling M1 is not sufficient to obtain command ownership.** The ecmc
-DS402 axis writes the full controlword and velocity setpoint every cycle,
-even when disabled. An ordinary PLC/PV write can therefore be overwritten.
-Run the sequence while no axis owns those entries, or provide an explicit
-ownership mechanism in the C++/PLC integration. The example maps the interface
-but deliberately does not install an uncoordinated automatic sequence.
+These are excerpts; retain the complete YAML, including its nonzero generic
+homing velocities/accelerations. Method 35 does not make a search move.
+Sequence 26 follows normal axis enabling and may energize the motor.
 
-Method 35 references logical `6064`; the fine `6063` counter remains unchanged.
-Zero the ecmc axis coordinate separately if required. Test the effect on the
-direct output's phase and first pulse on the bench before depending on it.
-The mapping and homing behavior need verification on FIR-v2542-B1080909.
-See the [Nanotec N6 manual](https://www.nanotec.com/fileadmin/files/Handbuecher/Motorsteuerungen/n6/fir-v2508/N6_EtherCAT_Technical-Manual_V1.1.0.pdf),
-sections 6.4, 607Ch and 6098h.
+To reference:
+
+1. Stop motion and disarm output 1 using `<slave-prefix>PosOut01-Ena=0`.
+2. Verify method 35 and offset 0 in the Home tab.
+3. Use the normal M1 **Home Forward** or **Home Reverse** command, for example
+   `caput <axis-motor-record>.HOMF 1`.
+4. Verify completion, the ecmc axis position at zero, scaled `6064` referenced
+   and actual mode back at 9. Re-arm the output when the result is verified.
+
+Sequence 26 switches to mode 6, waits for acknowledgment, asserts the
+trigger, detects a rising ready bit 12, clears the trigger and references
+the ecmc encoder object. Its post-home stage restores CSV and waits for
+acknowledgment. `postMoveEnable=true` is intentional: keeping its target
+identical to the home position makes that stage restore mode without an
+extra move. Changing those positions can introduce a real post-home move.
+On timeout/failure, stop/reset the axis and verify trigger clearing and
+mode restoration before resuming motion.
+
+The alias is necessary because the DS402 axis writes its whole controlword
+later than sequence 26 sets the trigger. At process-image transfer, the
+parent word is applied first, then the B1 alias replaces only bit 4.
+Linking directly to `driveControl01.4` would lose the trigger. A global PLC
+runs after the axes, but custom logic must also use the alias when HOMING
+is mapped and must not compete with sequence 26 for it.
+
+The Home tab displays method, offset, mode and status. The expert tab edits
+parameters; the motor-record/axis panel starts the coordinated sequence.
+Homing parameter PVs are `Drv01-HomeMethod`, `Drv01-HomeOffset`,
+`Drv01-ModeCmd` (each with `-RB`) and `Drv01-ModeAct`. `CfgHoming` hides
+optional fields when the interface is not mapped. Output parameter records
+use `PINI=0` to preserve initialization.
+
+Drive method 35 references logical `6064`; raw `6063` and `Enc01-PosAct`
+remain unchanged. Sequence 26 separately offsets the ecmc axis to its home
+position. The output gate is not automatically coordinated with this
+sequence. Verify its pulse phase/first pulse after referencing on the bench.
+
+The integration still needs commissioning on FIR-v2542-B1080909, especially
+repeated method-35 completion: bit 12 must provide an observable rising
+edge. Sequence 26 has no separate homing-error-bit input, so check bit 13
+and timeout behavior as well. Full details are in the Hugo N6 OPT guide
+and `manual/motion_cfg/homing.md` (sequence 26).
 
 ## Bench evidence and remaining checks
 

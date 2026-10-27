@@ -481,6 +481,13 @@ Example:
 
 - [SmarAct MCS2 best-practice example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/motion/smaract/mcs2)
 
+The [Nanotec N6 optional configuration]({{< relref "/manual/knowledgebase/hardware/Nanotec-N6_OPT.md" >}})
+also uses sequence 26: CSV mode 9, homing mode 6, drive method 35 and
+statusword bit 12 as ready. Its optional `driveCmdExe01` alias isolates
+controlword bit 4 from the axis's whole-word writes, following the MCS2
+mapping pattern. See that guide for the no-move post-home stage used to
+restore CSV and the required hardware handshake checks.
+
 ## Setting polarity of the home sensor
 
 For several sequences it is useful to invert the effective home-switch polarity.

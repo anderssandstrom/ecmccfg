@@ -5,6 +5,12 @@
 axis:
   id: ${AXIS_ID=1}
   tweakDist: 10
+  mode: CSV
+  autoMode:
+    modeSet: ec0.s$(DRV_SID).modeControl01
+    modeAct: ec0.s$(DRV_SID).modeActual01
+    modeCmdMotion: 9
+    modeCmdHome: 6
   autoEnable:
     enableTimeout: 1.0
     disableTimeout: 5.0
@@ -35,7 +41,24 @@ encoder:
   bits: 32
   position: ec0.s$(ENC_SID).positionActual01
   homing:
+    # Sequence 26 triggers drive method 35 (initialized by HOMING=1).
+    type: 26
+    position: 0
+    trigg: ec0.s$(DRV_SID).driveCmdExe01.0
+    ready: ec0.s$(DRV_SID).driveStatus01.12
+    refAtHome: 1
     refToEncIDAtStartup: 1
+    timeout: 10
+    # Required by generic homing validation; method 35 makes no search move.
+    velocity:
+      to: 18
+      from: 18
+    acceleration: 36
+    deceleration: 36
+    # The post-home stage waits for CSV acknowledgment. Equal positions
+    # skip the move, so this only restores mode 9 after referencing.
+    postMoveEnable: true
+    postMovePosition: 0
   useAsCSPDrvEnc: 1
 
 controller:

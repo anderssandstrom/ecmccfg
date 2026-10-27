@@ -5,7 +5,7 @@ require ecmccfg sandst_a "ENG_MODE=1,ECMC_VER=sandst_a,MASTER_ID=1"
 require ecmccomp sandst_a
 
 #- Fine counter and optional homing PDOs; HOMING maps parameters, it does not home.
-#- See README for PLC/C++ sequencing and control-word ownership.
+#- Axis homing uses sequence 26 with automatic mode switching; see README.
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=N6-1-1-1-S_OPT,OPT='RAW_POS=1,HOMING=1'"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Motor-Generic-2Phase-Stepper,CH_ID=1,MACROS='I_MAX_MA=400,I_STDBY_MA=100,STEPS=200,INV_DIR=0'"
 epicsEnvSet(DRV_SID,$(ECMC_EC_SLAVE_NUM))

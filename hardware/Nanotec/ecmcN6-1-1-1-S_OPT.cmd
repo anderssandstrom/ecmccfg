@@ -1,7 +1,7 @@
 #-d /**
 #-d   \brief N6 CSV hardware with optional raw position and masked output gates.
 #-d   \param RAW_POS Use 0x6063 as positionActual01; name 0x6064 positionActualScaled01, 0/1, default 0.
-#-d   \param HOMING Map homing method/offset for PLC or C++ sequencing, 0/1, default 0.
+#-d   \param HOMING Map homing parameters and sequence-26 trigger alias, 0/1, default 0.
 #-d   \details Legacy PDO layout and motor component type N6 are retained. No units
 #-d            or output routing are changed here; apply PositionOutput later.
 #-d */
@@ -39,6 +39,11 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmcN6_outputEnable
 ecmcEpicsEnvSetCalcTernary(N6_OPT_HOME,"${HOMING=0}==1","","#-")
 ${N6_OPT_HOME}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1603,0x6098,0x00,S8,homingMethod01)"
 ${N6_OPT_HOME}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1603,0x607C,0x00,S32,homeOffset01)"
+#- As for MCS2, a dedicated output-data bit is applied after the parent's
+#- whole controlword in the process image. Sequence 26 can therefore hold
+#- bit 4 without the DS402 axis's whole-word write clearing its trigger.
+${N6_OPT_HOME}ecmcConfigOrDie "Cfg.EcAddDataDT(ec${ECMC_EC_MASTER_ID=0}.s${ECMC_EC_SLAVE_NUM}.driveControl01,0,4,1,B1,driveCmdExe01)"
+${N6_OPT_HOME}ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},driveCmdExe01,0)"
 ${N6_OPT_HOME}ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},homingMethod01,35)"
 ${N6_OPT_HOME}ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},homeOffset01,0)"
 #- PINI=0 preserves the initialized method/offset and CSV mode at IOC startup.

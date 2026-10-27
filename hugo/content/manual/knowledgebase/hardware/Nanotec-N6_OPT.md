@@ -1,135 +1,457 @@
 +++
-title = "Nanotec N6 optional PDOs and position output"
+title = "Nanotec N6 optional PDOs, position output and homing"
 weight = 26
 chapter = false
 +++
 
-`N6-1-1-1-S_OPT` adds optional raw position and individual output-enable
-records to the standard N6 CSV mapping. The original `N6-1-1-1-S` descriptor
-is unchanged. Motor components still identify the drive as type `N6`.
+The N6 optional configuration combines fine open-loop axis feedback with a
+periodic digital output generated inside the drive. Optional homing PDOs
+prepare the interface for referencing the output's position source using
+homing method 35.
 
-## Configuration
+The working bench setup was an `N6-1-1-1-S`, firmware
+`FIR-v2542-B1080909`, with a 200-full-step motor in cyclic synchronous
+velocity mode (CSV). Fine counter feedback and an output every 100 full
+steps were demonstrated together. The sequence-26 homing integration and its effect on pulse phase still
+require a drive test. Homing is commanded through the normal axis interface
+and does not execute automatically at IOC startup.
+
+## Configure the hardware and components
+
+Build/install both updated modules: ecmccfg supplies the hardware, records
+and panels; ecmccomp supplies `Drive-Generic-PositionOutput`.
 
 ```text
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "HW_DESC=N6-1-1-1-S_OPT,OPT='RAW_POS=1'"
-${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Motor-Generic-2Phase-Stepper,MACROS='I_MAX_MA=400,I_STDBY_MA=100,STEPS=200,INV_DIR=0'"
-${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Drive-Generic-PositionOutput,MACROS='FULL_STEPS=100,OUTPUT=1,ARM=1'"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "HW_DESC=N6-1-1-1-S_OPT,OPT='RAW_POS=1,HOMING=1'"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Motor-Generic-2Phase-Stepper,CH_ID=1,MACROS='I_MAX_MA=400,I_STDBY_MA=100,STEPS=200,INV_DIR=0'"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Drive-Generic-PositionOutput,CH_ID=1,MACROS='FULL_STEPS=100,OUTPUT=1,ARM=1,N6_IO_24V=0'"
 ```
 
-Build/install both ecmccfg and ecmccomp with these additions. Load the output
-component after the motor and before applying EtherCAT configuration. It is
-not a live scan parameter. The dedicated lab example is
-`examples/PSI/lab_setup/N6/startup_position_output_100_steps.cmd`.
+Apply the motor first, then the position-output component, before applying
+EtherCAT configuration. The output component checks the raw mapping, motor
+configuration and supported interval. Motor `INV_DIR=0` is required. Applying
+the motor again after the output component is rejected because it would
+restore position units and change the output period.
 
-## Hardware option
+The complete example is
+`examples/PSI/lab_setup/N6/startup_position_output_100_steps.cmd`, with
+`cfg/axis_position_output.yaml` for the axis. The ordinary `startup.cmd`
+remains available for the base configuration. Restart the IOC after changing
+PDO options. The former `N6-1-1-1-S_POS_OUT` hardware wrapper has been removed;
+use `_OPT` instead.
 
-| Option | Default | Effect |
+## Hardware options and PDO names
+
+| Option | Default | Effect when set to `1` |
 | --- | --- | --- |
-| `RAW_POS` | `0` | With `1`, map `6063:00` as `positionActual01` and rename `6064` to `positionActualScaled01` |
-| `HOMING` | `0` | With `1`, add `6098` and `607C` homing parameter PDOs, initialized to method 35 / offset 0 |
+| `RAW_POS` | `0` | Map fine `6063:00` as `positionActual01`; name existing `6064:00` entry `positionActualScaled01` |
+| `HOMING` | `0` | Add `homingMethod01` (`6098:00`, S8), `homeOffset01` (`607C:00`, S32) and the `driveCmdExe01` trigger-bit alias |
 
-With `RAW_POS=0`, the process image matches the original descriptor. The
-optional S32 entry is appended to existing TxPDO `1A03` (20 bytes total with
-raw position), retaining the four TxPDO assignment slots. With `RAW_POS=1`, the existing
-`6064` entry is named `positionActualScaled01` so the fine counter can use
-the conventional feedback name `positionActual01`. Neither position
-units nor output routing are changed by this option.
+Both options are independent and accept only `0` or `1`. With both disabled,
+the PDO mapping matches the base `N6-1-1-1-S` configuration. The motor
+component type remains `N6`.
 
-The companion `Drive-Generic-PositionOutput` ecmccomp component requires raw
-position mapped, a motor applied first and motor `INV_DIR=0`. Its choices are:
+`RAW_POS=1` appends the S32 `6063` entry to existing TxPDO `1A03`, increasing
+that PDO from 16 to 20 bytes. The four TxPDO assignment slots are retained.
+`HOMING=1` appends five bytes to existing RxPDO `1603`, increasing it from
+4 to 9 bytes without adding an RxPDO assignment slot. These options map
+entries; they do not change position units, route outputs or execute homing.
+The trigger alias is process-image data over existing controlword bit 4;
+it adds no EtherCAT PDO bytes.
 
-| Macro | Default | Meaning |
+### Fine feedback and scaled output position
+
+| Configuration | `positionActual01` | `positionActualScaled01` |
+| --- | --- | --- |
+| Base descriptor or `RAW_POS=0` | `6064`, position in configured units | Not mapped |
+| `_OPT`, `RAW_POS=1` | `6063`, fine open-loop counter | `6064`, position in configured units |
+
+For the tested 200-full-step motor, the fine counter has nominally
+3,276,800 counts/revolution, or 16,384 counts/full step. The example uses:
+
+```yaml
+drive:
+  numerator: 360
+  denominator: 3276800
+
+encoder:
+  numerator: 360
+  denominator: 3276800
+  bits: 32
+  position: ec0.s$(ENC_SID).positionActual01
+```
+
+These are excerpts from the full YAML; use the complete example when
+configuring an IOC and keep EtherCAT paths consistent with its axis
+configuration. Check the corresponding scaling when using another motor
+step count. Velocity remains in native increments per
+second, so the drive and encoder scales remain matched.
+
+The position-output component makes `6064` deliberately coarse: with
+`FULL_STEPS=100`, one count is 100 full steps, or half a revolution on this
+motor. Use `6063` for fine axis feedback. Both entries are available
+simultaneously, but only one is the fine counter after changing `60A8`.
+The counter represents generated open-loop motion; it does not measure
+rotor position or detect lost steps. Additional `60E4` position values also
+use the configured position units; check external feedback channels if used.
+Its 32-bit rollover and the output's
+behavior across rollover require application checks.
+
+## Configure periodic output triggering
+
+The output is generated inside the drive from scaled position `6064` and
+its digital-output divider. It requires no cyclic PLC pulse generation or
+NanoJ program. This configuration provides periodic position-related
+triggering; it does not program arbitrary absolute compare positions or a
+pulse width.
+
+| Component macro | Default | Meaning |
 | --- | --- | --- |
 | `FULL_STEPS` | `100` | Full motor steps per output pulse |
-| `OUTPUT` | `1` | Physical output 1, 2 or 3 |
-| `ARM` | `0` | Startup output-enable bit, 0 or 1 |
-| `N6_IO_24V` | `0` for first output | `0` = 5 V output, `1` = nominal 24 V/+UB_Logic |
-| `N6_INPUT_PULLUP` | Inherit motor (default `0`) | `0` = pull-down, `1` = pull-up |
+| `OUTPUT` | `1` | Physical digital output 1, 2 or 3 |
+| `ARM` | `0` | Initial output gate: `0` disabled, `1` enabled |
+| `N6_IO_24V` | `0` for the first output | `0` = 5 V; `1` = nominal 24 V/+UB_Logic |
+| `N6_INPUT_PULLUP` | Inherit motor; normally `0` | Shared input bias: `0` pull-down, `1` pull-up |
 
-Supported intervals are `10^n * d`, with `n=0..6` and
-`d` in `1,2,4,8,16,32,64`. Other intervals are rejected. All configured outputs
-on one slave must use the same canonical unit exponent because `60A8` is
-shared. For example, 100 and 200 steps share unit 100 with dividers 1 and 2;
-100 and 10 steps conflict and are rejected. The motor cannot be reapplied
-after an output component has set those units in the same startup.
+Supported intervals are `10^n * d`, where `n=0..6` and `d` is one of
+`1,2,4,8,16,32,64`. Other intervals, such as 50 or 125 full steps, are
+rejected. The component selects a canonical full-step unit `10^n` and a
+power-of-two divider.
 
-## Optional homing PDOs
+All outputs on one drive share `60A8`. For example, 100 and 200 steps use
+the same unit of 100 with dividers 1 and 2, so they can coexist. Intervals
+100 and 10 select different unit exponents and are rejected together.
+Electrical settings are shared too: later output components inherit the
+first output's voltage and reject conflicting explicit voltage/bias choices.
+Intervals are startup settings, not live scan parameters. Nothing is saved
+to drive flash by this component.
 
-Use `OPT='RAW_POS=1,HOMING=1'` to expose `homingMethod01` (S8, `6098:00`)
-and `homeOffset01` (S32, `607C:00`). They extend existing RxPDO `1603` by five
-bytes; the RxPDO assignment count stays unchanged. The independent options
-can be used individually or together.
+For output 1 every 100 full steps, the important settings are:
 
-Mode control/display (`modeControl01`, `modeActual01`) and drive control/status
-(`driveControl01`, `driveStatus01`) are already mapped. With `HOMING=1`, the
-snippet also loads `Drv01-HomeMethod`, `Drv01-HomeOffset`, `Drv01-ModeCmd`
-(each with `-RB`) and `Drv01-ModeAct`. The output PVs use `PINI=0`.
-The option prepares the interface and does not execute homing or change CSV mode.
+| Object | Value | Purpose |
+| --- | --- | --- |
+| `60E6:01` | `0` | Keep sensorless interface disabled |
+| `60A8:00` | `0x02AC0000` | Position unit = 100 full steps |
+| `3252:02` | `0x0910` | Route position divider 1 to output 1, gated by bit 16 |
+| `323A:01` | `0` by default | Select 5 V I/O |
+| `60FE:01`, bit 16 | `ARM` | Output 1 gate |
 
-A PLC/C++ sequence can select mode 6, trigger method 35 via controlword bit 4,
-check statusword bits 12/10 for completion and bit 13 for error, and restore
-mode 9. It must own the drive command PDOs and enforce a timeout. Disabling
-the axis alone does not release its cyclic controlword/velocity writes.
-Method 35 references `6064`, not raw `6063`; the effect on output pulse phase
-requires commissioning. See the lab example's
-`README_position_output_100_steps.md` for the full ownership and sequence notes.
+With 200 full steps/revolution, the requested spacing is 180 degrees: two
+pulses per revolution. The expected steady pulse period is
+`180 / abs(velocity in degrees/second)` seconds. Verify the actual waveform,
+first pulse, pulse width, stop/restart and direction reversal on the bench.
+The direct position-routing limit is 500 Hz.
 
-## Two positions and output gates
+### Wiring and I/O voltage
 
-For the 200-full-step example, use `positionActual01` for the axis and
-`360/3276800` scaling for both encoder position and native CSV velocity.
-`positionActualScaled01` maps `6064`; its values become coarse when
-the component changes `60A8` to 100 full steps/count. Do not use that coarse
-entry with the original native encoder scaling. The raw counter represents
-generated open-loop motion, not measured rotor position or lost-step detection.
+Output 1 is on **X4 pin 5**, with **GNDD on X4 pin 8**.
+The position-output component defaults to **5 V output levels**. Select
+`N6_IO_24V=1` for nominal 24 V/+UB_Logic instead.
+
+`323A:01` selects both the output level and the digital input thresholds.
+Selecting 5 V outputs therefore also selects 5 V input thresholds. It does
+not configure the motor power supply; a motor supply such as 48 V is a
+separate matter. The base hardware and motor component retain their
+existing 24 V I/O default; the position-output component applies its own
+selection afterwards. `323A:02` selects the shared input pull-up/pull-down.
+
+### Arm and disarm an output
+
+The runtime gate controls are:
+
+| PV suffix | Output-word bit | Function |
+| --- | --- | --- |
+| `PosOut01-Ena` | 16 | Output 1 gate |
+| `PosOut02-Ena` | 17 | Output 2 gate |
+| `PosOut03-Ena` | 18 | Output 3 gate |
+
+Each has a corresponding `-RB` readback. For example, substituting the
+actual slave prefix:
+
+```bash
+caput <prefix>PosOut01-Ena 0
+caput <prefix>PosOut01-Ena 1
+caget <prefix>PosOut01-Ena-RB
+```
+
+These controls gate the configured position-derived signal. Enabling a gate
+does not command a single pulse or establish the pulse origin. Gate writes
+preserve other output bits, including the brake bit 0. The component uses
+bit-addressed `WriteEcEntryEcPath`; the records use asyn masks. Writing the
+complete `BO01-Arr` word replaces all bits and can change other gates.
+
+The hardware snippet loads all six gate control/readback records directly,
+even when default substitutions are disabled. Output records use
+`PINI=0`/`NO` so initialization preserves the configured gates.
+
+## Drive homing method 35
+
+Method 35 references the drive's **current position without a homing move**.
+With home offset 0 it can establish the zero of logical position `6064`,
+the source used for the periodic output. The manual explicitly states that
+raw `6063` is not zeroed by drive homing. Referencing the ecmc axis using an
+offset also leaves the drive counter unchanged and does not itself
+reference the drive-side output source.
+
+The effect of method 35 on the first output pulse and exact pulse phase
+has not yet been established on the bench. Keep drive referencing and
+ecmc axis-coordinate referencing as separate operations.
+
+### PDOs and panel records
+
+With `HOMING=1`, the process image initializes `homingMethod01=35` and
+`homeOffset01=0`. Mode remains CSV (9) until a sequence changes it.
+
+| Entry | Object/type | Purpose |
+| --- | --- | --- |
+| `homingMethod01` | `6098:00`, S8 | Homing method; optional PDO |
+| `homeOffset01` | `607C:00`, S32 | Offset in configured `6064` units; optional PDO |
+| `modeControl01` | `6060:00`, S8 | Mode command: 6 homing, 9 CSV; already mapped |
+| `modeActual01` | `6061:00`, S8 | Mode acknowledgment; already mapped |
+| `driveControl01` | `6040:00`, U16 | Axis-owned controlword; already mapped |
+| `driveCmdExe01` | B1 alias of `6040` bit 4 | Sequence-26 trigger; present with `HOMING=1` |
+| `driveStatus01` | `6041:00`, U16 | Homing completion/error and drive status; already mapped |
+
+With the 100-full-step position unit, a home offset of 1 means 100 full
+steps (180 degrees on the tested motor), not one native encoder increment.
+Use offset 0 when referencing the current scaled position to zero.
+
+Additional PVs are `Drv01-HomeMethod`, `Drv01-HomeOffset` and
+`Drv01-ModeCmd`, each with `-RB`, plus `Drv01-ModeAct`. Their command
+readbacks report the process-image command values; `Drv01-ModeAct` is the
+drive's actual mode acknowledgment. Command records use `PINI=0` so IOC
+initialization does not overwrite the initialized method, offset or mode.
+
+### Use axis homing sequence 26
+
+The dedicated axis YAML now uses the existing drive-triggered homing sequence
+`26` (`ECMC_SEQ_HOME_TRIGG_EXTERN`), also used for SmarAct MCS2. No separate
+PLC or C++ homing state machine is required for the example.
+
+```yaml
+axis:
+  mode: CSV
+  autoMode:
+    modeSet: ec0.s$(DRV_SID).modeControl01
+    modeAct: ec0.s$(DRV_SID).modeActual01
+    modeCmdMotion: 9
+    modeCmdHome: 6
+
+encoder:
+  homing:
+    type: 26
+    position: 0
+    trigg: ec0.s$(DRV_SID).driveCmdExe01.0
+    ready: ec0.s$(DRV_SID).driveStatus01.12
+    refAtHome: 1
+    timeout: 10
+    velocity:
+      to: 18
+      from: 18
+    acceleration: 36
+    deceleration: 36
+    postMoveEnable: true
+    postMovePosition: 0
+```
+
+This is an excerpt; retain the fine counter mapping and other axis settings
+from the complete example. The nonzero homing velocities/accelerations
+satisfy generic axis validation; drive method 35 makes no search move.
+
+Sequence 26 switches to mode 6 and waits for the mode acknowledgment, asserts
+the trigger, waits for a rising edge on statusword bit 12, clears the trigger
+and references the ecmc encoder to `position` (zero here). The raw drive
+counter and `Enc01-PosAct` remain unchanged; the axis position gains its
+engineering offset. Normal axis enabling applies, so the motor may energize
+even though bare drive method 35 itself does not require Operation enabled.
+
+The existing sequence restores mode 9 through its post-home stage. Therefore
+`postMoveEnable` is deliberately true, with `postMovePosition` equal to the
+home position. This waits for CSV mode acknowledgment and skips the move
+because the referenced position already equals the target. If these two
+positions are changed, keep them equal unless an actual post-home move is
+intended. The example uses a 10-second sequence timeout.
+
+### Trigger from the motor record
+
+After installing/restarting with `RAW_POS=1,HOMING=1` and the dedicated YAML:
+
+1. Stop the axis and disable the output gate using `PosOut01-Ena=0`.
+2. Verify the Home tab shows method 35 and offset 0. Leave automatic mode
+   switching to the axis; do not manually change mode while it is active.
+3. Use the normal M1 motor-record **Home Forward** or **Home Reverse**
+   command. For method 35 the direction does not request a search move.
+   The axis homing procedure is 26; this is distinct from drive method 35.
+4. Verify homing completes, the axis reads its configured home position,
+   `Drv01-ModeAct` returns to 9 and `Enc01-PosScaled` shows the expected
+   referenced drive position. Re-arm the output after checking the result.
+
+For example, substituting the actual PV prefixes:
+
+```bash
+caput <slave-prefix>PosOut01-Ena 0
+caput <axis-motor-record>.HOMF 1
+# After successful homing and verification:
+caput <slave-prefix>PosOut01-Ena 1
+```
+
+The example's motor record is named M1 under its configured IOC prefix.
+The output gate is not automatically coordinated with axis homing; these
+commands are separate. The hardware Home tab provides parameters and
+status; use the axis panel/motor record to start sequence 26.
+
+On failure or timeout, stop/reset through the normal axis controls and
+verify the trigger is cleared and mode 9 is restored before resuming
+motion. Mode restoration after a successful home uses the post-home stage;
+do not assume an aborted sequence has completed that stage.
+
+### Why the trigger uses a separate bit alias
+
+The DS402 axis writes its full controlword every cycle. Sequence 26 writes
+its trigger earlier in the axis execution, so directly linking
+`trigg` to `driveControl01.4` would let the later whole-word write clear it.
+
+With `HOMING=1`, the snippet instead adds:
+
+```text
+Cfg.EcAddDataDT(ec<master>.s<slave>.driveControl01,0,4,1,B1,driveCmdExe01)
+```
+
+This follows the MCS2 approach. The B1 alias is initialized to zero and
+appended after the parent entry. During output-image transfer the parent
+controlword is written first; the alias then replaces only bit 4, preserving
+the other bits. Sequence 26 owns this alias and clears it when finished or
+stopped. The alias is not an additional PDO mapping.
+
+### Alternative PLC/C++ integration
+
+The inspected ecmc RT loop executes in this order:
+
+```text
+Axis-local PLC → motion axis → C++ logic → normal global PLCs → EtherCAT send
+```
+
+A normal global PLC can override an axis command after the axis executes;
+an axis-local PLC cannot reliably override the parent's whole-word writes.
+However, with `HOMING=1`, the trigger alias is applied during output-image
+transfer after those writes. A custom PLC/C++ homing implementation must
+therefore write `driveCmdExe01.0`, not just `driveControl01.4`, and must not
+compete with sequence 26 for that alias. Coordinate mode, velocity, axis
+commands, timeout and output gates explicitly when replacing the built-in
+sequence. Do not run both trigger owners together.
+
+The execution order and writes were checked in `ecmcMainThread.cpp`,
+`ecmcDriveBase.cpp`, `ecmcAxisSequencer.cpp`, `ecmcEcSlave.cpp` and
+`ecmcEcData.cpp`. Verify the behavior in the deployed ecmc version when
+using a custom override.
+
+### Homing checks still needed on the drive
+
+Sequence 26 detects a rising edge on the configured ready bit. Verify first
+and repeated method-35 requests: statusword bit 12 may already be high from
+a previous home, and a fast operation must still produce an observable
+completion transition. The sequence has no separate configured input for
+homing-error bit 13; monitor it in the Home tab and verify timeout/error
+behavior. Also check statusword bit 10, trigger clearing, mode restoration
+and the first output pulse/phase. These are hardware commissioning checks,
+not outcomes established by the configuration tests.
+
+## Records and panels
 
 | PV suffix | Meaning |
 | --- | --- |
-| `Enc01-PosAct` | Fine `6063` open-loop counter with `RAW_POS=1`; otherwise legacy `6064` position |
-| `Enc01-PosScaled` | Scaled `6064` position; present only with `RAW_POS=1` |
-| `PosOut01-Ena`, `PosOut02-Ena`, `PosOut03-Ena` | Individual gate controls |
-| Corresponding `-RB` suffixes | Gate readbacks |
-| `CfgRawPosition` | Read-only resolved hardware option for the panel |
-| `BO01-Arr` | Existing complete output word, including brake bit 0 |
+| `Enc01-PosAct` | Fine `6063` counter with `RAW_POS=1`; otherwise legacy `6064` |
+| `Enc01-PosScaled` | Scaled `6064`; present with `RAW_POS=1` |
+| `PosOut01-Ena` through `PosOut03-Ena` | Individual output gates, each with `-RB` |
+| `CfgRawPosition` | Resolved raw-position option, read-only |
+| `CfgHoming` | Resolved homing option, read-only |
+| `BO01-Arr` | Complete output word, including the brake and output gates |
 
-The hardware snippet loads the six gate control/readback records directly,
-including when default substitutions are disabled.
+The hardware selects `ecmcN6-1-1-1-S_OPT.ui` and
+`ecmcN6-1-1-1-S_OPT_expert.ui`. The usual position field shows fine feedback
+with `RAW_POS=1`; the additional scaled field is visible with
+`CfgRawPosition=1`. Counter readouts use integer precision.
 
-The component uses bit-addressed `WriteEcEntryEcPath` calls and the gate PVs
-use asyn masks. Both preserve unrelated outputs and brake control. Output
-records use `PINI=0`/`NO` so initialization does not clear an explicitly armed
-gate. Whole-word writes to `BO01-Arr` intentionally still replace every bit.
+Both displays have a Home tab. `CfgHoming=1` reveals its homing fields;
+otherwise it reports that the PDOs are not mapped. The compact tab shows
+method, offset and actual mode readbacks. The expert tab adds editable
+parameters/mode, command readbacks and statusword bits 10, 12 and 13.
+The expert display also retains the output gate controls and readbacks.
+The original panels remain available for the base descriptor.
 
-## Panels
+After installing updated files, restart the IOC to load new records and
+reopen the panel to load its new layout. Changing the panel alone does not
+add missing IOC records.
 
-The hardware selects `ecmcN6-1-1-1-S_OPT.ui` and its expert display.
-Their Home tab uses `CfgHoming` to show homing fields only with `HOMING=1`.
-The compact display shows method, offset and actual mode readbacks. The
-expert tab adds parameter/mode edits, command readbacks and status bits
-10 (target reached), 12 (home attained) and 13 (homing error). These are
-low-level controls; the sequence still needs exclusive drive-command ownership. They show
-position actual, optional scaled position and all three masked gate controls.
-Raw fields are shown only when `CfgRawPosition=1`. The original compact and
-expert panels remain available for the unchanged legacy descriptor.
+## Commissioning evidence and troubleshooting
 
-## Commissioned scope
+The bench measurements support using raw `6063` as the fine open-loop
+counter on FIR-v2542-B1080909 with `60E6:01=0`. One approximate revolution
+changed `6063` by 3,270,300 counts (about 359.29 degrees at the nominal scale)
+and `6064` by two counts. The fine-counter axis and the 100-step output were
+then reported working together.
 
-The user demonstrated simultaneous fine `6063` axis feedback and a working
-100-full-step output on N6-1-1-1-S, FIR-v2542-B1080909, with `60E6:01=0`.
-The packaged optional choices and gate-bit operations have hardware-free
-checks; other intervals, outputs and firmware still need commissioning.
+The manual warns that `6063` values are invalid when the interface
+resolution is zero. The observed open-loop behavior is therefore specific
+evidence for this firmware/setup, not a guarantee for other firmware,
+motor modes or sensors. Hardware-free checks cover mapping, component
+validation, record links, gate masks and panel compilation/visibility;
+they do not establish the drive's waveform or homing behavior.
 
-The manual's generic warning about raw `6063` with zero interface resolution
-must not be generalized away: the observed open-loop counter behavior is
-firmware-specific evidence. Enabling the uncommissioned sensorless interface
-with a nominal resolution caused sensor fault `7305`; this feature deliberately
-keeps it disabled and makes no writes to `3203` or `205C`.
+### Earlier pulse-generator attempts
 
-Output 1 is X4 pin 5 with GNDD on pin 8. The position-output component defaults to
-5 V outputs. Select `N6_IO_24V=1` for nominal 24 V/+UB_Logic outputs.
-This shared selector also changes digital input thresholds; it does not
-configure the motor power supply. Later output components inherit the first
-output's voltage and reject conflicting electrical settings. Direct position routing is limited to 500 Hz;
-pulse width, phase, reversal and counter rollover remain commissioning checks.
+The initial `205C` pulse-generator approach tried to retain native `6064`
+units. At 16,384 increments/full step, 100 full steps require a divider of
+1,638,400, which does not fit the documented 16-bit ratio. A trial with one
+pulse per full step still failed when selecting the pulse-generator source:
+`3203:01=8` repeatedly aborted with `0x06040047` (internal incompatibility).
 
-See also [the base N6 configuration]({{< relref "Nanotec-N6.md" >}}).
+Enabling nominal sensorless resolution with `60E6:01=3276800` subsequently
+produced drive error `7305h` (sensor 1 faulty). The working configuration
+keeps `60E6:01=0`, leaves feedback selection unchanged and writes neither
+`3203` nor `205C`. The earlier pulse-generator example files are failed
+prototypes, not the recommended configuration.
+
+### Useful readbacks
+
+For the lab master 1, slave 0; adjust these addresses for another setup:
+
+```bash
+ethercat upload -m1 -p0 --type string 0x100A 0
+ethercat upload -m1 -p0 --type uint16 0x6041 0
+ethercat upload -m1 -p0 --type uint16 0x603F 0
+ethercat upload -m1 -p0 --type uint32 0x60E6 1
+ethercat upload -m1 -p0 --type uint32 0x60A8 0
+ethercat upload -m1 -p0 --type uint16 0x3252 2
+ethercat upload -m1 -p0 --type int32 0x6063 0
+ethercat upload -m1 -p0 --type int32 0x6064 0
+```
+
+For the 100-step/output-1 setup, expect `60E6:01=0`,
+`60A8=0x02AC0000` and `3252:02=0x0910`. Sequential SDO uploads are not a
+simultaneous position sample; stop motion when comparing paired readings.
+
+`6041` bit 3 identifies an active drive fault. `603F` reports the last error
+and may retain `7305` after its cause has gone. Reset a latched fault using
+the normal drive controls once the cause is resolved. An SDO controlword
+write while the axis owns the cyclic PDO will be overwritten.
+
+For blank gate or homing fields, check record existence in the IOC shell:
+
+```text
+dbgrep *PosOut*
+dbgrep *CfgHoming*
+dbgrep *HomeMethod*
+```
+
+There should be three gate controls and three gate readbacks. Homing
+parameter records are present only with `HOMING=1`. Missing records require
+updating the loaded configuration/database files and restarting the IOC.
+
+## Sources and related configuration
+
+- [Nanotec N6 EtherCAT technical manual, FIR-v2508, version 1.1.0](https://www.nanotec.com/fileadmin/files/Handbuecher/Motorsteuerungen/n6/fir-v2508/N6_EtherCAT_Technical-Manual_V1.1.0.pdf): method 35 in section 6.4.2.11; object entries `6063`, `607C`, `6098`, `323A` and `3252`.
+- [Base N6 configuration]({{< relref "Nanotec-N6.md" >}}).
+- [ecmc homing sequences]({{< relref "/manual/motion_cfg/homing.md" >}}).
+- `examples/PSI/lab_setup/N6/README_position_output_100_steps.md`: lab setup and commissioning notes.
+- ecmccomp `docs/N6_position_output.md`: component interface and constraints.

@@ -71,6 +71,13 @@ class N6OptTests(unittest.TestCase):
             self.assertEqual(entries['homeOffset01'], ((1, 2, 0x1603, 0x607c, 0), 'S32'))
             self.assertEqual({m[0][2] for m in entries.values() if m[0][0] == 1},
                              {0x1600, 0x1602, 0x1603})
+            alias = 'Cfg.EcAddDataDT(ec0.s3.driveControl01,0,4,1,B1,driveCmdExe01)'
+            self.assertIn(alias, enabled.commands)
+            parent = next(c for c in enabled.commands if c.startswith('Cfg.EcAddEntryDT(')
+                          and c.endswith(',driveControl01)'))
+            self.assertLess(enabled.commands.index(parent), enabled.commands.index(alias))
+            self.assertIn('Cfg.WriteEcEntryIDString(3,driveCmdExe01,0)', enabled.commands)
+            self.assertFalse(any('driveCmdExe01' in c for c in baseline.commands))
             self.assertIn('Cfg.WriteEcEntryIDString(3,homingMethod01,35)', enabled.commands)
             self.assertIn('Cfg.WriteEcEntryIDString(3,homeOffset01,0)', enabled.commands)
             mode_writes = [c for c in enabled.commands if ',modeControl01,' in c]

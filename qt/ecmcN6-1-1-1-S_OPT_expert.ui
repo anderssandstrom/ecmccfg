@@ -631,7 +631,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>PLC/C++ must own command PDOs. A disabled axis still writes them.</string>
+       <string>Sequence 26: start Home from the axis panel. Edit these fields only while idle.</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>

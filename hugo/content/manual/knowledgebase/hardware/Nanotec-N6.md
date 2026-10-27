@@ -232,7 +232,8 @@ saved settings on a drive that may have been configured previously.
 this supports the commissioned open-loop 100-full-step output while the
 axis retains fine counter feedback. See
 [N6 optional configuration]({{< relref "Nanotec-N6_OPT.md" >}}) for options,
-startup order, gate controls, panels and the firmware-specific test scope.
+startup order, 5 V/24 V I/O selection, output gates, panels, method-35
+homing PDOs, global-PLC triggering and the firmware-specific test scope.
 
 ## Useful commissioning checks
 

@@ -1,8 +1,9 @@
 """Regression checks for the commissioned N6 example after packaging."""
 import unittest
 import yaml
+from jinja2 import Environment, FileSystemLoader
 
-from n6_support import EXAMPLE, hardware_commands
+from n6_support import ROOT, EXAMPLE, hardware_commands
 
 
 class N6PositionOutputTests(unittest.TestCase):
@@ -27,6 +28,28 @@ class N6PositionOutputTests(unittest.TestCase):
             self.assertEqual((axis[part]['numerator'], axis[part]['denominator']), (360, 3276800))
         self.assertEqual(axis['encoder']['bits'], 32)
         self.assertTrue(axis['monitoring']['lag']['enable'])
+
+    def test_axis_renders_sequence_26_and_mode_handshake(self):
+        config = yaml.safe_load((EXAMPLE / 'cfg/axis_position_output.yaml').read_text())
+        env = Environment(loader=FileSystemLoader(ROOT / 'scripts/jinja2/templates'))
+        axis = env.get_template('axis.jinja2').render(**config)
+        encoder = env.get_template('encoder.jinja2').render(**config)
+        for text in ['ec0.s$(DRV_SID).modeControl01', 'ec0.s$(DRV_SID).modeActual01',
+                     'Cfg.SetAxisAutoModeCmdHoming(${ECMC_AXIS_NO},6)',
+                     'Cfg.SetAxisAutoModeCmdMotion(${ECMC_AXIS_NO},9)']:
+            self.assertIn(text, axis)
+        for text in ['ec0.s$(DRV_SID).driveCmdExe01.0',
+                     'ec0.s$(DRV_SID).driveStatus01.12',
+                     'Cfg.SetAxisHomeSeqId(${ECMC_AXIS_NO},26)',
+                     'Cfg.SetAxisSeqTimeout(${ECMC_AXIS_NO},10)']:
+            self.assertIn(text, encoder)
+        home = config['encoder']['homing']
+        self.assertTrue(home['postMoveEnable'])
+        self.assertEqual(home['postMovePosition'], home['position'])
+        self.assertEqual(home['position'], 0)
+        self.assertEqual(home['refAtHome'], 1)
+        for direction in ['to', 'from']:
+            self.assertGreater(home['velocity'][direction], 0)
 
     def test_example_uses_packaged_components_in_required_order(self):
         startup = (EXAMPLE / 'startup_position_output_100_steps.cmd').read_text()

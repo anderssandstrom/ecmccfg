@@ -1,6 +1,6 @@
 # N6 drive-side pulse generator trial
 
-## Current status: revised source-enable trial
+## Current status: order-corrected diagnostic trial
 
 The drive rejected the trial's `3203:01=8` write with SDO abort `0x06040047`
 (general internal incompatibility). EtherCAT SDO configuration consequently
@@ -13,17 +13,31 @@ failed. Subsequent readbacks were:
 | `60EB:01` | `1` |
 | `3202:00` | `0` (open-loop stepper) |
 
-The revision now configures `60EB:01=1` and `60E6:01=3276800` **before**
-selecting `3203:01=8`. This addresses the disabled-interface prerequisite.
-It is not yet verified to resolve the abort or produce pulses. The source
-may still require sensorless commissioning or be incompatible with this
-open-loop setup. The abort alone does not identify the exact cause.
+The revision configures `60EB:01=1` and `60E6:01=3276800` **before**
+selecting `3203:01=8`. The user reported the same `0x3203:01` abort after
+retrying this revision. Enabling the interface therefore did not produce a
+working configuration; a disabled interface alone is not an established
+explanation for the failure. No further selection-bit combinations are
+proposed without firmware-specific evidence.
+
+The EtherCAT error does not print the downloaded value. The previous revision
+wrote `3203:01` twice (first `0`, later `8`), so this log alone cannot identify
+which write was rejected or prove that the resolution writes were reached.
+Read back `60E6:01` and `3203:01` after the failure to narrow that down.
+Even a nonzero resolution would not prove support for the proposed source.
+
+The current revision removes the redundant `3203:01=0` write that preceded
+interface setup. It now configures the interface first and writes `3203:01`
+exactly once, with value `8`. This corrects the setup order without trying
+another source mask. It has not been verified on hardware. If it still aborts
+at `3203:01`, the rejection is unambiguously for the pulse-source selection;
+collect the readbacks below before any further configuration changes.
 
 Do not simply skip the failed write and continue the trial: `205C` requires a valid
 position source. The candidate explicitly sets `205C:01=0` so an absent
 source cannot fall back to continuous free-running pulses.
 
-After retrying with the drive disabled, check these readbacks before motion:
+To investigate the failed startup without changing settings, collect:
 
 ```sh
 ethercat upload -m1 -p0 --type string 0x100A 0
@@ -34,11 +48,17 @@ ethercat upload -m1 -p0 --type uint8 0x3203 1
 ethercat upload -m1 -p0 --type uint16 0x3205 4
 ```
 
-Expected configuration values are `60E6:01=3276800`, `60EB:01=1`,
-`3202:00=0`, `3203:01=8`. Inspect the selected sensor in `3205:04`.
-If the same abort persists despite the enabled interface, stop this trial
-and report the new error/readbacks. Do not switch to closed-loop or invent
-motor-model parameters to make the source work.
+The attempted final configuration values were `60E6:01=3276800`,
+`60EB:01=1`, `3202:00=0`, `3203:01=8`. They must not be assumed to have been
+applied after an aborted startup. Stop further trials if the corrected order
+still fails. Do not
+switch to closed-loop or invent motor-model parameters to make the source work.
+
+The question for Nanotec is: on N6-1-1-1-S with FIR-v2542-B1080909 and
+`3202=0`, can the `205C` pulse generator use synthesized open-loop motor
+position while `6064` remains in native units? Is `3203:01` bit 3 supported,
+and what prerequisites apply? Both attempted configurations above should
+be included with the abort and fresh readbacks.
 
 The [FIR-v2542 manual, object 60E6](https://www.nanotec.com/fileadmin/files/Handbuecher/Motorsteuerungen/n6/fir-v2508/N6_EtherCAT_Technical-Manual_V1.2.1.pdf?1773317058=)
 documents that zero disables an interface and that nonzero enables sensor

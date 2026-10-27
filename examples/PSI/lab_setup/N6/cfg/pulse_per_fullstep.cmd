@@ -1,7 +1,9 @@
-# WARNING: REVISED SOURCE-ENABLE TRIAL, NOT YET VERIFIED ON HARDWARE
+# WARNING: ORDER-CORRECTED DIAGNOSTIC TRIAL, NOT YET VERIFIED
+#- Previous revision wrote 0x3203:01=0 before enabling the interface, so its
+#- repeated abort could have occurred before the interface-enable writes.
+#- This version writes 0x3203:01 exactly once, after configuring interface 1.
 #- Initial 0x3203:01=8 write failed while 0x60E6:01 was zero (disabled).
-#- This revision configures interface 1 before selecting it. It may still
-#- require sensorless commissioning; do not bypass a rejected source write.
+#- Do not bypass a rejected source write; see README.md for test history.
 #- N6 FIR-v2542, 200-full-step open-loop motor; load after applyComponent
 #- and before applyConfig, with the drive disabled. N6_SID is the slave.
 #- Candidate ratio: 1 pulse per 16384 source increments = 1 full step IF
@@ -17,9 +19,9 @@ ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x205C,0x03,0,2)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x205C,0x01,0,2)"
 
 #- Replace saved selections for this OPEN-LOOP example: bits 0..2 stay zero
-#- (original position/velocity selection masks). Clear interface 1 before
-#- configuring its resolution; enable only its pulse-generator selection below.
-ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x3203,0x01,0,1)"
+#- (original position/velocity selection masks). Do not write interface 1
+#- until its resolution is configured: even a zero write may be rejected
+#- while that interface is disabled. Its single selection write is below.
 ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x3203,0x02,0,1)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x3203,0x03,0,1)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x3203,0x04,0,1)"

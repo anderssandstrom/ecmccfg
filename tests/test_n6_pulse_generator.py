@@ -56,13 +56,13 @@ class N6PulseGeneratorTests(unittest.TestCase):
 
     def test_disabled_interface_is_configured_before_source_selection(self):
         writes = sdo_writes(capture())
-        clear = writes.index((3, 0x3203, 1, 0, 1))
         revolutions = writes.index((3, 0x60eb, 1, 1, 4))
         increments = writes.index((3, 0x60e6, 1, 3276800, 4))
         select = writes.index((3, 0x3203, 1, 8, 1))
-        self.assertLess(clear, revolutions)
         self.assertLess(revolutions, increments)
         self.assertLess(increments, select)
+        self.assertEqual([entry for entry in writes if entry[1:3] == (0x3203, 1)],
+                         [(3, 0x3203, 1, 8, 1)])
         settings = {(index, sub): value for _, index, sub, value, _ in writes}
         self.assertEqual(settings[0x60e6, 1] / settings[0x60eb, 1], 200 * 16384)
 

@@ -16,7 +16,7 @@ BEGIN{
         id=id+1;
         filename_axis=faxis id;
         axisFound=1;
-        print "Write axis file: " filename;
+        print "Write axis file: " filename_axis;
         print "$(SCRIPTEXEC) $(ecmccfg_DIR)loadYamlAxis.cmd FILE=" filename_axis  > filename_cmd;
         print "system \"rm " filename_axis "\"" > filename_cmd;
     }

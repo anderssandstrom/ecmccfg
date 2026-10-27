@@ -9,4 +9,4 @@ COMMAND=$4
 PREF="ecmcConfigOrDie $4($OBJ_ID,"
 
 echo "$PREF$CODELINE)" | sed "s/€/\'/g" | sed "s/£/$/g" | sed "s/;/|/g"
-echo "$PREF$CODELINE)" | sed "s/€/\'/g" | sed "s/£/$/g" | sed "s/;/|/g" >> $OUTPUT_FILE
+echo "$PREF$CODELINE)" | sed "s/€/\'/g" | sed "s/£/$/g" | sed "s/;/|/g" >> "$OUTPUT_FILE"

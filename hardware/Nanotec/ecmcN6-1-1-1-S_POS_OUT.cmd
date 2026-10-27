@@ -1,6 +1,6 @@
-# WARNING: UNTESTED ON HARDWARE
-#- Not used by the drive-only trial: raw 0x6063 needs a valid feedback source.
-#- Enabling the uncommissioned sensorless interface caused 0x7305 on the test drive.
+# WARNING: CYCLIC RAW FEEDBACK AND AXIS CONTROL STILL NEED COMMISSIONING
+#- SDO readings on FIR-v2542-B1080909 support a fine open-loop counter in
+#- 0x6063 with 0x60E6:01=0. Do not enable sensorless feedback for this trial.
 #-d /**
 #-d   \brief N6 CSV descriptor for the scaled-position output trial.
 #-d   \details Standard N6 mapping plus native 0x6063 position feedback.

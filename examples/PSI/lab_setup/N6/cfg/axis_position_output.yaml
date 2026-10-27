@@ -1,7 +1,7 @@
-# WITHDRAWN: not loaded by startup_position_output_100_steps.cmd.
-# Raw 0x6063 is invalid with interface 1 disabled. Enabling that interface
-# with nominal resolution alone caused 0x7305 (sensor 1 faulty) on this drive.
-# Retained for diagnosis only; do not load without a commissioned feedback source.
+# Dedicated to startup_position_output_100_steps.cmd and its raw 0x6063 PDO.
+# FIR-v2542-B1080909 bench readings support the fine open-loop counter with
+# 0x60E6:01=0. Axis control, reversal and rollover still need commissioning.
+# This is the generated motor counter, not measured rotor-position feedback.
 axis:
   id: ${AXIS_ID=1}
   tweakDist: 10
@@ -27,7 +27,7 @@ drive:
   status: ec0.s$(DRV_SID).driveStatus01
 
 encoder:
-  desc: Native internal position
+  desc: Open-loop motor counter
   unit: deg
   numerator: 360
   denominator: 3276800

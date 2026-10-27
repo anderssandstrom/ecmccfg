@@ -225,6 +225,15 @@ Output routing is configured in `0x3252`. The factory mapping routes outputs
 1 through 3 to `0x60FE:01` bits 16 through 18. As with input routing, verify
 saved settings on a drive that may have been configured previously.
 
+## Optional raw position and periodic outputs
+
+`N6-1-1-1-S_OPT` offers optional raw `6063` position alongside the existing
+`6064` mapping. With the ecmccomp `Drive-Generic-PositionOutput` component,
+this supports the commissioned open-loop 100-full-step output while the
+axis retains fine counter feedback. See
+[N6 optional configuration]({{< relref "Nanotec-N6_OPT.md" >}}) for options,
+startup order, gate controls, panels and the firmware-specific test scope.
+
 ## Useful commissioning checks
 
 Adjust master and slave position as required:

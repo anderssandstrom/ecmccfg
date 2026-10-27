@@ -2,38 +2,59 @@
 
 Use `startup_position_output_100_steps.cmd` instead of the original startup
 or the failed `startup_pulse_per_fullstep.cmd`. Run from this directory and
-restart the IOC so the previous configuration is discarded. The installed
-ecmccfg must include `ecmcN6-1-1-1-S_POS_OUT.cmd`.
+restart the IOC so the previous configuration is discarded. Build/install
+both updated modules: ecmccfg must include N6_OPT and ecmccomp must include
+`Drive-Generic-PositionOutput`.
 
 The output was reported working in the drive-only bench test. Subsequent SDO
 readings support using `6063` as the fine open-loop counter on the tested
 FIR-v2542-B1080909 firmware while `60E6:01=0`. The dedicated startup now maps
-that counter and loads its axis YAML. **Cyclic feedback and axis operation
-still require commissioning.**
+that counter and loads its axis YAML. The user confirmed the fine-counter
+axis and 100-step output working together with the interface disabled. The
+new packaging and masked gate controls still require a bench recheck.
 
 ## Dedicated files
 
 | File | Purpose |
 | --- | --- |
 | `startup_position_output_100_steps.cmd` | Output trial with the M1 axis |
-| `cfg/position_output_100_steps.cmd` | Sensorless interface off; position units and output routing |
-| `cfg/axis_position_output.yaml` | Axis feedback from fine `positionActualRaw01` |
-| `hardware/Nanotec/ecmcN6-1-1-1-S_POS_OUT.cmd` | Base N6 mapping plus `6063:00` in existing PDO `1A03` |
+| ecmccomp `Drive-Generic-PositionOutput` | Sensorless interface off; position units and output routing |
+| `cfg/axis_position_output.yaml` | Axis feedback from fine `positionActual01` |
+| `hardware/Nanotec/ecmcN6-1-1-1-S_OPT.cmd` | `RAW_POS=1` adds `6063:00` in existing PDO `1A03` |
 
 The original `startup.cmd`, `cfg/axis.yaml` and base N6 descriptor are unchanged.
 There are still four TxPDO assignments; the extra raw entry is appended to
 `1A03`, which becomes 20 bytes.
 
+## Packaged startup
+
+The example now uses the reusable hardware option and component:
+
+```text
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "HW_DESC=N6-1-1-1-S_OPT,OPT='RAW_POS=1'"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Motor-Generic-2Phase-Stepper,MACROS='I_MAX_MA=400,I_STDBY_MA=100,STEPS=200,INV_DIR=0'"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Drive-Generic-PositionOutput,MACROS='FULL_STEPS=100,OUTPUT=1,ARM=1'"
+```
+
+Apply the output component after the motor. It checks the raw mapping,
+startup order and supported interval. Its default is `ARM=0`; the example
+explicitly arms output 1. Supported intervals are `10^n` times
+`1,2,4,8,16,32,64` with `n=0..6`; outputs 1..3 are supported. Different
+outputs on the same drive must share the canonical position-unit exponent.
+Motor `INV_DIR=0` is required. The original `_POS_OUT` descriptor and local
+`cfg/position_output_100_steps.cmd` remain as compatibility wrappers.
+
 ## Two simultaneous position values
 
 | Value | Units | Use |
 | --- | --- | --- |
-| `6063`, `positionActualRaw01` | Native counter increments; nominally 3,276,800/revolution | Axis feedback |
-| `6064`, `positionActual01` | 100 full motor steps/count; two counts/revolution | Direct drive-side output |
+| `6063`, `positionActual01` | Native counter increments; nominally 3,276,800/revolution | Axis feedback |
+| `6064`, `positionActualScaled01` | 100 full motor steps/count; two counts/revolution | Direct drive-side output |
 
 The M1 axis position readback is in degrees and uses `360/3276800` scaling.
-The normal N6 `Enc01-PosAct` drive record and panel still display coarse
-`6064`; use the M1 axis readback to observe fine position. Additional `60E4`
+With `RAW_POS=1`, `Enc01-PosAct` displays the fine `6063` open-loop counter.
+The OPT panels show it alongside `Enc01-PosScaled` for `6064`; the scaled field is visible
+only with `RAW_POS=1`. Use the M1 axis readback for position in degrees. Additional `60E4`
 positions also use the changed position units. Velocity remains in native
 increments/second, with matching `360/3276800` drive scaling and `INV_DIR=0`.
 
@@ -72,12 +93,14 @@ not commission its observer. No simulated encoder is substituted.
 | `60E6:01` | `0` | Sensorless interface remains disabled |
 | `60A8:00` | `0x02AC0000` | `6064` unit is 100 full motor steps |
 | `3252:02` | `0x0910` | Output 1 follows `6064` count changes, divider 1, gate bit 16 |
-| Existing `60FE:01` PDO | `65536` | Enable output 1; other output bits zero |
+| `60FE:01` PDO bit 16 | `1` | Enable output 1; preserve all other bits |
 
 There are no writes to `3203` or `205C`. The original feedback-selection
-masks must remain zero. `PINI=0` prevents record initialization from
-overwriting the gate; `BO01-Arr=0` disarms it and `65536` rearms it. This
-replaces the whole output word, with the brake-control bit and other outputs zero.
+masks must remain zero. Use `PosOut01-Ena=0` to disarm and `1` to rearm
+output 1. These masked controls and the component change only the selected
+bit. Output records avoid initialization writes that could clear the gate.
+Direct writes to `BO01-Arr` still replace the entire word; avoid them when
+other outputs or brake control are in use.
 
 ## Commissioning the axis
 
@@ -109,8 +132,13 @@ The lab's constant limit/interlock inputs match the original example.
 
 ## Output measurement
 
-Output 1 is **X4 pin 5**, with GNDD on **X4 pin 8**. Output level is nominal
-24 V/+UB_Logic. Use a compatible scope or counter input.
+Output 1 is **X4 pin 5**, with GNDD on **X4 pin 8**. The output defaults to
+**5 V**. To select nominal 24 V/+UB_Logic, add `N6_IO_24V=1` to the
+`Drive-Generic-PositionOutput` component macros. `N6_INPUT_PULLUP=0` selects
+pull-down inputs (default inherited from the motor); `1` selects pull-up.
+The voltage selector also changes the shared digital input thresholds.
+These options do not configure the motor power supply. Use a compatible
+scope or counter input.
 
 The target spacing is 100 full steps = 180 degrees, or ten seconds at a
 steady 18 degrees/second. Expect two pulses per revolution over repeated

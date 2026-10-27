@@ -1,0 +1,7 @@
+#- Resolved hardware option for panel visibility; not a run-time switch.
+record(bi,"${ECMC_P}CfgRawPosition") {
+  field(PINI,"YES")
+  field(INP,"${RAW_POS}")
+  field(ZNAM,"Not mapped")
+  field(ONAM,"Mapped")
+}

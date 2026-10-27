@@ -103,8 +103,9 @@ class N6PulseGeneratorTests(unittest.TestCase):
         self.assertLess(source.index('./cfg/pulse_per_fullstep.cmd'), source.index('loadYamlAxis.cmd'))
         yaml = (EXAMPLE / 'cfg/axis.yaml').read_text()
         self.assertIn('position: ec0.s$(ENC_SID).positionActual${ENC_CH=01}', yaml)
-        hardware = (ROOT / 'hardware/Nanotec/ecmcN6-1-1-1-S.cmd').read_text()
-        self.assertIn('0x1a01,0x6064,0x00,S32,positionActual01)', hardware)
+        from n6_support import hardware_commands
+        mapping = hardware_commands('N6-1-1-1-S').entries()['positionActual01']
+        self.assertEqual(mapping, ((2, 3, 0x1a01, 0x6064, 0), 'S32'))
 
 
 if __name__ == '__main__':

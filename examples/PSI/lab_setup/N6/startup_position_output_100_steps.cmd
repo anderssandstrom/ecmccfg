@@ -4,17 +4,19 @@
 require ecmccfg sandst_a "ENG_MODE=1,ECMC_VER=sandst_a,MASTER_ID=1"
 require ecmccomp sandst_a
 
-#- Append the raw 0x6063 PDO; suppress record initialization of the output gate.
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=N6-1-1-1-S_POS_OUT,MACROS='PINI=0'"
-${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Motor-Generic-2Phase-Stepper,CH_ID=1,MACROS='I_MAX_MA=400,I_STDBY_MA=100,STEPS=200,INV_DIR=0,N6_POS_UNIT=0x02AC0000'"
+#- Optional raw counter PDO and masked output-enable records.
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=N6-1-1-1-S_OPT,OPT='RAW_POS=1'"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Motor-Generic-2Phase-Stepper,CH_ID=1,MACROS='I_MAX_MA=400,I_STDBY_MA=100,STEPS=200,INV_DIR=0'"
 epicsEnvSet(DRV_SID,$(ECMC_EC_SLAVE_NUM))
 
 #- Initialize disabled with zero velocity before loading the axis controller.
 ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${DRV_SID},driveControl01,0)"
 ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${DRV_SID},velocitySetpoint01,0)"
 
-#- Append after the motor component so the final SDO units match this trial.
-${SCRIPTEXEC} ./cfg/position_output_100_steps.cmd "N6_SID=${DRV_SID}"
+#- Position output follows the motor so its position units take precedence.
+#- ARM changes only output 1's gate; the brake and other outputs are preserved.
+#- N6_IO_24V=0 selects 5 V logic outputs (also the component default).
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Drive-Generic-PositionOutput,CH_ID=1,MACROS='FULL_STEPS=100,OUTPUT=1,ARM=1,N6_IO_24V=0'"
 
 #- Bench readings support raw 0x6063 as the open-loop counter with 0x60E6:01=0.
 #- Keep sensorless feedback disabled. Do not use coarse 0x6064 for axis control.

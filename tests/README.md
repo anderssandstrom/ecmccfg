@@ -110,3 +110,19 @@ hardware communication or prove real-time behavior.
    templates and panels, to catch files omitted from packaging.
 4. Compare selected PDO layouts against versioned vendor ESI fixtures to catch
    incorrect indices, sizes and channel offsets independently of the scripts.
+
+## N6 and ecmccomp integration
+
+N6 OPT PDO, database and panel checks are included in the normal suite.
+The component checks use the actual sources in sibling `../ecmccomp` and
+are run separately so an ecmccfg-only checkout needs no second repository:
+
+```sh
+python3 tests/integration/n6_position_output.py
+```
+
+Both repositories must contain the N6 PositionOutput additions. These checks
+cover all 49 supported intervals on all three outputs, invalid options,
+per-master/slave capabilities, startup order, shared-unit conflicts, cleanup
+and preservation of unrelated output bits. They capture SDO commands and
+model bit writes; they do not operate a drive.

@@ -33,7 +33,7 @@ encoder:
   denominator: 3276800
   type: 0
   bits: 32
-  position: ec0.s$(ENC_SID).positionActualRaw01
+  position: ec0.s$(ENC_SID).positionActual01
   homing:
     refToEncIDAtStartup: 1
   useAsCSPDrvEnc: 1

@@ -1,0 +1,22 @@
+#- Masked access to the existing U32 output word. No overlapping output data
+#- items are created: other output bits, including brake bit 0, are preserved.
+record(bo,"${ECMC_P}PosOut${CH_ID}-Ena") {
+  info(asyn:READBACK,"1")
+  field(DESC,"N6 output ${CH_ID} gate")
+  field(PINI,"NO")
+  field(DTYP,"asynUInt32Digital")
+  field(OUT,"@asynMask(${PORT},${ADDR=0},${MASK},${TIMEOUT=1})T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynUInt32Digital/ec${MASTER_ID}.s${SLAVE_POS}.binaryOutputArray01=")
+  field(ZNAM,"Disabled")
+  field(ONAM,"Enabled")
+  field(TSE,"${TSE=-2}")
+}
+record(bi,"${ECMC_P}PosOut${CH_ID}-Ena-RB") {
+  field(DESC,"N6 output ${CH_ID} gate RB")
+  field(PINI,"YES")
+  field(DTYP,"asynUInt32Digital")
+  field(INP,"@asynMask(${PORT},${ADDR=0},${MASK},${TIMEOUT=1})T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynUInt32Digital/ec${MASTER_ID}.s${SLAVE_POS}.binaryOutputArray01?")
+  field(SCAN,"I/O Intr")
+  field(ZNAM,"Disabled")
+  field(ONAM,"Enabled")
+  field(TSE,"${TSE=-2}")
+}

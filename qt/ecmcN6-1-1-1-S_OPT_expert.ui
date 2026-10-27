@@ -1,0 +1,286 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1160</width>
+    <height>502</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Nanotec N6 OPT expert</string>
+  </property>
+  <widget class="caInclude" name="standardExpert">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>880</width>
+     <height>502</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string>
+   </property>
+   <property name="filename">
+    <string>ecmcN6-1-1-1-S_expert.ui</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="positionOutputGroup">
+   <property name="geometry">
+    <rect>
+     <x>890</x>
+     <y>10</y>
+     <width>260</width>
+     <height>480</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Positions and output gates</string>
+   </property>
+   <widget class="caFrame" name="scaledCounterFrame">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>28</y>
+      <width>240</width>
+      <height>54</height>
+     </rect>
+    </property>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgRawPosition</string>
+    </property>
+    <property name="visibility">
+     <enum>caFrame::Calc</enum>
+    </property>
+    <property name="visibilityCalc">
+     <string>A==1</string>
+    </property>
+    <widget class="QLabel" name="scaledCounterFrameLabel">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>240</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Scaled position</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="scaledCounterFrameValue">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>23</y>
+       <width>240</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-Enc01-PosScaled</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Static</enum>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="feedbackPositionLabel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>92</y>
+      <width>240</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Position actual</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="feedbackPosition">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>115</y>
+      <width>240</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-Enc01-PosAct</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="gate1Label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>165</y>
+      <width>240</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Output 1 enable gate</string>
+    </property>
+   </widget>
+   <widget class="caMenu" name="gate1">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>187</y>
+      <width>145</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-PosOut01-Ena</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="gate1Readback">
+    <property name="geometry">
+     <rect>
+      <x>165</x>
+      <y>187</y>
+      <width>85</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-PosOut01-Ena-RB</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="gate2Label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>233</y>
+      <width>240</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Output 2 enable gate</string>
+    </property>
+   </widget>
+   <widget class="caMenu" name="gate2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>255</y>
+      <width>145</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-PosOut02-Ena</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="gate2Readback">
+    <property name="geometry">
+     <rect>
+      <x>165</x>
+      <y>255</y>
+      <width>85</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-PosOut02-Ena-RB</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="gate3Label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>301</y>
+      <width>240</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Output 3 enable gate</string>
+    </property>
+   </widget>
+   <widget class="caMenu" name="gate3">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>323</y>
+      <width>145</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-PosOut03-Ena</string>
+    </property>
+   </widget>
+   <widget class="caLineEdit" name="gate3Readback">
+    <property name="geometry">
+     <rect>
+      <x>165</x>
+      <y>323</y>
+      <width>85</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="channel">
+     <string>$(IOC):m$(MasterID)s$(SlaveID)-PosOut03-Ena-RB</string>
+    </property>
+    <property name="colorMode">
+     <enum>caLineEdit::Static</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="gateNote">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>385</y>
+      <width>240</width>
+      <height>42</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Each control changes only its own bit.</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caInclude</class>
+   <extends>QWidget</extends>
+   <header>caInclude</header>
+  </customwidget>
+  <customwidget>
+   <class>caFrame</class>
+   <extends>QFrame</extends>
+   <header>caFrame</header>
+  </customwidget>
+  <customwidget>
+   <class>caMenu</class>
+   <extends>QComboBox</extends>
+   <header>caMenu</header>
+  </customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+ </customwidgets>
+ <resources />
+ <connections />
+</ui>

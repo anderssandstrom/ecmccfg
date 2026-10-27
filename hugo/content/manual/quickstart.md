@@ -43,6 +43,6 @@ For reusable public examples, see [examples]({{< relref "/manual/examples.md" >}
 
 ## Next steps
 - See [motion cfg](../motion_cfg/) for scaling, direction, and homing
-- See [PLC cfg]({{< relref "/manual/PLC_cfg/_index.md" >}}) for PLC hooks and synchronization
+- See [PLC cfg]({{< relref "/manual/plc_cfg/_index.md" >}}) for PLC hooks and synchronization
 - See [examples]({{< relref "/manual/examples.md" >}}) for best-practice example trees
 - See [troubleshooting](../knowledgebase/troubleshooting/) for common startup issues

@@ -1,4 +1,5 @@
 +++
+url = "/manual/general_cfg/iocsh_utils/"
 title = "iocsh utilities"
 weight = 14
 chapter = false

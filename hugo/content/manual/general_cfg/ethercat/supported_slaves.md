@@ -1,4 +1,5 @@
 +++
+url = "/manual/general_cfg/supported_slaves/"
 title = "Supported Slaves"
 weight = 17
 chapter = false

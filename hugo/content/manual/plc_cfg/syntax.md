@@ -8,11 +8,11 @@ In `ecmc`, PLCs are based on the `exprtk` expression evaluation library.
 For detailed syntax help, see the [exprtk website](https://github.com/ArashPartow/exprtk).
 
 Companion pages:
-- [variables]({{< relref "/manual/PLC_cfg/variables.md" >}})
-- [patterns]({{< relref "/manual/PLC_cfg/patterns.md" >}})
-- [functions]({{< relref "/manual/PLC_cfg/functions.md" >}})
-- [best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}})
-- [function libs]({{< relref "/manual/PLC_cfg/function_libs.md" >}})
+- [variables]({{< relref "/manual/plc_cfg/variables.md" >}})
+- [patterns]({{< relref "/manual/plc_cfg/patterns.md" >}})
+- [functions]({{< relref "/manual/plc_cfg/functions.md" >}})
+- [best practice]({{< relref "/manual/plc_cfg/best_practice.md" >}})
+- [function libs]({{< relref "/manual/plc_cfg/function_libs.md" >}})
 
 As a general rule, prefer PLC helper functions over direct raw variable access
 when both are available. The function calls are usually clearer, more stable as
@@ -76,7 +76,7 @@ The following "addresses" are supported:
   - `<name>`
 
 `static.<name>` variables are private to one PLC, while `global.<name>` variables are shared between PLCs.
-Both can also be exposed as EPICS PVs; see [best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}}).
+Both can also be exposed as EPICS PVs; see [best practice]({{< relref "/manual/plc_cfg/best_practice.md" >}}).
 
 ### comments
 The hash character `#` is reserved for comments.
@@ -96,9 +96,9 @@ If macro substitution is needed, please use the traditional approach using `load
 
 ## Reference pages
 
-- [variables]({{< relref "/manual/PLC_cfg/variables.md" >}}) for `static`, `global`, EtherCAT, motion, PLC, and data-storage namespaces.
-- [patterns]({{< relref "/manual/PLC_cfg/patterns.md" >}}) for short practical PLC snippets.
-- [functions]({{< relref "/manual/PLC_cfg/functions.md" >}}) for the full `ec_`, `mc_`, `mc_grp_`, `ds_`, `lut_`, `m2m_`, and `epics_` reference.
+- [variables]({{< relref "/manual/plc_cfg/variables.md" >}}) for `static`, `global`, EtherCAT, motion, PLC, and data-storage namespaces.
+- [patterns]({{< relref "/manual/plc_cfg/patterns.md" >}}) for short practical PLC snippets.
+- [functions]({{< relref "/manual/plc_cfg/functions.md" >}}) for the full `ec_`, `mc_`, `mc_grp_`, `ds_`, `lut_`, `m2m_`, and `epics_` reference.
 
 {{% notice tip %}}
 Custom function libs in exprtk syntax can be added and loaded to the PLC objects.

@@ -4,7 +4,7 @@ weight = 18
 chapter = false
 +++
 
-Reference companion to [syntax]({{< relref "/manual/PLC_cfg/syntax.md" >}}) and [best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}}).
+Reference companion to [syntax]({{< relref "/manual/plc_cfg/syntax.md" >}}) and [best practice]({{< relref "/manual/plc_cfg/best_practice.md" >}}).
 
 ## function libs
 Function libraries can be loaded into ecmc PLCs by loadPLCLib.cmd. The command takes these parameters:

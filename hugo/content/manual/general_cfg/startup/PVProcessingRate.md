@@ -1,4 +1,5 @@
 +++
+url = "/manual/general_cfg/pvprocessingrate/"
 title = "PV Processing Rate"
 weight = 15
 chapter = false

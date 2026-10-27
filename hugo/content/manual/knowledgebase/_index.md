@@ -1,12 +1,11 @@
 +++
-title = "knowledge base"
+title = "Knowledge base"
 weight = 10
 chapter = false
 +++
 
-## Topics
-{{% children %}}
----
+<!-- Preserve links to the former overview headings. -->
+<a id="topics"></a>
 
 ## Scope
 Troubleshooting EtherCAT motion systems can be difficult because errors often span several layers:
@@ -47,6 +46,10 @@ This knowledge base is a practical first-line guide for diagnosis and recovery.
 ### Need panel-based diagnosis or operation context
 - [panel]({{< relref "/manual/knowledgebase/panel.md" >}})
 
+<!-- Preserve links to the former overview headings. -->
+<a id="tools"></a>
+<a id="topic-map"></a>
+
 ## By Layer
 - [general]({{< relref "/manual/knowledgebase/general.md" >}}) for common IOC startup/runtime failures.
 - [ethercat command line interface]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}}) for host-side EtherCAT verification.
@@ -54,17 +57,3 @@ This knowledge base is a practical first-line guide for diagnosis and recovery.
 - [tuning]({{< relref "/manual/knowledgebase/tuning.md" >}}) for control-loop and motion-quality issues.
 - [host / ecmc server]({{< relref "/manual/knowledgebase/host.md" >}}) for NICs, drivers, latency, and deployment details.
 - [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}}) for device-specific notes.
-
-## Tools
-- [panel]({{< relref "/manual/knowledgebase/panel.md" >}})
-- [ethercat command line interface]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}})
-
-## Topic Map
-- [general]({{< relref "/manual/knowledgebase/general.md" >}})
-- [ethercat command line interface]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}})
-- [troubleshooting]({{< relref "/manual/knowledgebase/troubleshooting.md" >}})
-- [motion]({{< relref "/manual/knowledgebase/motion.md" >}})
-- [tuning]({{< relref "/manual/knowledgebase/tuning.md" >}})
-- [host / ecmc server]({{< relref "/manual/knowledgebase/host.md" >}})
-- [panel]({{< relref "/manual/knowledgebase/panel.md" >}})
-- [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})

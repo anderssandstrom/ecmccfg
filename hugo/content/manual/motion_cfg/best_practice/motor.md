@@ -1,9 +1,14 @@
 
 +++
-title = "Motor record"
+title = "Motor record examples"
 weight = 30
 chapter = false
 +++
+
+This page contains example-specific configurations and test results. For general
+motor-record behavior, see [Motor Record]({{< relref "/manual/motion_cfg/motor.md" >}}). For
+restore options, startup ordering, and soft-limit precedence, use
+[Motor position and soft-limit autosave]({{< relref "/manual/motion_cfg/autosave.md" >}}).
 
 ## Topics
 1. [Auto-save restore](#auto-save-restore)
@@ -18,9 +23,12 @@ The example is based on that PSI ioc install tool is used.
 Auto save/restore of motor position is made through motor record.
 At PSI if the tool "ioc install" is used, its enough to add a file \<ioc_name\>_pos.req in the "./cfg/" sub dir listing the DVAL field of the motor record names that need to be auto saved restored.
 
-In order for restore of motor position to succeed, both restore pass 1 and 2 needs to executed (see EPICS hooks).
+In order for restore of motor position to succeed, both autosave restore passes, **0 and 1**, must execute before `iocInit`.
+The PSI directive `#ENABLE-PASS=2` selects two passes; `2` is not a pass number.
 
-**NOTE: Auto save restore will only work with incremental encoders (in axis definition YAML file, "encoder.type: 0").**
+**NOTE:** The position-restore example uses an incremental encoder
+(`encoder.type: 0`). Soft-limit restoration is independent of position restoration;
+see [autosave]({{< relref "/manual/motion_cfg/autosave.md" >}}).
 
 ### Example of a _pos.req file in ./cfg/
 ioc install automatically adds restore at both passes ("#ENABLE-PASS=2") if filename ends with  "_pos.req"

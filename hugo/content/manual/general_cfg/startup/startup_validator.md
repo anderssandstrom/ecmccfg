@@ -1,4 +1,5 @@
 +++
+url = "/manual/general_cfg/startup_validator/"
 title = "Startup Validator"
 weight = 17
 chapter = false
@@ -142,6 +143,6 @@ makes it easier to invoke consistently from another directory.
 ## Related Pages
 
 - [startup.cmd]({{< relref "/manual/general_cfg/startup/_index.md" >}})
-- [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}})
-- [iocsh utilities]({{< relref "/manual/general_cfg/iocsh_utils.md" >}})
+- [Script Reference]({{< relref "/manual/general_cfg/utilities/script_reference.md" >}})
+- [iocsh utilities]({{< relref "/manual/general_cfg/utilities/iocsh_utils.md" >}})
 - [troubleshooting]({{< relref "/manual/knowledgebase/troubleshooting/_index.md" >}})

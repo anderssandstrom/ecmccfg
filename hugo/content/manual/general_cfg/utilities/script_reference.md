@@ -1,4 +1,5 @@
 +++
+url = "/manual/general_cfg/script_reference/"
 title = "Script Reference"
 weight = 16
 chapter = false
@@ -50,7 +51,7 @@ These are the scripts most users should start from.
 | `finalize.cmd` | Convenience wrapper that applies config if needed, loads some summary objects, and sets app mode. | Compact startup files that want the default finishing sequence. |
 
 For a generated list of available `HW_DESC` values together with product IDs and
-hardware snippet paths, see [Supported Slaves]({{< relref "/manual/general_cfg/supported_slaves.md" >}}).
+hardware snippet paths, see [Supported Slaves]({{< relref "/manual/general_cfg/ethercat/supported_slaves.md" >}}).
 
 ## Advanced Commands
 
@@ -61,13 +62,13 @@ These commands are real user-facing interfaces, but they are lower level or more
 | Script | Purpose |
 | --- | --- |
 | `applyConfig.cmd` | Apply the EtherCAT configuration and calculate process-image offsets. |
-| `addDomain.cmd` | Create an additional EtherCAT domain with custom execution rate/offset. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
-| `addEcDataItem.cmd` | Expose a custom pointer into already configured process-image data as an EPICS-accessible item. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
-| `addEcSdoRT.cmd` | Add runtime asynchronous SDO access and PVs: scalar with `DT` (default), or UCHAR waveforms with `BYTE_SIZE`. Configure during startup; trigger transfers at runtime. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
+| `addDomain.cmd` | Create an additional EtherCAT domain with custom execution rate/offset. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md" >}}). |
+| `addEcDataItem.cmd` | Expose a custom pointer into already configured process-image data as an EPICS-accessible item. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md" >}}). |
+| `addEcSdoRT.cmd` | Add runtime asynchronous SDO access and PVs: scalar with `DT` (default), or UCHAR waveforms with `BYTE_SIZE`. Configure during startup; trigger transfers at runtime. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md" >}}). |
 | `applySlaveConfig.cmd` | Apply one legacy slave-specific config file after `addSlave.cmd`. |
-| `applySlaveDCconfig.cmd` | Apply distributed-clock settings to a slave. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
-| `slaveVerify.cmd` | Verify slave identity and optionally reset/read firmware. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
-| `ignoreSlaves.cmd` | Skip one or more slave positions in the topology. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
+| `applySlaveDCconfig.cmd` | Apply distributed-clock settings to a slave. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md" >}}). |
+| `slaveVerify.cmd` | Verify slave identity and optionally reset/read firmware. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md" >}}). |
+| `ignoreSlaves.cmd` | Skip one or more slave positions in the topology. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md" >}}). |
 
 ### Motion / Encoders / Synchronization
 
@@ -76,9 +77,9 @@ These commands are real user-facing interfaces, but they are lower level or more
 | `addAxis.cmd` | Low-level axis object and PV creation after a classic config file has populated the environment. |
 | `addVirtualAxis.cmd` | Low-level virtual-axis object and PV creation. |
 | `addEncoder.cmd` | Add an extra encoder to the most recently configured axis in classic setups. |
-| `addMasterSlaveSM.cmd` | Create a master/slave state machine object and its PVs. See [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}}). |
+| `addMasterSlaveSM.cmd` | Create a master/slave state machine object and its PVs. See [Master/Slave State Machine]({{< relref "/manual/motion_cfg/master_slave_state_machine.md" >}}). |
 | `loadAxisPLCFile.cmd` | Load an axis PLC file tied to a specific axis id. |
-| `loadLUTFile.cmd` | Load a lookup table into ecmc, for example for corrections or PLC use. See [Lookup Tables]({{< relref "/manual/general_cfg/lut.md" >}}). |
+| `loadLUTFile.cmd` | Load a lookup table into ecmc, for example for corrections or PLC use. See [Lookup Tables]({{< relref "/manual/general_cfg/utilities/lut.md" >}}). |
 | `pvtControllerConfig.cmd` | Configure the profile-move/PVT controller records and trigger handling. |
 
 ### IOC / Record Behavior
@@ -101,7 +102,7 @@ These are repository utilities rather than IOC startup scripts:
 
 - legacy EtherCAT ESI parser for extracting PDO mappings and generating draft
   ecmc hardware snippets. See
-  [ESI Parser]({{< relref "/manual/general_cfg/esi_parser.md" >}}).
+  [ESI Parser]({{< relref "/manual/general_cfg/ethercat/esi_parser.md" >}}).
 - `utils/esi_mapping_browser.py`: newer interactive/browser-oriented ESI mapping
   inspection and snippet generation tool.
 
@@ -109,7 +110,7 @@ These are repository utilities rather than IOC startup scripts:
 
 - `scripts/validate-startup`: optional offline validation of IOC startup syntax,
   script macro lists, and local file references. See
-  [Startup Validator]({{< relref "/manual/general_cfg/startup_validator.md" >}}).
+  [Startup Validator]({{< relref "/manual/general_cfg/startup/startup_validator.md" >}}).
 
 ### Template / Substitution Helpers
 
@@ -176,14 +177,14 @@ should generally be seen as legacy entry points compared to the YAML-first path.
 ## Related Pages
 
 - [startup.cmd]({{< relref "/manual/general_cfg/startup/_index.md" >}})
-- [PV Processing Rate]({{< relref "/manual/general_cfg/PVProcessingRate.md" >}})
-- [iocsh utilities]({{< relref "/manual/general_cfg/iocsh_utils.md" >}})
-- [Startup Validator]({{< relref "/manual/general_cfg/startup_validator.md" >}})
-- [ESI Parser]({{< relref "/manual/general_cfg/esi_parser.md" >}})
-- [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}})
+- [PV Processing Rate]({{< relref "/manual/general_cfg/startup/PVProcessingRate.md" >}})
+- [iocsh utilities]({{< relref "/manual/general_cfg/utilities/iocsh_utils.md" >}})
+- [Startup Validator]({{< relref "/manual/general_cfg/startup/startup_validator.md" >}})
+- [ESI Parser]({{< relref "/manual/general_cfg/ethercat/esi_parser.md" >}})
+- [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md" >}})
 - [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}})
-- [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}})
-- [Lookup Tables]({{< relref "/manual/general_cfg/lut.md" >}})
+- [Master/Slave State Machine]({{< relref "/manual/motion_cfg/master_slave_state_machine.md" >}})
+- [Lookup Tables]({{< relref "/manual/general_cfg/utilities/lut.md" >}})
 - [motion configuration]({{< relref "/manual/motion_cfg/_index.md" >}})
-- [PLC configuration]({{< relref "/manual/PLC_cfg/_index.md" >}})
+- [PLC configuration]({{< relref "/manual/plc_cfg/_index.md" >}})
 - [plugins]({{< relref "/manual/plugins/_index.md" >}})

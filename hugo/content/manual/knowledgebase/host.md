@@ -174,6 +174,6 @@ In order to successfully run an ecmc EtherCAT system at higher rates, some tunin
 * consider use of more than one domain
 
 ## Related pages
-- [general best practice]({{< relref "/manual/general_cfg/best_practice.md" >}})
+- [general best practice]({{< relref "/manual/general_cfg/startup/best_practice.md" >}})
 - [startup]({{< relref "/manual/general_cfg/startup/_index.md" >}})
 - [knowledge base]({{< relref "/manual/knowledgebase/_index.md" >}})

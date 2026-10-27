@@ -98,7 +98,7 @@ Prefer the DAQ plugin when:
 - oversampling data is involved
 - waveform-style output is the natural result
 
-Prefer core [data storage]({{< relref "/manual/general_cfg/data_storage.md" >}}) when:
+Prefer core [data storage]({{< relref "/manual/general_cfg/utilities/data_storage.md" >}}) when:
 
 - one PLC or one small workflow appends scalar values over time
 - the capture logic is simple
@@ -127,11 +127,11 @@ Use the DAQ plugin for acquisition structure and synchronization, not as a repla
 - small PLC-local buffering
 - one-off debug values
 
-For those simpler cases, normal EPICS records or [data storage]({{< relref "/manual/general_cfg/data_storage.md" >}}) are usually easier.
+For those simpler cases, normal EPICS records or [data storage]({{< relref "/manual/general_cfg/utilities/data_storage.md" >}}) are usually easier.
 
 ## Related Pages
 
 - [plugins]({{< relref "/manual/plugins/_index.md" >}})
 - [Plugin Interface]({{< relref "/manual/plugins/interface.md" >}})
-- [data storage]({{< relref "/manual/general_cfg/data_storage.md" >}})
+- [data storage]({{< relref "/manual/general_cfg/utilities/data_storage.md" >}})
 - [Examples]({{< relref "/manual/examples.md" >}})

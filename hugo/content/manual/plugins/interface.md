@@ -169,7 +169,7 @@ In those cases, the common pattern is:
 ## Related Pages
 
 - [plugins]({{< relref "/manual/plugins/_index.md" >}})
-- [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}})
-- [ecmc command reference]({{< relref "/manual/general_cfg/ecmc_command_ref.md" >}})
-- [PLC syntax]({{< relref "/manual/PLC_cfg/syntax.md" >}})
+- [Script Reference]({{< relref "/manual/general_cfg/utilities/script_reference.md" >}})
+- [ecmc command reference]({{< relref "/manual/general_cfg/utilities/ecmc_command_ref.md" >}})
+- [PLC syntax]({{< relref "/manual/plc_cfg/syntax.md" >}})
 - [Examples]({{< relref "/manual/examples.md" >}})

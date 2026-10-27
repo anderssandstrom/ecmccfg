@@ -1,4 +1,5 @@
 +++
+url = "/manual/general_cfg/best_practice/"
 title = "general best practice"
 weight = 16
 chapter = false
@@ -40,7 +41,7 @@ more host-side guidance.
 
 {{% notice info %}}
 EPICS PVs update at a lower rate than the EtherCAT master rate. See
-[PV Processing Rate]({{< relref "/manual/general_cfg/PVProcessingRate.md" >}})
+[PV Processing Rate]({{< relref "/manual/general_cfg/startup/PVProcessingRate.md" >}})
 for details.
 {{% /notice %}}
 

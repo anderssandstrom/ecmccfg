@@ -42,6 +42,10 @@ Without the restore option, ECMC seeds the motor's limits from its configured
 limits at startup. Saving the motor limit fields alone does not make restored
 values authoritative in that mode.
 
+After changing soft limits, reload any open caQtDM panels. Numeric input widgets,
+such as the motor `VAL` field, use the limits read when the panel was opened and
+can reject values based on the previous limits until the panel is reloaded.
+
 ## Which values are used?
 
 The standard YAML generator initializes the motor record's `.DLLM` and `.DHLM`

@@ -1,4 +1,5 @@
 +++
+url = "/manual/general_cfg/fsoe/"
 title = "FSoE and TwinSAFE"
 weight = 18
 chapter = false
@@ -223,6 +224,6 @@ commands.
 
 ## Related pages
 
-- [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}})
+- [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md" >}})
 - [Beckhoff MX-System]({{< relref "/manual/knowledgebase/hardware/MX-System.md" >}})
 - [Panels]({{< relref "/manual/knowledgebase/panel.md" >}})

@@ -35,16 +35,16 @@ YAML PLC loading supports both parser backends:
 - `ecb` (C++ backend via `ECMC_CFG_TOOL=ecb`, see [ecb]({{< relref "/manual/motion_cfg/ecb.md" >}}))
 
 ### Understand language/syntax and available variables
-- [syntax]({{< relref "/manual/PLC_cfg/syntax.md" >}}) for operators, declarations, comments, and macro rules.
-- [variables]({{< relref "/manual/PLC_cfg/variables.md" >}}) for axis/ec/ds/plc variable namespaces.
-- [patterns]({{< relref "/manual/PLC_cfg/patterns.md" >}}) for short practical PLC examples.
-- [functions]({{< relref "/manual/PLC_cfg/functions.md" >}}) for the PLC helper function reference.
+- [syntax]({{< relref "/manual/plc_cfg/syntax.md" >}}) for operators, declarations, comments, and macro rules.
+- [variables]({{< relref "/manual/plc_cfg/variables.md" >}}) for axis/ec/ds/plc variable namespaces.
+- [patterns]({{< relref "/manual/plc_cfg/patterns.md" >}}) for short practical PLC examples.
+- [functions]({{< relref "/manual/plc_cfg/functions.md" >}}) for the PLC helper function reference.
 
 ### Reuse PLC functions and shared code
-- [function libs]({{< relref "/manual/PLC_cfg/function_libs.md" >}}) for `loadPLCLib.cmd`, function signatures, and constraints.
+- [function libs]({{< relref "/manual/plc_cfg/function_libs.md" >}}) for `loadPLCLib.cmd`, function signatures, and constraints.
 
 ### Apply robust coding patterns
-- [best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}}) for macros, include/substitute usage, printout strategy, declaration patterns, and exposing PLC variables as EPICS PVs.
+- [best practice]({{< relref "/manual/plc_cfg/best_practice.md" >}}) for macros, include/substitute usage, printout strategy, declaration patterns, and exposing PLC variables as EPICS PVs.
 
 ## PLC Definition Styles
 `ecmccfg` supports three styles:
@@ -98,9 +98,9 @@ PLC statement line terminator remains `|` in YAML-based code lines.
 {{% /notice %}}
 
 ## Recommended Reading Order
-1. [syntax]({{< relref "/manual/PLC_cfg/syntax.md" >}})
-2. [variables]({{< relref "/manual/PLC_cfg/variables.md" >}})
-3. [patterns]({{< relref "/manual/PLC_cfg/patterns.md" >}})
-4. [functions]({{< relref "/manual/PLC_cfg/functions.md" >}})
-5. [best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}})
-6. [function libs]({{< relref "/manual/PLC_cfg/function_libs.md" >}})
+1. [syntax]({{< relref "/manual/plc_cfg/syntax.md" >}})
+2. [variables]({{< relref "/manual/plc_cfg/variables.md" >}})
+3. [patterns]({{< relref "/manual/plc_cfg/patterns.md" >}})
+4. [functions]({{< relref "/manual/plc_cfg/functions.md" >}})
+5. [best practice]({{< relref "/manual/plc_cfg/best_practice.md" >}})
+6. [function libs]({{< relref "/manual/plc_cfg/function_libs.md" >}})

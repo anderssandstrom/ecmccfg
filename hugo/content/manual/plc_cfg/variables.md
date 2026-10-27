@@ -4,9 +4,9 @@ weight = 14
 chapter = false
 +++
 
-Reference companion to [syntax]({{< relref "/manual/PLC_cfg/syntax.md" >}}),
-[patterns]({{< relref "/manual/PLC_cfg/patterns.md" >}}), and
-[best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}}).
+Reference companion to [syntax]({{< relref "/manual/plc_cfg/syntax.md" >}}),
+[patterns]({{< relref "/manual/plc_cfg/patterns.md" >}}), and
+[best practice]({{< relref "/manual/plc_cfg/best_practice.md" >}}).
 
 As a general rule, prefer PLC helper functions over direct raw variable access
 when both are available. PLC variables are refreshed around each PLC scan,
@@ -32,7 +32,7 @@ PLC systems where the normal variable view is scan-based.
 
 `static.<name>` variables are private to one PLC, while `global.<name>` variables
 are shared between PLCs. Both can also be exposed as EPICS PVs; see
-[best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}}).
+[best practice]({{< relref "/manual/plc_cfg/best_practice.md" >}}).
 
 ### EtherCAT
 ```text

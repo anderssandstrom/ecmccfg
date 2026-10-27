@@ -4,9 +4,9 @@ weight = 16
 chapter = false
 +++
 
-Reference companion to [syntax]({{< relref "/manual/PLC_cfg/syntax.md" >}}),
-[variables]({{< relref "/manual/PLC_cfg/variables.md" >}}), and
-[patterns]({{< relref "/manual/PLC_cfg/patterns.md" >}}).
+Reference companion to [syntax]({{< relref "/manual/plc_cfg/syntax.md" >}}),
+[variables]({{< relref "/manual/plc_cfg/variables.md" >}}), and
+[patterns]({{< relref "/manual/plc_cfg/patterns.md" >}}).
 
 Most PLC helper functions follow a clear prefix:
 

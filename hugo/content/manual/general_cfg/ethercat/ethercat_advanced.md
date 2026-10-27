@@ -1,4 +1,5 @@
 +++
+url = "/manual/general_cfg/ethercat_advanced/"
 title = "Advanced EtherCAT and Commissioning"
 weight = 17
 chapter = false
@@ -641,6 +642,6 @@ For advanced systems:
 ## Related Pages
 
 - [startup.cmd]({{< relref "/manual/general_cfg/startup/_index.md" >}})
-- [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}})
-- [ecmc command reference]({{< relref "/manual/general_cfg/ecmc_command_ref.md" >}})
+- [Script Reference]({{< relref "/manual/general_cfg/utilities/script_reference.md" >}})
+- [ecmc command reference]({{< relref "/manual/general_cfg/utilities/ecmc_command_ref.md" >}})
 - [knowledgebase: EtherCAT CLI]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}})

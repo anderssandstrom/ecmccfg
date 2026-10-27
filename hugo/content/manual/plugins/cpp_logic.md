@@ -394,6 +394,6 @@ Current example families include:
 - [plugins]({{< relref "/manual/plugins/_index.md" >}})
 - [C++ Logic Helpers]({{< relref "/manual/plugins/cpp_logic_helpers.md" >}})
 - [Plugin Interface]({{< relref "/manual/plugins/interface.md" >}})
-- [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}})
-- [ecmc command reference]({{< relref "/manual/general_cfg/ecmc_command_ref.md" >}})
+- [Script Reference]({{< relref "/manual/general_cfg/utilities/script_reference.md" >}})
+- [ecmc command reference]({{< relref "/manual/general_cfg/utilities/ecmc_command_ref.md" >}})
 - [Examples]({{< relref "/manual/examples.md" >}})

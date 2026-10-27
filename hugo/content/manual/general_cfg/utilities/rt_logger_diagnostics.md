@@ -1,4 +1,5 @@
 +++
+url = "/manual/general_cfg/rt_logger_diagnostics/"
 title = "RT Logger Diagnostics"
 weight = 20
 chapter = false
@@ -202,4 +203,4 @@ $(IOC):MCU-RTLog-DiagFile
 
 - [Troubleshooting]({{< relref "/manual/knowledgebase/troubleshooting.md" >}})
 - [Motion troubleshooting]({{< relref "/manual/knowledgebase/motion.md" >}})
-- [Master/slave state machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}})
+- [Master/slave state machine]({{< relref "/manual/motion_cfg/master_slave_state_machine.md" >}})

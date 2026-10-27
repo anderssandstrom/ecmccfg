@@ -17,11 +17,11 @@ Use best-practice pages when you want:
 
 ## By area
 
-- [General]({{< relref "/manual/general_cfg/best_practice.md" >}})
+- [General]({{< relref "/manual/general_cfg/startup/best_practice.md" >}})
   host setup, EtherCAT rate, and controller-side recommendations
 - [Motion]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}})
   axis, encoder, homing, motor-record, and motion example patterns
-- [PLC]({{< relref "/manual/PLC_cfg/best_practice.md" >}})
+- [PLC]({{< relref "/manual/plc_cfg/best_practice.md" >}})
   PLC structure, macros, debug handling, and EPICS variable exposure
 
 ## Core recommendations

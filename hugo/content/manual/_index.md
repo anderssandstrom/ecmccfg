@@ -1,5 +1,5 @@
 +++
-title = "manual"
+title = "Manual"
 weight = 1
 chapter = true
 +++
@@ -10,33 +10,31 @@ A configuration framework for ECMC Motion Control Module for EPICS.
 
 ## Start here
 
-Use this manual as follows:
+1. Follow the [Quickstart]({{< relref "/manual/quickstart.md" >}}) to bring up one axis using YAML.
+2. Read the [Introduction]({{< relref "/manual/introduction.md" >}}) for the IOC startup structure.
+3. Use the [motion commissioning path]({{< relref "/manual/motion_cfg/_index.md" >}}) for axis configuration, scaling, direction, homing, motor-record behavior, and autosave.
+4. Check the system through the [overview panel]({{< relref "/manual/knowledgebase/panel.md" >}}) and use [Troubleshooting]({{< relref "/manual/knowledgebase/troubleshooting.md" >}}) when behavior differs from expectations.
 
-1. Start with [Quickstart](./quickstart/) if you want to bring up one axis with the current YAML-based workflow.
-2. Go to [Examples](./examples/) if you want a reusable starting point from `examples/PSI/best_practice/`.
-3. Check [Terminology](./terminology/) first if you want the canonical meaning of terms such as `axis`, `axis PLC`, `component`, `plugin`, and `master-less`.
-4. Go directly to the section below if you already know what you want to configure.
+For terminology such as `axis`, `axis PLC`, `component`, `plugin`, and
+`master-less`, see [Terminology]({{< relref "/manual/terminology.md" >}}).
 
-## Common tasks
+<!-- Preserve links to the former overview headings. -->
+<a id="common-tasks"></a>
+<a id="main-sections"></a>
+<a id="topics"></a>
 
-- I want to configure one or more axes:
-  [motion configuration](./motion_cfg/) and
-  [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}})
-- I want to load PLC logic:
-  [PLC configuration]({{< relref "/manual/PLC_cfg/_index.md" >}})
-- I want to expose PLC variables as EPICS PVs:
-  [PLC best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}})
-- I want to run without EtherCAT hardware:
-  [startup]({{< relref "/manual/general_cfg/startup/_index.md" >}})
-  and the `MASTER_ID=-1` section
-- I want to capture buffered data or use data storage:
-  [data storage]({{< relref "/manual/general_cfg/data_storage.md" >}})
-- I want to load plugins:
-  [plugins](./plugins/)
-- I want a ready-made example:
-  [examples](./examples/)
-- I need troubleshooting or hardware notes:
-  [knowledge base](./knowledgebase/)
+## Choose the material you need
+
+| Need | Start with |
+| --- | --- |
+| A working configuration to adapt | [Examples]({{< relref "/manual/examples.md" >}}) and [Best practice]({{< relref "/manual/best_practice.md" >}}) |
+| IOC startup or hardware-free operation (`MASTER_ID=-1`) | [Startup and IOC configuration]({{< relref "/manual/general_cfg/startup/_index.md" >}}) |
+| EtherCAT setup and commissioning | [EtherCAT and commissioning]({{< relref "/manual/general_cfg/ethercat/_index.md" >}}) |
+| Axis configuration and motion behavior | [Motion]({{< relref "/manual/motion_cfg/_index.md" >}}) |
+| PLC logic and EPICS variable exposure | [PLC configuration]({{< relref "/manual/plc_cfg/_index.md" >}}) and [PLC best practice]({{< relref "/manual/plc_cfg/best_practice.md" >}}) |
+| Plugins | [Plugins]({{< relref "/manual/plugins/_index.md" >}}) |
+| Buffered data, utilities, or command lookup | [Utilities and reference]({{< relref "/manual/general_cfg/utilities/_index.md" >}}) |
+| Runtime problems or device-specific notes | [Knowledge base]({{< relref "/manual/knowledgebase/_index.md" >}}) |
 
 ## Recommended workflow
 
@@ -75,18 +73,6 @@ For the detailed step-by-step breakdown of the startup structure, see
 - `configureAxis.cmd`, `configureVirtualAxis.cmd`, and `applyAxisSynchronization.cmd`:
   still supported, but mainly legacy compared to the YAML-first flow
 
-## Main sections
+## Maintenance
 
-- [Quickstart](./quickstart/) for a minimal single-axis bring-up
-- [Terminology](./terminology/) for the preferred meaning of common manual terms
-- [Introduction](./introduction/) for the detailed IOC startup structure
-- [Motion configuration](./motion_cfg/) for scaling, direction, homing, synchronization, and YAML axis details
-- [PLC configuration]({{< relref "/manual/PLC_cfg/_index.md" >}}) for syntax, variables, patterns, functions, and best practices
-- [General configuration]({{< relref "/manual/general_cfg/_index.md" >}}) for startup, scripts, data storage, and utilities
-- [Plugins](./plugins/) for available ecmc plugins and when to use them
-- [Examples](./examples/) for ready-to-adapt scenarios and scripts
-- [Knowledge base](./knowledgebase/) for troubleshooting, hardware notes, and diagnostics
-- [Upgrades](./upgrades/) for migration checklists and breaking changes
-
-## Topics
-{{% children %}}
+Use [Upgrades]({{< relref "/manual/upgrades.md" >}}) for migration checklists and breaking changes.

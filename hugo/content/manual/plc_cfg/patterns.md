@@ -4,9 +4,9 @@ weight = 15
 chapter = false
 +++
 
-Reference companion to [syntax]({{< relref "/manual/PLC_cfg/syntax.md" >}}),
-[variables]({{< relref "/manual/PLC_cfg/variables.md" >}}), and
-[best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}}).
+Reference companion to [syntax]({{< relref "/manual/plc_cfg/syntax.md" >}}),
+[variables]({{< relref "/manual/plc_cfg/variables.md" >}}), and
+[best practice]({{< relref "/manual/plc_cfg/best_practice.md" >}}).
 
 These examples are intentionally short and focus on the most common building blocks.
 
@@ -130,4 +130,4 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}addPlcVarBinary.cmd "NAME=Mode,PLC_VAR=mode,SCOPE=gl
 ```
 
 For the naming details and more EPICS examples, see
-[best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}}).
+[best practice]({{< relref "/manual/plc_cfg/best_practice.md" >}}).

@@ -1,4 +1,5 @@
 +++
+url = "/manual/general_cfg/lut/"
 title = "Lookup Tables"
 weight = 20
 chapter = false
@@ -104,7 +105,7 @@ A typical pattern is:
 value = lut_get_value(0,index);
 ```
 
-Use [PLC functions]({{< relref "/manual/PLC_cfg/functions.md" >}}) for the full `lut_...` reference.
+Use [PLC functions]({{< relref "/manual/plc_cfg/functions.md" >}}) for the full `lut_...` reference.
 
 ### C++ Logic Interface
 
@@ -129,7 +130,7 @@ For those cases, use data storage, plugins, or normal EPICS/PLC state instead.
 
 ## Related Pages
 
-- [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}})
-- [PLC functions]({{< relref "/manual/PLC_cfg/functions.md" >}})
+- [Script Reference]({{< relref "/manual/general_cfg/utilities/script_reference.md" >}})
+- [PLC functions]({{< relref "/manual/plc_cfg/functions.md" >}})
 - [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
 - [Examples]({{< relref "/manual/examples.md" >}})

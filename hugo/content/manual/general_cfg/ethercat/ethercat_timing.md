@@ -1,4 +1,5 @@
 +++
+url = "/manual/general_cfg/ethercat_timing/"
 title = "EtherCAT Endpoint Timing"
 weight = 18
 chapter = false
@@ -135,4 +136,4 @@ overrides.
 
 For a complete verification example using an EL2252 timestamp-scheduled output
 and an EL7062/ED7062 touch-probe latch, see
-[Verify DC Timing with Position Compare]({{< relref "/manual/general_cfg/verify_dc_timing_position_compare.md" >}}).
+[Verify DC Timing with Position Compare]({{< relref "/manual/general_cfg/ethercat/verify_dc_timing_position_compare.md" >}}).

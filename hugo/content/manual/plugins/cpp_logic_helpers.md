@@ -174,7 +174,7 @@ if (ecmcCpp::lutExists(0)) {
 The first argument is the LUT id. The second argument is the input/index value.
 The helper returns `0.0` if the LUT id is out of range or if the LUT object has
 not been loaded. Use `ecmcCpp::lutExists(...)` when logic should check for an
-optional LUT without logging an error. See [Lookup Tables]({{< relref "/manual/general_cfg/lut.md" >}})
+optional LUT without logging an error. See [Lookup Tables]({{< relref "/manual/general_cfg/utilities/lut.md" >}})
 for loading and file format details.
 
 IOC exit requests are deferred through the main realtime loop. The helper only
@@ -538,6 +538,6 @@ examples.
 
 - [C++ Logic]({{< relref "/manual/plugins/cpp_logic.md" >}})
 - [Plugin Interface]({{< relref "/manual/plugins/interface.md" >}})
-- [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}})
-- [ecmc command reference]({{< relref "/manual/general_cfg/ecmc_command_ref.md" >}})
+- [Script Reference]({{< relref "/manual/general_cfg/utilities/script_reference.md" >}})
+- [ecmc command reference]({{< relref "/manual/general_cfg/utilities/ecmc_command_ref.md" >}})
 - [Examples]({{< relref "/manual/examples.md" >}})

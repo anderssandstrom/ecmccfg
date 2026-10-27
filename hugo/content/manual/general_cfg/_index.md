@@ -1,65 +1,43 @@
 +++
-title = "general"
+title = "General configuration"
 weight = 7
 chapter = false
 +++
 
-## Topics
-{{% children %}}
----
+<!-- Preserve links to the former overview headings. -->
+<a id="scope"></a>
 
-## Scope
-General configuration covers IOC/bootstrap behavior that is not axis-specific:
-- startup mode and global macros
-- record update/processing behavior
-- iocsh utility functions
-- common data buffering patterns
-- command-parser reference access
+General configuration covers IOC startup and behavior shared by axes, PLCs,
+plugins, and data services.
 
-## By Task
-### Start and parameterize ecmccfg
-- [startup.cmd]({{< relref "/manual/general_cfg/startup/_index.md" >}}) for startup arguments/macros and initialization behavior.
-- [modes]({{< relref "/manual/general_cfg/startup/modes.md" >}}) for `FULL`, `DAQ`, `NO_MR`, and `ENG_MODE`.
+<!-- Preserve links to the former overview headings. -->
+<a id="by-task"></a>
+<a id="topics"></a>
+<a id="use-utility-functions-in-startup-scripts"></a>
+<a id="configure-generic-data-capturebuffering"></a>
+<a id="browse-command-api-details"></a>
+<a id="script-authoring--automation-path"></a>
 
-### Configure EPICS record processing/update rate
-- [PV Processing Rate]({{< relref "/manual/general_cfg/PVProcessingRate.md" >}}) for `ECMC_SAMPLE_RATE_MS`, per-record overrides, and processing hooks.
+## Choose an area
 
-### Use utility functions in startup scripts
-- [iocsh utilities]({{< relref "/manual/general_cfg/iocsh_utils.md" >}}) for `ecmcEpicsEnvSetCalc`, `ecmcIf`, loops, and file existence checks.
-- [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}}) for which `scripts/` entry points are public, advanced, or internal helpers.
-- [Startup Validator]({{< relref "/manual/general_cfg/startup_validator.md" >}}) for checking startup syntax, script macros, and local file references before IOC execution.
-- [ESI Parser]({{< relref "/manual/general_cfg/esi_parser.md" >}}) for the legacy EtherCAT ESI XML utility.
-- [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}) for extra domains, data items, DC, slave verify, and topology skips.
-- [EtherCAT Endpoint Timing]({{< relref "/manual/general_cfg/ethercat_timing.md" >}}) for input/output delay, DC phase, timestamps, timing PVs, and the diagnostic panel.
-- [Verify DC Timing with Position Compare]({{< relref "/manual/general_cfg/verify_dc_timing_position_compare.md" >}}) for an EL2252 output checked by an EL7062/ED7062 touch probe.
-- [FSoE and TwinSAFE]({{< relref "/manual/general_cfg/fsoe.md" >}}) for direct safety-telegram forwarding and hardware-panel navigation.
-- [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}}) for synchronized virtual/physical systems.
-- [Lookup Tables]({{< relref "/manual/general_cfg/lut.md" >}}) for loading numeric correction/value tables into ecmc.
+- [Startup and IOC configuration]({{< relref "/manual/general_cfg/startup/_index.md" >}}) — startup macros and modes, validation, record processing rates, and host recommendations.
+- [EtherCAT and commissioning]({{< relref "/manual/general_cfg/ethercat/_index.md" >}}) — supported slaves, domains, DC timing, verification, and safety telegrams.
+- [Utilities and reference]({{< relref "/manual/general_cfg/utilities/_index.md" >}}) — script entry points, iocsh helpers, command API, data buffers, lookup tables, and logging.
 
-### Configure generic data capture/buffering
-- [data storage buffer]({{< relref "/manual/general_cfg/data_storage.md" >}}) for `ds_append_data`/`ds_push_asyn` usage patterns.
+<!-- Preserve links to the former overview headings. -->
+<a id="apply-platform-level-recommendations"></a>
+<a id="configure-epics-record-processingupdate-rate"></a>
+<a id="new-ioc-bootstrapconfig-path"></a>
+<a id="recommended-reading-paths"></a>
+<a id="start-and-parameterize-ecmccfg"></a>
 
-### Apply platform-level recommendations
-- [best practice]({{< relref "/manual/general_cfg/best_practice.md" >}}) for EtherCAT rate and host-side setup guidance.
+## First IOC
 
-### Browse command API details
-- [ecmc command reference]({{< relref "/manual/general_cfg/ecmc_command_ref.md" >}}) for command syntax by domain.
+1. Follow the [Quickstart]({{< relref "/manual/quickstart.md" >}}) and [Introduction]({{< relref "/manual/introduction.md" >}}) for the startup structure.
+2. Set [startup macros]({{< relref "/manual/general_cfg/startup/_index.md" >}}) and choose a [mode]({{< relref "/manual/general_cfg/startup/modes.md" >}}). For hardware-free operation, see `MASTER_ID=-1` in the startup reference.
+3. Review [PV processing rates]({{< relref "/manual/general_cfg/startup/PVProcessingRate.md" >}}) and [host recommendations]({{< relref "/manual/general_cfg/startup/best_practice.md" >}}).
+4. Run the [startup validator]({{< relref "/manual/general_cfg/startup/startup_validator.md" >}}) before starting the IOC.
 
-## Recommended Reading Paths
-### New IOC bootstrap/config path
-1. [startup.cmd]({{< relref "/manual/general_cfg/startup/_index.md" >}})
-2. [modes]({{< relref "/manual/general_cfg/startup/modes.md" >}})
-3. [PV Processing Rate]({{< relref "/manual/general_cfg/PVProcessingRate.md" >}})
-4. [best practice]({{< relref "/manual/general_cfg/best_practice.md" >}})
+For script authoring, start with the [script reference]({{< relref "/manual/general_cfg/utilities/script_reference.md" >}}) and [iocsh utilities]({{< relref "/manual/general_cfg/utilities/iocsh_utils.md" >}}), then use the EtherCAT or data-service guide for the feature you need.
 
-### Script authoring / automation path
-1. [iocsh utilities]({{< relref "/manual/general_cfg/iocsh_utils.md" >}})
-2. [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}})
-3. [Startup Validator]({{< relref "/manual/general_cfg/startup_validator.md" >}})
-4. [ESI Parser]({{< relref "/manual/general_cfg/esi_parser.md" >}})
-5. [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}})
-6. [FSoE and TwinSAFE]({{< relref "/manual/general_cfg/fsoe.md" >}})
-7. [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}})
-8. [Lookup Tables]({{< relref "/manual/general_cfg/lut.md" >}})
-9. [data storage buffer]({{< relref "/manual/general_cfg/data_storage.md" >}})
-10. [ecmc command reference]({{< relref "/manual/general_cfg/ecmc_command_ref.md" >}})
+For runtime faults, start with [Troubleshooting]({{< relref "/manual/knowledgebase/troubleshooting.md" >}}).

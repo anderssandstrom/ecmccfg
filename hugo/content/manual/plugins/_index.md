@@ -24,7 +24,7 @@ ecmcConfigOrDie "Cfg.LoadSafetyPlugin(<lib>,<cfg>)"
 ```
 
 For the general script overview, see
-[Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}}).
+[Script Reference]({{< relref "/manual/general_cfg/utilities/script_reference.md" >}}).
 
 ## Start here
 

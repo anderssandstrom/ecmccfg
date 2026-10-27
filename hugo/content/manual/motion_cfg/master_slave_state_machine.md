@@ -1,4 +1,5 @@
 +++
+url = "/manual/general_cfg/master_slave_state_machine/"
 title = "Master/Slave State Machine"
 weight = 19
 chapter = false
@@ -98,4 +99,4 @@ For most new systems, this is preferable to keeping equivalent switching logic i
 - [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
 - [upgrades]({{< relref "/manual/upgrades.md#native-masterslave-state-machine" >}})
 - [knowledgebase: tuning]({{< relref "/manual/knowledgebase/tuning.md" >}})
-- [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}})
+- [Script Reference]({{< relref "/manual/general_cfg/utilities/script_reference.md" >}})

@@ -86,4 +86,4 @@ variables like `{{ var.ty1 }}`.
 
 - [YAML configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
 - [legacy motion]({{< relref "/manual/motion_cfg/legacy.md" >}})
-- [PLC configuration]({{< relref "/manual/PLC_cfg/_index.md" >}})
+- [PLC configuration]({{< relref "/manual/plc_cfg/_index.md" >}})

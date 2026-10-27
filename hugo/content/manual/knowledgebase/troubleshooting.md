@@ -86,12 +86,12 @@ you know the visible problem, but not yet which detailed page to use.
 
 ## PLC and Scripting
 - **Limit logic overrides do not behave as expected**: when using `plcOverride`, verify that PLC code writes `ax<id>.mon.lowlim/highlim` correctly.
-  Use: [motion]({{< relref "/manual/knowledgebase/motion.md" >}}), [PLC configuration]({{< relref "/manual/PLC_cfg/_index.md" >}})
+  Use: [motion]({{< relref "/manual/knowledgebase/motion.md" >}}), [PLC configuration]({{< relref "/manual/plc_cfg/_index.md" >}})
 - **Startup scripts or verification scripts behave unexpectedly**: review `SCRIPTEXEC` use and macro expansion.
-  Use: [general]({{< relref "/manual/knowledgebase/general.md" >}}), [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}})
+  Use: [general]({{< relref "/manual/knowledgebase/general.md" >}}), [Script Reference]({{< relref "/manual/general_cfg/utilities/script_reference.md" >}})
 
 ## Diagnostics Tools
-- Use the [RT logger diagnostics]({{< relref "/manual/general_cfg/rt_logger_diagnostics.md" >}})
+- Use the [RT logger diagnostics]({{< relref "/manual/general_cfg/utilities/rt_logger_diagnostics.md" >}})
   to trace motion commands through the motor-record request, ecmc request, and
   execute stages, inspect blockers, and create a YAML motion-state dump.
 - Use the hardware diagnostics guide for `ec_diagnostic_messages.py` usage and interpretation:

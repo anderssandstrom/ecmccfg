@@ -232,4 +232,4 @@ The preferred example to start from is:
 
 - [Motor Record]({{< relref "/manual/motion_cfg/motor.md" >}})
 - [Axis YAML]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
-- [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}})
+- [Script Reference]({{< relref "/manual/general_cfg/utilities/script_reference.md" >}})

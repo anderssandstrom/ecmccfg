@@ -1,4 +1,5 @@
 +++
+url = "/manual/general_cfg/esi_parser/"
 title = "ESI Parser"
 weight = 17
 chapter = false
@@ -17,7 +18,7 @@ This is a utility/developer workflow, not a normal IOC startup script.
 
 ## Current Status
 
-- The parser is currently described in [utils/readme.md](/Users/sandst_a/sources/ecmccfg/utils/readme.md).
+- The parser is currently described in [utils/readme.md](https://github.com/paulscherrerinstitute/ecmccfg/blob/master/utils/readme.md).
 - The note in that file still applies: support is limited and mainly intended
   for slaves with several alternative PDO mappings.
 - For interactive inspection and snippet generation, the newer
@@ -97,5 +98,5 @@ Typical flow:
 
 ## Related Pages
 
-- [Script Reference]({{< relref "/manual/general_cfg/script_reference.md" >}})
-- [Supported Slaves]({{< relref "/manual/general_cfg/supported_slaves.md" >}})
+- [Script Reference]({{< relref "/manual/general_cfg/utilities/script_reference.md" >}})
+- [Supported Slaves]({{< relref "/manual/general_cfg/ethercat/supported_slaves.md" >}})

@@ -1,4 +1,5 @@
 +++
+url = "/manual/general_cfg/data_storage/"
 title = "data storage buffer"
 weight = 13
 chapter = false
@@ -107,6 +108,6 @@ static.triggOld:=static.trigg;
 
 ## Related pages
 
-- [general best practice]({{< relref "/manual/general_cfg/best_practice.md" >}})
-- [script reference]({{< relref "/manual/general_cfg/script_reference.md" >}})
-- [PLC best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}})
+- [general best practice]({{< relref "/manual/general_cfg/startup/best_practice.md" >}})
+- [script reference]({{< relref "/manual/general_cfg/utilities/script_reference.md" >}})
+- [PLC best practice]({{< relref "/manual/plc_cfg/best_practice.md" >}})

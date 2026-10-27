@@ -18,7 +18,7 @@ Read this page when:
 For YAML configuration of the motor record itself, see
 [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}}).
 For example-driven setups, see
-[motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}}).
+[motor record examples]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}}).
 
 ## Common use cases
 
@@ -29,8 +29,9 @@ through the motor record. For soft-limit restoration, the exact driver option, v
 
 Important note:
 
-- auto save restore is only meaningful with incremental encoders
+- this position-restore workflow is intended for incremental encoders
 - in YAML terms this means `encoder.type: 0`
+- soft-limit restoration is independent of position restoration; see the autosave guide
 
 At PSI, this is commonly done by adding a file ending in `_pos.req` in the
 local `cfg/` directory and listing the `DVAL` fields that should be restored.

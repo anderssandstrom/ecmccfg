@@ -133,7 +133,7 @@ See [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.m
 {{% /notice %}}
 
 ##### loading a PLC from file
-The PLC functionality is explained in detail in the [PLC configuration section]({{< relref "/manual/PLC_cfg/_index.md" >}}).
+The PLC functionality is explained in detail in the [PLC configuration section]({{< relref "/manual/plc_cfg/_index.md" >}}).
 ECMC PLCs can be loaded from classical PLC files, from pure yaml files or from a yaml/PLC hybrid.
   * classic PLC-file
   ```bash
@@ -148,8 +148,8 @@ ECMC PLCs can be loaded from classical PLC files, from pure yaml files or from a
   ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlPlc.cmd, "FILE=./plc1File.yaml"
   ```
 {{% notice tip %}}
-See the [PLC configuration section]({{< relref "/manual/PLC_cfg/_index.md" >}})
+See the [PLC configuration section]({{< relref "/manual/plc_cfg/_index.md" >}})
 for syntax, variables, patterns, and function reference, and
-[PLC best practice]({{< relref "/manual/PLC_cfg/best_practice.md" >}})
+[PLC best practice]({{< relref "/manual/plc_cfg/best_practice.md" >}})
 for recommended structure and EPICS variable mapping.
 {{% /notice %}}

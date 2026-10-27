@@ -1,5 +1,5 @@
 +++
-title = "motion"
+title = "Motion configuration"
 weight = 8
 chapter = false
 +++
@@ -21,60 +21,42 @@ For new configurations, the preferred path is YAML-based:
 If you are maintaining an older IOC based on `.ax`, `.vax`, and `.sax` files,
 go directly to [legacy motion]({{< relref "/manual/motion_cfg/legacy.md" >}}).
 
-## Common tasks
+<!-- Preserve links to the former overview headings. -->
+<a id="new-axis-bring-up"></a>
+<a id="recommended-reading-paths"></a>
 
-- I want to bring up a new axis:
-  [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
-- I want example-driven guidance:
-  [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}})
-- I need scaling, direction, or homing:
-  [scaling]({{< relref "/manual/motion_cfg/scaling.md" >}}),
-  [direction]({{< relref "/manual/motion_cfg/direction.md" >}}),
-  [homing]({{< relref "/manual/motion_cfg/homing.md" >}})
-- I need named collections of axes:
-  [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}})
-- I need synchronization or axis-local PLC logic:
-  [axis PLC]({{< relref "/manual/motion_cfg/axisPLC.md" >}})
-- I need motor record behavior or PVT/profile moves:
-  [motor record]({{< relref "/manual/motion_cfg/motor.md" >}}),
-  [PVT]({{< relref "/manual/motion_cfg/pvt.md" >}})
-- I need runtime tuning or investigation:
-  [ecmc_cfg_tool]({{< relref "/manual/motion_cfg/ecmc_cfg_tool.md" >}})
-- I need older classic motion docs:
-  [legacy motion]({{< relref "/manual/motion_cfg/legacy.md" >}})
+## Commission a new axis
 
-## Recommended reading paths
+1. Follow the [Quickstart]({{< relref "/manual/quickstart.md" >}}) and select a [motion example]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}}).
+2. Configure the axis with the [YAML guide]({{< relref "/manual/motion_cfg/axisYaml.md" >}}) and choose the [drive mode]({{< relref "/manual/motion_cfg/modes_CSV_CSP_CSP_PC.md" >}}).
+3. Verify [scaling]({{< relref "/manual/motion_cfg/scaling.md" >}}) and [direction of motion]({{< relref "/manual/motion_cfg/direction.md" >}}).
+4. Configure and verify [homing]({{< relref "/manual/motion_cfg/homing.md" >}}).
+5. Configure [motor-record behavior]({{< relref "/manual/motion_cfg/motor.md" >}}) and [position and soft-limit autosave]({{< relref "/manual/motion_cfg/autosave.md" >}}) when needed.
+6. Check [motion diagnostics]({{< relref "/manual/knowledgebase/motion.md" >}}) and [tuning]({{< relref "/manual/knowledgebase/tuning.md" >}}). Review the configuration warnings below before putting the IOC into service.
 
-### New axis bring-up
+<!-- Preserve links to the former overview headings. -->
+<a id="common-tasks"></a>
+<a id="existing-ioc-with-classic-motion-files"></a>
+<a id="key-references"></a>
+<a id="runtime-tuning-and-diagnostics"></a>
+<a id="synchronization-and-axis-logic"></a>
+<a id="topics"></a>
 
-1. [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}})
-2. [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
-3. [drive modes CSV, CSP, CSP-PC]({{< relref "/manual/motion_cfg/modes_CSV_CSP_CSP_PC.md" >}})
-4. [scaling]({{< relref "/manual/motion_cfg/scaling.md" >}})
-5. [direction]({{< relref "/manual/motion_cfg/direction.md" >}})
-6. [homing]({{< relref "/manual/motion_cfg/homing.md" >}})
-7. [motor record]({{< relref "/manual/motion_cfg/motor.md" >}}) if the EPICS motor record is used
+## Find a topic
 
-### Synchronization and axis logic
-
-1. [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}})
-2. [axis PLC]({{< relref "/manual/motion_cfg/axisPLC.md" >}})
-3. [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
-4. [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}})
-
-### Existing IOC with classic motion files
-
-1. [legacy motion]({{< relref "/manual/motion_cfg/legacy.md" >}})
-2. [scaling]({{< relref "/manual/motion_cfg/scaling.md" >}})
-3. [direction]({{< relref "/manual/motion_cfg/direction.md" >}})
-4. [homing]({{< relref "/manual/motion_cfg/homing.md" >}})
-5. [motion knowledge base]({{< relref "/manual/knowledgebase/motion.md" >}})
-
-### Runtime tuning and diagnostics
-
-1. [ecmc_cfg_tool]({{< relref "/manual/motion_cfg/ecmc_cfg_tool.md" >}})
-2. [motion knowledge base]({{< relref "/manual/knowledgebase/motion.md" >}})
-3. [tuning knowledge base]({{< relref "/manual/knowledgebase/tuning.md" >}})
+| Task | Guide |
+| --- | --- |
+| Look up YAML keys | [Settings table]({{< relref "/manual/motion_cfg/axisYamlSettingsTable.md" >}}) or [grouped settings]({{< relref "/manual/motion_cfg/axisYamlSettingsHeadings.md" >}}) |
+| See all settings in a configuration | [Complete axis YAML example]({{< relref "/manual/motion_cfg/axisYamlExample.md" >}}) |
+| Configure motor-record examples and retry tests | [Motor record examples]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}}) |
+| Create named collections of axes | [Axis groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}}) |
+| Coordinate virtual master and physical slave axes | [Master/slave state machine]({{< relref "/manual/motion_cfg/master_slave_state_machine.md" >}}) |
+| Synchronize axes and add axis-local logic | [Axis PLC]({{< relref "/manual/motion_cfg/axisPLC.md" >}}) and [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.md" >}}) |
+| Configure PVT/profile moves | [PVT]({{< relref "/manual/motion_cfg/pvt.md" >}}) |
+| Use motion sequences | [Motion sequencer]({{< relref "/manual/motion_cfg/sequencer.md" >}}) |
+| Inspect or tune a running IOC | [ecmc_cfg_tool]({{< relref "/manual/motion_cfg/ecmc_cfg_tool.md" >}}) |
+| Select a configuration backend | [ecb]({{< relref "/manual/motion_cfg/ecb.md" >}}) and [ecmccomp]({{< relref "/manual/motion_cfg/ecmccomp.md" >}}) |
+| Maintain classic `.ax`, `.vax`, or `.sax` files | [Legacy motion]({{< relref "/manual/motion_cfg/legacy.md" >}}); use the scaling, direction, homing, and motion diagnostics guides above as needed |
 
 ## Configuration Warnings
 
@@ -108,17 +90,4 @@ Mitigate this by increasing `monitoring.target.tolerance`, increasing the
 active `Kp`, or using suitable inner controller parameters for final
 positioning. This specific rounding warning applies to CSV axes with integer
 velocity setpoints. See also [tuning]({{< relref "/manual/knowledgebase/tuning.md#axis-stops-close-to-target" >}})
-and [RT logger diagnostics]({{< relref "/manual/general_cfg/rt_logger_diagnostics.md" >}}).
-
-## Key references
-
-- [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
-- [axis YAML settings table]({{< relref "/manual/motion_cfg/axisYamlSettingsTable.md" >}})
-- [axis YAML settings (heading view)]({{< relref "/manual/motion_cfg/axisYamlSettingsHeadings.md" >}})
-- [drive modes CSV, CSP, CSP-PC]({{< relref "/manual/motion_cfg/modes_CSV_CSP_CSP_PC.md" >}})
-- [PVT]({{< relref "/manual/motion_cfg/pvt.md" >}})
-- [ecmccomp]({{< relref "/manual/motion_cfg/ecmccomp.md" >}})
-- [ecb]({{< relref "/manual/motion_cfg/ecb.md" >}})
-
-## Topics
-{{% children %}}
+and [RT logger diagnostics]({{< relref "/manual/general_cfg/utilities/rt_logger_diagnostics.md" >}}).

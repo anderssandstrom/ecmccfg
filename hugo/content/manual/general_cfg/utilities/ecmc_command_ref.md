@@ -1,4 +1,5 @@
 +++
+url = "/manual/general_cfg/ecmc_command_ref/"
 title = "ecmc command reference"
 weight = 30
 chapter = false
@@ -38,13 +39,13 @@ chapter = false
 | `Cfg.AddAxisToGroupByName(<int>,<str>)` | Adds an axis to a group. See [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}}). |
 | `Cfg.AddAxisToGroupByName(<int>,<str>,<int>)` | Adds an axis to a group. See [Axis Groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}}). |
 | `Cfg.AppendAxisPLCExpr(<int>)=<str>` | Append axis sync. |
-| `Cfg.CompileAxisPLC(<int>)` | Compile Axis PLC code. For syntax and usage patterns, see [PLC syntax]({{< relref "/manual/PLC_cfg/syntax.md" >}}) and [PLC patterns]({{< relref "/manual/PLC_cfg/patterns.md" >}}). |
+| `Cfg.CompileAxisPLC(<int>)` | Compile Axis PLC code. For syntax and usage patterns, see [PLC syntax]({{< relref "/manual/plc_cfg/syntax.md" >}}) and [PLC patterns]({{< relref "/manual/plc_cfg/patterns.md" >}}). |
 | `Cfg.CreateAxis(<int>)` | Creates an axis object at index axisIndex. |
 | `Cfg.CreateAxis(<int>,<int>)` | Creates an axis object at index axisIndex. |
 | `Cfg.CreateAxis(<int>,<int>,<int>)` | Creates an axis object at index axisIndex. |
 | `Cfg.CreateAxis(<int>,<int>,<int>,<int>)` | Creates an axis object at index axisIndex. |
 | `Cfg.CreateDefaultAxis(<int>)` | Creates an axis object at index axisIndex. |
-| `Cfg.CreateMasterSlaveSM(<int>,<str>,<str>,<str>,<int>,<int>)` | Create a new master/slave state machine object. See [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}}). |
+| `Cfg.CreateMasterSlaveSM(<int>,<str>,<str>,<str>,<int>,<int>)` | Create a new master/slave state machine object. See [Master/Slave State Machine]({{< relref "/manual/motion_cfg/master_slave_state_machine.md" >}}). |
 | `Cfg.SetMstSlvAtTgtTimeout(<int>,<float>)` | Set master/slave timeout after all master axes reached target. |
 | `GetAxisAcc(<int>)` | Get axis acceleration setpoint. |
 | `GetAxisAllowCommandsFromPLC(<int>)` | Get axis allow command from PLC. |
@@ -251,26 +252,26 @@ chapter = false
 
 | Command syntax | Description |
 |---|---|
-| `Cfg.EcAddDataDT(<str>,<int>,<int>,<int>,<str>,<str>)` | Adds a data item object to access data directly from EtherCAT domain. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
-| `Cfg.EcAddDomain(<int>,<int>)` | Add domain. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
+| `Cfg.EcAddDataDT(<str>,<int>,<int>,<int>,<str>,<str>)` | Adds a data item object to access data directly from EtherCAT domain. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md" >}}). |
+| `Cfg.EcAddDomain(<int>,<int>)` | Add domain. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md" >}}). |
 | `Cfg.EcAddEntryComplete(<int>,0x<hex>,0x<hex>,<int>,<int>,0x<hex>,0x<hex>,0x<hex>,<int>,<str>,<int>)` | Set update in realtime bit for an entry * If set to zero the entry will not be updated during realtime operation. |
 | `Cfg.EcAddEntryDT(<int>,0x<hex>,0x<hex>,<int>,<int>,0x<hex>,0x<hex>,0x<hex>,<str>,<str>)` | Adds an EtherCAT slave to the hardware configuration. |
 | `Cfg.EcAddEntryDT(<int>,0x<hex>,0x<hex>,<int>,<int>,0x<hex>,0x<hex>,0x<hex>,<str>,<str>,<int>)` | Adds an EtherCAT slave to the hardware configuration. |
 | `Cfg.EcAddEntryFixedDT(<int>,0x<hex>,0x<hex>,<int>,<int>,0x<hex>,0x<hex>,0x<hex>,<str>,<str>)` | Registers an entry from an existing fixed/read-only PDO mapping without clearing or rewriting that mapping. |
-| `Cfg.EcAddEntryCyclicWrite(<str>,<str>)` | Copies a source EtherCAT entry to a destination output or simulation entry every realtime cycle. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md#cyclic-ethercat-entry-writes" >}}). |
-| `Cfg.EcAddEntryCyclicWrite(<str>,<str>,<int>)` | Adds a cyclic entry write with optional forced raw-bit copying between different datatypes. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md#cyclic-ethercat-entry-writes" >}}). |
+| `Cfg.EcAddEntryCyclicWrite(<str>,<str>)` | Copies a source EtherCAT entry to a destination output or simulation entry every realtime cycle. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md#cyclic-ethercat-entry-writes" >}}). |
+| `Cfg.EcAddEntryCyclicWrite(<str>,<str>,<int>)` | Adds a cyclic entry write with optional forced raw-bit copying between different datatypes. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md#cyclic-ethercat-entry-writes" >}}). |
 | `Cfg.EcAddMemMap(<int>,<str>,<int>,<int>,<str>)` | Adds a memory map object to access data directly from EtherCAT domain. |
 | `Cfg.EcAddMemMapDT(<str>,<int>,<int>,<str>,<str>)` | Adds a memory map object to access data directly from EtherCAT domain. |
 | `Cfg.EcAddSdo(<int>,0x<hex>,0x<hex>,0x<hex>,<int>)` | Adds a Service Data Object for writing. |
 | `Cfg.EcAddSdo(<int>,0x<hex>,0x<hex>,<int>,<int>)` | Adds a Service Data Object for writing. |
-| `Cfg.EcAddSdoAsync(<int>,0x<hex>,0x<hex>,<str>,<str>)` | Adds an async SDO object. For the normal ecmccfg wrapper and resulting PVs, see [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
-| `EcGetSdoRTObjectIndex(<slave>,<name>)` | Resolve the per-slave RT SDO object index by alias for PLC/C++ access. Call with `ecmcConfig`; result is in `ECMC_CONFIG_RETURN_VAL`. This is not the EtherCAT index/subindex. See [RT SDO Object Access]({{< relref "/manual/general_cfg/ethercat_advanced.md#runtime-sdo-objects" >}}). |
-| `Cfg.EcAddSdoAsyncArray(<slave>,0x<index>,0x<subindex>,<byteSize>,<alias>)` | Configure one runtime byte-payload SDO before activation. Size is 1..1048576 bytes: maximum upload and exact download length. Use `addEcSdoRT.cmd` with `BYTE_SIZE` to load the UCHAR waveform PVs; see [Runtime SDO Byte Arrays]({{< relref "/manual/general_cfg/ethercat_advanced.md#runtime-sdo-byte-arrays" >}}). |
+| `Cfg.EcAddSdoAsync(<int>,0x<hex>,0x<hex>,<str>,<str>)` | Adds an async SDO object. For the normal ecmccfg wrapper and resulting PVs, see [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md" >}}). |
+| `EcGetSdoRTObjectIndex(<slave>,<name>)` | Resolve the per-slave RT SDO object index by alias for PLC/C++ access. Call with `ecmcConfig`; result is in `ECMC_CONFIG_RETURN_VAL`. This is not the EtherCAT index/subindex. See [RT SDO Object Access]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md#runtime-sdo-objects" >}}). |
+| `Cfg.EcAddSdoAsyncArray(<slave>,0x<index>,0x<subindex>,<byteSize>,<alias>)` | Configure one runtime byte-payload SDO before activation. Size is 1..1048576 bytes: maximum upload and exact download length. Use `addEcSdoRT.cmd` with `BYTE_SIZE` to load the UCHAR waveform PVs; see [Runtime SDO Byte Arrays]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md#runtime-sdo-byte-arrays" >}}). |
 | `Cfg.EcAddSdoBuffer(<int>,0x<hex>,0x<hex>,<str>,<int>)` | Adds a Service Data Object for writing. |
 | `Cfg.EcAddSdoComplete(<int>,0x<hex>,<str>,<int>)` | Adds a Service Data Object for writing. |
 | `Cfg.EcAddSdoDT(<int>,0x<hex>,0x<hex>,<str>,<str>)` | Adds a Service Data Object for writing. |
 | `Cfg.EcAddSimEntry(<int>,<str>,<str>,%` | Adds a slave-scoped EtherCAT simulation entry. |
-| `Cfg.EcAddSimEntry(<str>,<str>,%` | Adds a global EtherCAT simulation entry on the internal simulation slave. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md#simulation-entries" >}}). |
+| `Cfg.EcAddSimEntry(<str>,<str>,%` | Adds a global EtherCAT simulation entry on the internal simulation slave. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md#simulation-entries" >}}). |
 | `Cfg.EcAddSlave(<int>,<int>,0x<hex>,0x<hex>)` | Adds an EtherCAT slave to the hardware configuration. |
 | `Cfg.EcApplyConfig(<int>)` | Apply hardware configuration to master. |
 | `Cfg.EcEnablePrintouts(<int>)` | Enable diagnostic printouts from EtherCAT objects. |
@@ -287,8 +288,8 @@ chapter = false
 | `Cfg.EcSetAllowOffline(<int>)` | Allow master to be offline |
 | `Cfg.EcSetDelayECOkAtStartup(<int>)` | Delay ethercat OK status for a time * This can be useful to allow extra time for DC clocks to synchronize or for slaves that do not report correct data directly when entering OP. |
 | `Cfg.EcSetDiagnostics(<int>)` | Enable EtherCAT bus diagnostics. |
-| `Cfg.EcSetDomainAllowOffline(<int>)` | Allow domain to be offline. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
-| `Cfg.EcSetDomainFailedCyclesLimit(<int>)` | Set allowed bus cycles in row of none complete domain data transfer. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
+| `Cfg.EcSetDomainAllowOffline(<int>)` | Allow domain to be offline. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md" >}}). |
+| `Cfg.EcSetDomainFailedCyclesLimit(<int>)` | Set allowed bus cycles in row of none complete domain data transfer. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md" >}}). |
 | `Cfg.EcSetEntryUpdateInRealtime(<int>,<str>,<int>)` | Set update in realtime bit for an entry * If set to zero the entry will not be updated during realtime operation. |
 | `Cfg.EcSetMaster(<int>)` | Selects EtherCAT master to use. |
 | `Cfg.EcSetSlaveEnableSDOCheck(<int>,<int>)` | Enable SDO setting check for a slave SDO setting check is default true for slaves linked to a motion axis. |
@@ -298,10 +299,10 @@ chapter = false
 | `Cfg.EcSetSlaveTimingSource(<int>,<int>,<int>)` | Set endpoint source: cycle-only, SYNC0 or SYNC1. |
 | `Cfg.EcSetSlaveTimingUpdateDivisor(<int>,<int>,<int>)` | Set the cycles between fresh endpoint values. |
 | `Cfg.EcLinkSlaveTimingTimestamp(<int>,<int>,<str>,<int>,<int>)` | Link a 32- or 64-bit DC timestamp entry to an endpoint. |
-| `Cfg.EcSlaveConfigDC(<int>,0x<hex>,<int>,<int>,<int>,<int>)` | Configure slave DC clock. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
+| `Cfg.EcSlaveConfigDC(<int>,0x<hex>,<int>,<int>,<int>,<int>)` | Configure slave DC clock. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md" >}}). |
 | `Cfg.EcSlaveConfigWatchDog(<int>,<int>,<int>)` | Configure Slave watch dog. |
-| `Cfg.EcSlaveVerify(<int>,<int>,0x<hex>,0x<hex>)` | Verify slave at position * The command verifies that the actual slave at a certain position\ has the correct alias, position, vendor id, product code and revision number. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
-| `Cfg.EcSlaveVerify(<int>,<int>,0x<hex>,0x<hex>,0x<hex>)` | Verify slave at position * The command verifies that the actual slave at a certain position\ has the correct alias, position, vendor id, product code and revision number. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat_advanced.md" >}}). |
+| `Cfg.EcSlaveVerify(<int>,<int>,0x<hex>,0x<hex>)` | Verify slave at position * The command verifies that the actual slave at a certain position\ has the correct alias, position, vendor id, product code and revision number. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md" >}}). |
+| `Cfg.EcSlaveVerify(<int>,<int>,0x<hex>,0x<hex>,0x<hex>)` | Verify slave at position * The command verifies that the actual slave at a certain position\ has the correct alias, position, vendor id, product code and revision number. See [Advanced EtherCAT and Commissioning]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md" >}}). |
 | `Cfg.EcUseClockRealtime(<int>)` | Use CLOCK_REALTIME * Ecmc will as default use CLOCK_MONOTONIC as clock source both for the RT loop and the ethercat bus. |
 | `Cfg.EcVerifySdo(<int>,0x<hex>,0x<hex>,0x<hex>,<int>)` | Verify a Service Data Object. |
 | `Cfg.EcVerifySdo(<int>,0x<hex>,0x<hex>,<int>,<int>)` | Verify a Service Data Object. |
@@ -322,7 +323,7 @@ chapter = false
 | `Cfg.ClearStorage(<int>)` | Clear data storage buffer. |
 | `Cfg.CreateStorage(<int>,<int>,<int>)` | Create a data storage object. |
 | `GetStorageDataIndex(<int>)` | Get current index of data in storage buffer. |
-| `Cfg.LoadLUTFile(<int>,<str>)` | Load and create lookup table (LUT). See [Lookup Tables]({{< relref "/manual/general_cfg/lut.md" >}}). |
+| `Cfg.LoadLUTFile(<int>,<str>)` | Load and create lookup table (LUT). See [Lookup Tables]({{< relref "/manual/general_cfg/utilities/lut.md" >}}). |
 | `Cfg.PrintDataStorage(<int>)` | Print contents of buffer. |
 | `ReadDataStorage(<int>)` | Reads contents of storage buffer. |
 | `Cfg.SetDataStorageCurrentDataIndex(<int>,<int>)` | Set current data index of storage buffer. |

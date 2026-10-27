@@ -1,0 +1,2500 @@
+{
+  "sections": [
+    {
+      "name": "axis",
+      "groups": [
+        {
+          "keys": [
+            "axis.id"
+          ],
+          "requirement": "required",
+          "description": "Axis id.",
+          "entries": [
+            {
+              "key": "axis.id",
+              "summary": "Axis id"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.type"
+          ],
+          "requirement": "optional",
+          "description": "Future selection of axis type; see type mapping in the axis section.",
+          "entries": [
+            {
+              "key": "axis.type",
+              "summary": "Axis type"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.mode"
+          ],
+          "requirement": "optional",
+          "description": "Supported modes CSV or CSP; defaults to CSV.",
+          "entries": [
+            {
+              "key": "axis.mode",
+              "summary": "Supported mode, CSV and CSP, defaults CSV"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.parameters"
+          ],
+          "requirement": "optional",
+          "description": "Additional motor driver options (e.g. powerAutoOnOff, powerOffDelay, powerOnDelay). `restoreMotorSoftLims=1;` enables startup restoration of motor dial limits and ongoing synchronization; see [autosave]({{< relref \"/manual/motion_cfg/autosave.md\" >}}).",
+          "entries": [
+            {
+              "key": "axis.parameters",
+              "summary": "Additional motor driver options. `restoreMotorSoftLims=1;` lets initialized/autosave-restored motor dial limits override ECMC at startup and also enables ongoing synchronization. See [autosave]({{< relref \"/manual/motion_cfg/autosave.md\" >}})."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.healthOutput"
+          ],
+          "requirement": "optional",
+          "description": "EtherCAT entry for health output.",
+          "entries": [
+            {
+              "key": "axis.healthOutput",
+              "summary": "EtherCAT entry for health output"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.feedSwitchesOutput"
+          ],
+          "requirement": "optional",
+          "description": "EtherCAT entry for fed switches.",
+          "entries": [
+            {
+              "key": "axis.feedSwitchesOutput",
+              "summary": "EtherCAT entry for fed switches"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.feedSwitchesValue"
+          ],
+          "requirement": "optional",
+          "description": "Value written to `axis.feedSwitchesOutput`; defaults to 1.",
+          "entries": [
+            {
+              "key": "axis.feedSwitchesValue",
+              "summary": "Value to write to axis.feedSwitchesOutput. Defaults to 1"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.group"
+          ],
+          "requirement": "optional",
+          "description": "Group name; creates/uses a group and stores its id in `GRP_<axis.group>_ID`. See [Axis Groups]({{< relref \"/manual/motion_cfg/axis_groups.md\" >}}).",
+          "entries": [
+            {
+              "key": "axis.group",
+              "summary": "Add axis to group (group will be created if it does not exist)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.autoMode"
+          ],
+          "requirement": "optional",
+          "description": "Auto-switch drive modes for motion/homing.",
+          "entries": []
+        },
+        {
+          "keys": [
+            "axis.autoMode.modeSet"
+          ],
+          "requirement": "optional",
+          "description": "EtherCAT entry to write drive mode (CSV/CSP/homing).",
+          "entries": [
+            {
+              "key": "axis.autoMode.modeSet",
+              "summary": "EtherCAT entry drive mode write (set CSV,CSP,homing)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.autoMode.modeAct"
+          ],
+          "requirement": "optional",
+          "description": "EtherCAT entry reading drive mode.",
+          "entries": [
+            {
+              "key": "axis.autoMode.modeAct",
+              "summary": "EtherCAT entry drive mode reading (set CSV,CSP,homing)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.autoMode.modeCmdMotion"
+          ],
+          "requirement": "optional",
+          "description": "Drive mode value used during normal motion.",
+          "entries": [
+            {
+              "key": "axis.autoMode.modeCmdMotion",
+              "summary": "Drive mode value for normal motion (written to axis.drvMode.modeSet when normal motion)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.autoMode.modeCmdHome"
+          ],
+          "requirement": "optional",
+          "description": "Drive mode value used during homing.",
+          "entries": [
+            {
+              "key": "axis.autoMode.modeCmdHome",
+              "summary": "Drive mode value for when homing (written to axis.drvMode.modeSet when homing)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.features"
+          ],
+          "requirement": "optional",
+          "description": "Feature switches.",
+          "entries": []
+        },
+        {
+          "keys": [
+            "axis.features.blockCom"
+          ],
+          "requirement": "optional",
+          "description": "Block communication to axis.",
+          "entries": [
+            {
+              "key": "axis.features.blockCom",
+              "summary": "Block communication to axis"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.features.allowSrcChangeWhenEnabled"
+          ],
+          "requirement": "optional",
+          "description": "Allow trajectory/encoder source change while enabled.",
+          "entries": [
+            {
+              "key": "axis.features.allowSrcChangeWhenEnabled",
+              "summary": "Allow traj/enc source change when axis is enabled"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.features.allowedFunctions.homing"
+          ],
+          "requirement": "optional",
+          "description": "Allow homing.",
+          "entries": [
+            {
+              "key": "axis.features.allowedFunctions.homing",
+              "summary": "Allow homing"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.features.allowedFunctions.constantVelocity"
+          ],
+          "requirement": "optional",
+          "description": "Allow constant velocity mode.",
+          "entries": [
+            {
+              "key": "axis.features.allowedFunctions.constantVelocity",
+              "summary": "Allow constant velocity"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.features.allowedFunctions.positioning"
+          ],
+          "requirement": "optional",
+          "description": "Allow positioning.",
+          "entries": [
+            {
+              "key": "axis.features.allowedFunctions.positioning",
+              "summary": "Allow positioning"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.autoEnable"
+          ],
+          "requirement": "optional",
+          "description": "Native ecmc auto enable/disable. Preferred over motor record auto-enable.",
+          "entries": []
+        },
+        {
+          "keys": [
+            "axis.autoEnable.enableTimeout"
+          ],
+          "requirement": "optional",
+          "description": "Try auto-enable for at most this many seconds.",
+          "entries": [
+            {
+              "key": "axis.autoEnable.enableTimeout",
+              "summary": "If defined, ecmc tries to auto-enable for a maximum enableTimeout seconds."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.autoEnable.disableTimeout"
+          ],
+          "requirement": "optional",
+          "description": "Disable after being idle this many seconds.",
+          "entries": [
+            {
+              "key": "axis.autoEnable.disableTimeout",
+              "summary": "If defined, ecmc disables axis after idle (non busy) in disableTime seconds"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.autoEnable.autoDisableLatchAtTarget"
+          ],
+          "requirement": "optional",
+          "description": "After the first AtTarget assertion, allow the auto-disable timer to continue if AtTarget is later lost (default false).",
+          "entries": [
+            {
+              "key": "axis.autoEnable.autoDisableLatchAtTarget",
+              "summary": "Keep the auto-disable timer active after AtTarget has been asserted once"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.autoEnable.atStartup"
+          ],
+          "requirement": "optional",
+          "description": "Auto-enable at IOC start (default false).",
+          "entries": [
+            {
+              "key": "axis.autoEnable.atStartup",
+              "summary": "Auto enable axis at ioc start, default False"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "axis.tweakDist"
+          ],
+          "requirement": "optional",
+          "description": "Tweak value for both ecmc and motor record.",
+          "entries": [
+            {
+              "key": "axis.tweakDist",
+              "summary": "Tweak value (both ecmc interface and motor record tweak value)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "epics",
+      "groups": [
+        {
+          "keys": [
+            "epics.name"
+          ],
+          "requirement": "required",
+          "description": "PV name.",
+          "entries": [
+            {
+              "key": "epics.name",
+              "summary": "Axis name"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "epics.precision"
+          ],
+          "requirement": "optional",
+          "description": "PREC; default 3.",
+          "entries": [
+            {
+              "key": "epics.precision",
+              "summary": "Decimal count"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "epics.description"
+          ],
+          "requirement": "optional",
+          "description": "Axis description.",
+          "entries": [
+            {
+              "key": "epics.description",
+              "summary": "Axis description"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "epics.unit"
+          ],
+          "requirement": "optional",
+          "description": "EGU; default mm.",
+          "entries": [
+            {
+              "key": "epics.unit",
+              "summary": "Unit"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "epics.motorRecord"
+          ],
+          "requirement": "optional",
+          "description": "Motor record block.",
+          "entries": []
+        },
+        {
+          "keys": [
+            "epics.motorRecord.enable"
+          ],
+          "requirement": "optional",
+          "description": "Enable motor record.",
+          "entries": [
+            {
+              "key": "epics.motorRecord.enable",
+              "summary": "Enable motor record"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "epics.motorRecord.description"
+          ],
+          "requirement": "optional",
+          "description": "Motor record description.",
+          "entries": [
+            {
+              "key": "epics.motorRecord.description",
+              "summary": "This is MR"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "epics.motorRecord.fieldInit"
+          ],
+          "requirement": "optional",
+          "description": "Additional motor record fields.",
+          "entries": [
+            {
+              "key": "epics.motorRecord.fieldInit",
+              "summary": "Extra config for motor record"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "epics.motorRecord.syncSoftLimits"
+          ],
+          "requirement": "optional",
+          "description": "Sync soft limits between motor record and ecmc (default false; `restoreMotorSoftLims=1` overrides this to enabled). When synchronization is disabled, motor record `HLM`/`LLM` and ecmc soft limits may differ. On false-to-true, ecmc soft limits are copied to the motor record; while true, later motor record soft-limit changes are written back to ecmc.",
+          "entries": [
+            {
+              "key": "epics.motorRecord.syncSoftLimits",
+              "summary": "Sync softlimits between motor and ecmc (default false; `restoreMotorSoftLims=1` overrides this to enabled). When synchronization is disabled, motor record HLM/LLM and ecmc soft limits may differ. On false->true, ecmc soft limits are copied to the motor record; while true, later motor record soft-limit changes are written back to ecmc."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "epics.motorRecord.pvt"
+          ],
+          "requirement": "optional",
+          "description": "PVT/profile-move support.",
+          "entries": []
+        },
+        {
+          "keys": [
+            "epics.motorRecord.pvt.npoints"
+          ],
+          "requirement": "optional",
+          "description": "Max number of target points.",
+          "entries": [
+            {
+              "key": "epics.motorRecord.pvt.npoints",
+              "summary": "Max number of target points for PVT/profile move"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "epics.motorRecord.pvt.nreadback"
+          ],
+          "requirement": "optional",
+          "description": "Max number of readback points.",
+          "entries": [
+            {
+              "key": "epics.motorRecord.pvt.nreadback",
+              "summary": "Max number of readback points for PVT/profile move"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "drive",
+      "groups": [
+        {
+          "keys": [
+            "drive.numerator"
+          ],
+          "requirement": "required",
+          "description": "Fastest speed in engineering units.",
+          "entries": [
+            {
+              "key": "drive.numerator",
+              "summary": "Fastest speed in engineering units"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.denominator"
+          ],
+          "requirement": "required",
+          "description": "I/O range for `ECMC_EC_ALIAS_DRV_VELO_SET`.",
+          "entries": [
+            {
+              "key": "drive.denominator",
+              "summary": "I/O range for ECMC_EC_ALIAS_DRV_VELO_SET"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.type"
+          ],
+          "requirement": "required",
+          "description": "0=stepper, 1=DS402 (servo/advanced stepper).",
+          "entries": [
+            {
+              "key": "drive.type",
+              "summary": "Stepper: 0. DS402: 1 (DS402 = servos and advanced stepper drives)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.control"
+          ],
+          "requirement": "required",
+          "description": "Control word EtherCAT entry.",
+          "entries": [
+            {
+              "key": "drive.control",
+              "summary": "Control word EtherCAT entry"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.enable"
+          ],
+          "requirement": "required for non-DS402",
+          "description": "Enable bit index in control word.",
+          "entries": [
+            {
+              "key": "drive.enable",
+              "summary": "Enable bit index in control word (not used if DS402)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.enabled"
+          ],
+          "requirement": "required for non-DS402",
+          "description": "Enabled bit index in status word.",
+          "entries": [
+            {
+              "key": "drive.enabled",
+              "summary": "Enabled bit index in status word (not used if DS402)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.status"
+          ],
+          "requirement": "required",
+          "description": "Status word EtherCAT entry.",
+          "entries": [
+            {
+              "key": "drive.status",
+              "summary": "Status word EtherCAT entry"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.setpoint"
+          ],
+          "requirement": "required",
+          "description": "Velocity setpoint if CSV; position setpoint if CSP. `F32`/`F64` CSV setpoints are supported. `F32`/`F64` CSP setpoints require the selected CSP encoder actual-position entry to use the same datatype.",
+          "entries": [
+            {
+              "key": "drive.setpoint",
+              "summary": "Velocity setpoint if CSV. Position setpoint if CSP. `F32`/`F64` CSV setpoints are supported; `F32`/`F64` CSP setpoints require the selected CSP encoder actual-position entry to use the same datatype."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.reduceTorque"
+          ],
+          "requirement": "optional",
+          "description": "Reduce torque bit in control word.",
+          "entries": [
+            {
+              "key": "drive.reduceTorque",
+              "summary": "Reduce torque bit in drive control word"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.reduceTorqueEnable"
+          ],
+          "requirement": "optional",
+          "description": "Enable reduce torque handling.",
+          "entries": [
+            {
+              "key": "drive.reduceTorqueEnable",
+              "summary": "Enable reduce torque functionality"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.brake"
+          ],
+          "requirement": "optional",
+          "description": "Brake control block.",
+          "entries": []
+        },
+        {
+          "keys": [
+            "drive.brake.enable"
+          ],
+          "requirement": "optional",
+          "description": "Enable brake control.",
+          "entries": [
+            {
+              "key": "drive.brake.enable",
+              "summary": ""
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.brake.output"
+          ],
+          "requirement": "optional",
+          "description": "EtherCAT link to brake output.",
+          "entries": [
+            {
+              "key": "drive.brake.output",
+              "summary": "EtherCAT link to brake output"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.brake.openDelay"
+          ],
+          "requirement": "optional",
+          "description": "Brake open delay in cycles.",
+          "entries": [
+            {
+              "key": "drive.brake.openDelay",
+              "summary": "Brake timing parameter in cycles (default 1kHz)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.brake.closeAhead"
+          ],
+          "requirement": "optional",
+          "description": "Brake close-ahead time in cycles.",
+          "entries": [
+            {
+              "key": "drive.brake.closeAhead",
+              "summary": "Brake timing parameter in cycles (default 1kHz)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.reset"
+          ],
+          "requirement": "optional",
+          "description": "Reset bit.",
+          "entries": [
+            {
+              "key": "drive.reset",
+              "summary": "Reset (if no drive reset bit then leave empty)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.warning"
+          ],
+          "requirement": "optional",
+          "description": "Warning bit.",
+          "entries": [
+            {
+              "key": "drive.warning",
+              "summary": "Warning (if no drive warning bit then leave empty)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.error"
+          ],
+          "requirement": "optional, up to 3 entries",
+          "description": "Error bits.",
+          "entries": []
+        },
+        {
+          "keys": [
+            "drive.error[2]"
+          ],
+          "requirement": "required",
+          "description": "Error 2 (if no drive error bit then leave empty)",
+          "entries": [
+            {
+              "key": "drive.error[2]",
+              "summary": "Error 2 (if no drive error bit then leave empty)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.error[1]"
+          ],
+          "requirement": "required",
+          "description": "Error 1 (if no drive error bit then leave empty)",
+          "entries": [
+            {
+              "key": "drive.error[1]",
+              "summary": "Error 1 (if no drive error bit then leave empty)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.error[0]"
+          ],
+          "requirement": "required",
+          "description": "Error 0 (if no drive error bit then leave empty)",
+          "entries": [
+            {
+              "key": "drive.error[0]",
+              "summary": "Error 0 (if no drive error bit then leave empty)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "encoder",
+      "groups": [
+        {
+          "keys": [
+            "encoder.numerator"
+          ],
+          "requirement": "required",
+          "description": "Scaling numerator (e.g. 360 deg/rev).",
+          "entries": [
+            {
+              "key": "encoder.numerator",
+              "summary": "Scaling numerator example 360 deg/rev"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.denominator"
+          ],
+          "requirement": "required",
+          "description": "Scaling denominator (e.g. ticks per rev).",
+          "entries": [
+            {
+              "key": "encoder.denominator",
+              "summary": "Scaling denominator example 4096 ticks per 360 degree"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.type"
+          ],
+          "requirement": "required",
+          "description": "0=incremental, 1=absolute.",
+          "entries": [
+            {
+              "key": "encoder.type",
+              "summary": "Type: 0=Incremental, 1=Absolute"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.bits"
+          ],
+          "requirement": "required",
+          "description": "Bit count used for ecmc's encoder value; it does not alter the raw EtherCAT slave value.",
+          "entries": [
+            {
+              "key": "encoder.bits",
+              "summary": "Bit count used for ecmc's encoder value; does not alter the raw EtherCAT slave value"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.absBits"
+          ],
+          "requirement": "required",
+          "description": "Absolute bit count (LSBs of `bits`).",
+          "entries": [
+            {
+              "key": "encoder.absBits",
+              "summary": "Absolute bit count (for absolute encoders) always least significant part of 'bits'"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.absOffset"
+          ],
+          "requirement": "required",
+          "description": "Offset in engineering units for absolute encoders.",
+          "entries": [
+            {
+              "key": "encoder.absOffset",
+              "summary": "Encoder offset in eng units (for absolute encoders)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.mask"
+          ],
+          "requirement": "optional",
+          "description": "Mask applied to ecmc's encoder value, not the raw EtherCAT slave value. The original value remains visible in the EtherCAT hardware PVs.",
+          "entries": [
+            {
+              "key": "encoder.mask",
+              "summary": "Mask applied to ecmc's encoder value; the original EtherCAT value remains visible in the hardware PVs"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.position"
+          ],
+          "requirement": "required",
+          "description": "EtherCAT entry for actual position. `F32`/`F64` actual-position entries are only valid for absolute encoders (`type: 1`). Keep `bits` and `absBits` aligned with the datatype width (`32`/`32` or `64`/`64`).",
+          "entries": [
+            {
+              "key": "encoder.position",
+              "summary": "EtherCAT entry for actual position input (encoder). `F32`/`F64` actual-position entries are only valid for absolute encoders (`encoder.type: 1`). Keep `encoder.bits` and `encoder.absBits` aligned with the datatype width (`32`/`32` or `64`/`64`)."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.control"
+          ],
+          "requirement": "optional; required if reset is used",
+          "description": "Encoder control word entry.",
+          "entries": [
+            {
+              "key": "encoder.control",
+              "summary": "Mandatory only if 'reset' is used"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.status"
+          ],
+          "requirement": "optional; required if warning/error are used",
+          "description": "Encoder status word entry.",
+          "entries": [
+            {
+              "key": "encoder.status",
+              "summary": "Mandatory only if 'warning' or 'error' are used"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.ready"
+          ],
+          "requirement": "optional",
+          "description": "Status bit for encoder ready.",
+          "entries": [
+            {
+              "key": "encoder.ready",
+              "summary": "Bit in encoder status word for encoder ready"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.source"
+          ],
+          "requirement": "optional",
+          "description": "0=from EtherCAT hardware, 1=from PLC.",
+          "entries": [
+            {
+              "key": "encoder.source",
+              "summary": "0 = Encoder value from EtherCAT hardware, 1 = Encoder value from PLC"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.reset"
+          ],
+          "requirement": "optional",
+          "description": "Reset bit.",
+          "entries": [
+            {
+              "key": "encoder.reset",
+              "summary": "Reset"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.warning"
+          ],
+          "requirement": "optional",
+          "description": "Warning bit.",
+          "entries": [
+            {
+              "key": "encoder.warning",
+              "summary": "Warning"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.error"
+          ],
+          "requirement": "optional, up to 3 entries",
+          "description": "Error bits.",
+          "entries": []
+        },
+        {
+          "keys": [
+            "encoder.filter"
+          ],
+          "requirement": "optional",
+          "description": "Encoder-side filtering.",
+          "entries": []
+        },
+        {
+          "keys": [
+            "encoder.filter.velocity.size"
+          ],
+          "requirement": "optional",
+          "description": "Velocity filter size.",
+          "entries": [
+            {
+              "key": "encoder.filter.velocity.size",
+              "summary": "Filter size for velocity"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.filter.velocity.enable"
+          ],
+          "requirement": "optional",
+          "description": "Enable velocity filter.",
+          "entries": [
+            {
+              "key": "encoder.filter.velocity.enable",
+              "summary": "enable velocity filter"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.filter.position.size"
+          ],
+          "requirement": "optional",
+          "description": "Position filter size.",
+          "entries": [
+            {
+              "key": "encoder.filter.position.size",
+              "summary": "Filter size for encoder value"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.filter.position.enable"
+          ],
+          "requirement": "optional",
+          "description": "Enable position filter.",
+          "entries": [
+            {
+              "key": "encoder.filter.position.enable",
+              "summary": "enable encoder value filter"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.latch"
+          ],
+          "requirement": "optional",
+          "description": "Homing latch settings. For EL7062/ED7062 touch-probe use outside homing, prefer the separate `touchProbe` section.",
+          "entries": []
+        },
+        {
+          "keys": [
+            "encoder.latch.position"
+          ],
+          "requirement": "optional",
+          "description": "Latched value link.",
+          "entries": [
+            {
+              "key": "encoder.latch.position",
+              "summary": "Link to latched value. Used for some homing seqs"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.latch.timestamp"
+          ],
+          "requirement": "optional",
+          "description": "Optional DC timestamp for the same latch event.",
+          "entries": [
+            {
+              "key": "encoder.latch.timestamp",
+              "summary": "Optional 32/64-bit DC timestamp for the same latch event"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.latch.control"
+          ],
+          "requirement": "optional",
+          "description": "Control bit to arm latch.",
+          "entries": [
+            {
+              "key": "encoder.latch.control",
+              "summary": "Bit in encoder control word to arm latch. Used for some homing seqs"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.latch.status"
+          ],
+          "requirement": "optional",
+          "description": "Status bit for latch triggered.",
+          "entries": [
+            {
+              "key": "encoder.latch.status",
+              "summary": "Bit in encoder status word for latch triggered status. Used for some homing seqs"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.latch.armCmd"
+          ],
+          "requirement": "optional",
+          "description": "Value written to `encoder.control` to arm latch.",
+          "entries": [
+            {
+              "key": "encoder.latch.armCmd",
+              "summary": "Value in dec to arm latch to write to encoder.control"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.latch.armBits"
+          ],
+          "requirement": "optional",
+          "description": "Bit length of `armCmd`.",
+          "entries": [
+            {
+              "key": "encoder.latch.armBits",
+              "summary": "Bit size of encoder.latch.armCmd"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.touchProbe"
+          ],
+          "requirement": "optional",
+          "description": "Encoder touch-probe mapping separate from homing latch.",
+          "entries": []
+        },
+        {
+          "keys": [
+            "encoder.touchProbe.position"
+          ],
+          "requirement": "optional",
+          "description": "Latched touch-probe position entry.",
+          "entries": [
+            {
+              "key": "encoder.touchProbe.position",
+              "summary": "Link to touch-probe latched position. Used for touch-probe functionality separate from homing latch."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.touchProbe.timestamp"
+          ],
+          "requirement": "optional",
+          "description": "Optional 32- or 64-bit DC timestamp entry for the same edge.",
+          "entries": [
+            {
+              "key": "encoder.touchProbe.timestamp",
+              "summary": "Optional 32/64-bit DC timestamp for the same touch-probe edge"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.touchProbe.control"
+          ],
+          "requirement": "optional",
+          "description": "Touch-probe control word entry.",
+          "entries": [
+            {
+              "key": "encoder.touchProbe.control",
+              "summary": "Touch-probe control word entry"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.touchProbe.controlBit"
+          ],
+          "requirement": "optional",
+          "description": "First bit to write in the control word (default `0`).",
+          "entries": [
+            {
+              "key": "encoder.touchProbe.controlBit",
+              "summary": "First bit in touch-probe control word to write `armBits` bits from `armCmd`; default 0"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.touchProbe.status"
+          ],
+          "requirement": "optional",
+          "description": "Touch-probe status word entry.",
+          "entries": [
+            {
+              "key": "encoder.touchProbe.status",
+              "summary": "Touch-probe status word entry"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.touchProbe.statusBit"
+          ],
+          "requirement": "optional",
+          "description": "Status bit that indicates a captured event (default `0`).",
+          "entries": [
+            {
+              "key": "encoder.touchProbe.statusBit",
+              "summary": "Status bit for captured touch-probe event; default 0"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.touchProbe.armCmd"
+          ],
+          "requirement": "optional",
+          "description": "Value written to arm the touch probe (default `17`, EL7062/ED7062 TP1 positive edge).",
+          "entries": [
+            {
+              "key": "encoder.touchProbe.armCmd",
+              "summary": "Value in dec to arm touch probe; default 17 for EL7062/ED7062 TP1 positive edge"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.touchProbe.armBits"
+          ],
+          "requirement": "optional",
+          "description": "Number of bits written from `armCmd` (default `5`).",
+          "entries": [
+            {
+              "key": "encoder.touchProbe.armBits",
+              "summary": "Bit size of encoder.touchProbe.armCmd; default 5"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.primary"
+          ],
+          "requirement": "optional",
+          "description": "Use as primary encoder for control.",
+          "entries": [
+            {
+              "key": "encoder.primary",
+              "summary": "Use this encoder as primary (for control)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.useAsCSPDrvEnc"
+          ],
+          "requirement": "optional",
+          "description": "Use as CSP drive encoder when controller enabled in CSP.",
+          "entries": [
+            {
+              "key": "encoder.useAsCSPDrvEnc",
+              "summary": "Use this encoder as CSP drive encoder (ecmc controller enabled in CSP)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.allowOverUnderFlow"
+          ],
+          "requirement": "optional",
+          "description": "Allow over/under flow of encoder raw counter (default true). Set to false for linear encoders.",
+          "entries": [
+            {
+              "key": "encoder.allowOverUnderFlow",
+              "summary": "Allow over/under flow of encoder raw counter (default true). Set to false for linear encoders."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.homing"
+          ],
+          "requirement": "optional",
+          "description": "Encoder homing settings.",
+          "entries": []
+        },
+        {
+          "keys": [
+            "encoder.homing.type"
+          ],
+          "requirement": "optional",
+          "description": "Homing sequence type.",
+          "entries": [
+            {
+              "key": "encoder.homing.type",
+              "summary": "Homing sequence type"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.homing.position"
+          ],
+          "requirement": "optional",
+          "description": "Referenced position.",
+          "entries": [
+            {
+              "key": "encoder.homing.position",
+              "summary": "Position to reference encoder to"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.homing.velocity.to"
+          ],
+          "requirement": "optional",
+          "description": "Velocity to cam/sensor.",
+          "entries": [
+            {
+              "key": "encoder.homing.velocity.to",
+              "summary": "Velocity to cam/sensor (used for some homing seqs)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.homing.velocity.from"
+          ],
+          "requirement": "optional",
+          "description": "Velocity off cam/sensor.",
+          "entries": [
+            {
+              "key": "encoder.homing.velocity.from",
+              "summary": "Velocity from cam/sensor (used for some homing seqs)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.homing.acceleration"
+          ],
+          "requirement": "optional",
+          "description": "Homing acceleration.",
+          "entries": [
+            {
+              "key": "encoder.homing.acceleration",
+              "summary": "Acceleration during homing"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.homing.deceleration"
+          ],
+          "requirement": "optional",
+          "description": "Homing deceleration.",
+          "entries": [
+            {
+              "key": "encoder.homing.deceleration",
+              "summary": "Deceleration during homing"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.homing.refToEncIDAtStartup"
+          ],
+          "requirement": "optional",
+          "description": "Copy start value from another encoder id at startup.",
+          "entries": [
+            {
+              "key": "encoder.homing.refToEncIDAtStartup",
+              "summary": "At startup then set the start value of this encoder to actpos of this encoder id"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.homing.refAtHome"
+          ],
+          "requirement": "optional",
+          "description": "Set position after homing.",
+          "entries": [
+            {
+              "key": "encoder.homing.refAtHome",
+              "summary": "If homing is executed then set position of this encoder"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.homing.tolToPrim"
+          ],
+          "requirement": "optional",
+          "description": "Max tolerance vs primary encoder.",
+          "entries": [
+            {
+              "key": "encoder.homing.tolToPrim",
+              "summary": "If set then this is the max allowed tolerance between prim encoder and this encoder"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.homing.postMoveEnable"
+          ],
+          "requirement": "optional",
+          "description": "Enable post-move after homing.",
+          "entries": [
+            {
+              "key": "encoder.homing.postMoveEnable",
+              "summary": "Enable move after successful homing"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.homing.postMovePosition"
+          ],
+          "requirement": "optional",
+          "description": "Post-move target position.",
+          "entries": [
+            {
+              "key": "encoder.homing.postMovePosition",
+              "summary": "Position to move to after successful homing"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.homing.trigg"
+          ],
+          "requirement": "optional",
+          "description": "EtherCAT entry to trigger drive internal homing sequence.",
+          "entries": [
+            {
+              "key": "encoder.homing.trigg",
+              "summary": "EtherCAT entry for triggering drive internal homing seq (seq id 26)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.homing.ready"
+          ],
+          "requirement": "optional",
+          "description": "Status entry for drive internal homing ready.",
+          "entries": [
+            {
+              "key": "encoder.homing.ready",
+              "summary": "EtherCAT entry for reading drive internal homing seq ready (seq id 26)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.homing.latchCount"
+          ],
+          "requirement": "optional",
+          "description": "Latch number to reference (1=first latch).",
+          "entries": [
+            {
+              "key": "encoder.homing.latchCount",
+              "summary": "latch number to reference on (1=ref on first latch)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.delayComp"
+          ],
+          "requirement": "optional",
+          "description": "Delay compensation between set and act.",
+          "entries": []
+        },
+        {
+          "keys": [
+            "encoder.delayComp.time"
+          ],
+          "requirement": "optional",
+          "description": "Delay time in cycles.",
+          "entries": [
+            {
+              "key": "encoder.delayComp.time",
+              "summary": "Delay time between set and act [cycles]"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.delayComp.enable"
+          ],
+          "requirement": "optional",
+          "description": "Enable flag (defaults to true if set).",
+          "entries": [
+            {
+              "key": "encoder.delayComp.enable",
+              "summary": "enable (defaults to 1 if not set)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.lookuptable"
+          ],
+          "requirement": "optional",
+          "description": "Correction lookup table (applied when homed).",
+          "entries": []
+        },
+        {
+          "keys": [
+            "encoder.lookuptable.filename"
+          ],
+          "requirement": "optional",
+          "description": "LUT file; value subtracted from encoder value.",
+          "entries": [
+            {
+              "key": "encoder.lookuptable.filename",
+              "summary": "Load correction lookup table file. Value will be subtracted from encoder value."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.lookuptable.enable"
+          ],
+          "requirement": "optional",
+          "description": "Enable LUT (default true if loaded).",
+          "entries": [
+            {
+              "key": "encoder.lookuptable.enable",
+              "summary": "Enable correction table (default enabled if loaded)."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.lookuptable.scale"
+          ],
+          "requirement": "optional",
+          "description": "LUT scale; set to -1.0 to add instead of subtract.",
+          "entries": [
+            {
+              "key": "encoder.lookuptable.scale",
+              "summary": "Scale applied to LUT (if you want value to be added then set scale to -1.0)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.lookuptable.range"
+          ],
+          "requirement": "optional",
+          "description": "Modulo range the LUT covers.",
+          "entries": [
+            {
+              "key": "encoder.lookuptable.range",
+              "summary": "LUT modulo value (LUT should cover the range 0..range)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.error[1]"
+          ],
+          "requirement": "optional",
+          "description": "Error 1",
+          "entries": [
+            {
+              "key": "encoder.error[1]",
+              "summary": "Error 1"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.error[2]"
+          ],
+          "requirement": "optional",
+          "description": "Error 2",
+          "entries": [
+            {
+              "key": "encoder.error[2]",
+              "summary": "Error 2"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.error[0]"
+          ],
+          "requirement": "optional",
+          "description": "Error 0",
+          "entries": [
+            {
+              "key": "encoder.error[0]",
+              "summary": "Error 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "controller",
+      "groups": [
+        {
+          "keys": [
+            "controller.Kp"
+          ],
+          "requirement": "required",
+          "description": "Proportional gain.",
+          "entries": [
+            {
+              "key": "controller.Kp",
+              "summary": "Kp proportional gain"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "controller.Ki"
+          ],
+          "requirement": "optional",
+          "description": "Integral gain.",
+          "entries": [
+            {
+              "key": "controller.Ki",
+              "summary": "Ki integral gain"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "controller.Kd"
+          ],
+          "requirement": "optional",
+          "description": "Derivative gain.",
+          "entries": [
+            {
+              "key": "controller.Kd",
+              "summary": "Kd derivative gain"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "controller.Kff"
+          ],
+          "requirement": "optional",
+          "description": "Feed-forward gain.",
+          "entries": [
+            {
+              "key": "controller.Kff",
+              "summary": "Feed forward gain"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "controller.resetIAtRmp"
+          ],
+          "requirement": "optional",
+          "description": "Reset the integral part to zero while an internal trajectory is busy.",
+          "entries": [
+            {
+              "key": "controller.resetIAtRmp",
+              "summary": "Reset the integral part to zero while an internal trajectory is busy. Reset takes precedence over freeze."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "controller.freezeIAtRmp"
+          ],
+          "requirement": "optional",
+          "description": "Freeze the integral part at its current value while an internal trajectory is busy.",
+          "entries": [
+            {
+              "key": "controller.freezeIAtRmp",
+              "summary": "Keep the current integral part unchanged while an internal trajectory is busy."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "controller.deadband.tol"
+          ],
+          "requirement": "optional",
+          "description": "Stop control within this distance.",
+          "entries": [
+            {
+              "key": "controller.deadband.tol",
+              "summary": "Stop control if within this distance from target for the below time"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "controller.deadband.time"
+          ],
+          "requirement": "optional",
+          "description": "Deadband time filter.",
+          "entries": [
+            {
+              "key": "controller.deadband.time",
+              "summary": "Deadband time filter"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "controller.limits.minOutput",
+            "controller.limits.maxOutput"
+          ],
+          "requirement": "optional",
+          "description": "Output clamps. Active only when `maxOutput > minOutput`; both `0` disables the limits.",
+          "entries": [
+            {
+              "key": "controller.limits.minOutput",
+              "summary": "Minimum controller output. Output limiting is active only when `maxOutput > minOutput`; `minOutput=0` and `maxOutput=0` disables it."
+            },
+            {
+              "key": "controller.limits.maxOutput",
+              "summary": "Maximum controller output. Output limiting is active only when `maxOutput > minOutput`; `minOutput=0` and `maxOutput=0` disables it."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "controller.limits.minIntegral",
+            "controller.limits.maxIntegral"
+          ],
+          "requirement": "optional",
+          "description": "Integral clamps. Active only when `maxIntegral > minIntegral`; both `0` disables the limits.",
+          "entries": [
+            {
+              "key": "controller.limits.minIntegral",
+              "summary": "Minimum integral output. Integral limiting is active only when `maxIntegral > minIntegral`; `minIntegral=0` and `maxIntegral=0` disables it."
+            },
+            {
+              "key": "controller.limits.maxIntegral",
+              "summary": "Maximum integral output. Integral limiting is active only when `maxIntegral > minIntegral`; `minIntegral=0` and `maxIntegral=0` disables it."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "controller.inner.Kp",
+            "controller.inner.Ki",
+            "controller.inner.Kd",
+            "controller.inner.tol"
+          ],
+          "requirement": "optional",
+          "description": "Inner PID used near target.",
+          "entries": [
+            {
+              "key": "controller.inner.Kp",
+              "summary": "Kp for when close to target"
+            },
+            {
+              "key": "controller.inner.Ki",
+              "summary": "Ki for when close to target"
+            },
+            {
+              "key": "controller.inner.Kd",
+              "summary": "Kd for when close to target"
+            },
+            {
+              "key": "controller.inner.tol",
+              "summary": "Distance from target for when inner PID params will be used, defaults to atTarget tol"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "trajectory",
+      "groups": [
+        {
+          "keys": [
+            "trajectory.type"
+          ],
+          "requirement": "optional",
+          "description": "0=trapezoidal, 1=s-curve (ruckig); defaults to trapezoidal.",
+          "entries": [
+            {
+              "key": "trajectory.type",
+              "summary": "Default 0 = trapezoidal, 1 = S-curve (ruckig)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "trajectory.source"
+          ],
+          "requirement": "optional",
+          "description": "0=trajectory generator, 1=PLC source.",
+          "entries": [
+            {
+              "key": "trajectory.source",
+              "summary": "0 = take trajectory setpoint from axis traj object, 1 = trajectory setpoint from plc"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "trajectory.axis.velocity"
+          ],
+          "requirement": "required",
+          "description": "Default velocity.",
+          "entries": [
+            {
+              "key": "trajectory.axis.velocity",
+              "summary": "Default velocity for axis"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "trajectory.axis.acceleration"
+          ],
+          "requirement": "required",
+          "description": "Default acceleration.",
+          "entries": [
+            {
+              "key": "trajectory.axis.acceleration",
+              "summary": "Default acceleration for axis"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "trajectory.axis.deceleration"
+          ],
+          "requirement": "optional",
+          "description": "Default deceleration.",
+          "entries": [
+            {
+              "key": "trajectory.axis.deceleration",
+              "summary": "Default deceleration for axis"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "trajectory.axis.emergencyDeceleration"
+          ],
+          "requirement": "optional",
+          "description": "Deceleration in error state.",
+          "entries": [
+            {
+              "key": "trajectory.axis.emergencyDeceleration",
+              "summary": "Deceleration when axis in error state"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "trajectory.axis.jerk"
+          ],
+          "requirement": "optional",
+          "description": "Default jerk.",
+          "entries": [
+            {
+              "key": "trajectory.axis.jerk",
+              "summary": "Default jerk for axis"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "trajectory.jog.velocity"
+          ],
+          "requirement": "optional",
+          "description": "Default jog velocity (motor record).",
+          "entries": [
+            {
+              "key": "trajectory.jog.velocity",
+              "summary": "Default velocity for JOG (motor record)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "trajectory.modulo.range"
+          ],
+          "requirement": "optional",
+          "description": "Modulo range.",
+          "entries": [
+            {
+              "key": "trajectory.modulo.range",
+              "summary": "Modulo range 0..360"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "trajectory.modulo.type"
+          ],
+          "requirement": "optional",
+          "description": "Modulo type.",
+          "entries": [
+            {
+              "key": "trajectory.modulo.type",
+              "summary": "Modulo type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "positionCompare",
+      "groups": [
+        {
+          "keys": [
+            "positionCompare.output"
+          ],
+          "requirement": "required",
+          "description": "EtherCAT output entry to schedule, for example an EL2252 binary output.",
+          "entries": [
+            {
+              "key": "positionCompare.output",
+              "summary": "EtherCAT output entry to schedule, for example an EL2252 binary output"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "positionCompare.activate"
+          ],
+          "requirement": "required",
+          "description": "EtherCAT activation/control entry used by the timed-output terminal.",
+          "entries": [
+            {
+              "key": "positionCompare.activate",
+              "summary": "EtherCAT activation/control entry used by the timed-output terminal"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "positionCompare.startTime"
+          ],
+          "requirement": "required",
+          "description": "EtherCAT DC start-time entry. Use a 64-bit integer PV/entry for EL2252 start time.",
+          "entries": [
+            {
+              "key": "positionCompare.startTime",
+              "summary": "EtherCAT DC start-time entry; use a 64-bit integer entry/PV for EL2252"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "positionCompare.minLeadMs"
+          ],
+          "requirement": "optional",
+          "description": "Minimum allowed scheduling lead time in milliseconds (default `2.0`).",
+          "entries": [
+            {
+              "key": "positionCompare.minLeadMs",
+              "summary": "Minimum scheduling lead time [ms], default 2.0"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "positionCompare.maxLeadMs"
+          ],
+          "requirement": "optional",
+          "description": "Maximum allowed scheduling lead time in milliseconds (default `100.0`).",
+          "entries": [
+            {
+              "key": "positionCompare.maxLeadMs",
+              "summary": "Maximum scheduling lead time [ms], default 100.0"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "positionCompare.activateIdle"
+          ],
+          "requirement": "optional",
+          "description": "Activation value written while idle (default `3` for EL2252).",
+          "entries": [
+            {
+              "key": "positionCompare.activateIdle",
+              "summary": "Activation value written while idle, default 3 for EL2252"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "positionCompare.activateSchedule"
+          ],
+          "requirement": "optional",
+          "description": "Activation value written for one cycle to load a new schedule (default `0` for EL2252).",
+          "entries": [
+            {
+              "key": "positionCompare.activateSchedule",
+              "summary": "Activation value written for one cycle to load a schedule, default 0 for EL2252"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "positionCompare.pulseWidthMs"
+          ],
+          "requirement": "optional",
+          "description": "If greater than zero, schedule an automatic reset after this pulse width in milliseconds. Fractions such as `0.5` are allowed.",
+          "entries": [
+            {
+              "key": "positionCompare.pulseWidthMs",
+              "summary": "Optional automatic reset pulse width [ms], default 0. Fractions such as 0.5 are allowed."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "positionCompare.resetValue"
+          ],
+          "requirement": "optional",
+          "description": "Output value used for the automatic reset (default `0`).",
+          "entries": [
+            {
+              "key": "positionCompare.resetValue",
+              "summary": "Output value for automatic reset after pulseWidthMs, default 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "groups": [
+        {
+          "keys": [
+            "input.limit.forward"
+          ],
+          "requirement": "required",
+          "description": "Forward limit switch entry.",
+          "entries": [
+            {
+              "key": "input.limit.forward",
+              "summary": "EtherCAT entry for low limit switch input"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "input.limit.forwardPolarity"
+          ],
+          "requirement": "required",
+          "description": "Forward limit polarity.",
+          "entries": [
+            {
+              "key": "input.limit.forwardPolarity",
+              "summary": "Polarity of forward limit switch"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "input.limit.backward"
+          ],
+          "requirement": "required",
+          "description": "Backward limit switch entry.",
+          "entries": [
+            {
+              "key": "input.limit.backward",
+              "summary": "EtherCAT entry for high limit switch input"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "input.limit.backwardPolarity"
+          ],
+          "requirement": "required",
+          "description": "Backward limit polarity.",
+          "entries": [
+            {
+              "key": "input.limit.backwardPolarity",
+              "summary": "Polarity of backward limit switch"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "input.home"
+          ],
+          "requirement": "required",
+          "description": "Home switch entry.",
+          "entries": [
+            {
+              "key": "input.home",
+              "summary": "EtherCAT entry for home switch"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "input.homePolarity"
+          ],
+          "requirement": "required",
+          "description": "Home switch polarity.",
+          "entries": [
+            {
+              "key": "input.homePolarity",
+              "summary": "Polarity of home switch"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "input.interlock"
+          ],
+          "requirement": "required",
+          "description": "Interlock input entry.",
+          "entries": [
+            {
+              "key": "input.interlock",
+              "summary": "EtherCAT entry for interlock switch input"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "input.interlockPolarity"
+          ],
+          "requirement": "required",
+          "description": "Interlock polarity.",
+          "entries": [
+            {
+              "key": "input.interlockPolarity",
+              "summary": "Polarity of interlock switch"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "input.analog"
+          ],
+          "requirement": "optional",
+          "description": "Analog interlock block.",
+          "entries": []
+        },
+        {
+          "keys": [
+            "input.analog.interlock"
+          ],
+          "requirement": "optional",
+          "description": "Analog interlock entry.",
+          "entries": [
+            {
+              "key": "input.analog.interlock",
+              "summary": "EtherCAT entry for analog interlock"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "input.analog.interlockPolarity"
+          ],
+          "requirement": "optional",
+          "description": "0: high is bad; 1: low is bad.",
+          "entries": [
+            {
+              "key": "input.analog.interlockPolarity",
+              "summary": "0: High value is bad, 1 = Low value is bad"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "input.analog.rawLimit"
+          ],
+          "requirement": "optional",
+          "description": "Raw analog limit.",
+          "entries": [
+            {
+              "key": "input.analog.rawLimit",
+              "summary": "Analog raw limit"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "input.analog.enable"
+          ],
+          "requirement": "optional",
+          "description": "Enable analog interlock (default true if set).",
+          "entries": [
+            {
+              "key": "input.analog.enable",
+              "summary": "Enable analog interlock default true if analog.interlock is set"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "softlimits",
+      "groups": [
+        {
+          "keys": [
+            "softlimits.enable"
+          ],
+          "requirement": "optional",
+          "description": "Global soft limit enable.",
+          "entries": [
+            {
+              "key": "softlimits.enable",
+              "summary": "Enable soft limits"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "softlimits.forward"
+          ],
+          "requirement": "optional",
+          "description": "Forward soft limit.",
+          "entries": [
+            {
+              "key": "softlimits.forward",
+              "summary": "Soft limit position fwd"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "softlimits.forwardEnable"
+          ],
+          "requirement": "optional",
+          "description": "Forward soft limit enable.",
+          "entries": [
+            {
+              "key": "softlimits.forwardEnable",
+              "summary": "Soft limit position fwd enable"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "softlimits.backward"
+          ],
+          "requirement": "optional",
+          "description": "Backward soft limit.",
+          "entries": [
+            {
+              "key": "softlimits.backward",
+              "summary": "Soft limit position bwd"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "softlimits.backwardEnable"
+          ],
+          "requirement": "optional",
+          "description": "Backward soft limit enable.",
+          "entries": [
+            {
+              "key": "softlimits.backwardEnable",
+              "summary": "Soft limit position bwd enable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "monitoring",
+      "groups": [
+        {
+          "keys": [
+            "monitoring.lag.enable",
+            "monitoring.lag.tolerance",
+            "monitoring.lag.time"
+          ],
+          "requirement": "optional",
+          "description": "Position lag (following error) monitoring.",
+          "entries": [
+            {
+              "key": "monitoring.lag.enable",
+              "summary": "Enable position lag monitoring (following error)"
+            },
+            {
+              "key": "monitoring.lag.tolerance",
+              "summary": "Allowed tolerance"
+            },
+            {
+              "key": "monitoring.lag.time",
+              "summary": "Allowed time outside tolerance"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "monitoring.target.enable",
+            "monitoring.target.tolerance",
+            "monitoring.target.time"
+          ],
+          "requirement": "optional",
+          "description": "At-target monitoring (mandatory when using motor record).",
+          "entries": [
+            {
+              "key": "monitoring.target.enable",
+              "summary": "Enable at target monitoring (needs to be enabled and configured if using motor record)"
+            },
+            {
+              "key": "monitoring.target.tolerance",
+              "summary": "Allowed tolerance"
+            },
+            {
+              "key": "monitoring.target.time",
+              "summary": "Filter time inside tolerance to be at target"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "monitoring.target.slaveControlDeadband.tolerance",
+            "monitoring.target.slaveControlDeadband.time"
+          ],
+          "requirement": "optional",
+          "description": "Live master-axis band forwarded to slaves for reduced-torque control. Applies to physical and virtual master axes and defaults to the AtTarget tolerance and time when omitted.",
+          "entries": [
+            {
+              "key": "monitoring.target.slaveControlDeadband.tolerance",
+              "summary": "Master-axis tolerance forwarded to slaves for reduced-torque control; defaults to AtTarget tolerance"
+            },
+            {
+              "key": "monitoring.target.slaveControlDeadband.time",
+              "summary": "Filter time inside slave-control deadband; defaults to AtTarget time"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "monitoring.velocity.enable",
+            "monitoring.velocity.max",
+            "monitoring.velocity.time.trajectory",
+            "monitoring.velocity.time.drive"
+          ],
+          "requirement": "optional",
+          "description": "Velocity monitoring.",
+          "entries": [
+            {
+              "key": "monitoring.velocity.enable",
+              "summary": "Enable velocity monitoring"
+            },
+            {
+              "key": "monitoring.velocity.max",
+              "summary": "Allowed max velocity"
+            },
+            {
+              "key": "monitoring.velocity.time.trajectory",
+              "summary": "Time allowed outside max velocity before system init halt"
+            },
+            {
+              "key": "monitoring.velocity.time.drive",
+              "summary": "Time allowed outside max velocity before system disables drive"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "monitoring.velocityDifference.enable",
+            "monitoring.velocityDifference.max",
+            "monitoring.velocityDifference.time.trajectory",
+            "monitoring.velocityDifference.time.drive"
+          ],
+          "requirement": "optional",
+          "description": "Velocity setpoint vs actual monitoring.",
+          "entries": [
+            {
+              "key": "monitoring.velocityDifference.enable",
+              "summary": "Enable velocity difference monitoring (velocity set vs velocity actual)"
+            },
+            {
+              "key": "monitoring.velocityDifference.max",
+              "summary": "Allowed max difference"
+            },
+            {
+              "key": "monitoring.velocityDifference.time.trajectory",
+              "summary": "Time allowed outside max diff velo before system init halt"
+            },
+            {
+              "key": "monitoring.velocityDifference.time.drive",
+              "summary": "Time allowed outside max diff velo before system disables drive"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "monitoring.stall.enable",
+            "monitoring.stall.time.timeout",
+            "monitoring.stall.time.factor"
+          ],
+          "requirement": "optional",
+          "description": "Stall monitoring (requires target monitoring enabled).",
+          "entries": [
+            {
+              "key": "monitoring.stall.enable",
+              "summary": "Enable stall monitoring. At target must be enabled for this functionality"
+            },
+            {
+              "key": "monitoring.stall.time.timeout",
+              "summary": "If not at target after \"timeout\" cycles after trajectory generator is ready then drive will disable"
+            },
+            {
+              "key": "monitoring.stall.time.factor",
+              "summary": "Measures duration of last motion command (busy high edge to busy low edge). The new timeout will be defined as this duration multiplied by this factor. The timeout finally used for stall detection will be the longest (of time.timeout and calculated from time.factor)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "plc",
+      "groups": [
+        {
+          "keys": [
+            "plc.enable"
+          ],
+          "requirement": "optional",
+          "description": "Enable axis PLC.",
+          "entries": [
+            {
+              "key": "plc.enable",
+              "summary": "Enable axis plc"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "plc.externalCommands"
+          ],
+          "requirement": "optional",
+          "description": "Allow external PLC commands.",
+          "entries": [
+            {
+              "key": "plc.externalCommands",
+              "summary": "Allow axis input from PLC"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "plc.file"
+          ],
+          "requirement": "optional",
+          "description": "PLC code file to include.",
+          "entries": [
+            {
+              "key": "plc.file",
+              "summary": "File with plc code"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "plc.code"
+          ],
+          "requirement": "optional",
+          "description": "Inline PLC code list (appended after `plc.file` content); example shows enable logic and setpoint calculation.",
+          "entries": [
+            {
+              "key": "plc.code[0]",
+              "summary": "Enable axis if one of master axes is enabled"
+            },
+            {
+              "key": "plc.code[1]",
+              "summary": "Calculate set position for physical axis"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "plc.velocity_filter"
+          ],
+          "requirement": "optional",
+          "description": "Velocity feedforward smoothing.",
+          "entries": []
+        },
+        {
+          "keys": [
+            "plc.velocity_filter.encoder.enable",
+            "plc.velocity_filter.encoder.size"
+          ],
+          "requirement": "optional",
+          "description": "Filter PLC encoder velocity.",
+          "entries": [
+            {
+              "key": "plc.velocity_filter.encoder.enable",
+              "summary": "Filter enable"
+            },
+            {
+              "key": "plc.velocity_filter.encoder.size",
+              "summary": "Filter size"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "plc.velocity_filter.trajectory.enable",
+            "plc.velocity_filter.trajectory.size"
+          ],
+          "requirement": "optional",
+          "description": "Filter PLC trajectory velocity.",
+          "entries": [
+            {
+              "key": "plc.velocity_filter.trajectory.enable",
+              "summary": "Filter enable"
+            },
+            {
+              "key": "plc.velocity_filter.trajectory.size",
+              "summary": "Filter size"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "plc.filter"
+          ],
+          "requirement": "optional; deprecated alias",
+          "description": "Older naming for velocity filters with the same subkeys.",
+          "entries": [
+            {
+              "key": "plc.filter.velocity.enable",
+              "summary": "Filter enable"
+            },
+            {
+              "key": "plc.filter.velocity.size",
+              "summary": "Filter size"
+            },
+            {
+              "key": "plc.filter.trajectory.enable",
+              "summary": "Filter enable"
+            },
+            {
+              "key": "plc.filter.trajectory.size",
+              "summary": "Filter size"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

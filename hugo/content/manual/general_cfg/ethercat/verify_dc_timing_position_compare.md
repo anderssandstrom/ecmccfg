@@ -1,4 +1,5 @@
 +++
+url = "/manual/general_cfg/verify_dc_timing_position_compare/"
 title = "Verify DC Timing with Position Compare"
 weight = 19
 chapter = false
@@ -234,7 +235,7 @@ When results are unstable, check:
 
 ## Related pages
 
-- [EtherCAT Endpoint Timing]({{< relref "/manual/general_cfg/ethercat_timing.md" >}})
+- [EtherCAT Endpoint Timing]({{< relref "/manual/general_cfg/ethercat/ethercat_timing.md" >}})
 - [EL2252]({{< relref "/manual/knowledgebase/hardware/EL2252.md" >}})
 - [EL7062]({{< relref "/manual/knowledgebase/hardware/EL7062.md" >}})
 - [Axis YAML]({{< relref "/manual/motion_cfg/axisYaml.md" >}})

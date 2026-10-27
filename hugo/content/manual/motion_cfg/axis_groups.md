@@ -75,7 +75,7 @@ Master/slave synchronization uses two groups:
 
 The master/slave state machine then switches which group is active and which one follows.
 
-See [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}}).
+See [Master/Slave State Machine]({{< relref "/manual/motion_cfg/master_slave_state_machine.md" >}}).
 
 ### Summary PVs and overview panels
 
@@ -102,6 +102,6 @@ For new configurations:
 
 - [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
 - [Axis YAML settings (heading view)]({{< relref "/manual/motion_cfg/axisYamlSettingsHeadings.md" >}})
-- [PLC functions]({{< relref "/manual/PLC_cfg/functions.md" >}})
-- [Master/Slave State Machine]({{< relref "/manual/general_cfg/master_slave_state_machine.md" >}})
+- [PLC functions]({{< relref "/manual/plc_cfg/functions.md" >}})
+- [Master/Slave State Machine]({{< relref "/manual/motion_cfg/master_slave_state_machine.md" >}})
 - [Synchronization examples]({{< relref "/manual/examples.md" >}})

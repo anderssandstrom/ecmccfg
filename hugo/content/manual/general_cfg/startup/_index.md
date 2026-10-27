@@ -1,5 +1,5 @@
 +++
-title = "startup.cmd"
+title = "Startup and IOC configuration"
 weight = 11
 chapter = false
 +++
@@ -105,7 +105,7 @@ an explicit restore-complete mechanism for this guarantee.
 
 PLCs can use `epics_get_started()`, `ec_get_started()`, and
 `system_get_started()` to inspect startup readiness. See
-[PLC functions]({{< relref "/manual/PLC_cfg/functions.md" >}}).
+[PLC functions]({{< relref "/manual/plc_cfg/functions.md" >}}).
 
 ## Complete startup gate
 
@@ -173,3 +173,10 @@ are normally not used, but other parts of ecmc still work, for example:
 
 ## iocsh startup
 ecmc needs to be started with root privileges (or with a user in the realtime group), otherwise ecmc might segfault.
+
+## Startup guides and reference
+
+- [Startup modes]({{< relref "/manual/general_cfg/startup/modes.md" >}}) — `FULL`, `DAQ`, `NO_MR`, and `ENG_MODE`.
+- [Startup validator]({{< relref "/manual/general_cfg/startup/startup_validator.md" >}}) — check scripts and file references before IOC execution.
+- [PV processing rate]({{< relref "/manual/general_cfg/startup/PVProcessingRate.md" >}}) — global and per-record update rates.
+- [General best practice]({{< relref "/manual/general_cfg/startup/best_practice.md" >}}) — host setup and EtherCAT rate recommendations.

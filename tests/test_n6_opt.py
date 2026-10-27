@@ -1,5 +1,6 @@
 """N6 OPT mapping, database and option-aware panel checks; no hardware access."""
 from pathlib import Path
+from itertools import product
 import re
 import shutil
 import subprocess
@@ -57,6 +58,41 @@ class N6OptTests(unittest.TestCase):
             with self.subTest(value=value), self.assertRaises(InvalidConfiguration):
                 hardware_commands(options={'RAW_POS': value})
 
+    def test_homing_pdos_are_optional_and_preserve_csv(self):
+        for raw in ['0', '1']:
+            baseline = hardware_commands(options={'RAW_POS': raw})
+            enabled = hardware_commands(options={'RAW_POS': raw, 'HOMING': '1'})
+            entries = enabled.entries()
+            self.assertEqual(set(entries) - set(baseline.entries()),
+                             {'homingMethod01', 'homeOffset01'})
+            for name, mapping in baseline.entries().items():
+                self.assertEqual(entries[name], mapping)
+            self.assertEqual(entries['homingMethod01'], ((1, 2, 0x1603, 0x6098, 0), 'S8'))
+            self.assertEqual(entries['homeOffset01'], ((1, 2, 0x1603, 0x607c, 0), 'S32'))
+            self.assertEqual({m[0][2] for m in entries.values() if m[0][0] == 1},
+                             {0x1600, 0x1602, 0x1603})
+            self.assertIn('Cfg.WriteEcEntryIDString(3,homingMethod01,35)', enabled.commands)
+            self.assertIn('Cfg.WriteEcEntryIDString(3,homeOffset01,0)', enabled.commands)
+            mode_writes = [c for c in enabled.commands if ',modeControl01,' in c]
+            self.assertEqual(mode_writes, ['Cfg.WriteEcEntryIDString(3,modeControl01,9)'])
+            self.assertFalse(any(',driveControl01,' in c for c in enabled.commands))
+            database = expanded_database(enabled)
+            sources = set(re.findall(r'/ec0\.s3\.(\w+)[?=]', database))
+            self.assertLessEqual(sources, entries.keys())
+            names = re.findall(r'record\(\w+,\s*"([^"]+)"', database)
+            self.assertEqual(len(names), len(set(names)))
+            for suffix in ['HomeMethod', 'HomeOffset', 'ModeCmd']:
+                name = 'TEST:Drv01-' + suffix
+                body = re.search(r'record\(ao,\s*"' + name + r'"\)\s*\{(.*?)\n\}', database, re.S)[1]
+                self.assertRegex(body, r'field\(PINI,\s*"0"\)')
+                self.assertIn(name + '-RB', names)
+            self.assertIn('TEST:Drv01-ModeAct', names)
+            self.assertEqual(enabled.env['ECMC_N6_M0_S3_HOMING'], '1')
+            self.assertFalse(any(key.startswith('N6_OPT_') for key in enabled.env))
+        for value in ['2', '-1', 'yes', '1.0', '']:
+            with self.subTest(value=value), self.assertRaises(InvalidConfiguration):
+                hardware_commands(options={'HOMING': value})
+
     def test_hardware_loads_all_gate_records_directly(self):
         for raw in ['0', '1']:
             startup = hardware_commands(options={'RAW_POS': raw})
@@ -94,8 +130,8 @@ class N6OptTests(unittest.TestCase):
                 self.assertRegex(body, r'field\(PINI,\s*"0"\)')
 
     def test_optional_panels_only_show_mapped_channels(self):
-        for raw in ['0', '1']:
-            startup = hardware_commands(options={'RAW_POS': raw})
+        for raw, homing in product(['0', '1'], repeat=2):
+            startup = hardware_commands(options={'RAW_POS': raw, 'HOMING': homing})
             names = set(re.findall(r'record\(\w+,\s*"([^"]+)"', expanded_database(startup)))
             visited = []
             for filename in ['ecmcN6-1-1-1-S_OPT.ui', 'ecmcN6-1-1-1-S_OPT_expert.ui']:
@@ -105,11 +141,12 @@ class N6OptTests(unittest.TestCase):
                     if 'channel' in props:
                         pv = expand(props['channel'], dict(IOC='TEST', MasterID='0', SlaveID='3'))
                         pv = pv.replace('TEST:m0s3-', 'TEST:')
-                        self.assertIn(pv, names, (filename, pv))
+                        self.assertIn(pv.split('.', 1)[0], names, (filename, pv))
                         visited.append(pv)
                     if 'visibilityCalc' in props:
                         self.assertEqual(props['visibilityCalc'], 'A==1')
-                        if raw == '0':
+                        flag = homing if props['channel'].endswith('CfgHoming') else raw
+                        if flag == '0':
                             return
                     for child in widget.findall('widget'):
                         check(child)
@@ -118,6 +155,8 @@ class N6OptTests(unittest.TestCase):
                     related = root.find(".//widget[@name='expertPanel']/property[@name='files']/string")
                     self.assertEqual(related.text, 'ecmcN6-1-1-1-S_OPT_expert.ui')
             self.assertEqual('TEST:Enc01-PosScaled' in visited, raw == '1')
+            self.assertEqual('TEST:Drv01-HomeMethod' in visited, homing == '1')
+            self.assertEqual('TEST:Drv01-Stat.BC' in visited, homing == '1')
             for output in [1, 2, 3]:
                 self.assertIn(f'TEST:PosOut{output:02d}-Ena', visited)
 

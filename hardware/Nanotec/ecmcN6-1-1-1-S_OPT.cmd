@@ -1,11 +1,14 @@
 #-d /**
 #-d   \brief N6 CSV hardware with optional raw position and masked output gates.
 #-d   \param RAW_POS Use 0x6063 as positionActual01; name 0x6064 positionActualScaled01, 0/1, default 0.
+#-d   \param HOMING Map homing method/offset for PLC or C++ sequencing, 0/1, default 0.
 #-d   \details Legacy PDO layout and motor component type N6 are retained. No units
 #-d            or output routing are changed here; apply PositionOutput later.
 #-d */
 ecmcEpicsEnvSetCalcTernary(N6_OPT_BAD,"'${RAW_POS=0}'!='0' and '${RAW_POS=0}'!='1'","","#-")
 ${N6_OPT_BAD}ecmcExit Error: N6_OPT RAW_POS must be 0 or 1
+ecmcEpicsEnvSetCalcTernary(N6_OPT_BAD,"'${HOMING=0}'!='0' and '${HOMING=0}'!='1'","","#-")
+${N6_OPT_BAD}ecmcExit Error: N6_OPT HOMING must be 0 or 1
 epicsEnvUnset(N6_OPT_BAD)
 
 #- Keep the conventional feedback name for the fine open-loop counter.
@@ -23,13 +26,28 @@ epicsEnvSet(ECMC_HW_PANEL,N6-1-1-1-S_OPT)
 ecmcEpicsEnvSetCalcTernary(N6_OPT_RAW,"${RAW_POS=0}==1","","#-")
 ${N6_OPT_RAW}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a03,0x6063,0x00,S32,positionActual01)"
 ${N6_OPT_RAW}${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmc_analogInput-chX.template,ECMC_P=${ECMC_P},PARAM='CH_ID=01,KEY=Enc,suffix=-PosScaled,sourceName=positionActualScaled,EGU=counts,PREC=0'"
-${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmcN6_OPT_config.template,ECMC_P=${ECMC_P},PARAM='RAW_POS=${RAW_POS=0}'"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmcN6_OPT_config.template,ECMC_P=${ECMC_P},PARAM='RAW_POS=${RAW_POS=0},HOMING=${HOMING=0}'"
 
 #- Feature-specific records belong to this hardware option, like PosScaled.
 #- Load explicitly so they also exist when default substitutions are disabled.
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmcN6_outputEnable.template,ECMC_P=${ECMC_P},PARAM='CH_ID=01,MASK=0x00010000'"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmcN6_outputEnable.template,ECMC_P=${ECMC_P},PARAM='CH_ID=02,MASK=0x00020000'"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmcN6_outputEnable.template,ECMC_P=${ECMC_P},PARAM='CH_ID=03,MASK=0x00040000'"
+
+#- Optional drive-side homing parameters. Reuse SM2 PDO 1603 to retain the
+#- existing assignment slots. No homing command is issued by this option.
+ecmcEpicsEnvSetCalcTernary(N6_OPT_HOME,"${HOMING=0}==1","","#-")
+${N6_OPT_HOME}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1603,0x6098,0x00,S8,homingMethod01)"
+${N6_OPT_HOME}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1603,0x607C,0x00,S32,homeOffset01)"
+${N6_OPT_HOME}ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},homingMethod01,35)"
+${N6_OPT_HOME}ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},homeOffset01,0)"
+#- PINI=0 preserves the initialized method/offset and CSV mode at IOC startup.
+${N6_OPT_HOME}${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmc_analogOutput-chX.template,ECMC_P=${ECMC_P},PARAM='CH_ID=01,KEY=Drv,suffix=-HomeMethod,sourceName=homingMethod,PINI=0,PREC=0,EGU=,DRVL=-128,DRVH=127'"
+${N6_OPT_HOME}${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmc_analogOutput-chX.template,ECMC_P=${ECMC_P},PARAM='CH_ID=01,KEY=Drv,suffix=-HomeOffset,sourceName=homeOffset,PINI=0,PREC=0,EGU=counts'"
+${N6_OPT_HOME}${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmc_analogOutput-chX.template,ECMC_P=${ECMC_P},PARAM='CH_ID=01,KEY=Drv,suffix=-ModeCmd,sourceName=modeControl,PINI=0,PREC=0,EGU=,DRVL=-128,DRVH=127'"
+${N6_OPT_HOME}${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmc_analogInput-chX.template,ECMC_P=${ECMC_P},PARAM='CH_ID=01,KEY=Drv,suffix=-ModeAct,sourceName=modeActual,PREC=0,EGU='"
+epicsEnvSet(ECMC_N6_M${ECMC_EC_MASTER_ID=0}_S${ECMC_EC_SLAVE_NUM}_HOMING,${HOMING=0})
+epicsEnvUnset(N6_OPT_HOME)
 
 #- Per-master/slave capability used by ecmccomp's PositionOutput validator.
 epicsEnvSet(ECMC_N6_M${ECMC_EC_MASTER_ID=0}_S${ECMC_EC_SLAVE_NUM}_RAW_POS,${RAW_POS=0})

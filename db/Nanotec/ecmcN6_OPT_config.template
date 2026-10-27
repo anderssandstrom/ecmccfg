@@ -5,3 +5,10 @@ record(bi,"${ECMC_P}CfgRawPosition") {
   field(ZNAM,"Not mapped")
   field(ONAM,"Mapped")
 }
+
+record(bi,"${ECMC_P}CfgHoming") {
+  field(PINI,"YES")
+  field(INP,"${HOMING=0}")
+  field(ZNAM,"Not mapped")
+  field(ONAM,"Mapped")
+}

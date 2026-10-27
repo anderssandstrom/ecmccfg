@@ -26,6 +26,7 @@ not a live scan parameter. The dedicated lab example is
 | Option | Default | Effect |
 | --- | --- | --- |
 | `RAW_POS` | `0` | With `1`, map `6063:00` as `positionActual01` and rename `6064` to `positionActualScaled01` |
+| `HOMING` | `0` | With `1`, add `6098` and `607C` homing parameter PDOs, initialized to method 35 / offset 0 |
 
 With `RAW_POS=0`, the process image matches the original descriptor. The
 optional S32 entry is appended to existing TxPDO `1A03` (20 bytes total with
@@ -51,6 +52,27 @@ on one slave must use the same canonical unit exponent because `60A8` is
 shared. For example, 100 and 200 steps share unit 100 with dividers 1 and 2;
 100 and 10 steps conflict and are rejected. The motor cannot be reapplied
 after an output component has set those units in the same startup.
+
+## Optional homing PDOs
+
+Use `OPT='RAW_POS=1,HOMING=1'` to expose `homingMethod01` (S8, `6098:00`)
+and `homeOffset01` (S32, `607C:00`). They extend existing RxPDO `1603` by five
+bytes; the RxPDO assignment count stays unchanged. The independent options
+can be used individually or together.
+
+Mode control/display (`modeControl01`, `modeActual01`) and drive control/status
+(`driveControl01`, `driveStatus01`) are already mapped. With `HOMING=1`, the
+snippet also loads `Drv01-HomeMethod`, `Drv01-HomeOffset`, `Drv01-ModeCmd`
+(each with `-RB`) and `Drv01-ModeAct`. The output PVs use `PINI=0`.
+The option prepares the interface and does not execute homing or change CSV mode.
+
+A PLC/C++ sequence can select mode 6, trigger method 35 via controlword bit 4,
+check statusword bits 12/10 for completion and bit 13 for error, and restore
+mode 9. It must own the drive command PDOs and enforce a timeout. Disabling
+the axis alone does not release its cyclic controlword/velocity writes.
+Method 35 references `6064`, not raw `6063`; the effect on output pulse phase
+requires commissioning. See the lab example's
+`README_position_output_100_steps.md` for the full ownership and sequence notes.
 
 ## Two positions and output gates
 
@@ -80,7 +102,12 @@ gate. Whole-word writes to `BO01-Arr` intentionally still replace every bit.
 
 ## Panels
 
-The hardware selects `ecmcN6-1-1-1-S_OPT.ui` and its expert display. They show
+The hardware selects `ecmcN6-1-1-1-S_OPT.ui` and its expert display.
+Their Home tab uses `CfgHoming` to show homing fields only with `HOMING=1`.
+The compact display shows method, offset and actual mode readbacks. The
+expert tab adds parameter/mode edits, command readbacks and status bits
+10 (target reached), 12 (home attained) and 13 (homing error). These are
+low-level controls; the sequence still needs exclusive drive-command ownership. They show
 position actual, optional scaled position and all three masked gate controls.
 Raw fields are shown only when `CfgRawPosition=1`. The original compact and
 expert panels remain available for the unchanged legacy descriptor.

@@ -31,7 +31,7 @@ There are still four TxPDO assignments; the extra raw entry is appended to
 The example now uses the reusable hardware option and component:
 
 ```text
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "HW_DESC=N6-1-1-1-S_OPT,OPT='RAW_POS=1'"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "HW_DESC=N6-1-1-1-S_OPT,OPT='RAW_POS=1,HOMING=1'"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Motor-Generic-2Phase-Stepper,MACROS='I_MAX_MA=400,I_STDBY_MA=100,STEPS=200,INV_DIR=0'"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Drive-Generic-PositionOutput,MACROS='FULL_STEPS=100,OUTPUT=1,ARM=1'"
 ```
@@ -41,8 +41,9 @@ startup order and supported interval. Its default is `ARM=0`; the example
 explicitly arms output 1. Supported intervals are `10^n` times
 `1,2,4,8,16,32,64` with `n=0..6`; outputs 1..3 are supported. Different
 outputs on the same drive must share the canonical position-unit exponent.
-Motor `INV_DIR=0` is required. The original `_POS_OUT` descriptor and local
-`cfg/position_output_100_steps.cmd` remain as compatibility wrappers.
+Motor `INV_DIR=0` is required. The local `cfg/position_output_100_steps.cmd`
+remains a compatibility wrapper; the dedicated `_POS_OUT` hardware descriptor
+has been replaced by `_OPT`.
 
 ## Two simultaneous position values
 
@@ -61,6 +62,61 @@ increments/second, with matching `360/3276800` drive scaling and `INV_DIR=0`.
 This is the generated open-loop motor counter, not measured rotor position;
 it does not detect lost motor steps. Raw `6063` does not reset during drive
 homing; use ecmc axis referencing when setting the axis coordinate.
+
+## Optional drive homing interface (method 35)
+
+The example enables `HOMING=1` in `_OPT`. This maps parameters for a PLC or
+C++ logic state machine; **it does not execute homing at startup**. Without
+this option the original RxPDO layout is unchanged. The two extra entries
+are appended to existing RxPDO `1603` (9 bytes total); no additional RxPDO
+assignment slot is used. The initialized method is 35 and home offset is 0.
+
+| EtherCAT entry | Object | Type | Purpose |
+| --- | --- | --- | --- |
+| `homingMethod01` | `6098:00` | S8 | Homing method; initialized to 35 |
+| `homeOffset01` | `607C:00` | S32 | Home offset in configured `6064` units; initialized to 0 |
+| `modeControl01` | `6060:00` | S8 | Already mapped; 6 = homing, 9 = CSV |
+| `modeActual01` | `6061:00` | S8 | Already mapped; confirms the selected mode |
+| `driveControl01` | `6040:00` | U16 | Already mapped; bit 4 starts homing |
+| `driveStatus01` | `6041:00` | U16 | Already mapped; bits 12/13 report attained/error |
+
+With `HOMING=1`, additional diagnostic/control PVs are `Drv01-HomeMethod`,
+`Drv01-HomeOffset`, `Drv01-ModeCmd` (each with `-RB`) and `Drv01-ModeAct`.
+Output records use `PINI=0` so IOC initialization does not overwrite the
+method 35, zero offset or CSV mode initialized in the process image.
+The OPT panels have a Home tab. With `HOMING=1`, the compact tab displays
+method, offset and actual mode; the expert tab adds edits and homing status
+bits. `CfgHoming` hides these fields when the PDOs are not mapped.
+These PVs are low-level controls, not a coordinated homing trigger.
+
+A drive-referencing state machine should:
+
+1. Obtain exclusive ownership of the drive command PDOs, stop motion, hold
+   target velocity at zero, and disable the position-output gate.
+2. Write method 35 and offset 0, clear controlword bit 4, select mode 6, and
+   wait for `modeActual01=6`.
+3. Start homing with a rising edge on controlword bit 4. Method 35 does not
+   require Operation enabled; do not energize the motor merely to reference.
+4. Check completion for this request (statusword bits 12 and 10 set), bit 13
+   clear and fault bit 3 clear, with a timeout. Do not accept an old attained
+   bit as proof that a new request has executed. Check scaled `6064` as well.
+5. Clear bit 4, restore mode 9, wait for `modeActual01=9`, then release command
+   ownership. Leave the drive disabled on errors; re-arm the output only after
+   successful referencing and application checks.
+
+**Disabling M1 is not sufficient to obtain command ownership.** The ecmc
+DS402 axis writes the full controlword and velocity setpoint every cycle,
+even when disabled. An ordinary PLC/PV write can therefore be overwritten.
+Run the sequence while no axis owns those entries, or provide an explicit
+ownership mechanism in the C++/PLC integration. The example maps the interface
+but deliberately does not install an uncoordinated automatic sequence.
+
+Method 35 references logical `6064`; the fine `6063` counter remains unchanged.
+Zero the ecmc axis coordinate separately if required. Test the effect on the
+direct output's phase and first pulse on the bench before depending on it.
+The mapping and homing behavior need verification on FIR-v2542-B1080909.
+See the [Nanotec N6 manual](https://www.nanotec.com/fileadmin/files/Handbuecher/Motorsteuerungen/n6/fir-v2508/N6_EtherCAT_Technical-Manual_V1.1.0.pdf),
+sections 6.4, 607Ch and 6098h.
 
 ## Bench evidence and remaining checks
 
@@ -123,9 +179,9 @@ retain `7305` after its cause is removed. Reset a latched fault with the
 drive stationary through the normal controls.
 
 Use the M1 motor record for motion. Do not write the drive velocity/control
-records manually while the axis controller owns those PDOs. The dedicated
-YAML starts at 18 degrees/second, 36 degrees/second squared, with a 10-degree
-tweak and a 5-degree following-error tolerance. Begin with a small move and
+records manually while the axis controller owns those PDOs. Motion settings are configured in the dedicated YAML; begin with values
+appropriate for the bench setup. The axis uses a 10-degree tweak and a
+5-degree following-error tolerance. Begin with a small move and
 confirm fine, correctly signed M1 feedback. Stop if it fails to follow.
 Then check reverse motion, stop/restart and eventual signed-counter rollover.
 The lab's constant limit/interlock inputs match the original example.
@@ -140,8 +196,9 @@ The voltage selector also changes the shared digital input thresholds.
 These options do not configure the motor power supply. Use a compatible
 scope or counter input.
 
-The target spacing is 100 full steps = 180 degrees, or ten seconds at a
-steady 18 degrees/second. Expect two pulses per revolution over repeated
+The target spacing is 100 full steps = 180 degrees. Pulse period in seconds
+is `180 / abs(velocity in degrees/second)` (for example ten seconds at 18
+degrees/second). Expect two pulses per revolution over repeated
 revolutions; verify pulse width, phase, reversal and stop/restart separately.
 The routing limit is 500 Hz. No absolute compare point or pulse width is programmed.
 

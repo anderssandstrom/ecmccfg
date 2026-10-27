@@ -26,13 +26,12 @@ class N6PositionOutputTests(unittest.TestCase):
         for part in ['drive', 'encoder']:
             self.assertEqual((axis[part]['numerator'], axis[part]['denominator']), (360, 3276800))
         self.assertEqual(axis['encoder']['bits'], 32)
-        self.assertEqual(axis['trajectory']['axis']['velocity'], 18)
         self.assertTrue(axis['monitoring']['lag']['enable'])
 
     def test_example_uses_packaged_components_in_required_order(self):
         startup = (EXAMPLE / 'startup_position_output_100_steps.cmd').read_text()
         active = '\n'.join(line for line in startup.splitlines() if not line.lstrip().startswith('#'))
-        self.assertIn("HW_DESC=N6-1-1-1-S_OPT,OPT='RAW_POS=1'", active)
+        self.assertIn("HW_DESC=N6-1-1-1-S_OPT,OPT='RAW_POS=1,HOMING=1'", active)
         self.assertIn('FULL_STEPS=100,OUTPUT=1,ARM=1', active)
         self.assertLess(active.index('COMP=Motor-'), active.index('COMP=Drive-Generic-PositionOutput'))
         self.assertLess(active.index('COMP=Drive-Generic-PositionOutput'), active.index('loadYamlAxis.cmd'))

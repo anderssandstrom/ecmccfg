@@ -8,8 +8,8 @@ file "ecmcEL72XX_DRV.template"
 
 file "ecmcEL72XX_ENC.template"
 {
-  pattern {CH_ID}
-          {01   }
+  pattern {CH_ID, PREC}
+          {01,    0   }
 }
 
 file "ecmc_analogInput-chX.template"
@@ -34,12 +34,4 @@ file "ecmcN6_binaryOutputArray-chX.template"
 {
   pattern {CH_ID, PINI}
           {01,    0   }
-}
-
-file "ecmcN6_outputEnable.template"
-{
-  pattern {CH_ID, MASK}
-          {01,    0x00010000}
-          {02,    0x00020000}
-          {03,    0x00040000}
 }

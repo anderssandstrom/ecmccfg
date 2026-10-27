@@ -57,6 +57,14 @@ class N6OptTests(unittest.TestCase):
             with self.subTest(value=value), self.assertRaises(InvalidConfiguration):
                 hardware_commands(options={'RAW_POS': value})
 
+    def test_hardware_loads_all_gate_records_directly(self):
+        for raw in ['0', '1']:
+            startup = hardware_commands(options={'RAW_POS': raw})
+            gates = [(name, macros) for name, macros in startup.templates
+                     if name == 'ecmcN6_outputEnable.template']
+            self.assertEqual([(m['CH_ID'], int(m['MASK'], 0)) for _, m in gates],
+                             [('01', 0x10000), ('02', 0x20000), ('03', 0x40000)])
+
     def test_records_have_valid_links_and_optional_scaled_record(self):
         for raw in ['0', '1']:
             with self.subTest(raw=raw):
@@ -68,6 +76,7 @@ class N6OptTests(unittest.TestCase):
                 self.assertIn('TEST:Enc01-PosAct', names)
                 enc = re.search(r'record\(ai,\s*"TEST:Enc01-PosAct"\)\s*\{(.*?)\n\}', database, re.S)[1]
                 self.assertIn('/ec0.s3.positionActual01?', enc)
+                self.assertRegex(enc, r'field\(PREC,\s*"0"\)')
                 if raw == '1':
                     scaled = re.search(r'record\(ai,\s*"TEST:Enc01-PosScaled"\)\s*\{(.*?)\n\}', database, re.S)[1]
                     self.assertIn('/ec0.s3.positionActualScaled01?', scaled)

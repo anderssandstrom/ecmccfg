@@ -25,6 +25,12 @@ ${N6_OPT_RAW}ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VE
 ${N6_OPT_RAW}${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmc_analogInput-chX.template,ECMC_P=${ECMC_P},PARAM='CH_ID=01,KEY=Enc,suffix=-PosScaled,sourceName=positionActualScaled,EGU=counts,PREC=0'"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmcN6_OPT_config.template,ECMC_P=${ECMC_P},PARAM='RAW_POS=${RAW_POS=0}'"
 
+#- Feature-specific records belong to this hardware option, like PosScaled.
+#- Load explicitly so they also exist when default substitutions are disabled.
+${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmcN6_outputEnable.template,ECMC_P=${ECMC_P},PARAM='CH_ID=01,MASK=0x00010000'"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmcN6_outputEnable.template,ECMC_P=${ECMC_P},PARAM='CH_ID=02,MASK=0x00020000'"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyTemplate.cmd "TEMPLATE_FILE=ecmcN6_outputEnable.template,ECMC_P=${ECMC_P},PARAM='CH_ID=03,MASK=0x00040000'"
+
 #- Per-master/slave capability used by ecmccomp's PositionOutput validator.
 epicsEnvSet(ECMC_N6_M${ECMC_EC_MASTER_ID=0}_S${ECMC_EC_SLAVE_NUM}_RAW_POS,${RAW_POS=0})
 epicsEnvUnset(N6_OPT_RAW)

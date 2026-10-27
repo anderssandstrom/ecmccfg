@@ -256,6 +256,9 @@
     <property name="text">
      <string>Each control changes only its own bit.</string>
     </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
    </widget>
   </widget>
  </widget>

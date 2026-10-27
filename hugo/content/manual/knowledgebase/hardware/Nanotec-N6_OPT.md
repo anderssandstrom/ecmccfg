@@ -70,6 +70,9 @@ generated open-loop motion, not measured rotor position or lost-step detection.
 | `CfgRawPosition` | Read-only resolved hardware option for the panel |
 | `BO01-Arr` | Existing complete output word, including brake bit 0 |
 
+The hardware snippet loads the six gate control/readback records directly,
+including when default substitutions are disabled.
+
 The component uses bit-addressed `WriteEcEntryEcPath` calls and the gate PVs
 use asyn masks. Both preserve unrelated outputs and brake control. Output
 records use `PINI=0`/`NO` so initialization does not clear an explicitly armed

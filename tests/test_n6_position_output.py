@@ -52,7 +52,7 @@ class N6PositionOutputTests(unittest.TestCase):
         commands = capture(filename='position_output_100_steps.cmd')
         writes = sdo_writes(commands)
         settings = {(index, sub): (value, size) for _, index, sub, value, size in writes}
-        self.assertEqual(set(settings), {(0x60eb, 1), (0x60e6, 1), (0x60a8, 0), (0x3252, 2)})
+        self.assertEqual(set(settings), {(0x60e6, 1), (0x60a8, 0), (0x3252, 2)})
         unit, size = settings[0x60a8, 0]
         self.assertEqual(size, 4)
         self.assertEqual((unit >> 16) & 0xff, 0xac)
@@ -60,8 +60,11 @@ class N6PositionOutputTests(unittest.TestCase):
         self.assertEqual(full_steps_per_count, 100)
         self.assertEqual(full_steps_per_count * 16384, 1638400)
         self.assertEqual(settings[0x3252, 2], (0x0910, 2))
-        self.assertEqual(settings[0x60e6, 1], (3276800, 4))
-        self.assertEqual(settings[0x60eb, 1], (1, 4))
+        self.assertEqual(settings[0x60e6, 1], (0, 4))
+        # Regression: nominal nonzero resolution enabled the uncommissioned
+        # sensorless observer and caused 0x7305 on the test drive.
+        self.assertTrue(all(value == 0 for _, index, sub, value, _ in writes
+                            if (index, sub) == (0x60e6, 1)))
         for _, _, _, value, size in writes:
             self.assertGreaterEqual(value, 0)
             self.assertLess(value, 1 << (8 * size))
@@ -75,7 +78,7 @@ class N6PositionOutputTests(unittest.TestCase):
         self.assertEqual(capture({'N6_SID': '7'}, filename=filename),
                          [command.replace('(3,', '(7,') for command in commands])
 
-    def test_dedicated_axis_uses_raw_feedback_and_native_velocity(self):
+    def test_raw_feedback_axis_is_withdrawn_from_active_trial(self):
         axis = yaml.safe_load((EXAMPLE / 'cfg/axis_position_output.yaml').read_text())
         self.assertEqual(axis['encoder']['position'], 'ec0.s$(ENC_SID).positionActualRaw01')
         for part in ['drive', 'encoder']:
@@ -83,16 +86,20 @@ class N6PositionOutputTests(unittest.TestCase):
         self.assertEqual(axis['encoder']['bits'], 32)
         self.assertEqual(axis['trajectory']['axis']['velocity'], 18)
         self.assertTrue(axis['monitoring']['lag']['enable'])
+        self.assertIn('WITHDRAWN', (EXAMPLE / 'cfg/axis_position_output.yaml').read_text())
 
     def test_dedicated_startup_orders_overrides_after_component(self):
         startup = (EXAMPLE / 'startup_position_output_100_steps.cmd').read_text()
-        self.assertIn('HW_DESC=N6-1-1-1-S_POS_OUT', startup)
+        self.assertIn('HW_DESC=N6-1-1-1-S,', startup)
         self.assertIn("MACROS='PINI=0'", startup)
         self.assertIn('N6_POS_UNIT=0x02AC0000', startup)
         self.assertIn('STEPS=200,INV_DIR=0', startup)
         self.assertLess(startup.index('applyComponent.cmd'), startup.index('./cfg/position_output_100_steps.cmd'))
-        self.assertLess(startup.index('./cfg/position_output_100_steps.cmd'), startup.index('loadYamlAxis.cmd'))
-        self.assertIn('FILE=./cfg/axis_position_output.yaml', startup)
+        active = '\n'.join(line for line in startup.splitlines() if not line.lstrip().startswith('#'))
+        self.assertNotIn('loadYamlAxis.cmd', active)
+        self.assertNotIn('axis_position_output.yaml', active)
+        self.assertIn('driveControl01,0)', active)
+        self.assertIn('velocitySetpoint01,0)', active)
         self.assertNotIn('cfg/pulse_per_fullstep.cmd', startup)
 
 

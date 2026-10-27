@@ -1,4 +1,6 @@
 # WARNING: UNTESTED ON HARDWARE
+#- Not used by the drive-only trial: raw 0x6063 needs a valid feedback source.
+#- Enabling the uncommissioned sensorless interface caused 0x7305 on the test drive.
 #-d /**
 #-d   \brief N6 CSV descriptor for the scaled-position output trial.
 #-d   \details Standard N6 mapping plus native 0x6063 position feedback.

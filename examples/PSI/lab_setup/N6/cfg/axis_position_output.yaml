@@ -1,4 +1,7 @@
-# Dedicated to startup_position_output_100_steps.cmd and its raw 0x6063 PDO.
+# WITHDRAWN: not loaded by startup_position_output_100_steps.cmd.
+# Raw 0x6063 is invalid with interface 1 disabled. Enabling that interface
+# with nominal resolution alone caused 0x7305 (sensor 1 faulty) on this drive.
+# Retained for diagnosis only; do not load without a commissioned feedback source.
 axis:
   id: ${AXIS_ID=1}
   tweakDist: 10

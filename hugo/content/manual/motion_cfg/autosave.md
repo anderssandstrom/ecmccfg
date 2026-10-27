@@ -118,6 +118,47 @@ position-restore policy or request zeroing. Keep the real MRES scaling; do not
 set MRES to 1 to conceal a limit conversion problem. The ECMC compatibility init
 hook also sets the EGU flag before motor-record initialization.
 
+## Startup sequence, step by step
+
+With `restoreMotorSoftLims=1` and `ECMC_STARTUP_GATE=1`, startup proceeds as
+follows:
+
+1. **Load the YAML configuration, before `iocInit`.** ECMC receives the configured
+   soft limits. The standard motor template also initializes `.DLLM` and `.DHLM`
+   from those limits, for example `-100` and `100`.
+2. **Hold limit readback while restoration is pending.** The driver suppresses
+   ECMC-to-motor soft-limit updates so that the configured limits cannot overwrite
+   values restored into the motor record.
+3. **Autosave restores the motor fields during `iocInit`.** Restore passes 0 and 1
+   load `.DLLM` and `.DHLM`, for example `-123` and `123`. `.DVAL` is restored
+   separately and follows the motor's position-restoration policy.
+4. **Capture the restored limits after the IOC is built.** At
+   `initHookAfterIocBuilt`, ECMC captures the motor record's `.DLLM`, `.DHLM` and
+   `.MRES`. This is an IOC initialization hook, not an autosave callback. If
+   autosave did not replace the fields, their template defaults are captured.
+5. **Allow native axis initialization.** Once the IOC is running and bus/timing
+   health has been good continuously for two seconds, the gate allows native axis
+   initialization. Drives, motion commands and ordinary cyclic command producers
+   remain held.
+6. **Apply the buffered soft-limit pair.** With valid native axis status, the
+   motor poller applies the captured limits to ECMC under the RT mutex. Failed
+   attempts are retried. After success, normal soft-limit synchronization resumes.
+7. **Deliver the first healthy motor status.** The compatibility workaround
+   handles a stale startup `COMM_ALARM` once, under the motor-record lock, before
+   normal asyn status delivery. This permits a deferred position-load command to
+   proceed.
+8. **Complete position restoration, if requested by `RSTM`.** The motor sends the
+   saved `.DVAL` through asyn to ECMC. Startup waits for motor-record completion
+   and a subsequent RT sample acknowledging the loaded coordinate; merely
+   queueing the command is not sufficient.
+9. **Release the remaining startup gate.** Every native axis must finish
+   initialization, and every loaded motor record must complete its startup
+   handshake. Ordinary PLCs, plugins and other motion command producers can then
+   run, and a configured startup enable can be applied. An axis without a loaded
+   motor record does not wait for a motor-record handshake.
+10. **Continue normal operation.** Motor and ECMC soft limits remain synchronized.
+    Autosave independently saves the monitored fields for the next restart.
+
 ## Complete startup before motion
 
 Set the gate explicitly before ecmccfg enters runtime:

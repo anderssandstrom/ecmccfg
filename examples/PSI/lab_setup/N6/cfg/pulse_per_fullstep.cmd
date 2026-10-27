@@ -1,0 +1,39 @@
+# WARNING: EXPERIMENTAL, NOT HARDWARE TESTED
+#- N6 FIR-v2508, open-loop two-phase stepper; load after applyComponent
+#- and before applyConfig, with the drive disabled. N6_SID is the slave.
+#- Candidate ratio: 1 pulse per 16384 source increments = 1 full step IF
+#- the pulse generator uses the same native resolution as positionActual01.
+#- Verify source, channel assignment and pulse count on hardware (README.md).
+
+#- Hold both pulse-generator output gates low during setup.
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${N6_SID=${ECMC_EC_SLAVE_NUM}},binaryOutputArray01,0)"
+
+#- Queue SDOs for startup/reconnection. First suppress any saved generation
+#- ratio and disable the free-running source used when no feedback is selected.
+ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x205C,0x03,0,2)"
+ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x205C,0x01,0,2)"
+
+#- Replace saved selections for this OPEN-LOOP example: bits 0..2 stay zero
+#- (original position/velocity feedback). Only interface 1 has bit 3 set,
+#- selecting the internal/sensorless interface for the pulse generator.
+#- This is a commissioning candidate; open-loop source behavior needs testing.
+ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x3203,0x02,0,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x3203,0x03,0,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x3203,0x04,0,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x3203,0x01,8,1)"
+
+#- Clock/direction (A/B), denominator 16384; all 0x205C fields are S16.
+ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x205C,0x02,1,2)"
+ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x205C,0x04,16384,2)"
+
+#- Source 0x20 = pulse generator. Subindices 2/3 are physical outputs 1/2,
+#- gated by bits 16/17 of the EXISTING 0x60FE:01 PDO. Subindex 1 is brake.
+ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x3252,0x02,0x2010,2)"
+ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x3252,0x03,0x2011,2)"
+ecmcConfigOrDie "Cfg.EcAddSdo(${N6_SID=${ECMC_EC_SLAVE_NUM}},0x205C,0x03,1,2)"
+
+#- The FIR-v2508 N6 dictionary lists only 0x3250:01. Do not queue the
+#- undocumented 0x3250:08 enable from the manual's generic routing example.
+#- Arm outputs 1/2 (0x00030000); other output bits remain zero. Writing the
+#- existing BO01-Arr record to 0 disarms both. This example owns the output word.
+ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${N6_SID=${ECMC_EC_SLAVE_NUM}},binaryOutputArray01,196608)"

@@ -1,13 +1,12 @@
 #- Configuration scripts
 #require ecmccfg v11.0.9_RC2 "MASTER_ID=0,ENG_MODE=1,EC_RATE=1000,ECMC_VER=v11.0.9_RC2"
-require ecmccfg dc_timing "MASTER_ID=0,ENG_MODE=1,EC_RATE=1000,ECMC_VER=dc_timing"
-#require ecmccfg sandst_a "MASTER_ID=0,ENG_MODE=1,EC_RATE=500,ECMC_VER=sandst_a"
+require ecmccfg sandst_a "MASTER_ID=0,ENG_MODE=1,EC_RATE=1000,ECMC_VER=sandst_a"
+#require ecmccfg 11.0.8 "MASTER_ID=0,ENG_MODE=1,EC_RATE=500,ECMC_VER=sandst_a"
 #require ecmccfg "MASTER_ID=0,ENG_MODE=1,EC_RATE=500"
 #- Only output errors
 asynSetTraceMask(${ECMC_ASYN_PORT}, -1, 0x01)
 
 ecmcConfigOrDie "Cfg.SetEcStartupTimeout(100)"
-
 
 #   0  0:0   PREOP  +  EK1100 EtherCAT Coupler (2A E-Bus)
 #   1  0:1   PREOP  +  EL2068 8Ch. Dig Output 24V, 0.5A
@@ -28,11 +27,7 @@ ecmcConfigOrDie "Cfg.SetEcStartupTimeout(100)"
 #  16  0:16  PREOP  +  EL7411 BLDC Terminal with incremental encoder/Hall, 50 V DC, 4.
 #  17  0:17  PREOP  +  EL7211-9014 1K. MDP742 Servo-Motor-Endstufe mit OCT (50V, 4,5A 
 #  18  0:18  PREOP  +  EL9576 Bremschopper Klemme
-#  19  0:19  PREOP  +  EL9501 Netzteilklemme 0...20 V DC, 0...2 A
-#  20  0:20  PREOP  +  EL2535-0002 2Ch. Pulse Width Current Output (24V, 2 A)
-#  21  0:21  PREOP  +  EL5102 2Ch. Inc. Encoder 5V (RS422,TTL)
 #  22  0:22  PREOP  +  ED7062 | 2-ch. motion interface, stepper motor, 48 V DC, 3 A, p
-#  23  0:23  PREOP  +  EL7062-0000 2Ch. Stepper motor output stage (48V, 3A)
 #  24  0:24  PREOP  +  EK1100 EtherCAT-Koppler (2A E-Bus)
 #  25  0:25  PREOP  +  EL9227-5500 Overcurrent protection 24V DC, 2Ch., max. 10A (sum)
 #  26  0:26  PREOP  +  EL5042 2Ch. BiSS-C Encoder
@@ -76,27 +71,22 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Motor-Generic-2Phase-Stepp
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd,   "FILE=./cfg/axis_ax5_LO.yaml,        DRV_SLAVE=${ECMC_EC_SLAVE_NUM}, ENC_SLAVE=${ECMC_EC_SLAVE_NUM}, ENC_CHANNEL=01,M_ID=${ECMC_EC_MASTER_ID}"
 
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=15,HW_DESC=EL7342"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=16,HW_DESC=EL7411"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=17,HW_DESC=EL7211-9014_STD"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=18,HW_DESC=EL9576"
-#${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=19,HW_DESC=EL9501"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=20,HW_DESC=EL2535-0002"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=21,HW_DESC=EL5102"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=22,HW_DESC=ED7062"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=23,HW_DESC=EL7062"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=24,HW_DESC=EK1100"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=25,HW_DESC=EL9227-5500"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=26,HW_DESC=EL5042"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=27,HW_DESC=EL5042"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=28,HW_DESC=EL3204"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=29,HW_DESC=EL2008"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=30,HW_DESC=EL1008"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=31,HW_DESC=EL7211-9014_STD"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=32,HW_DESC=EL7211-9014_STD"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=33,HW_DESC=EL7211-9014_STD"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=34,HW_DESC=EL7211-9014_STD"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=35,HW_DESC=EL9576"
-
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL7411"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL7211-9014_STD"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL9576"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=ED7062"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,      "HW_DESC=EK1100"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,      "HW_DESC=EL9227-5500"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,      "HW_DESC=EL5042"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,      "HW_DESC=EL5042"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,      "HW_DESC=EL3204"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,      "HW_DESC=EL2008"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,      "HW_DESC=EL1008"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,      "HW_DESC=EL7211-9014_STD"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,      "HW_DESC=EL7211-9014_STD"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,      "HW_DESC=EL7211-9014_STD"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,      "HW_DESC=EL7211-9014_STD"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,      "HW_DESC=EL9576"
 
 #- #################################################################
 #- Virtual axes

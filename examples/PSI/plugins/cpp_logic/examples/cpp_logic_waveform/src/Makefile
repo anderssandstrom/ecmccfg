@@ -4,7 +4,7 @@ BUILDCLASSES = Linux
 ARCH_FILTER = deb10% deb12%
 EXCLUDE_VERSIONS+=3 7.0.5 7.0.6 7.0.7
 USR_CXXFLAGS += -std=c++17
-ecmc_VERSION = v11.0.7_RC1
+ecmc_VERSION = v11.1.0_RC1
 DIRS+=.
 SOURCES += $(foreach d,${DIRS}, $(wildcard $d/*.c) $(wildcard $d/*.cpp))
 HEADERS += $(foreach d,${DIRS}, $(wildcard $d/*.h))

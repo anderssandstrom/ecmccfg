@@ -3,4 +3,4 @@
 
 require ecmccfg sandst_a "ECMC_VER=sandst_a"
 
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=24, HW_DESC=EL4078"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=28, HW_DESC=EL4078"

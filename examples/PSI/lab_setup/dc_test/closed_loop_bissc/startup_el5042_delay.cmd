@@ -30,7 +30,7 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "SLAVE_ID=9,HW_DESC=EL5042_DC"
 epicsEnvUnset("SYNC_0_SHIFT")
 ecmcConfig "Cfg.EcSetSlaveTimingSource(${ECMC_EC_SLAVE_NUM},2,1)"
 ecmcConfig "Cfg.EcSetSlaveTimingOverride(${ECMC_EC_SLAVE_NUM},2,-1,0,100000)"
-${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Encoder-RLS-LA11-26bit-BISS-C,CH_ID=1"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Encoder-RLS-LA11-26bit-BISS-C,CH_ID=1,MACROS='CLK_FRQ_KHZ=5000'"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd  "COMP=Encoder-RLS-LA11-26bit-BISS-C,CH_ID=2"
 epicsEnvSet(ENC_SID,${ECMC_EC_SLAVE_NUM})
 
@@ -67,7 +67,8 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=27,DS_SIZE=1000,SAMPLE_RAT
 ${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=28,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Mean diff negative'"
 ${SCRIPTEXEC} ${ecmccfg_DIR}addDataStorage.cmd "DS_ID=29,DS_SIZE=1000,SAMPLE_RATE_MS=-1,DS_TYPE=2,DESC='Relative delay ns'"
 
-${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd, "PLC_ID=11,FILE=./cfg/el5042_delay.plc,PLC_MACROS='AX_ID=1,ENC_REF_ID=1,ENC_BISS_ID=2,REF_SID=22,BISS_SID=9,DS_BASE=20,PRINT_EVERY=100,PUSH_ASYN=1'"
+#${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd, "PLC_ID=11,FILE=./cfg/el5042_delay.plc,PLC_MACROS='AX_ID=1,ENC_REF_ID=1,ENC_BISS_ID=2,REF_SID=22,BISS_SID=9,DS_BASE=20,PRINT_EVERY=100,PUSH_ASYN=1'"
+${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd "PLC_ID=11,FILE=./cfg/el5042_delay.plc,PLC_MACROS='AX_ID=1,ENC_REF_ID=1,ENC_BISS_ID=2,REF_SID=22,BISS_SID=9,DS_BASE=20,PRINT_EVERY=100,MIN_VEL=4,PUSH_ASYN=1'"
 
 # Useful commands:
 # ecmcConfig "EcPrintSlaveConfig(9)"

@@ -18,6 +18,7 @@ new packaging and masked gate controls still require a bench recheck.
 | File | Purpose |
 | --- | --- |
 | `startup_position_output_100_steps.cmd` | Output trial with the M1 axis |
+| `startup_opt_all.cmd` | Same trial with capture and analog input PDOs enabled too |
 | ecmccomp `Drive-Generic-PositionOutput` | Sensorless interface off; position units and output routing |
 | `cfg/axis_position_output.yaml` | Axis feedback from fine `positionActual01` |
 | `hardware/Nanotec/ecmcN6-1-1-1-S_OPT.cmd` | `RAW_POS=1` adds `6063:00` in existing PDO `1A03` |
@@ -279,6 +280,18 @@ are separate SDO settings; the experiment does not raise the documented
 500 Hz limit of the position-divider output or preserve position locking.
 
 ## Other optional PDOs
+
+Run `startup_opt_all.cmd` from this directory to try all options together.
+It calls the 100-step startup with `N6_CAPTURE=1,N6_ANALOG_IN=1`, reusing
+the same M1 axis and output component. The normal 100-step startup keeps
+those two diagnostic options off by default.
+
+The compact and expert panels include **Capture** and **Analog** tabs;
+the **Home / Speed** tab shows drive homing speeds and acceleration.
+Optional fields become visible when their mapping flags are enabled.
+After installing the updated module, restart the IOC with this startup
+and reopen the panels. Capture mapping alone does not arm capture.
+
 
 The hardware also supports `CAPTURE=1` for all `3241:01–0C` capture
 readbacks and `ANALOG_IN=1` for both `3320:01–02` analog inputs. They are

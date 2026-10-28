@@ -11,7 +11,8 @@ require ecmccomp sandst_a
 
 #- Fine counter and optional homing PDOs; HOMING maps parameters, it does not home.
 #- Axis homing uses sequence 26 with automatic mode switching; see README.
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=N6-1-1-1-S_OPT,OPT='RAW_POS=1,HOMING=1'"
+#- Optional diagnostics default off; startup_opt_all.cmd enables both.
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=N6-1-1-1-S_OPT,OPT='RAW_POS=1,HOMING=1,CAPTURE=${N6_CAPTURE=0},ANALOG_IN=${N6_ANALOG_IN=0}'"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Motor-Generic-2Phase-Stepper,CH_ID=1,MACROS='I_MAX_MA=400,I_STDBY_MA=100,STEPS=200,INV_DIR=0'"
 epicsEnvSet(DRV_SID,$(ECMC_EC_SLAVE_NUM))
 

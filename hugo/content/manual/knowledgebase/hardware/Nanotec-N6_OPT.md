@@ -64,7 +64,11 @@ it adds no EtherCAT PDO bytes.
 
 ### Capture and analog input options
 
-To enable all optional mappings:
+The runnable all-options example is
+`examples/PSI/lab_setup/N6/startup_opt_all.cmd`. It reuses the 100-step
+startup and M1 axis with `N6_CAPTURE=1,N6_ANALOG_IN=1`.
+
+To enable all optional mappings directly:
 
 ```text
 HW_DESC=N6-1-1-1-S_OPT,OPT='RAW_POS=1,HOMING=1,CAPTURE=1,ANALOG_IN=1'

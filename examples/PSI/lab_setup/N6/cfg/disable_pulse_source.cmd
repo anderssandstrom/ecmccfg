@@ -1,3 +1,5 @@
+#- Lab-only recovery for the rejected pulse-generator trial, not a component.
+#- For ordinary output disarming, use the masked PosOutNN-Ena PVs instead.
 #- Restore the original open-loop source/output settings after the pulse trial.
 #- Load with the drive disabled, after applyComponent and before applyConfig.
 #- This is specific to the original N6 lab setup: interface 1 was disabled,

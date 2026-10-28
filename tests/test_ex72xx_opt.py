@@ -4,6 +4,7 @@ Run: python3 tests/test_ex72xx_opt.py
 Database checks use EPICS msi; UI checks use Qt uic (when installed).
 """
 import itertools
+import math
 import ctypes
 from pathlib import Path
 import re
@@ -51,7 +52,7 @@ def arguments(text):
 
 def expression(text):
     text = re.sub(r'(?<!!)(?<![=])=(?!=)', '==', text)
-    return eval(text, {'__builtins__': {}}, {})
+    return eval(text, {'__builtins__': {}}, {'floor': math.floor})
 
 
 class Startup:

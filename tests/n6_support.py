@@ -62,11 +62,14 @@ class PositionOutput(harness.Startup):
         return list(self.commands)
 
     def apply(self, options=None, channel='1', comp_type='N6'):
+        return self.apply_output('PositionOutput', 'POSITION_OUTPUT', options, channel, comp_type)
+
+    def apply_output(self, name, kind, options=None, channel='1', comp_type='N6'):
         options = {key: str(value) for key, value in (options or {}).items()}
         self.commands = []
         self.env.update(COMP_S_ID=self.slave, CH_ID=str(channel), EC_COMP_TYPE=comp_type)
-        self.run(COMP / 'drive_slaves/Drive-Generic-PositionOutput.cmd', {})
-        self.run(COMP / 'drive_slaves/N6_POSITION_OUTPUT.cmd', {})
+        self.run(COMP / f'drive_slaves/Drive-Generic-{name}.cmd', {})
+        self.run(COMP / f'drive_slaves/N6_{kind}.cmd', {})
         self.run(COMP / 'scripts/support/validateGeneric.cmd', {})
         with tempfile.TemporaryDirectory() as directory:
             generated = Path(directory) / 'valid.cmd'
@@ -75,11 +78,16 @@ class PositionOutput(harness.Startup):
                             self.env['SUPP_MACROS'], str(generated)],
                            capture_output=True, text=True, check=False, timeout=5)
             self.run(generated, {})
-        self.run(COMP / 'scripts/support/validatePOSITION_OUTPUT.cmd', options)
-        self.run(COMP / 'drive_slaves/hw_sdo_scripts/N6_SDOS_POSITION_OUTPUT.cmd', options)
-        self.run(COMP / 'scripts/support/cleanupPOSITION_OUTPUT.cmd', {})
+        self.run(COMP / f'scripts/support/validate{kind}.cmd', options)
+        self.run(COMP / f'drive_slaves/hw_sdo_scripts/N6_SDOS_{kind}.cmd', options)
+        self.run(COMP / f'scripts/support/cleanup{kind}.cmd', {})
         self.run(COMP / 'scripts/support/cleanupGeneric.cmd', {})
         return list(self.commands)
+
+
+class PWMOutput(PositionOutput):
+    def apply(self, options=None, channel='1', comp_type='N6'):
+        return self.apply_output('PWMOutput', 'PWM_OUTPUT', options, channel, comp_type)
 
 
 def settings(commands):

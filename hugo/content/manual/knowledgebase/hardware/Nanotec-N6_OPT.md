@@ -257,6 +257,29 @@ gates, loads no motion axis, and keeps the drive disabled with zero velocity.
 The test selects 5 V I/O and leaves the output gate disabled until explicitly
 armed. The companion `README_software_pwm.md` contains the scope procedure.
 
+The reusable SDO configuration is now in ecmccomp. The startup applies:
+
+```text
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Drive-Generic-PWMOutput,CH_ID=1,MACROS='FREQUENCY_HZ=2000,DUTY_PERCENT=50,OUTPUT=1,PWM_ID=0,ARM=0,N6_IO_24V=0'"
+```
+
+| Component macro | Default | Meaning |
+| --- | --- | --- |
+| `FREQUENCY_HZ` | `2000` | Plain integer 50..2000 Hz |
+| `DUTY_PERCENT` | `50` | Plain integer 0..100 percent; 0/100 give constant endpoints |
+| `OUTPUT` | `1` | Physical output 1..3 |
+| `PWM_ID` | `0` | Generator 0 (`3260`, source `0x12`) or 1 (`3261`, source `0x13`) |
+| `ARM` | `0` | Initial selected-output gate |
+| `N6_IO_24V` | `0` for first output; then inherit | Shared voltage selection |
+| `N6_INPUT_PULLUP` | Inherit motor | Shared input bias |
+
+Apply it after the motor and N6_OPT. Outputs sharing a PWM_ID must use the
+same frequency/duty. PositionOutput and PWMOutput may use different physical
+outputs on one drive, but cannot claim the same output or disagree on shared
+I/O settings. The motor cannot be reapplied after either output component.
+Generator 0 / output 1 / 2 kHz / 50% is the bench-reported case; other
+choices still require commissioning. No extra frequency/duty PVs are added.
+
 The EtherCAT manual distinguishes a **2 kHz software-PWM** limit from the
 **500 Hz** limit for other output sources. PWM is a fixed-frequency signal,
 not a faster position-divider mode. A successful PWM measurement does not
@@ -277,7 +300,8 @@ Run the dedicated startup instead of the position-output startup, connect
 the scope to X4 pin 5 / GNDD pin 8, then arm `PosOut01-Ena`. Expected at
 2 kHz/50%: a 500 microsecond full period with 250 microseconds high and low.
 Disarm after measurement. The test also accepts 500, 1000 and 1500 Hz by
-changing `N6_PWM_HZ` in its startup and restarting. No extra PDOs, motor
+changing `FREQUENCY_HZ` in its component call and restarting. These are
+checkpoints, not the only supported integer frequencies. No extra PDOs, motor
 motion or drive-flash writes are needed. Restart the original 100-step
 startup to restore position routing. The output was reported working; exact
 frequency, duty and jitter still need recorded scope measurements.
@@ -602,3 +626,19 @@ updating the loaded configuration/database files and restarting the IOC.
 - [ecmc homing sequences]({{< relref "/manual/motion_cfg/homing.md" >}}).
 - `examples/PSI/lab_setup/N6/README_position_output_100_steps.md`: lab setup and commissioning notes.
 - ecmccomp `docs/N6_position_output.md`: component interface and constraints.
+
+### Ownership of the N6 configuration snippets
+
+Reusable SDO setup belongs in ecmccomp. Hardware PDOs, records and panels
+remain in ecmccfg, and examples choose components and parameter values.
+
+| N6 lab file | Status |
+| --- | --- |
+| `cfg/position_output_100_steps.cmd` | Compatibility wrapper for existing `Drive-Generic-PositionOutput` |
+| `cfg/software_pwm_2khz.cmd` | Compatibility wrapper for new `Drive-Generic-PWMOutput` |
+| `cfg/pulse_per_fullstep.cmd` | Failed pulse-generator reproducer; not a supported component |
+| `cfg/disable_pulse_source.cmd` | Lab-specific recovery for that failed trial; resets whole output word and feedback selections |
+| Axis YAML files | Axis configuration: scaling, motion settings and sequence-26 homing |
+
+Use masked gate PVs to disarm supported outputs normally. The failed trial
+and its broad recovery are deliberately not packaged as reusable components.

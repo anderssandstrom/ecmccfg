@@ -10,5 +10,5 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Motor-Generic-2Phase-Steppe
 #- Hold the drive disabled with zero velocity; the PWM needs no motor motion.
 ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},driveControl01,0)"
 ecmcConfigOrDie "Cfg.WriteEcEntryIDString(${ECMC_EC_SLAVE_NUM},velocitySetpoint01,0)"
-#- Gate stays off until explicitly armed through PosOut01-Ena.
-${SCRIPTEXEC} ./cfg/software_pwm_2khz.cmd "N6_PWM_HZ=2000,N6_PWM_ARM=0,N6_IO_24V=0"
+#- Reusable SDO configuration is supplied by ecmccomp. Gate starts disabled.
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Drive-Generic-PWMOutput,CH_ID=1,MACROS='FREQUENCY_HZ=2000,DUTY_PERCENT=50,OUTPUT=1,PWM_ID=0,ARM=0,N6_IO_24V=0'"

@@ -130,10 +130,12 @@ are run separately so an ecmccfg-only checkout needs no second repository:
 
 ```sh
 python3 tests/integration/n6_position_output.py
+python3 tests/integration/n6_pwm_output.py
 ```
 
-Both repositories must contain the N6 PositionOutput additions. These checks
-cover all 49 supported intervals on all three outputs, invalid options,
-per-master/slave capabilities, startup order, shared-unit conflicts, cleanup
-and preservation of unrelated output bits. They capture SDO commands and
+Both repositories must contain the N6 PositionOutput/PWMOutput additions.
+These checks cover all 49 position intervals on three outputs; PWM frequency
+and duty bounds, generators and output routing; invalid options; per-master/
+slave capabilities; startup order; shared-unit, generator, electrical and
+output-ownership conflicts; cleanup and preservation of unrelated output bits. They capture SDO commands and
 model bit writes; they do not operate a drive.

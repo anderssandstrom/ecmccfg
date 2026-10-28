@@ -268,3 +268,11 @@ For full restoration of routing and interface settings, load
 `cfg/disable_pulse_source.cmd` after the motor component and before applying
 EtherCAT configuration. The normal component restores native position units.
 No script saves settings to drive flash.
+
+## Compare with software PWM
+
+For the separate fixed-frequency 2 kHz PWM bench candidate, use
+`startup_software_pwm.cmd` and [README_software_pwm.md](README_software_pwm.md).
+It loads no motion axis and starts output 1 disarmed. PWM frequency/duty
+are separate SDO settings; the experiment does not raise the documented
+500 Hz limit of the position-divider output or preserve position locking.

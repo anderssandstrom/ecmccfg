@@ -194,6 +194,38 @@ The hardware snippet loads all six gate control/readback records directly,
 even when default substitutions are disabled. Output records use
 `PINI=0`/`NO` so initialization preserves the configured gates.
 
+## Separate software-PWM frequency test
+
+`examples/PSI/lab_setup/N6/startup_software_pwm.cmd` is an isolated bench
+candidate for fixed-frequency software PWM. It uses `_OPT` for masked output
+gates, loads no motion axis, and keeps the drive disabled with zero velocity.
+The test selects 5 V I/O and leaves the output gate disabled until explicitly
+armed. The companion `README_software_pwm.md` contains the scope procedure.
+
+The EtherCAT manual distinguishes a **2 kHz software-PWM** limit from the
+**500 Hz** limit for other output sources. PWM is a fixed-frequency signal,
+not a faster position-divider mode. A successful PWM measurement does not
+prove that the 100-full-step position output can exceed its documented limit.
+A PWM carrier gated by position is also not automatically phase-aligned to
+position or guaranteed to produce one pulse per compare point.
+
+The candidate uses `3260:01=2000` Hz, `3260:02=50` percent and
+`3252:02=0x1210` (PWM 0 to output 1, gated by bit 16). Source `0x12` is
+explicitly listed in the newer
+[N6 Modbus TCP manual v1.2.1 for FIR-v2542](https://www.nanotec.com/fileadmin/files/Handbuecher/Motorsteuerungen/n6/fir-v2508/N6_ModbusTCP_Technical-Manual_V1.2.1.pdf),
+section 7.1.2.3. The older EtherCAT v1.1.0 table omits that source despite
+listing the PWM parameter objects. Its operation on the EtherCAT variant
+and physical output 1 therefore needs verification; this is not an already
+commissioned feature.
+
+Run the dedicated startup instead of the position-output startup, connect
+the scope to X4 pin 5 / GNDD pin 8, then arm `PosOut01-Ena`. Expected at
+2 kHz/50%: a 500 microsecond full period with 250 microseconds high and low.
+Disarm after measurement. The test also accepts 500, 1000 and 1500 Hz by
+changing `N6_PWM_HZ` in its startup and restarting. No extra PDOs, motor
+motion or drive-flash writes are needed. Restart the original 100-step
+startup to restore position routing. No physical PWM result is recorded yet.
+
 ## Drive homing method 35
 
 Method 35 references the drive's **current position without a homing move**.

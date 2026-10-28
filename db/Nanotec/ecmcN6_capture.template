@@ -1,0 +1,43 @@
+#- Read-only capture PDOs. UInt32-to-Float64 conversion preserves the full
+#- unsigned 32-bit count/position range in EPICS without sign truncation.
+#- CH_ID: 01=home switch, 02=input 3, 03=input 4.
+record(ai,"${ECMC_P}Capture${CH_ID}-Control-RB") {
+  field(DESC,"N6 capture ${CH_ID} Control")
+  field(PINI,"YES")
+  field(DTYP,"asynFloat64")
+  field(INP,"@asyn(${PORT},${ADDR=0},${TIMEOUT=1})CMD=UINT32TOFLOAT64/T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynFloat64/ec${MASTER_ID}.s${SLAVE_POS}.captureControl${CH_ID}?")
+  field(SCAN,"I/O Intr")
+  field(PREC,"0")
+  field(EGU,"")
+  field(TSE,"${TSE=-2}")
+}
+record(ai,"${ECMC_P}Capture${CH_ID}-Count") {
+  field(DESC,"N6 capture ${CH_ID} Count")
+  field(PINI,"YES")
+  field(DTYP,"asynFloat64")
+  field(INP,"@asyn(${PORT},${ADDR=0},${TIMEOUT=1})CMD=UINT32TOFLOAT64/T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynFloat64/ec${MASTER_ID}.s${SLAVE_POS}.captureCount${CH_ID}?")
+  field(SCAN,"I/O Intr")
+  field(PREC,"0")
+  field(EGU,"edges")
+  field(TSE,"${TSE=-2}")
+}
+record(ai,"${ECMC_P}Capture${CH_ID}-PosAct") {
+  field(DESC,"N6 capture ${CH_ID} Position")
+  field(PINI,"YES")
+  field(DTYP,"asynFloat64")
+  field(INP,"@asyn(${PORT},${ADDR=0},${TIMEOUT=1})CMD=UINT32TOFLOAT64/T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynFloat64/ec${MASTER_ID}.s${SLAVE_POS}.capturePosition${CH_ID}?")
+  field(SCAN,"I/O Intr")
+  field(PREC,"0")
+  field(EGU,"user")
+  field(TSE,"${TSE=-2}")
+}
+record(ai,"${ECMC_P}Capture${CH_ID}-PosRaw") {
+  field(DESC,"N6 capture ${CH_ID} RawPosition")
+  field(PINI,"YES")
+  field(DTYP,"asynFloat64")
+  field(INP,"@asyn(${PORT},${ADDR=0},${TIMEOUT=1})CMD=UINT32TOFLOAT64/T_SMP_MS=${T_SMP_MS=1000}/TYPE=asynFloat64/ec${MASTER_ID}.s${SLAVE_POS}.captureRawPosition${CH_ID}?")
+  field(SCAN,"I/O Intr")
+  field(PREC,"0")
+  field(EGU,"counts")
+  field(TSE,"${TSE=-2}")
+}

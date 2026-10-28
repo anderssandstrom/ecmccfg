@@ -1,8 +1,9 @@
 # N6 software-PWM frequency trial
 
 Run `startup_software_pwm.cmd` from this directory instead of the 100-step
-position-output startup. This is an uncommissioned bench candidate for
-N6-1-1-1-S / FIR-v2542-B1080909. No axis is loaded, the drive controlword
+position-output startup. The user reported this PWM trial working on
+N6-1-1-1-S / FIR-v2542-B1080909 (2026-10-28). Detailed measured frequency,
+duty and jitter were not supplied. No axis is loaded, the drive controlword
 and velocity command are zero, and output 1 starts disarmed. No additional
 PDOs or NanoJ program are needed. The motor component is applied to satisfy
 the normal slave configuration requirements; the test does not enable motion.
@@ -21,9 +22,25 @@ The older EtherCAT v1.1.0 manual lists the 2 kHz limit and `3260` frequency/
 duty objects, but omits the software-PWM routing entries from its table.
 The newer **N6 Modbus TCP** v1.2.1 manual for FIR-v2542 explicitly lists
 `0x12xx` for PWM 0 (`3260`) and frequency in hertz. That is the basis for
-this EtherCAT experiment, not proof that the routing works on this variant.
+this EtherCAT experiment. The subsequent bench report confirms operation
+on the tested drive; it does not establish support on other variants.
 If the drive rejects the SDO, record its abort and firmware; do not substitute
 brake PWM or change sensorless/feedback settings to work around it.
+
+## Can PWM follow the open-loop counter?
+
+No direct counter-clock or position-synchronization setting is documented
+for `3260`: it exposes frequency and duty cycle. Routing selects either
+the PWM source (`0x12`) or a counter/position divider, not both. Its gate
+selects a bit in `60FE:01`, not a position source.
+
+A PLC can use `6063`/`6064` to control that gate, producing position-windowed
+PWM bursts, but the carrier remains time-based. This does not give one
+edge per configured number of full steps or a defined position phase.
+The normal 1 ms PLC/EtherCAT cycle cannot individually place 250 microsecond
+edges. There is no documented SDO-only path here that turns the working
+2 kHz carrier into a 2 kHz position-synchronous output. The existing
+position-divider route retains its documented 500 Hz limit.
 
 ## Settings
 
@@ -70,7 +87,8 @@ separately. A gate readback confirms the command bit, not the physical output.
 The newer manual permits a wider frequency parameter range than the stated
 2 kHz software-PWM output limit. An accepted SDO value is not proof of the
 physical output frequency; this candidate stays at or below 2 kHz.
-No physical measurements have been made for this PWM candidate yet.
+The user reported the output working. Record numerical scope results
+before treating frequency accuracy, duty or jitter as verified.
 
 Useful readbacks for master 1 / slave 0:
 

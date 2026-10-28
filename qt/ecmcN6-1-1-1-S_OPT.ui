@@ -613,115 +613,848 @@
      <property name="visibilityCalc">
       <string>A==1</string>
      </property>
-     <widget class="QLabel" name="homingLabel0">
+     <widget class="QTabWidget" name="homingTabs">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
         <width>104</width>
+        <height>275</height>
+       </rect>
+      </property>
+      <widget class="QWidget" name="homingModeTab">
+       <attribute name="title">
+        <string>Mode</string>
+       </attribute>
+       <widget class="QLabel" name="homingLabel0">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>104</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Method</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="homingValue0">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>20</y>
+          <width>104</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv01-HomeMethod-RB</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="homingLabel1">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>52</y>
+          <width>104</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Home offset</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="homingValue1">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>72</y>
+          <width>104</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv01-HomeOffset-RB</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="homingLabel2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>104</y>
+          <width>104</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Mode actual</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="homingValue2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>124</y>
+          <width>104</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv01-ModeAct</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="homingHelp">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>164</y>
+          <width>104</width>
+          <height>65</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>6: Home
+9: CSV
+See Expert</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="homingDynamicsTab">
+       <attribute name="title">
+        <string>Speed</string>
+       </attribute>
+       <widget class="QLabel" name="homeLabelHomeVelTo">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>94</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Speed to</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="homeReadHomeVelTo">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>20</y>
+          <width>104</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv01-HomeVelTo-RB</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="homeLabelHomeVelFrm">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>52</y>
+          <width>94</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Speed from</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="homeReadHomeVelFrm">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>72</y>
+          <width>104</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv01-HomeVelFrm-RB</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="homeLabelHomeAcc">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>104</y>
+          <width>94</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Accel</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="homeReadHomeAcc">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>124</y>
+          <width>104</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv01-HomeAcc-RB</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="homeDynamicsNote">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>160</y>
+          <width>94</width>
+          <height>75</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Drive units; not YAML values.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="captureTab">
+    <attribute name="title">
+     <string>Capture</string>
+    </attribute>
+    <widget class="QLabel" name="captureTabLabel">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>5</y>
+       <width>104</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Capture</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="captureTabMapped">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>25</y>
+       <width>104</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgCapture</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Static</enum>
+     </property>
+    </widget>
+    <widget class="caFrame" name="captureTabFrame">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>55</y>
+       <width>104</width>
+       <height>275</height>
+      </rect>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgCapture</string>
+     </property>
+     <property name="visibility">
+      <enum>caFrame::Calc</enum>
+     </property>
+     <property name="visibilityCalc">
+      <string>A==1</string>
+     </property>
+     <widget class="QTabWidget" name="captureTabs">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>104</width>
+        <height>275</height>
+       </rect>
+      </property>
+      <widget class="QWidget" name="captureGroup1">
+       <attribute name="title">
+        <string>Home</string>
+       </attribute>
+       <widget class="QLabel" name="captureLabel1_0">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>94</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Control</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="captureValue1_0">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>20</y>
+          <width>94</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Capture01-Control-RB</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="captureLabel1_1">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>52</y>
+          <width>94</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Edge count</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="captureValue1_1">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>72</y>
+          <width>94</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Capture01-Count</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="captureLabel1_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>104</y>
+          <width>94</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Position</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="captureValue1_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>124</y>
+          <width>94</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Capture01-PosAct</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="captureLabel1_3">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>156</y>
+          <width>94</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Raw position</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="captureValue1_3">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>176</y>
+          <width>94</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Capture01-PosRaw</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="captureGroup2">
+       <attribute name="title">
+        <string>In 3</string>
+       </attribute>
+       <widget class="QLabel" name="captureLabel2_0">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>94</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Control</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="captureValue2_0">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>20</y>
+          <width>94</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Capture02-Control-RB</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="captureLabel2_1">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>52</y>
+          <width>94</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Edge count</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="captureValue2_1">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>72</y>
+          <width>94</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Capture02-Count</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="captureLabel2_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>104</y>
+          <width>94</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Position</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="captureValue2_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>124</y>
+          <width>94</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Capture02-PosAct</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="captureLabel2_3">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>156</y>
+          <width>94</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Raw position</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="captureValue2_3">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>176</y>
+          <width>94</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Capture02-PosRaw</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="captureGroup3">
+       <attribute name="title">
+        <string>In 4</string>
+       </attribute>
+       <widget class="QLabel" name="captureLabel3_0">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>94</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Control</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="captureValue3_0">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>20</y>
+          <width>94</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Capture03-Control-RB</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="captureLabel3_1">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>52</y>
+          <width>94</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Edge count</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="captureValue3_1">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>72</y>
+          <width>94</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Capture03-Count</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="captureLabel3_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>104</y>
+          <width>94</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Position</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="captureValue3_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>124</y>
+          <width>94</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Capture03-PosAct</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="captureLabel3_3">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>156</y>
+          <width>94</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Raw position</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="caLineEdit" name="captureValue3_3">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>176</y>
+          <width>94</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="channel">
+         <string>$(IOC):m$(MasterID)s$(SlaveID)-Capture03-PosRaw</string>
+        </property>
+        <property name="colorMode">
+         <enum>caLineEdit::Static</enum>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="analogTab">
+    <attribute name="title">
+     <string>Analog</string>
+    </attribute>
+    <widget class="QLabel" name="analogTabLabel">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>5</y>
+       <width>104</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Analog</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="analogTabMapped">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>25</y>
+       <width>104</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgAnalogIn</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Static</enum>
+     </property>
+    </widget>
+    <widget class="caFrame" name="analogTabFrame">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>55</y>
+       <width>104</width>
+       <height>275</height>
+      </rect>
+     </property>
+     <property name="channel">
+      <string>$(IOC):m$(MasterID)s$(SlaveID)-CfgAnalogIn</string>
+     </property>
+     <property name="visibility">
+      <enum>caFrame::Calc</enum>
+     </property>
+     <property name="visibilityCalc">
+      <string>A==1</string>
+     </property>
+     <widget class="QLabel" name="analogLabel1">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>94</width>
         <height>18</height>
        </rect>
       </property>
       <property name="text">
-       <string>Method</string>
+       <string>Input 1</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="caLineEdit" name="homingValue0">
+     <widget class="caLineEdit" name="analogValue1">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>20</y>
-        <width>104</width>
+        <width>94</width>
         <height>22</height>
        </rect>
       </property>
       <property name="channel">
-       <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv01-HomeMethod-RB</string>
+       <string>$(IOC):m$(MasterID)s$(SlaveID)-AI01</string>
       </property>
       <property name="colorMode">
        <enum>caLineEdit::Static</enum>
       </property>
      </widget>
-     <widget class="QLabel" name="homingLabel1">
+     <widget class="QLabel" name="analogLabel2">
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>52</y>
-        <width>104</width>
+        <y>55</y>
+        <width>94</width>
         <height>18</height>
        </rect>
       </property>
       <property name="text">
-       <string>Home offset</string>
+       <string>Input 2</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="caLineEdit" name="homingValue1">
+     <widget class="caLineEdit" name="analogValue2">
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>72</y>
-        <width>104</width>
+        <y>75</y>
+        <width>94</width>
         <height>22</height>
        </rect>
       </property>
       <property name="channel">
-       <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv01-HomeOffset-RB</string>
+       <string>$(IOC):m$(MasterID)s$(SlaveID)-AI02</string>
       </property>
       <property name="colorMode">
        <enum>caLineEdit::Static</enum>
       </property>
      </widget>
-     <widget class="QLabel" name="homingLabel2">
+     <widget class="QLabel" name="analogNote">
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>104</y>
-        <width>104</width>
-        <height>18</height>
+        <y>120</y>
+        <width>94</width>
+        <height>75</height>
        </rect>
       </property>
       <property name="text">
-       <string>Mode actual</string>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="caLineEdit" name="homingValue2">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>124</y>
-        <width>104</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="channel">
-       <string>$(IOC):m$(MasterID)s$(SlaveID)-Drv01-ModeAct</string>
-      </property>
-      <property name="colorMode">
-       <enum>caLineEdit::Static</enum>
-      </property>
-     </widget>
-     <widget class="QLabel" name="homingHelp">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>164</y>
-        <width>104</width>
-        <height>65</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>6: Home
-9: CSV
-See Expert</string>
+       <string>Drive user units.</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>

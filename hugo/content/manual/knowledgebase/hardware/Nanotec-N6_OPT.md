@@ -46,19 +46,70 @@ use `_OPT` instead.
 | Option | Default | Effect when set to `1` |
 | --- | --- | --- |
 | `RAW_POS` | `0` | Map fine `6063:00` as `positionActual01`; name existing `6064:00` entry `positionActualScaled01` |
-| `HOMING` | `0` | Add `homingMethod01` (`6098:00`, S8), `homeOffset01` (`607C:00`, S32) and the `driveCmdExe01` trigger-bit alias |
+| `HOMING` | `0` | Add method, offset, drive homing speeds/acceleration and the sequence-26 trigger alias |
+| `CAPTURE` | `0` | Map `3241:01–0C` capture control readbacks, counts and latched positions |
+| `ANALOG_IN` | `0` | Map both signed `3320:01–02` analog input values |
 
-Both options are independent and accept only `0` or `1`. With both disabled,
+All options are independent and accept only `0` or `1`. With all disabled,
 the PDO mapping matches the base `N6-1-1-1-S` configuration. The motor
 component type remains `N6`.
 
 `RAW_POS=1` appends the S32 `6063` entry to existing TxPDO `1A03`, increasing
 that PDO from 16 to 20 bytes. The four TxPDO assignment slots are retained.
-`HOMING=1` appends five bytes to existing RxPDO `1603`, increasing it from
-4 to 9 bytes without adding an RxPDO assignment slot. These options map
+`HOMING=1` appends 17 bytes to existing RxPDO `1603`, increasing it from
+4 to 21 bytes without adding an RxPDO assignment slot. These options map
 entries; they do not change position units, route outputs or execute homing.
 The trigger alias is process-image data over existing controlword bit 4;
 it adds no EtherCAT PDO bytes.
+
+### Capture and analog input options
+
+To enable all optional mappings:
+
+```text
+HW_DESC=N6-1-1-1-S_OPT,OPT='RAW_POS=1,HOMING=1,CAPTURE=1,ANALOG_IN=1'
+```
+
+`CAPTURE=1` exposes all twelve `3241` payload subindices as U32 readbacks:
+
+| Group | Source | Subindices | PDO | Entry suffix |
+| --- | --- | --- | --- | --- |
+| 01 | Home-switch capture | `01–04` | `1A00` | `01` |
+| 02 | Input 3 capture | `05–08` | `1A01` | `02` |
+| 03 | Input 4 capture | `09–0C` | `1A02` | `03` |
+
+Each group has `captureControlNN`, `captureCountNN`, `capturePositionNN`
+and `captureRawPositionNN`. Corresponding PVs are `CaptureNN-Control-RB`,
+`CaptureNN-Count`, `CaptureNN-PosAct` and `CaptureNN-PosRaw`. Position is in
+configured drive position units; raw position is in sensor increments.
+The EPICS records preserve the entire unsigned 32-bit range. For negative
+positions, interpret the appropriate 32-bit two's-complement value in the
+application rather than treating the unsigned display as a distance.
+
+The object dictionary marks these subindices **TxPDO-only**, including the
+control fields. Mapping them does not arm capture or change input routing.
+Configure the desired edge by SDO: `3241:01` for the home-switch source,
+`:05` for input 3, `:09` for input 4. Values are `0` disabled, `1` rising,
+`2` falling and `3` both edges. Re-arming can reset the capture count.
+For example, enable both-edge capture of input 3 on master 1/slave 0:
+
+```bash
+ethercat download -m1 -p0 --type uint32 0x3241 0x05 3
+```
+
+Check capture/input-routing behavior with the actual wiring and firmware;
+in particular, its raw sensor value needs verification with our generated
+open-loop counter. No automatic capture SDO writes are added by `_OPT`.
+
+`ANALOG_IN=1` maps `analogInput01` and `analogInput02` (S32, `3320:01–02`)
+in `1A03`, with PVs `AI01` and `AI02`. Values use the drive's existing input
+scaling and offsets. The records label them `user`, not volts; no voltage
+conversion or analog-input configuration is applied by this option.
+
+The groups are deliberately spread across existing PDOs because each PDO
+has at most eight mapping entries. With all options enabled, TxPDO entry
+counts are `1A00:6`, `1A01:5`, `1A02:5`, `1A03:8`; the four assignment slots
+are retained. `1A03` is 28 bytes with raw position and both analog inputs.
 
 ### Fine feedback and scaled output position
 
@@ -214,9 +265,9 @@ The candidate uses `3260:01=2000` Hz, `3260:02=50` percent and
 explicitly listed in the newer
 [N6 Modbus TCP manual v1.2.1 for FIR-v2542](https://www.nanotec.com/fileadmin/files/Handbuecher/Motorsteuerungen/n6/fir-v2508/N6_ModbusTCP_Technical-Manual_V1.2.1.pdf),
 section 7.1.2.3. The older EtherCAT v1.1.0 table omits that source despite
-listing the PWM parameter objects. Its operation on the EtherCAT variant
-and physical output 1 therefore needs verification; this is not an already
-commissioned feature.
+listing the PWM parameter objects. The user subsequently reported the PWM test working on the EtherCAT drive
+on 2026-10-28. Numerical frequency/duty/jitter measurements were not supplied;
+this is evidence for that tested setup, not other variants.
 
 Run the dedicated startup instead of the position-output startup, connect
 the scope to X4 pin 5 / GNDD pin 8, then arm `PosOut01-Ena`. Expected at
@@ -224,7 +275,14 @@ the scope to X4 pin 5 / GNDD pin 8, then arm `PosOut01-Ena`. Expected at
 Disarm after measurement. The test also accepts 500, 1000 and 1500 Hz by
 changing `N6_PWM_HZ` in its startup and restarting. No extra PDOs, motor
 motion or drive-flash writes are needed. Restart the original 100-step
-startup to restore position routing. No physical PWM result is recorded yet.
+startup to restore position routing. The output was reported working; exact
+frequency, duty and jitter still need recorded scope measurements.
+
+No counter-clock input is documented for `3260`; it provides frequency and
+duty parameters. Output routing selects PWM or position, and its gate is a
+`60FE:01` bit. A PLC may gate PWM over a position window, but this gives
+bursts of a time-based carrier rather than one edge per motor-step interval.
+It does not bypass the documented 500 Hz position-divider limit.
 
 ## Drive homing method 35
 
@@ -242,12 +300,20 @@ coordinated by sequence 26 in the example.
 ### PDOs and panel records
 
 With `HOMING=1`, the process image initializes `homingMethod01=35` and
-`homeOffset01=0`. Mode remains CSV (9) until a sequence changes it.
+`homeOffset01=0`. It also maps the drive homing dynamics, initialized to the
+manual's presets: switch-search speed 50, zero-search speed 10 and
+acceleration 500. These are drive-defined user-unit values, separate from
+the YAML homing parameters used by ecmc. Method 35 makes no search move;
+configure and verify these values before using other drive homing methods.
+Mode remains CSV (9) until a sequence changes it.
 
 | Entry | Object/type | Purpose |
 | --- | --- | --- |
 | `homingMethod01` | `6098:00`, S8 | Homing method; optional PDO |
 | `homeOffset01` | `607C:00`, S32 | Offset in configured `6064` units; optional PDO |
+| `homingVelocitySwitch01` | `6099:01`, U32 | Switch-search speed; initialized to 50 |
+| `homingVelocityZero01` | `6099:02`, U32 | Zero/index-search speed; initialized to 10 |
+| `homingAcceleration01` | `609A:00`, U32 | Drive homing acceleration; initialized to 500 |
 | `modeControl01` | `6060:00`, S8 | Mode command: 6 homing, 9 CSV; already mapped |
 | `modeActual01` | `6061:00`, S8 | Mode acknowledgment; already mapped |
 | `driveControl01` | `6040:00`, U16 | Axis-owned controlword; already mapped |
@@ -263,6 +329,9 @@ Additional PVs are `Drv01-HomeMethod`, `Drv01-HomeOffset` and
 readbacks report the process-image command values; `Drv01-ModeAct` is the
 drive's actual mode acknowledgment. Command records use `PINI=0` so IOC
 initialization does not overwrite the initialized method, offset or mode.
+Additional command/readback pairs are `Drv01-HomeVelTo`, `Drv01-HomeVelFrm`
+and `Drv01-HomeAcc`, also with `PINI=0`. Edit them while the axis is idle.
+The EPICS edits use the nonnegative asynInt32 range; the mapped PDO type is U32.
 
 ### Use axis homing sequence 26
 
@@ -431,6 +500,8 @@ established by the configuration tests.
 | `PosOut01-Ena` through `PosOut03-Ena` | Individual output gates, each with `-RB` |
 | `CfgRawPosition` | Resolved raw-position option, read-only |
 | `CfgHoming` | Resolved homing option, read-only |
+| `CfgCapture` | Resolved capture option, read-only |
+| `CfgAnalogIn` | Resolved analog input option, read-only |
 | `BO01-Arr` | Complete output word, including the brake and output gates |
 
 The hardware selects `ecmcN6-1-1-1-S_OPT.ui` and
@@ -443,6 +514,11 @@ otherwise it reports that the PDOs are not mapped. The compact tab shows
 method, offset and actual mode readbacks. The expert tab adds editable
 parameters/mode, command readbacks and statusword bits 10, 12 and 13.
 The expert display also retains the output gate controls and readbacks.
+The Home tab separates Mode and Speed fields; Speed shows the new drive
+homing dynamics (editable in Expert, read-only in the compact display).
+Capture and Analog tabs expose their optional readbacks only when
+`CfgCapture=1` / `CfgAnalogIn=1`. Capture has Home, In 3 and In 4 sub-tabs;
+its control fields are readbacks, not writable arming controls.
 The original panels remain available for the base descriptor.
 
 After installing updated files, restart the IOC to load new records and
@@ -511,7 +587,8 @@ dbgrep *HomeMethod*
 ```
 
 There should be three gate controls and three gate readbacks. Homing
-parameter records are present only with `HOMING=1`. Missing records require
+parameter records are present only with `HOMING=1`; capture and analog
+records similarly require their options. Missing records require
 updating the loaded configuration/database files and restarting the IOC.
 
 ## Sources and related configuration

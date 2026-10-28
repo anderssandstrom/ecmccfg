@@ -12,3 +12,17 @@ record(bi,"${ECMC_P}CfgHoming") {
   field(ZNAM,"Not mapped")
   field(ONAM,"Mapped")
 }
+
+record(bi,"${ECMC_P}CfgCapture") {
+  field(PINI,"YES")
+  field(INP,"${CAPTURE=0}")
+  field(ZNAM,"Not mapped")
+  field(ONAM,"Mapped")
+}
+
+record(bi,"${ECMC_P}CfgAnalogIn") {
+  field(PINI,"YES")
+  field(INP,"${ANALOG_IN=0}")
+  field(ZNAM,"Not mapped")
+  field(ONAM,"Mapped")
+}

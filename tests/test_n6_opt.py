@@ -64,7 +64,8 @@ class N6OptTests(unittest.TestCase):
             enabled = hardware_commands(options={'RAW_POS': raw, 'HOMING': '1'})
             entries = enabled.entries()
             self.assertEqual(set(entries) - set(baseline.entries()),
-                             {'homingMethod01', 'homeOffset01'})
+                             {'homingMethod01', 'homeOffset01', 'homingVelocitySwitch01',
+                              'homingVelocityZero01', 'homingAcceleration01'})
             for name, mapping in baseline.entries().items():
                 self.assertEqual(entries[name], mapping)
             self.assertEqual(entries['homingMethod01'], ((1, 2, 0x1603, 0x6098, 0), 'S8'))
@@ -88,7 +89,7 @@ class N6OptTests(unittest.TestCase):
             self.assertLessEqual(sources, entries.keys())
             names = re.findall(r'record\(\w+,\s*"([^"]+)"', database)
             self.assertEqual(len(names), len(set(names)))
-            for suffix in ['HomeMethod', 'HomeOffset', 'ModeCmd']:
+            for suffix in ['HomeMethod', 'HomeOffset', 'ModeCmd', 'HomeVelTo', 'HomeVelFrm', 'HomeAcc']:
                 name = 'TEST:Drv01-' + suffix
                 body = re.search(r'record\(ao,\s*"' + name + r'"\)\s*\{(.*?)\n\}', database, re.S)[1]
                 self.assertRegex(body, r'field\(PINI,\s*"0"\)')
@@ -99,6 +100,53 @@ class N6OptTests(unittest.TestCase):
         for value in ['2', '-1', 'yes', '1.0', '']:
             with self.subTest(value=value), self.assertRaises(InvalidConfiguration):
                 hardware_commands(options={'HOMING': value})
+
+    def test_capture_analog_and_homing_options_fit_pdo_limits(self):
+        from collections import Counter
+        for raw, home, capture, analog in product(['0', '1'], repeat=4):
+            startup = hardware_commands(options={'RAW_POS': raw, 'HOMING': home,
+                                                 'CAPTURE': capture, 'ANALOG_IN': analog})
+            entries = startup.entries()
+            counts = Counter(m[0][:3] for m in entries.values())
+            self.assertTrue(all(count <= 8 for count in counts.values()), counts)
+            self.assertEqual({pdo for direction, sm, pdo in counts if direction == 2},
+                             {0x1a00, 0x1a01, 0x1a02, 0x1a03})
+            self.assertEqual({pdo for direction, sm, pdo in counts if direction == 1},
+                             {0x1600, 0x1602, 0x1603})
+            for ch in [1, 2, 3]:
+                for offset, name in enumerate(['captureControl', 'captureCount',
+                                               'capturePosition', 'captureRawPosition']):
+                    key = f'{name}{ch:02d}'
+                    self.assertEqual(key in entries, capture == '1')
+                    if capture == '1':
+                        self.assertEqual(entries[key],
+                            ((2, 3, 0x1a00+ch-1, 0x3241, (ch-1)*4+offset+1), 'U32'))
+            for ch in [1, 2]:
+                key = f'analogInput{ch:02d}'
+                self.assertEqual(key in entries, analog == '1')
+                if analog == '1':
+                    self.assertEqual(entries[key], ((2, 3, 0x1a03, 0x3320, ch), 'S32'))
+            if home == '1':
+                for name, index, sub, initial in [('homingVelocitySwitch', 0x6099, 1, 50),
+                                                ('homingVelocityZero', 0x6099, 2, 10),
+                                                ('homingAcceleration', 0x609a, 0, 500)]:
+                    self.assertEqual(entries[name+'01'], ((1, 2, 0x1603, index, sub), 'U32'))
+                    self.assertIn(f'Cfg.WriteEcEntryIDString(3,{name}01,{initial})', startup.commands)
+            self.assertFalse(any('0x3241' in c and 'Sdo' in c for c in startup.commands))
+            database = expanded_database(startup)
+            sources = set(re.findall(r'/ec0\.s3\.(\w+)[?=]', database))
+            self.assertLessEqual(sources, entries.keys())
+            names = re.findall(r'record\(\w+,\s*"([^"]+)"', database)
+            self.assertEqual(len(names), len(set(names)))
+            if capture == '1':
+                for suffix in ['Control-RB', 'Count', 'PosAct', 'PosRaw']:
+                    for ch in [1, 2, 3]:
+                        body = re.search(r'record\(ai,\s*"TEST:Capture' + f'{ch:02d}' + '-' + suffix + r'"\)\s*\{(.*?)\n\}', database, re.S)[1]
+                        self.assertIn('CMD=UINT32TOFLOAT64', body)
+        for option in ['CAPTURE', 'ANALOG_IN']:
+            for value in ['2', '-1', 'true', '1.0', '']:
+                with self.subTest(option=option, value=value), self.assertRaises(InvalidConfiguration):
+                    hardware_commands(options={option: value})
 
     def test_hardware_loads_all_gate_records_directly(self):
         for raw in ['0', '1']:
@@ -137,8 +185,9 @@ class N6OptTests(unittest.TestCase):
                 self.assertRegex(body, r'field\(PINI,\s*"0"\)')
 
     def test_optional_panels_only_show_mapped_channels(self):
-        for raw, homing in product(['0', '1'], repeat=2):
-            startup = hardware_commands(options={'RAW_POS': raw, 'HOMING': homing})
+        for raw, homing, capture, analog in product(['0', '1'], repeat=4):
+            startup = hardware_commands(options={'RAW_POS': raw, 'HOMING': homing,
+                                                 'CAPTURE': capture, 'ANALOG_IN': analog})
             names = set(re.findall(r'record\(\w+,\s*"([^"]+)"', expanded_database(startup)))
             visited = []
             for filename in ['ecmcN6-1-1-1-S_OPT.ui', 'ecmcN6-1-1-1-S_OPT_expert.ui']:
@@ -152,7 +201,8 @@ class N6OptTests(unittest.TestCase):
                         visited.append(pv)
                     if 'visibilityCalc' in props:
                         self.assertEqual(props['visibilityCalc'], 'A==1')
-                        flag = homing if props['channel'].endswith('CfgHoming') else raw
+                        flag = {'CfgHoming': homing, 'CfgRawPosition': raw,
+                                'CfgCapture': capture, 'CfgAnalogIn': analog}[props['channel'].rsplit('-', 1)[-1]]
                         if flag == '0':
                             return
                     for child in widget.findall('widget'):
@@ -164,6 +214,8 @@ class N6OptTests(unittest.TestCase):
             self.assertEqual('TEST:Enc01-PosScaled' in visited, raw == '1')
             self.assertEqual('TEST:Drv01-HomeMethod' in visited, homing == '1')
             self.assertEqual('TEST:Drv01-Stat.BC' in visited, homing == '1')
+            self.assertEqual('TEST:Capture01-Count' in visited, capture == '1')
+            self.assertEqual('TEST:AI01' in visited, analog == '1')
             for output in [1, 2, 3]:
                 self.assertIn(f'TEST:PosOut{output:02d}-Ena', visited)
 

@@ -74,7 +74,8 @@ different settings: sequence 26 coordinates the axis; method 35 runs in
 the drive. Homing does not run automatically at IOC startup.
 
 The option appends `homingMethod01` (S8, `6098:00`) and `homeOffset01`
-(S32, `607C:00`) to RxPDO `1603`, increasing it to nine bytes. It also adds
+(S32, `607C:00`), plus the two drive homing speeds (`6099:01–02`, U32)
+and acceleration (`609A:00`, U32), to RxPDO `1603`, increasing it to 21 bytes. It also adds
 a B1 output-data alias, `driveCmdExe01`, over controlword bit 4; that alias
 adds no PDO bytes. Initial values are method 35, offset 0 and trigger 0.
 Mode control/display and drive control/status are already mapped.
@@ -276,3 +277,15 @@ For the separate fixed-frequency 2 kHz PWM bench candidate, use
 It loads no motion axis and starts output 1 disarmed. PWM frequency/duty
 are separate SDO settings; the experiment does not raise the documented
 500 Hz limit of the position-divider output or preserve position locking.
+
+## Other optional PDOs
+
+The hardware also supports `CAPTURE=1` for all `3241:01–0C` capture
+readbacks and `ANALOG_IN=1` for both `3320:01–02` analog inputs. They are
+independent and default off, so the 100-step example does not add them
+unless requested. For all mappings, use
+`OPT='RAW_POS=1,HOMING=1,CAPTURE=1,ANALOG_IN=1'`.
+Capture arming remains an SDO operation; these options do not change input
+routing or scaling. See the Hugo N6 OPT guide for entry names, units, PDO
+allocation and panel tabs. Drive homing speeds default to the documented
+50/10 and acceleration 500, independent of ecmc's YAML homing values.

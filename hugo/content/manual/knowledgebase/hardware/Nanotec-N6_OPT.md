@@ -12,8 +12,9 @@ homing method 35.
 The working bench setup was an `N6-1-1-1-S`, firmware
 `FIR-v2542-B1080909`, with a 200-full-step motor in cyclic synchronous
 velocity mode (CSV). Fine counter feedback and an output every 100 full
-steps were demonstrated together. The sequence-26 homing integration and its effect on pulse phase still
-require a drive test. Homing is commanded through the normal axis interface
+steps were demonstrated together. Subsequent method-35 testing returned
+scaled position to zero and produced a repeatable first-edge shift,
+documented below. Full homing/error handling still needs commissioning. Homing is commanded through the normal axis interface
 and does not execute automatically at IOC startup.
 
 ## Configure the hardware and components
@@ -136,10 +137,12 @@ For output 1 every 100 full steps, the important settings are:
 | `323A:01` | `0` by default | Select 5 V I/O |
 | `60FE:01`, bit 16 | `ARM` | Output 1 gate |
 
-With 200 full steps/revolution, the requested spacing is 180 degrees: two
-pulses per revolution. The expected steady pulse period is
-`180 / abs(velocity in degrees/second)` seconds. Verify the actual waveform,
-first pulse, pulse width, stop/restart and direction reversal on the bench.
+With 200 full steps/revolution, subsequent edges were observed 180 degrees
+apart: two output transitions per revolution. The expected steady time
+between edges is `180 / abs(velocity in degrees/second)` seconds. An edge
+is not a complete pulse: alternating rising/falling edges 100 steps apart
+give a 200-step full cycle. See the observed first-edge shift after homing
+below; verify waveform, pulse width, stop/restart and reversal on the bench.
 The direct position-routing limit is 500 Hz.
 
 ### Wiring and I/O voltage
@@ -193,9 +196,9 @@ raw `6063` is not zeroed by drive homing. Referencing the ecmc axis using an
 offset also leaves the drive counter unchanged and does not itself
 reference the drive-side output source.
 
-The effect of method 35 on the first output pulse and exact pulse phase
-has not yet been established on the bench. Keep drive referencing and
-ecmc axis-coordinate referencing as separate operations.
+The observed first-edge shift after method 35 is described below. Drive
+referencing and ecmc axis-coordinate referencing remain separate operations,
+coordinated by sequence 26 in the example.
 
 ### PDOs and panel records
 
@@ -345,6 +348,28 @@ The execution order and writes were checked in `ecmcMainThread.cpp`,
 `ecmcEcData.cpp`. Verify the behavior in the deployed ecmc version when
 using a custom override.
 
+### Repeatable first-edge shift after homing (2026-10-28)
+
+On the tested 100-full-step setup, a fresh start produced the first output
+edge after **100 full steps**. After method-35 homing, the first edge was
+observed after **50 full steps**, followed by transitions after another
+100 steps: **50, 150, 250, ...** full steps of subsequent motion. This
+behavior was repeatable. The scaled position was reported to return to zero
+on homing.
+
+The observation is a shift of the first-edge position; the following
+edge spacing remains 100 full steps. Here “edge” means an output state
+change, not a complete high/low pulse cycle. For the tested 200-step motor,
+50 steps are 90 degrees and 100 steps are 180 degrees.
+
+Homing once after startup, before beginning a measurement, is therefore a
+proposed way to obtain a consistent first edge after 50 full steps. The
+example does **not** automatically home at startup: command the normal M1
+home sequence, verify completion and CSV restoration, then begin the
+measurement. Coordinate the output gate as described above. This proposal
+uses the reported repeatability; it does not establish behavior for other
+firmware, intervals, directions or restart conditions.
+
 ### Homing checks still needed on the drive
 
 Sequence 26 detects a rising edge on the configured ready bit. Verify first
@@ -353,8 +378,10 @@ a previous home, and a fast operation must still produce an observable
 completion transition. The sequence has no separate configured input for
 homing-error bit 13; monitor it in the Home tab and verify timeout/error
 behavior. Also check statusword bit 10, trigger clearing, mode restoration
-and the first output pulse/phase. These are hardware commissioning checks,
-not outcomes established by the configuration tests.
+and first-edge behavior under other motion/restart conditions. The
+repeatable 100-step/50-step first-edge observation above does not establish
+all these cases. These are hardware commissioning checks, not outcomes
+established by the configuration tests.
 
 ## Records and panels
 

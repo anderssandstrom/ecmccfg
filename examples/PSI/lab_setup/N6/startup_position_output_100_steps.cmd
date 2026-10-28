@@ -1,5 +1,10 @@
 #- Dedicated 100-full-step output and raw open-loop counter axis trial.
 #- See README_position_output_100_steps.md for observed firmware behavior.
+#- Bench observation 2026-10-28: fresh start -> first output edge at 100 full steps.
+#- After method-35 homing -> first edge at 50, then 150, 250, ... full steps.
+#- The following edge spacing remains 100 full steps; this shift is repeatable.
+#- Homing once at startup is a proposed way to obtain a consistent 50-step first
+#- edge. It is not automatic here; trigger M1 homing before the measurement.
 #- Run from this directory instead of startup.cmd or startup_pulse_per_fullstep.cmd.
 require ecmccfg sandst_a "ENG_MODE=1,ECMC_VER=sandst_a,MASTER_ID=1"
 require ecmccomp sandst_a

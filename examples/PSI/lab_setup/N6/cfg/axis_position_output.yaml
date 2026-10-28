@@ -42,6 +42,9 @@ encoder:
   position: ec0.s$(ENC_SID).positionActual01
   homing:
     # Sequence 26 triggers drive method 35 (initialized by HOMING=1).
+    # Bench 2026-10-28: first output edge after homing at 50 full steps,
+    # then at 150, 250, ... (100-step spacing). Fresh-start first edge: 100.
+    # Homing at startup could make the first edge consistent; not auto-run.
     type: 26
     position: 0
     trigg: ec0.s$(DRV_SID).driveCmdExe01.0

@@ -139,7 +139,8 @@ use `PINI=0` to preserve initialization.
 Drive method 35 references logical `6064`; raw `6063` and `Enc01-PosAct`
 remain unchanged. Sequence 26 separately offsets the ecmc axis to its home
 position. The output gate is not automatically coordinated with this
-sequence. Verify its pulse phase/first pulse after referencing on the bench.
+sequence. The repeatable first-edge shift observed after referencing is
+recorded below.
 
 The integration still needs commissioning on FIR-v2542-B1080909, especially
 repeated method-35 completion: bit 12 must provide an observable rising
@@ -148,6 +149,29 @@ and timeout behavior as well. Full details are in the Hugo N6 OPT guide
 and `manual/motion_cfg/homing.md` (sequence 26).
 
 ## Bench evidence and remaining checks
+
+### Repeatable first-edge shift after homing (2026-10-28)
+
+On the tested 100-full-step setup, a fresh start produced the first output
+edge after **100 full steps**. After method-35 homing, the first edge was
+observed after **50 full steps**, followed by transitions after another
+100 steps: **50, 150, 250, ...** full steps of subsequent motion. This
+behavior was repeatable. The scaled position was reported to return to zero
+on homing.
+
+The observation is a shift of the first-edge position; the following
+edge spacing remains 100 full steps. Here “edge” means an output state
+change, not a complete high/low pulse cycle. For the tested 200-step motor,
+50 steps are 90 degrees and 100 steps are 180 degrees.
+
+Homing once after startup, before beginning a measurement, is therefore a
+proposed way to obtain a consistent first edge after 50 full steps. The
+example does **not** automatically home at startup: command the normal M1
+home sequence, verify completion and CSV restoration, then begin the
+measurement. Coordinate the output gate as described above. This proposal
+uses the reported repeatability; it does not establish behavior for other
+firmware, intervals, directions or restart conditions.
+
 
 The user recorded these pairs with the sensorless interface disabled:
 
@@ -225,10 +249,13 @@ The voltage selector also changes the shared digital input thresholds.
 These options do not configure the motor power supply. Use a compatible
 scope or counter input.
 
-The target spacing is 100 full steps = 180 degrees. Pulse period in seconds
-is `180 / abs(velocity in degrees/second)` (for example ten seconds at 18
-degrees/second). Expect two pulses per revolution over repeated
-revolutions; verify pulse width, phase, reversal and stop/restart separately.
+The observed spacing between subsequent output edges is 100 full steps =
+180 degrees. The steady time between edges is
+`180 / abs(velocity in degrees/second)` (for example ten seconds at 18
+degrees/second). Two state transitions per revolution are not two complete
+pulses: alternating rising/falling edges 100 steps apart give a 200-step
+full cycle. See the first-edge observation above; verify waveform, pulse
+width, reversal and stop/restart separately.
 The routing limit is 500 Hz. No absolute compare point or pulse width is programmed.
 
 ## Return to the original axis

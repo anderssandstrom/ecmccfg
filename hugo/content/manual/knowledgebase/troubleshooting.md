@@ -84,6 +84,48 @@ you know the visible problem, but not yet which detailed page to use.
   hardware PV to inspect the original value received from the slave.
   Use: [yaml configuration]({{< relref "/manual/motion_cfg/axisYaml.md#encoder" >}}), [scaling]({{< relref "/manual/motion_cfg/scaling.md#encoder-scaling" >}})
 
+### Other motor records stop responding during automatic enable
+
+A move on one axis can delay commands to other axes on the same asyn motor
+controller while that axis waits to enable. This is especially visible with a
+servo drive whose motor is disconnected: the other motor records become
+responsive again when the enable wait expires.
+
+In motorECMC 7.2.8.1, motor-side automatic power calls `autoPowerOn()` before
+issuing the move. Mode 1 sleeps for the configured power-on delay; mode 2 waits
+for enabled feedback up to that delay. This synchronous wait occupies the shared
+controller command path. ECMC's nonblocking DS402 state machine does not remove
+that outer motor-side wait.
+
+Use ECMC's RT automatic-enable sequence instead. Configure each affected axis in
+its YAML, choosing timeouts suitable for the drive:
+
+```yaml
+axis:
+  autoEnable:
+    enableTimeout: 3.0
+    disableTimeout: 5.0
+```
+
+With `axis.autoEnable.enableTimeout` configured, the YAML generator disables
+motor-side automatic power and configures ECMC to handle enabling. ECMC accepts
+the motion request, waits asynchronously for enabled feedback, and starts the
+motion only after enable succeeds. If enable times out, the pending request is
+cancelled. Other axes can continue accepting commands during the wait.
+
+Check the generated `ecmcMotorRecordCreateAxis` command: its axis flags should
+normally be `4` rather than `6` (or `5` when startup enable is also requested).
+Also check that an explicit `powerAutoOnOff` option or a restored runtime setting
+has not re-enabled motor-side automatic power. Merely shortening the motor-side
+power-on delay does not move ownership of the enable sequence into ECMC.
+
+This symptom concerns move-triggered automatic enable. A direct Enable request
+uses a different path. The startup gate also does not re-engage after startup
+has completed, so a later failed enable does not itself reapply the global gate.
+
+See [YAML axis settings]({{< relref "/manual/motion_cfg/axisYaml.md#axis" >}})
+and [motor configuration]({{< relref "/manual/motion_cfg/motor.md" >}}).
+
 ## PLC and Scripting
 - **Limit logic overrides do not behave as expected**: when using `plcOverride`, verify that PLC code writes `ax<id>.mon.lowlim/highlim` correctly.
   Use: [motion]({{< relref "/manual/knowledgebase/motion.md" >}}), [PLC configuration]({{< relref "/manual/plc_cfg/_index.md" >}})

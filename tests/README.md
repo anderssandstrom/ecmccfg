@@ -10,6 +10,17 @@ The runner collects the configuration tests here and the startup-validator
 tests in `scripts/startup_validator/tests`. The existing Jinja pytest suite
 remains in its separate workflow.
 
+## Configuration fixtures
+
+Keep regression inputs under `tests/fixtures/`, not in mutable lab examples.
+The N6 tests use `tests/fixtures/n6/` for YAML and startup/command fixtures.
+Edit these deliberately with the relevant test case; changes under
+`examples/PSI/lab_setup/N6/` must not silently change test inputs. Production
+hardware descriptors, database templates, panels, Jinja templates and
+components remain the implementations exercised by the tests. The YAML
+parity suite likewise uses `tests/fixtures/yaml_parity/`, including a stable
+EL7062 CSP fixture rather than the editable best-practice example.
+
 ## Dependencies
 
 Python runs the basic checks without EPICS. For all checks, install EPICS Base

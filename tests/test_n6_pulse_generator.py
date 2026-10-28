@@ -1,4 +1,4 @@
-"""Hardware-free checks for the experimental N6 pulse-generator setup."""
+"""Historical N6 pulse-generator command fixtures; no hardware access."""
 from pathlib import Path
 import re
 import unittest
@@ -6,14 +6,14 @@ import unittest
 from test_ex72xx_opt import Startup
 
 ROOT = Path(__file__).resolve().parents[1]
-EXAMPLE = ROOT / 'examples/PSI/lab_setup/N6'
+FIXTURES = ROOT / 'tests/fixtures/n6'
 
 
 def capture(scope=None, filename='pulse_per_fullstep.cmd'):
     startup = Startup.__new__(Startup)
     startup.env = {'ECMC_EC_SLAVE_NUM': '3'}
     startup.commands = []
-    startup.run(EXAMPLE / 'cfg' / filename, scope or {})
+    startup.run(FIXTURES / 'cfg' / filename, scope or {})
     return startup.commands
 
 
@@ -95,13 +95,13 @@ class N6PulseGeneratorTests(unittest.TestCase):
                          [command.replace('(3,', '(7,') for command in commands])
 
     def test_startup_uses_original_feedback_and_loads_after_component(self):
-        source = (EXAMPLE / 'startup_pulse_per_fullstep.cmd').read_text()
+        source = (FIXTURES / 'startup_pulse_per_fullstep.cmd').read_text()
         self.assertIn('HW_DESC=N6-1-1-1-S,', source)
         self.assertIn("MACROS='PINI=0'", source)
         self.assertIn('STEPS=200,INV_DIR=0', source)
         self.assertLess(source.index('applyComponent.cmd'), source.index('./cfg/pulse_per_fullstep.cmd'))
         self.assertLess(source.index('./cfg/pulse_per_fullstep.cmd'), source.index('loadYamlAxis.cmd'))
-        yaml = (EXAMPLE / 'cfg/axis.yaml').read_text()
+        yaml = (FIXTURES / 'cfg/axis.yaml').read_text()
         self.assertIn('position: ec0.s$(ENC_SID).positionActual${ENC_CH=01}', yaml)
         from n6_support import hardware_commands
         mapping = hardware_commands('N6-1-1-1-S').entries()['positionActual01']

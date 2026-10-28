@@ -1,0 +1,105 @@
+# Dedicated to startup_position_output_100_steps.cmd and its raw 0x6063 PDO.
+# FIR-v2542-B1080909 bench readings support the fine open-loop counter with
+# 0x60E6:01=0. Axis control, reversal and rollover still need commissioning.
+# This is the generated motor counter, not measured rotor-position feedback.
+axis:
+  id: ${AXIS_ID=1}
+  tweakDist: 10
+  mode: CSV
+  autoMode:
+    modeSet: ec0.s$(DRV_SID).modeControl01
+    modeAct: ec0.s$(DRV_SID).modeActual01
+    modeCmdMotion: 9
+    modeCmdHome: 6
+  autoEnable:
+    enableTimeout: 1.0
+    disableTimeout: 5.0
+
+epics:
+  name: ${AX_NAME=M1}
+  precision: 3
+  description: N6 position output trial
+  unit: steps
+  motorRecord:
+    fieldInit: 'RTRY=0,FOFF=Frozen'
+    syncSoftLimits: true
+
+drive:
+  numerator: 200
+  denominator: 3276800
+  type: 1
+  setpoint: ec0.s$(DRV_SID).velocitySetpoint01
+  control: ec0.s$(DRV_SID).driveControl01
+  status: ec0.s$(DRV_SID).driveStatus01
+
+encoder:
+  desc: Open-loop motor counter
+  unit: steps
+  numerator: 200
+  denominator: 3276800
+  type: 0
+  bits: 32
+  position: ec0.s$(ENC_SID).positionActual01
+  homing:
+    # Sequence 26 triggers drive method 35 (initialized by HOMING=1).
+    # Bench 2026-10-28: first output edge after homing at 50 full steps,
+    # then at 150, 250, ... (100-step spacing). Fresh-start first edge: 100.
+    # Homing at startup could make the first edge consistent; not auto-run.
+    type: 26
+    position: 0
+    trigg: ec0.s$(DRV_SID).driveCmdExe01.0
+    ready: ec0.s$(DRV_SID).driveStatus01.12
+    refAtHome: 1
+    refToEncIDAtStartup: 1
+    timeout: 10
+    # Required by generic homing validation; method 35 makes no search move.
+    velocity:
+      to: 18
+      from: 18
+    acceleration: 36
+    deceleration: 36
+    # The post-home stage waits for CSV acknowledgment. Equal positions
+    # skip the move, so this only restores mode 9 after referencing.
+    postMoveEnable: true
+    postMovePosition: 0
+
+controller:
+  Kp: 10
+  Ki: 0
+  Kd: 0
+
+trajectory:
+  type: 1
+  axis:
+    velocity: 1000
+    acceleration: 2000
+    deceleration: 2000
+    emergencyDeceleration: 4000
+    jerk: 10000
+  jog:
+    velocity: 200
+
+# Lab setup only: these constant inputs match the original example.
+input:
+  limit:
+    forward: ec0.s$(DRV_SID).ONE.0
+    backward: ec0.s$(DRV_SID).ONE.1
+  home: ec0.s$(DRV_SID).ONE.0
+  interlock: ec0.s$(DRV_SID).ONE.0
+
+softlimits:
+  enable: false
+  forward: 100
+  forwardEnable: false
+  backward: -100
+  backwardEnable: false
+
+monitoring:
+  lag:
+    enable: true
+    tolerance: 5
+    time: 100
+  target:
+    enable: true
+    tolerance: 0.01
+    time: 10

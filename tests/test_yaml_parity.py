@@ -79,9 +79,6 @@ class YamlParityTests(unittest.TestCase):
             with self.subTest(fixture=source.name):
                 self.compare(source)
 
-    def test_psi_csp_example(self):
-        self.compare(ROOT / 'examples/PSI/best_practice/motion/stepper_incremental/ex7062_CSP/cfg/axis.yaml')
-
     def test_defaults_and_explicit_homing(self):
         base = self.yaml.safe_load((FIXTURES / 'virtual_monitoring.yaml').read_text())
         minimal = {key: base[key] for key in ['axis', 'encoder', 'trajectory', 'input']}

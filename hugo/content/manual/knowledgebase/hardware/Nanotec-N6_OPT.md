@@ -68,15 +68,20 @@ it adds no EtherCAT PDO bytes.
 | `_OPT`, `RAW_POS=1` | `6063`, fine open-loop counter | `6064`, position in configured units |
 
 For the tested 200-full-step motor, the fine counter has nominally
-3,276,800 counts/revolution, or 16,384 counts/full step. The example uses:
+3,276,800 counts/revolution, or 16,384 counts/full step. The example uses
+full-step engineering units:
 
 ```yaml
+epics:
+  unit: steps
+
 drive:
-  numerator: 360
+  numerator: 200
   denominator: 3276800
 
 encoder:
-  numerator: 360
+  unit: steps
+  numerator: 200
   denominator: 3276800
   bits: 32
   position: ec0.s$(ENC_SID).positionActual01
@@ -84,8 +89,9 @@ encoder:
 
 These are excerpts from the full YAML; use the complete example when
 configuring an IOC and keep EtherCAT paths consistent with its axis
-configuration. Check the corresponding scaling when using another motor
-step count. Velocity remains in native increments per
+configuration. For degrees, use numerator 360 for both drive and encoder
+and set both unit labels to `deg`. Check the corresponding scaling when
+using another motor step count. Velocity remains in native increments per
 second, so the drive and encoder scales remain matched.
 
 The position-output component makes `6064` deliberately coarse: with
@@ -139,7 +145,8 @@ For output 1 every 100 full steps, the important settings are:
 
 With 200 full steps/revolution, subsequent edges were observed 180 degrees
 apart: two output transitions per revolution. The expected steady time
-between edges is `180 / abs(velocity in degrees/second)` seconds. An edge
+between edges is `100 / abs(velocity in full steps/second)` seconds
+(or `180 / abs(velocity in degrees/second)` when using degrees). An edge
 is not a complete pulse: alternating rising/falling edges 100 steps apart
 give a 200-step full cycle. See the observed first-edge shift after homing
 below; verify waveform, pulse width, stop/restart and reversal on the bench.

@@ -52,12 +52,14 @@ has been replaced by `_OPT`.
 | `6063`, `positionActual01` | Native counter increments; nominally 3,276,800/revolution | Axis feedback |
 | `6064`, `positionActualScaled01` | 100 full motor steps/count; two counts/revolution | Direct drive-side output |
 
-The M1 axis position readback is in degrees and uses `360/3276800` scaling.
+The M1 axis position readback is in full steps and uses `200/3276800` scaling
+for the 200-full-step motor. To use degrees instead, set both numerators to
+360 and change both EPICS and encoder unit labels to `deg`.
 With `RAW_POS=1`, `Enc01-PosAct` displays the fine `6063` open-loop counter.
 The OPT panels show it alongside `Enc01-PosScaled` for `6064`; the scaled field is visible
-only with `RAW_POS=1`. Use the M1 axis readback for position in degrees. Additional `60E4`
+only with `RAW_POS=1`. Use the M1 axis readback for position in full steps. Additional `60E4`
 positions also use the changed position units. Velocity remains in native
-increments/second, with matching `360/3276800` drive scaling and `INV_DIR=0`.
+increments/second, with matching `200/3276800` drive scaling and `INV_DIR=0`.
 
 This is the generated open-loop motor counter, not measured rotor position;
 it does not detect lost motor steps. Raw `6063` does not reset during drive
@@ -233,8 +235,8 @@ drive stationary through the normal controls.
 
 Use the M1 motor record for motion. Do not write the drive velocity/control
 records manually while the axis controller owns those PDOs. Motion settings are configured in the dedicated YAML; begin with values
-appropriate for the bench setup. The axis uses a 10-degree tweak and a
-5-degree following-error tolerance. Begin with a small move and
+appropriate for the bench setup. The axis uses a 10-full-step tweak and a
+5-full-step following-error tolerance. Begin with a small move and
 confirm fine, correctly signed M1 feedback. Stop if it fails to follow.
 Then check reverse motion, stop/restart and eventual signed-counter rollover.
 The lab's constant limit/interlock inputs match the original example.
@@ -251,6 +253,7 @@ scope or counter input.
 
 The observed spacing between subsequent output edges is 100 full steps =
 180 degrees. The steady time between edges is
+`100 / abs(velocity in full steps/second)`, or
 `180 / abs(velocity in degrees/second)` (for example ten seconds at 18
 degrees/second). Two state transitions per revolution are not two complete
 pulses: alternating rising/falling edges 100 steps apart give a 200-step

@@ -1,9 +1,9 @@
-"""Regression checks for the commissioned N6 example after packaging."""
+"""Regression checks for N6 mappings and configuration-generation fixtures."""
 import unittest
 import yaml
 from jinja2 import Environment, FileSystemLoader
 
-from n6_support import ROOT, EXAMPLE, hardware_commands
+from n6_support import ROOT, FIXTURES, hardware_commands
 
 
 class N6PositionOutputTests(unittest.TestCase):
@@ -22,15 +22,22 @@ class N6PositionOutputTests(unittest.TestCase):
         self.assertEqual(dedicated.env['ECMC_EC_COMP_TYPE'], 'N6')
 
     def test_axis_uses_fine_open_loop_counter_at_native_scale(self):
-        axis = yaml.safe_load((EXAMPLE / 'cfg/axis_position_output.yaml').read_text())
+        axis = yaml.safe_load((FIXTURES / 'cfg/axis_position_output.yaml').read_text())
         self.assertEqual(axis['encoder']['position'], 'ec0.s$(ENC_SID).positionActual01')
+        # The same native counter can be expressed in degrees or full steps.
+        # Check the physical scale against the selected units, not a fixed unit.
+        units_per_revolution = {'steps': 200, 'deg': 360}
+        unit = axis['epics']['unit']
+        self.assertIn(unit, units_per_revolution)
+        self.assertEqual(axis['encoder']['unit'], unit)
         for part in ['drive', 'encoder']:
-            self.assertEqual((axis[part]['numerator'], axis[part]['denominator']), (360, 3276800))
+            self.assertEqual((axis[part]['numerator'], axis[part]['denominator']),
+                             (units_per_revolution[unit], 3276800))
         self.assertEqual(axis['encoder']['bits'], 32)
         self.assertTrue(axis['monitoring']['lag']['enable'])
 
     def test_axis_renders_sequence_26_and_mode_handshake(self):
-        config = yaml.safe_load((EXAMPLE / 'cfg/axis_position_output.yaml').read_text())
+        config = yaml.safe_load((FIXTURES / 'cfg/axis_position_output.yaml').read_text())
         env = Environment(loader=FileSystemLoader(ROOT / 'scripts/jinja2/templates'))
         axis = env.get_template('axis.jinja2').render(**config)
         encoder = env.get_template('encoder.jinja2').render(**config)
@@ -51,8 +58,8 @@ class N6PositionOutputTests(unittest.TestCase):
         for direction in ['to', 'from']:
             self.assertGreater(home['velocity'][direction], 0)
 
-    def test_example_uses_packaged_components_in_required_order(self):
-        startup = (EXAMPLE / 'startup_position_output_100_steps.cmd').read_text()
+    def test_startup_fixture_uses_packaged_components_in_required_order(self):
+        startup = (FIXTURES / 'startup_position_output_100_steps.cmd').read_text()
         active = '\n'.join(line for line in startup.splitlines() if not line.lstrip().startswith('#'))
         self.assertIn("HW_DESC=N6-1-1-1-S_OPT,OPT='RAW_POS=1,HOMING=1'", active)
         self.assertIn('FULL_STEPS=100,OUTPUT=1,ARM=1', active)

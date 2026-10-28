@@ -10,7 +10,7 @@ import test_ex72xx_opt as harness
 ROOT = Path(__file__).resolve().parents[1]
 HW = ROOT / 'hardware/Nanotec'
 COMP = ROOT.parent / 'ecmccomp'
-EXAMPLE = ROOT / 'examples/PSI/lab_setup/N6'
+FIXTURES = ROOT / 'tests/fixtures/n6'
 
 
 def hardware_commands(model='N6-1-1-1-S_OPT', options=None, slave=3, master=0):

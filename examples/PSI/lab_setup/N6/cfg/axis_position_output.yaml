@@ -25,7 +25,7 @@ epics:
     syncSoftLimits: true
 
 drive:
-  numerator: 360
+  numerator: 200
   denominator: 3276800
   type: 1
   setpoint: ec0.s$(DRV_SID).velocitySetpoint01
@@ -34,8 +34,8 @@ drive:
 
 encoder:
   desc: Open-loop motor counter
-  unit: deg
-  numerator: 360
+  unit: steps
+  numerator: 200
   denominator: 3276800
   type: 0
   bits: 32
@@ -69,13 +69,13 @@ controller:
 trajectory:
   type: 1
   axis:
-    velocity: 1080
-    acceleration: 3600
-    deceleration: 3600
-    emergencyDeceleration: 360
+    velocity: 1000
+    acceleration: 2000
+    deceleration: 2000
+    emergencyDeceleration: 4000
     jerk: 10000
   jog:
-    velocity: 360
+    velocity: 200
 
 # Lab setup only: these constant inputs match the original example.
 input:

@@ -16,7 +16,7 @@ epics:
       syncSoftLimits: true
 
 drive:
-  numerator: 360                                  # Fastest speed in eng. units (360*8000Hz)
+  numerator: 200                                  # Fastest speed in eng. units (360*8000Hz)
   denominator: 3276800                             # I/O range for ECMC_EC_ALIAS_DRV_VELO_SET (normally +-16bit)
   type: 1                                             # Stepper: 0. DS402: 1 (DS402 = servos and advanced stepper drives)
   setpoint: ec0.s$(DRV_SID).velocitySetpoint${DRV_CH=01}   # Velocity setpoint if CSV. Position setpoint if CSP
@@ -25,8 +25,8 @@ drive:
 
 encoder:
   desc: Openloop
-  unit: mm
-  numerator: 360                                         # Scaling numerator example 1 mm/rev
+  unit: steps
+  numerator: 200                                         # Scaling numerator example 1 mm/rev
   denominator: 3276800                                 # Scaling denominator example 4096 ticks per 360 degree
   type: 0                                              # Type: 0=Incremental, 1=Absolute
   bits: 32                                             # Total bit count of encoder raw data
@@ -44,13 +44,13 @@ controller:
 trajectory:
   type: 1
   axis:
-    velocity: 1800                                      # Default velo for axis
-    acceleration: 3600                                  # Default acc for axis
-    deceleration: 3600                                  # Default dec for axis
+    velocity: 1000                                      # Default velo for axis
+    acceleration: 2000                                  # Default acc for axis
+    deceleration: 2000                                  # Default dec for axis
     emergencyDeceleration: 10000                        # Deceleration when axis in error state
     jerk: 10000                                         # Default jerk for axis
   jog:
-    velocity: 360                                       # Default velo fro JOG (motor record)
+    velocity: 200                                       # Default velo fro JOG (motor record)
 
 input:
   limit:

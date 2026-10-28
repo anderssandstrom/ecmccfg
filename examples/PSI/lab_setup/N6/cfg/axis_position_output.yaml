@@ -62,7 +62,6 @@ encoder:
     # skip the move, so this only restores mode 9 after referencing.
     postMoveEnable: true
     postMovePosition: 0
-  useAsCSPDrvEnc: 1
 
 controller:
   Kp: 10

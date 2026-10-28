@@ -34,7 +34,6 @@ encoder:
   status: ec0.s$(ENC_SID).encoderStatus${ENC_CH=01}    # mandatory only if 'warning' or 'error' are used
   homing:
     refToEncIDAtStartup: 1                             # Ref encoder at startup (to BISS value)
-  useAsCSPDrvEnc: 1                                    # This is the open loop encoder used for CSP control
   
 controller:
   Kp: 10                                               # Kp proportinal gain

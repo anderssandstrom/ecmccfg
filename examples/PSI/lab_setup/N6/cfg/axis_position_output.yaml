@@ -19,7 +19,7 @@ epics:
   name: ${AX_NAME=M1}
   precision: 3
   description: N6 position output trial
-  unit: deg
+  unit: steps
   motorRecord:
     fieldInit: 'RTRY=0,FOFF=Frozen'
     syncSoftLimits: true

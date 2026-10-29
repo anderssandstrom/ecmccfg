@@ -19,6 +19,7 @@
 #- EthercatMC_VER    = 3.0.2 (obsolete)
 #- INIT              = initAll
 #- MASTER_ID         = 0 <-- put negatuve number to disable master, aka non ec-mode
+#- SIM               = 0. Set to 1 to use memory simulation for MASTER_ID >= 0
 #- SCRIPTEXEC        = iocshLoad
 #- NAMING            = mXsXXX (default), ClassicNaming, ESSnaming
 #- EC_RATE           = 1000
@@ -150,13 +151,19 @@ ecmcEpicsEnvSetCalcTernary(ECMC_USE_ECmasterECMC_DIR, "'${ECmasterECMC_DIR='empt
 ${ECMC_USE_ECmasterECMC_DIR}epicsEnvSet(ECMC_EC_TOOL_PATH, "${ECmasterECMC_DIR}bin/${EPICS_HOST_ARCH}/ethercat")
 epicsEnvUnset(ECMC_USE_ECmasterECMC_DIR)
 
+#- Select memory simulation before any master is claimed. SIM=0 retains the
+#- default EtherCAT backend without requiring simulation commands in older ECMC.
+ecmcEpicsEnvSetCalcTernary(ECMC_SIM_CMD, "${SIM=0}=1 and ${MASTER_ID=0}>=0", "", "#-")
+${ECMC_SIM_CMD}ecmcConfigOrDie "Cfg.SetIoBackend(${MASTER_ID=0},1)"
+epicsEnvUnset(ECMC_SIM_CMD)
+
 #- Open downstream MX-System baseplates in discovery order. MX_1..MX_5 contain
 #- the MB1120 slave positions; an empty macro skips that position.
-ecmcEpicsEnvSetCalcTernary(ECMC_MX_1_CMD, "'${MX_1=}'!='' and ${MASTER_ID=0}>=0", "", "#-")
-ecmcEpicsEnvSetCalcTernary(ECMC_MX_2_CMD, "'${MX_2=}'!='' and ${MASTER_ID=0}>=0", "", "#-")
-ecmcEpicsEnvSetCalcTernary(ECMC_MX_3_CMD, "'${MX_3=}'!='' and ${MASTER_ID=0}>=0", "", "#-")
-ecmcEpicsEnvSetCalcTernary(ECMC_MX_4_CMD, "'${MX_4=}'!='' and ${MASTER_ID=0}>=0", "", "#-")
-ecmcEpicsEnvSetCalcTernary(ECMC_MX_5_CMD, "'${MX_5=}'!='' and ${MASTER_ID=0}>=0", "", "#-")
+ecmcEpicsEnvSetCalcTernary(ECMC_MX_1_CMD, "'${MX_1=}'!='' and ${MASTER_ID=0}>=0 and ${SIM=0}=0", "", "#-")
+ecmcEpicsEnvSetCalcTernary(ECMC_MX_2_CMD, "'${MX_2=}'!='' and ${MASTER_ID=0}>=0 and ${SIM=0}=0", "", "#-")
+ecmcEpicsEnvSetCalcTernary(ECMC_MX_3_CMD, "'${MX_3=}'!='' and ${MASTER_ID=0}>=0 and ${SIM=0}=0", "", "#-")
+ecmcEpicsEnvSetCalcTernary(ECMC_MX_4_CMD, "'${MX_4=}'!='' and ${MASTER_ID=0}>=0 and ${SIM=0}=0", "", "#-")
+ecmcEpicsEnvSetCalcTernary(ECMC_MX_5_CMD, "'${MX_5=}'!='' and ${MASTER_ID=0}>=0 and ${SIM=0}=0", "", "#-")
 ${ECMC_MX_1_CMD}${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}mxEnableDownStreamBaseplate.cmd", "MASTER_ID=${MASTER_ID=0},MB1120_SID=${MX_1=0},REPORT=${MX_REPORT=0},RESCAN_DELAY=${MX_RESCAN_DELAY=3}"
 ${ECMC_MX_2_CMD}${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}mxEnableDownStreamBaseplate.cmd", "MASTER_ID=${MASTER_ID=0},MB1120_SID=${MX_2=0},REPORT=${MX_REPORT=0},RESCAN_DELAY=${MX_RESCAN_DELAY=3}"
 ${ECMC_MX_3_CMD}${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}mxEnableDownStreamBaseplate.cmd", "MASTER_ID=${MASTER_ID=0},MB1120_SID=${MX_3=0},REPORT=${MX_REPORT=0},RESCAN_DELAY=${MX_RESCAN_DELAY=3}"

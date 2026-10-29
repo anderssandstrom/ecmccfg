@@ -77,6 +77,10 @@ epicsEnvUnset(ECMC_SUBST_TYPE)
 ecmcEpicsEnvSetCalcTernary(DEFAULT_SLAVE_PVS, "${DEFAULT_SLAVE_PVS=True}", "","#- ")
 ${DEFAULT_SLAVE_PVS}${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}applyTemplate.cmd" "TEMPLATE_FILE=ecmcEcSlave.template,ECMC_P=${ECMC_P},ECMC_G=${ECMC_G=}"
 ${DEFAULT_SLAVE_PVS}${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}applySubstitutions.cmd" "SUBST_FILE=ecmcEcTiming.substitutions,ECMC_P=${ECMC_P}"
+#- Expose existing discovery metadata under the simulation prefix.
+ecmcEpicsEnvSetCalcTernary(ECMC_SIM_META_CMD, "${ECMC_SIM=0}=1", "", "#-")
+${ECMC_SIM_META_CMD}${DEFAULT_SLAVE_PVS}dbLoadRecords("ecmcSimulationSlaveAliases.db","SOURCE_P=${ECMC_P},SIM_P=${ECMC_SIM_PREFIX=${ECMC_PREFIX}SIM:},MASTER_ID=${ECMC_EC_MASTER_ID},SLAVE_POS=${ECMC_EC_SLAVE_NUM}")
+epicsEnvUnset(ECMC_SIM_META_CMD)
 epicsEnvUnset(DEFAULT_SLAVE_PVS)
 
 #- Do not set NxtSlv "pointer" if this is the first slave (ECMC_EC_PREVIOUS_SLAVE==-1)

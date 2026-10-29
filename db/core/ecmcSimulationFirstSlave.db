@@ -1,0 +1,2 @@
+# The normal first-slave record is populated by addSlave.cmd.
+alias("${P}MCU-Cfg-EC-FrstObjId", "${SIM_P}FirstSlave")

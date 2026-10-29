@@ -545,7 +545,7 @@ record(bo,"${PREFIX}${MOTOR_NAME}-CfgSyncSftLim"){
 
 # Startup diagnostics (requires ECMC startup diagnostic parameters).
 record(bi, "$(PREFIX)$(MOTOR_NAME)-StartupHeld") {
-  field(DESC, "Controller startup command hold")
+  field(DESC, "Axis startup command hold")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(MOTOR_PORT),$(AXIS_NO),1)STARTUP_COMMANDS_HELD")
   field(SCAN, "I/O Intr")
@@ -575,4 +575,39 @@ record(waveform, "$(PREFIX)$(MOTOR_NAME)-StartupRestoreStatus") {
   field(SCAN, "I/O Intr")
   field(FTVL, "CHAR")
   field(NELM, "256")
+}
+
+record(waveform, "$(PREFIX)$(MOTOR_NAME)-StartupHoldReason") {
+  field(DESC, "Axis startup hold reason")
+  field(DTYP, "asynOctetRead")
+  field(INP, "@asyn($(MOTOR_PORT),$(AXIS_NO),1)STARTUP_HOLD_REASON")
+  field(SCAN, "I/O Intr")
+  field(FTVL, "CHAR")
+  field(NELM, "256")
+}
+record(longin, "$(PREFIX)$(MOTOR_NAME)-StartupBlockingAxis") {
+  field(DESC, "Blocking startup axis; -1=none")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(MOTOR_PORT),$(AXIS_NO),1)STARTUP_BLOCKING_AXIS")
+  field(SCAN, "I/O Intr")
+}
+record(longin, "$(PREFIX)$(MOTOR_NAME)-StartupBlockingGroup") {
+  field(DESC, "Blocking master/slave; -1=none")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(MOTOR_PORT),$(AXIS_NO),1)STARTUP_BLOCKING_GROUP")
+  field(SCAN, "I/O Intr")
+}
+record(bi, "$(PREFIX)$(MOTOR_NAME)-StartupSharedHeld") {
+  field(DESC, "Shared startup program hold")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(MOTOR_PORT),$(AXIS_NO),1)STARTUP_SHARED_COMMANDS_HELD")
+  field(SCAN, "I/O Intr")
+  field(ZNAM, "Released")
+  field(ONAM, "Held")
+}
+record(longin, "$(PREFIX)$(MOTOR_NAME)-StartupSharedBlockingAxis") {
+  field(DESC, "Axis holding shared startup")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(MOTOR_PORT),$(AXIS_NO),1)STARTUP_SHARED_BLOCKING_AXIS")
+  field(SCAN, "I/O Intr")
 }

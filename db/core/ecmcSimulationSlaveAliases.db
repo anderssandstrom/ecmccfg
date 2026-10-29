@@ -1,0 +1,3 @@
+# Shared discovery metadata: aliases reuse the normal hardware record values.
+alias("${SOURCE_P}HWType", "${SIM_P}ec${MASTER_ID}:s${SLAVE_POS}:HWType")
+alias("${SOURCE_P}NxtObjId", "${SIM_P}ec${MASTER_ID}:s${SLAVE_POS}:NxtObjId")

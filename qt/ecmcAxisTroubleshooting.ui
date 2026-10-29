@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>760</width>
-    <height>684</height>
+    <height>794</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1054,27 +1054,63 @@
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QGroupBox" name="startupRestoreBox"><property name="geometry"><rect><x>10</x><y>534</y><width>740</width><height>140</height></rect></property><property name="title"><string>Startup and restore</string></property><widget class="QLabel" name="startupHeldLabel"><property name="geometry"><rect><x>12</x><y>24</y><width>182</width><height>20</height></rect></property><property name="text"><string>Global hold (1 = held)</string></property></widget><widget class="caLineEdit" name="startupHeld"><property name="geometry"><rect><x>196</x><y>22</y><width>42</width><height>24</height></rect></property>
- <property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-StartupHeld</string></property>
- <property name="colorMode"><enum>caLineEdit::Static</enum></property>
- <property name="readOnly"><bool>true</bool></property>
-
- </widget><widget class="QLabel" name="startupMotorReadyLabel"><property name="geometry"><rect><x>254</x><y>24</y><width>182</width><height>20</height></rect></property><property name="text"><string>Motor ready (1 = ready)</string></property></widget><widget class="caLineEdit" name="startupMotorReady"><property name="geometry"><rect><x>438</x><y>22</y><width>42</width><height>24</height></rect></property>
- <property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-StartupMotorReady</string></property>
- <property name="colorMode"><enum>caLineEdit::Static</enum></property>
- <property name="readOnly"><bool>true</bool></property>
-
- </widget><widget class="QLabel" name="startupLimitsReadyLabel"><property name="geometry"><rect><x>496</x><y>24</y><width>182</width><height>20</height></rect></property><property name="text"><string>Limits ready (1 = ready)</string></property></widget><widget class="caLineEdit" name="startupLimitsReady"><property name="geometry"><rect><x>680</x><y>22</y><width>42</width><height>24</height></rect></property>
- <property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-StartupLimitsReady</string></property>
- <property name="colorMode"><enum>caLineEdit::Static</enum></property>
- <property name="readOnly"><bool>true</bool></property>
-
- </widget><widget class="QLabel" name="startupRestoreStatusLabel"><property name="geometry"><rect><x>12</x><y>52</y><width>710</width><height>20</height></rect></property><property name="text"><string>Soft-limit restore status</string></property></widget><widget class="caLineEdit" name="startupRestoreStatus"><property name="geometry"><rect><x>12</x><y>75</y><width>716</width><height>24</height></rect></property>
- <property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-StartupRestoreStatus</string></property>
- <property name="colorMode"><enum>caLineEdit::Static</enum></property>
- <property name="readOnly"><bool>true</bool></property>
- <property name="formatType"><enum>caLineEdit::string</enum></property>
- </widget><widget class="QLabel" name="startupRestoreNote"><property name="geometry"><rect><x>12</x><y>108</y><width>716</width><height>20</height></rect></property><property name="text"><string>Global hold may wait for another axis. Before IOC network access, use console / asynReport.</string></property></widget></widget>
+  <widget class="QGroupBox" name="startupRestoreBox"><property name="geometry"><rect><x>10</x><y>534</y><width>740</width><height>250</height></rect></property><property name="title"><string>Startup and restore</string></property>
+   <widget class="QLabel" name="startupHeldLabel"><property name="geometry"><rect><x>12</x><y>24</y><width>182</width><height>20</height></rect></property><property name="text"><string>Axis hold (1 = held)</string></property></widget>
+   <widget class="caLineEdit" name="startupHeld"><property name="geometry"><rect><x>196</x><y>22</y><width>42</width><height>24</height></rect></property>
+    <property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-StartupHeld</string></property>
+    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+    <property name="readOnly"><bool>true</bool></property>
+   </widget>
+   <widget class="QLabel" name="startupMotorReadyLabel"><property name="geometry"><rect><x>254</x><y>24</y><width>182</width><height>20</height></rect></property><property name="text"><string>Motor ready (1 = ready)</string></property></widget>
+   <widget class="caLineEdit" name="startupMotorReady"><property name="geometry"><rect><x>438</x><y>22</y><width>42</width><height>24</height></rect></property>
+    <property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-StartupMotorReady</string></property>
+    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+    <property name="readOnly"><bool>true</bool></property>
+   </widget>
+   <widget class="QLabel" name="startupLimitsReadyLabel"><property name="geometry"><rect><x>496</x><y>24</y><width>182</width><height>20</height></rect></property><property name="text"><string>Limits ready (1 = ready)</string></property></widget>
+   <widget class="caLineEdit" name="startupLimitsReady"><property name="geometry"><rect><x>680</x><y>22</y><width>42</width><height>24</height></rect></property>
+    <property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-StartupLimitsReady</string></property>
+    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+    <property name="readOnly"><bool>true</bool></property>
+   </widget>
+   <widget class="QLabel" name="startupHoldReasonLabel"><property name="geometry"><rect><x>12</x><y>52</y><width>710</width><height>20</height></rect></property><property name="text"><string>Axis hold reason</string></property></widget>
+   <widget class="caLineEdit" name="startupHoldReason"><property name="geometry"><rect><x>12</x><y>75</y><width>716</width><height>24</height></rect></property>
+    <property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-StartupHoldReason</string></property>
+    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+    <property name="readOnly"><bool>true</bool></property><property name="formatType"><enum>caLineEdit::string</enum></property>
+   </widget>
+   <widget class="QLabel" name="startupBlockingAxisLabel"><property name="geometry"><rect><x>12</x><y>106</y><width>115</width><height>20</height></rect></property><property name="text"><string>Blocking axis</string></property></widget>
+   <widget class="caLineEdit" name="startupBlockingAxis"><property name="geometry"><rect><x>132</x><y>104</y><width>64</width><height>24</height></rect></property>
+    <property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-StartupBlockingAxis</string></property>
+    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+    <property name="readOnly"><bool>true</bool></property>
+   </widget>
+   <widget class="QLabel" name="startupBlockingGroupLabel"><property name="geometry"><rect><x>232</x><y>106</y><width>170</width><height>20</height></rect></property><property name="text"><string>Master/slave group</string></property></widget>
+   <widget class="caLineEdit" name="startupBlockingGroup"><property name="geometry"><rect><x>410</x><y>104</y><width>64</width><height>24</height></rect></property>
+    <property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-StartupBlockingGroup</string></property>
+    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+    <property name="readOnly"><bool>true</bool></property>
+   </widget>
+   <widget class="QLabel" name="startupSharedHeldLabel"><property name="geometry"><rect><x>12</x><y>136</y><width>182</width><height>20</height></rect></property><property name="text"><string>Shared programs held</string></property></widget>
+   <widget class="caLineEdit" name="startupSharedHeld"><property name="geometry"><rect><x>196</x><y>134</y><width>75</width><height>24</height></rect></property>
+    <property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-StartupSharedHeld</string></property>
+    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+    <property name="readOnly"><bool>true</bool></property>
+   </widget>
+   <widget class="QLabel" name="startupSharedBlockingAxisLabel"><property name="geometry"><rect><x>290</x><y>136</y><width>310</width><height>20</height></rect></property><property name="text"><string>Blocking axis for shared programs</string></property></widget>
+   <widget class="caLineEdit" name="startupSharedBlockingAxis"><property name="geometry"><rect><x>620</x><y>134</y><width>64</width><height>24</height></rect></property>
+    <property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-StartupSharedBlockingAxis</string></property>
+    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+    <property name="readOnly"><bool>true</bool></property>
+   </widget>
+   <widget class="QLabel" name="startupRestoreStatusLabel"><property name="geometry"><rect><x>12</x><y>164</y><width>710</width><height>20</height></rect></property><property name="text"><string>Soft-limit restore status</string></property></widget>
+   <widget class="caLineEdit" name="startupRestoreStatus"><property name="geometry"><rect><x>12</x><y>187</y><width>716</width><height>24</height></rect></property>
+    <property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-StartupRestoreStatus</string></property>
+    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+    <property name="readOnly"><bool>true</bool></property><property name="formatType"><enum>caLineEdit::string</enum></property>
+   </widget>
+   <widget class="QLabel" name="startupRestoreNote"><property name="geometry"><rect><x>12</x><y>218</y><width>716</width><height>20</height></rect></property><property name="text"><string>IDs = -1: no axis/group blocker. Shared programs wait for all configured axes.</string></property></widget>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>

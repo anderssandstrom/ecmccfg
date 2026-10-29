@@ -39,6 +39,18 @@ ecmcConfigOrDie "Cfg.EcSetDelayECOkAtStartup(${EC_DELAY_CYCLES=0})"
 epicsEnvUnset(EC_DELAY_CYCLES)
 epicsEnvUnset(ECMC_EC_STARTUP_DELAY)
 
+#- Alias the existing first-slave pointer once for prefix-only discovery.
+ecmcEpicsEnvSetCalcTernary(ECMC_SIM_META_CMD, "${ECMC_SIM=0}=1 and ${ECMC_SIM_METADATA_DONE=0}=0", "", "#-")
+${ECMC_SIM_META_CMD}dbLoadRecords("ecmcSimulationFirstSlave.db","P=${ECMC_PREFIX},SIM_P=${ECMC_SIM_PREFIX=${ECMC_PREFIX}SIM:}")
+${ECMC_SIM_META_CMD}epicsEnvSet(ECMC_SIM_METADATA_DONE,1)
+epicsEnvUnset(ECMC_SIM_META_CMD)
+
+#- One common loader creates records for declared simulated I/O fields.
+#- It runs before runtime/iocInit; hardware and axis templates are unchanged.
+ecmcEpicsEnvSetCalcTernary(ECMC_SIM_RECORDS_CMD, "${ECMC_SIM=0}=1", "", "#-")
+${ECMC_SIM_RECORDS_CMD}ecmcConfigOrDie "Cfg.SimLoadRecords(${ECMC_SIM_PREFIX=${ECMC_PREFIX}SIM:})"
+epicsEnvUnset(ECMC_SIM_RECORDS_CMD)
+
 #- Start RT thread
 ecmcConfigOrDie "Cfg.SetStartupGate(${ECMC_STARTUP_GATE=1})"
 ${ECMC_START_ECMC_FIRST_CMD}ecmcConfigOrDie "Cfg.SetAppMode(1)"

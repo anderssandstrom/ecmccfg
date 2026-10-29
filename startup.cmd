@@ -151,6 +151,9 @@ ecmcEpicsEnvSetCalcTernary(ECMC_USE_ECmasterECMC_DIR, "'${ECmasterECMC_DIR='empt
 ${ECMC_USE_ECmasterECMC_DIR}epicsEnvSet(ECMC_EC_TOOL_PATH, "${ECmasterECMC_DIR}bin/${EPICS_HOST_ARCH}/ethercat")
 epicsEnvUnset(ECMC_USE_ECmasterECMC_DIR)
 
+#- Persist SIM for the common runtime-start record loader.
+epicsEnvSet("ECMC_SIM", "${SIM=0}")
+
 #- Select memory simulation before any master is claimed. SIM=0 retains the
 #- default EtherCAT backend without requiring simulation commands in older ECMC.
 ecmcEpicsEnvSetCalcTernary(ECMC_SIM_CMD, "${SIM=0}=1 and ${MASTER_ID=0}>=0", "", "#-")

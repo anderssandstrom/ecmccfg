@@ -1,5 +1,38 @@
 # ecmc utilities
 
+## Monitor motor record updates
+
+Pass the complete motor record name (axis prefix, without `.VAL` or `.RBV`):
+
+```bash
+bash utils/camonitor_motor.sh IOC:m1
+```
+
+This subscribes to most public motor fields and common record fields, including
+`VAL`, `RBV`, `DRBV`, `RRBV`, `DMOV`, `MOVN`, `MSTA`, `STAT` and `SEVR`, and prints
+the normal `camonitor` output. It only reads/monitors PVs. Stop with Ctrl+C.
+
+To see client-side time between updates for each PV, with numeric enums:
+
+```bash
+bash utils/camonitor_motor.sh IOC:m1 -n -t cI
+```
+
+`-t cI` shows the interval since the previous event for that channel; repeated
+intervals around `0.001` seconds indicate roughly 1 kHz received updates.
+This measures delivered Channel Access monitor events, rather than every IOC
+record-processing cycle. No rate summary or pass/fail threshold is calculated.
+
+Print the subscribed PV names without connecting:
+
+```bash
+bash utils/camonitor_motor.sh IOC:m1 --list
+```
+
+Requires `camonitor` on `PATH`; uses the existing `EPICS_CA_*` settings. The field
+list covers motorECMC 7.2.8.1; older motor versions may report missing fields.
+Additional options after the prefix are forwarded to `camonitor`.
+
 ## Hardware product-id summary
 
 Generate a summary of `ECMC_EC_PRODUCT_ID` usage in `hardware/**/*.cmd`.

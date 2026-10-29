@@ -118,7 +118,12 @@ class Startup:
                     macros = dict(item.split('=', 1) for item in arguments(child.get('PARAM', '')))
                     self.templates.append((child['TEMPLATE_FILE'], macros))
                 else:
-                    self.run(HW / filename if (HW / filename).exists() else HW / 'EL' / filename, child)
+                    target = HW / filename
+                    if not target.exists():
+                        target = ROOT / 'scripts' / filename
+                    if not target.exists():
+                        target = HW / 'EL' / filename
+                    self.run(target, child)
                 continue
             raise AssertionError(f'Unsupported command: {line}')
 
@@ -373,6 +378,27 @@ class OptTests(unittest.TestCase):
             with self.subTest(model=model, options=options):
                 with self.assertRaises(InvalidConfiguration):
                     Startup(model, options)
+
+    def test_legacy_el7201_timing_and_watchdog(self):
+        for rate, period, shift in [(500, 2000000, 1000000),
+                                    (1000, 1000000, 500000)]:
+            for options, watchdog in [({}, '2498,1000'),
+                                      (dict(WATCHDOG_DIVIDER='2498',
+                                            WATCHDOG_INTERVALS='500'), '2498,500')]:
+                with self.subTest(rate=rate, options=options):
+                    startup = Startup.__new__(Startup)
+                    startup.env = dict(SCRIPTEXEC='iocshLoad', ecmccfg_DIR='',
+                                       ECMC_EC_SLAVE_NUM='13', ECMC_EC_SAMPLE_RATE=str(rate),
+                                       ECMC_EC_ASSIGN_ACTIVATE='0x700')
+                    startup.commands = []
+                    startup.run(HW / 'EL/ecmcEL7201.cmd', options)
+                    self.assertIn(f'Cfg.EcSlaveConfigDC(13,0x700,{period},{shift},0,0)',
+                                  startup.commands)
+                    for index in ['0x1C32', '0x1C33']:
+                        self.assertIn(f'Cfg.EcAddSdo(13,{index},0x2,{period},4)',
+                                      startup.commands)
+                    self.assertIn(f'Cfg.EcSlaveConfigWatchDog(13,{watchdog})',
+                                  startup.commands)
 
     def test_family_timing_and_overrides(self):
         for model in MODELS:

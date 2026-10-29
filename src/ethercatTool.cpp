@@ -24,10 +24,10 @@
 // | VALA  | return status    | double   |
 //
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
+#include "ecToolCommand.h"
+#include <cstring>
+#include <cfloat>
+#include <new>
 #include <aSubRecord.h>
 #include <dbAccess.h>
 #include <dbAddr.h>
@@ -38,271 +38,122 @@
 #include <epicsThread.h>
 #include <registryFunction.h>
 
-#define EC_SLAVES_MAX 65535
+extern char **environ;
 
-enum EcToolCommand {
-  CMD_EC_SLV_CHANGE_EC_STATE = 10,
-  CMD_EC_SLVS_LIST = 11,
-  CMD_EC_SLV_READ_DIAG_BUFFER_SDO = 20,
-  CMD_EC_MST = 5,
-  CMD_EC_SLV_EL7062_AUTOTUNE = 70621,
-  CMD_EC_SLV_EL7062_READBACK = 70622
+namespace {
+struct EcToolContext {
+    epicsEventId event;
+    epicsMutexId lock;
+    std::string directory, prefix, name;
+    ecTool::Arguments environment, job;
+    bool busy;
+    EcToolContext() : event(NULL), lock(NULL), busy(false) {}
 };
 
-void updateStatEtherCATTool(const char *);
-void workerEtherCATTool(void *);
-static void initEtherCATTool(struct aSubRecord *);
-static long runEtherCATTool(struct aSubRecord *);
-
-static int setupChangeSlaveEtherCATstate(int, int, int);
-static int setupEthercatSlaves(int master, char* epics, char *ecmccfg, char * prefix);
-static int setupEthercatMaster(int master, char* epics, char *ecmccfg, char * prefix);
-static int setupEL7062ExeAutoTune(int, int, int, char *, char *, char *);
-static int setupEL7062ReadBack(int, int, int, char *, char *, char *);
-static int setupReadDiagBufferSDO(int master, int slave, char* epics, char *ecmccfg, char * prefix);
-
-// globals
-static epicsEventId scriptEvent;
-static epicsMutexId scriptLock;
-static char scriptPath[512];
-static char globalStausPvName[64];
-static volatile int hasJob = 0;
-
-
-void updateStatEtherCATTool (const char *statusStr) {
-    char status[16];
-    strncpy(status, statusStr, sizeof(status) - 1);
-    status[sizeof(status) - 1] = '\0';
+// Read only local startup configuration, before the IOC starts serving CA.
+// dbGetField avoids depending on the initialization order of DB links.
+bool startupString(DBLINK &link, const void *constant, std::string &value) {
+    char text[MAX_STRING_SIZE] = {0};
+    if (link.type == CONSTANT) {
+        if (!constant) return false;
+        std::memcpy(text, constant, sizeof(text));
+    } else if (link.type == PV_LINK || link.type == DB_LINK || link.type == CA_LINK) {
+        DBADDR address;
+        long count = 1;
+        if (!link.value.pv_link.pvname ||
+            dbNameToAddr(link.value.pv_link.pvname, &address) ||
+            dbGetField(&address, DBR_STRING, text, NULL, &count, NULL) || count != 1)
+            return false;
+    } else return false;
+    text[sizeof(text) - 1] = '\0';
+    value = text;
+    return true;
 }
 
-
-void workerEtherCATTool(void *arg)
-{
-    while (1) {
-        printf("workerEtherCATTool(): Executing: \"%s\"\n",scriptPath);
-
-        epicsEventWait(scriptEvent);
-        epicsMutexLock(scriptLock);
-        if (hasJob) {
-            updateStatEtherCATTool("BUSY");
-            int ret = system(scriptPath);
-            //printf("Returned with %d\n",ret);
-            updateStatEtherCATTool(ret == 0 ? "IDLE" : "ERROR");
-            hasJob = 0;
-        }
-        epicsMutexUnlock(scriptLock);
+void workerEtherCATTool(void *arg) {
+    EcToolContext *context = static_cast<EcToolContext *>(arg);
+    while (true) {
+        epicsEventWait(context->event);
+        epicsMutexLock(context->lock);
+        ecTool::Arguments job = context->job;
+        epicsMutexUnlock(context->lock);
+        // Do not hold the lock while waiting: processing a busy record must
+        // return promptly, not block the IOC database lock behind a subprocess.
+        int result = ecTool::execute(job, context->environment);
+        if (result)
+            std::fprintf(stderr, "%s: EcTool helper failed (%d)\n",
+                         context->name.c_str(), result);
+        epicsMutexLock(context->lock);
+        context->job.clear();
+        context->busy = false;
+        epicsMutexUnlock(context->lock);
     }
 }
+}
 
-
-static void initEtherCATTool (struct aSubRecord *rec)
-{
-    memset(globalStausPvName,0, sizeof(globalStausPvName));
-    scriptLock = epicsMutexCreate();
-    scriptEvent = epicsEventCreate(epicsEventEmpty);
-
-    epicsThreadCreate("EtherCAT worker",
-            epicsThreadPriorityLow,
-            epicsThreadGetStackSize(epicsThreadStackMedium),
-            workerEtherCATTool,
-            NULL);
-
-    printf("initEtherCATTool\n");
+static void initEtherCATTool(struct aSubRecord *rec) {
+    rec->dpvt = NULL;
+    EcToolContext *context = new (std::nothrow) EcToolContext;
+    if (!context) return;
+    std::string epics, version;
+    if (rec->ftr != DBF_STRING || rec->fts != DBF_STRING || rec->ftt != DBF_STRING ||
+        !startupString(rec->inpr, rec->r, context->prefix) ||
+        !startupString(rec->inps, rec->s, epics) ||
+        !startupString(rec->inpt, rec->t, version) ||
+        !ecTool::versionComponent(epics) || !ecTool::versionComponent(version) ||
+        (!context->prefix.empty() && context->prefix[0] == '-')) {
+        std::fprintf(stderr, "%s: EcTool requires valid local startup prefix/version records\n", rec->name);
+        delete context;
+        return;
+    }
+    // Preserve the deployed helper layout. Later metadata/link writes cannot
+    // change either the directory or the publication prefix.
+    context->directory = "/ioc/modules/ecmccfg/" + version + "/R" + epics;
+    context->name = rec->name;
+    for (char **entry = environ; entry && *entry; ++entry)
+        if (ecTool::safeEnvironmentEntry(*entry)) context->environment.push_back(*entry);
+    context->lock = epicsMutexCreate();
+    context->event = epicsEventCreate(epicsEventEmpty);
+    if (!context->lock || !context->event ||
+        !epicsThreadCreate("EtherCAT worker", epicsThreadPriorityLow,
+                           epicsThreadGetStackSize(epicsThreadStackMedium),
+                           workerEtherCATTool, context)) {
+        if (context->event) epicsEventDestroy(context->event);
+        if (context->lock) epicsMutexDestroy(context->lock);
+        delete context;
+        std::fprintf(stderr, "%s: EcTool worker initialization failed\n", rec->name);
+        return;
+    }
+    rec->dpvt = context;
 }
 epicsRegisterFunction(initEtherCATTool);
 
-
-static long runEtherCATTool (struct aSubRecord *rec)
-{
-    double *a = (double *)rec->a;           // A: master id (double)
-    int masterId = (int)*a;
-
-    double *b = (double *)rec->b;           // B: command (double)
-    int cmd = (int)*b;
-
-    // unused                               // C: spare
-
-    double *d = (double *)rec->d;           // D: slave id (double)
-    int slaveId = (int)*d;
-
-    double *e = (double *)rec->e;           // E: channel id (double)
-    int chId = (int)*e;
-
-    // unused                               // F: sdoIndex    (double)
-    // unused                               // G: sdoSubIndex (double)
-    // unused                               // H: data type   (string)
-
-    double *i = (double *)rec->i;           // I: command specific arg (double)
-    int cmdArg = (int)*i;
-
-    char *prefix = (char *)rec->r;          // R: prefix  (string)
-    char *epicsVer = (char *)rec->s;        // S: epics version (string)
-    char *ecmccfgVer = (char *)rec->t;      // T: ecmccfg_ver (string)
-    double *triggerCmd = (double *)rec->u;  // U: trigger (double)
-
-
-    // sanity checks
-    if (!*triggerCmd)
-        return 0;
-
-    if (masterId < 0)
-        return -1;
-
-    if ((slaveId < 0) || (slaveId > EC_SLAVES_MAX))
-        return -1;
-
-    epicsMutexLock(scriptLock);
-    if (hasJob) {
-        printf("Busy, ignoring trigger.\n");
-        epicsMutexUnlock(scriptLock);
+static long runEtherCATTool(struct aSubRecord *rec) {
+    EcToolContext *context = static_cast<EcToolContext *>(rec->dpvt);
+    if (!context || rec->ftu != DBF_DOUBLE || !rec->u) return -1;
+    const double trigger = *static_cast<double *>(rec->u);
+    if (trigger == 0) return 0;
+    if (!(trigger >= -DBL_MAX && trigger <= DBL_MAX)) return -1;
+    if (rec->fta != DBF_DOUBLE || rec->ftb != DBF_DOUBLE ||
+        rec->ftd != DBF_DOUBLE || rec->fte != DBF_DOUBLE || rec->fti != DBF_DOUBLE ||
+        !rec->a || !rec->b || !rec->d || !rec->e || !rec->i) return -1;
+    ecTool::Arguments job;
+    if (!ecTool::build(context->directory, context->prefix,
+                       *static_cast<double *>(rec->a), *static_cast<double *>(rec->b),
+                       *static_cast<double *>(rec->d), *static_cast<double *>(rec->e),
+                       *static_cast<double *>(rec->i), job)) {
+        std::fprintf(stderr, "%s: invalid EcTool command or argument\n", rec->name);
         return -1;
     }
-
-    switch(cmd) {
-        case CMD_EC_MST:
-            setupEthercatMaster(masterId, epicsVer, ecmccfgVer, prefix);
-            break;
-        case CMD_EC_SLV_CHANGE_EC_STATE:
-            setupChangeSlaveEtherCATstate(masterId, slaveId, cmdArg);
-            break;
-        case CMD_EC_SLVS_LIST:
-            setupEthercatSlaves(masterId, epicsVer, ecmccfgVer, prefix);
-            break;        
-        case CMD_EC_SLV_READ_DIAG_BUFFER_SDO:           
-            setupReadDiagBufferSDO(masterId, slaveId, epicsVer, ecmccfgVer, prefix);
-            break;
-        case CMD_EC_SLV_EL7062_AUTOTUNE:
-            setupEL7062ExeAutoTune(masterId, slaveId, chId, epicsVer, ecmccfgVer, prefix);
-            break;
-        case CMD_EC_SLV_EL7062_READBACK:
-            setupEL7062ReadBack(masterId, slaveId, chId, epicsVer, ecmccfgVer, prefix);
-            break;
+    epicsMutexLock(context->lock);
+    if (context->busy) {
+        epicsMutexUnlock(context->lock);
+        return -1;
     }
-
-    epicsEventSignal(scriptEvent);
-    epicsMutexUnlock(scriptLock);
+    context->job.swap(job);
+    context->busy = true;
+    epicsEventSignal(context->event);
+    epicsMutexUnlock(context->lock);
     return 0;
 }
 epicsRegisterFunction(runEtherCATTool);
-
-
-static int setupChangeSlaveEtherCATstate(int masterId, int slaveId, int cmdArg) {
-
-  char stateName[sizeof("SAFEOP")] = "";
-  bool isValidState = true;
-
-  switch(cmdArg) {
-    case 1:  strcpy(stateName, "INIT")   ; break;
-    case 2:  strcpy(stateName, "PREOP")  ; break;
-    case 3:  strcpy(stateName, "BOOT")   ; break;
-    case 4:  strcpy(stateName, "SAFEOP") ; break;
-    case 8:  strcpy(stateName, "OP")     ; break;
-    default: isValidState = false        ; break;
-  }
-
-  if (false == isValidState)
-    return -1;
-
-  size_t charCount = snprintf(scriptPath,
-      sizeof(scriptPath),
-      "/opt/etherlab/bin/ethercat states -m%d -p%d %s\n",
-      masterId,
-      slaveId,
-      stateName);
-
-  if (charCount >= sizeof(scriptPath) - 1)
-    return -1;
-
-  hasJob=1;
-  return 0;
-}
-
-static int setupEthercatMaster(int master, char* epics, char *ecmccfg, char * prefix) {
-    size_t charCount = snprintf(scriptPath,
-            sizeof(scriptPath),
-            "bash /ioc/modules/ecmccfg/%s/R%s/ecToolEthercatMaster.sh %d %s\n",
-            ecmccfg,
-            epics,
-            master,
-            prefix);
-
-    if (charCount >= sizeof(scriptPath) - 1)
-        return -1;
-
-    hasJob=1;
-    return 0;
-}
-
-
-static int setupEthercatSlaves(int master, char* epics, char *ecmccfg, char * prefix) {
-    size_t charCount = snprintf(scriptPath,
-            sizeof(scriptPath),
-            "bash /ioc/modules/ecmccfg/%s/R%s/ecToolEthercatSlaves.sh %d %s\n",
-            ecmccfg,
-            epics,
-            master,
-            prefix);
-
-    if (charCount >= sizeof(scriptPath) - 1)
-        return -1;
-
-    hasJob=1;
-    return 0;
-}
-
-static int setupReadDiagBufferSDO(int master, int slave, char* epics, char *ecmccfg, char * prefix) {
-    size_t charCount = snprintf(scriptPath,
-            sizeof(scriptPath),
-            "bash /ioc/modules/ecmccfg/%s/R%s/ecToolReadHwDiag.sh %d %d %s\n",
-            ecmccfg,
-            epics,
-            master,
-            slave,            
-            prefix);
-
-    if (charCount >= sizeof(scriptPath) - 1)
-        return -1;
-
-    hasJob=1;
-    return 0;
-}
-
-static int setupEL7062ExeAutoTune(int master, int slave, int channel, char* epics, char *ecmccfg, char * prefix)
-{
-    size_t charCount = snprintf(scriptPath,
-            sizeof(scriptPath),
-            "bash /ioc/modules/ecmccfg/%s/R%s/ecToolEL7062_triggTune.sh %d %d %d %s\n",
-            ecmccfg,
-            epics,
-            master,
-            slave,
-            channel,
-            prefix);
-
-    if (charCount >= sizeof(scriptPath) - 1)
-        return -1;
-
-    hasJob=1;
-    return 0;
-}
-
-
-static int setupEL7062ReadBack(int master, int slave, int channel, char* epics, char *ecmccfg, char * prefix)
-{
-    size_t charCount = snprintf(scriptPath,
-            sizeof(scriptPath),
-            "bash /ioc/modules/ecmccfg/%s/R%s/ecToolEL7062_readBackParams.sh %d %d %d %s\n",
-            ecmccfg,
-            epics,
-            master,
-            slave,
-            channel,
-            prefix);
-
-    if (charCount >= sizeof(scriptPath) - 1)
-        return -1;
-
-    hasJob=1;
-    return 0;
-}
-// vim: ts=4 sw=4 et

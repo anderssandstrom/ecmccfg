@@ -15,6 +15,23 @@ you know the visible problem, but not yet which detailed page to use.
 3. Use the symptom groups below to pick the detailed page.
 
 ## Startup and EtherCAT
+
+- **Startup errors after loading `ecmccfg` twice**: check that the startup file
+  contains only one `require ecmccfg` call. Accidentally keeping both a versioned
+  call and an unversioned call can cause startup errors. For example, remove the
+  duplicate from this configuration:
+
+  ```text
+  require ecmccfg sandst_a "MASTER_ID=0,ENG_MODE=1,EC_RATE=500,ECMC_VER=sandst_a"
+  require ecmccfg "MASTER_ID=0,ENG_MODE=1,EC_RATE=500"
+  ```
+
+  Keep only the call with the intended version and settings, for example:
+
+  ```text
+  require ecmccfg sandst_a "MASTER_ID=0,ENG_MODE=1,EC_RATE=500,ECMC_VER=sandst_a"
+  ```
+
 - **EtherCAT validation fails**: verify slave order/ids, confirm process image matches hardware, and check for missing power or ESTOP on drives.
   Use: [general]({{< relref "/manual/knowledgebase/general.md" >}}), [ethercat command line interface]({{< relref "/manual/knowledgebase/ethercatCLI.md" >}}), [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})
 - **IOC will not start after partial hardware failure**: fix cabling and power first; restarting with missing slaves can leave the IOC unusable.

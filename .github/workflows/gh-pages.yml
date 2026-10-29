@@ -27,6 +27,8 @@ jobs:
             pip install mdutils
       - name: Check generated axis YAML references
         run: python3 hugo/scripts/generate_axis_reference.py --check
+      - name: Check generated hardware entry reference
+        run: python3 hugo/scripts/generate_hardware_reference.py --check
 
       - name: build content from source
         run: |

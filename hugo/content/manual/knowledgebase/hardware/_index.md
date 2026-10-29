@@ -9,6 +9,10 @@ chapter = false
 ---
 
 ## Scope
+The generated [hardware entry reference]({{< relref "/manual/knowledgebase/hardware/entries/_index.md" >}})
+lists the EtherCAT identifiers created by the slave configurations and shared
+snippets, including optional PDOs, data types, addresses and source links.
+
 Most field issues are not EtherCAT protocol faults but physical/system integration problems:
 - cabling
 - missing or partial power

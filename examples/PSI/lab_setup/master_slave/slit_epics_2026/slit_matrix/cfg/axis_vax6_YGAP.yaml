@@ -60,8 +60,8 @@ monitoring:
 plc:
   enable: true
   externalCommands: true
-  filter:
-    velocity:
+  velocity_filter:
+    encoder:
       enable: false
       size: 10
     trajectory:

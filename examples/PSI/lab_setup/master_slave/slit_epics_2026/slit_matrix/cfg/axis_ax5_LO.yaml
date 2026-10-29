@@ -22,6 +22,8 @@ drive:
   numerator: 10                 # max velo in EGU/s
   denominator: 32768            # MAX_INT for a 16-bit register, always this for this stepper drive!
   type: 0
+  enable: 0                     # Enable bit in the Beckhoff control word
+  enabled: 1                    # Enabled bit in the Beckhoff status word
   control: ec${M_ID=0}.s$(DRV_SLAVE).driveControl01
   status: ec${M_ID=0}.s$(DRV_SLAVE).driveStatus01
   setpoint: ec${M_ID=0}.s$(DRV_SLAVE).velocitySetpoint01
@@ -85,3 +87,10 @@ monitoring:
 plc:
   enable: true
   externalCommands: true
+  velocity_filter:
+    encoder:
+      enable: false
+      size: 1
+    trajectory:
+      enable: false
+      size: 1

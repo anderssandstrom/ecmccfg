@@ -380,11 +380,12 @@ class OptTests(unittest.TestCase):
                     Startup(model, options)
 
     def test_legacy_el7201_timing_and_watchdog(self):
-        for rate, period, shift in [(500, 2000000, 1000000),
-                                    (1000, 1000000, 500000)]:
-            for options, watchdog in [({}, '2498,1000'),
+        for rate, period in [(500, 2000000), (1000, 1000000)]:
+            for options, watchdog, shift in [({}, '2498,1000', 0),
                                       (dict(WATCHDOG_DIVIDER='2498',
-                                            WATCHDOG_INTERVALS='500'), '2498,500')]:
+                                            WATCHDOG_INTERVALS='500'), '2498,500', 0),
+                                      (dict(SYNC_0_SHIFT=str(period // 2)),
+                                       '2498,1000', period // 2)]:
                 with self.subTest(rate=rate, options=options):
                     startup = Startup.__new__(Startup)
                     startup.env = dict(SCRIPTEXEC='iocshLoad', ecmccfg_DIR='',

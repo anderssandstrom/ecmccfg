@@ -36,12 +36,11 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}ecmcEX72XX_CSV.cmd
 
 #- ############ Distributed clocks config EL7201:
 #- ECMC_EC_SAMPLE_RATE must match the master rate before loading this script.
-#- At 500 Hz: Sync0 period = 2000000 ns, shift = 1000000 ns.
-ecmcEpicsEnvSetCalc("ECMC_TEMP_PERIOD_NANO_SECS",1000/${ECMC_EC_SAMPLE_RATE=1000}*1E6)
-ecmcEpicsEnvSetCalc("ECMC_TEMP_PERIOD_NANO_SECS_HALF",${ECMC_TEMP_PERIOD_NANO_SECS}/2)
+#- Trial zero Sync0 shift for intermittent PLL errors during startup.
+#- At 500 Hz: Sync0 period = 2000000 ns, shift = 0 ns.
 
 #- NOTE important the sync 1 period needs to be 0!
-${SCRIPTEXEC} ${ecmccfg_DIR}applySlaveDCconfig.cmd "ASSIGN_ACTIVATE=0x700,SYNC_0_SHIFT=${SYNC_0_SHIFT=${ECMC_TEMP_PERIOD_NANO_SECS_HALF}}"
+${SCRIPTEXEC} ${ecmccfg_DIR}applySlaveDCconfig.cmd "ASSIGN_ACTIVATE=0x700,SYNC_0_SHIFT=${SYNC_0_SHIFT=0}"
 
 #- applySlaveDCconfig.cmd unsets the period; restore it for the cycle-time SDOs.
 ecmcEpicsEnvSetCalc("ECMC_TEMP_PERIOD_NANO_SECS",1000/${ECMC_EC_SAMPLE_RATE=1000}*1E6)
@@ -63,4 +62,3 @@ ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x1C33,0x1,3,2)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x1C33,0x2,${ECMC_TEMP_PERIOD_NANO_SECS},4)"
 
 epicsEnvUnset(ECMC_TEMP_PERIOD_NANO_SECS)
-epicsEnvUnset(ECMC_TEMP_PERIOD_NANO_SECS_HALF)

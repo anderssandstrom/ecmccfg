@@ -72,12 +72,14 @@ See [Beckhoff's explanation of 0x001F](https://infosys.beckhoff.com/content/1033
 
 DC timing is calculated separately from `ECMC_EC_SAMPLE_RATE`. Set the master
 rate through `EC_RATE` when loading `ecmccfg`, before configuring the slave.
-For the resolver EL7201, the defaults are:
+The `EL7201` script currently defaults to zero Sync0 shift as a trial for
+intermittent PLL errors during startup. `SYNC_0_SHIFT` can override this in ns;
+the `EL7201_STD` and `EL7201_OPT` profiles retain their half-cycle defaults.
 
 | Master rate | Sync0 period | Sync0 shift | Sync1 period |
 | --- | --- | --- | --- |
-| 1000 Hz | 1000000 ns | 500000 ns | 0 |
-| 500 Hz | 2000000 ns | 1000000 ns | 0 |
+| 1000 Hz | 1000000 ns | 0 | 0 |
+| 500 Hz | 2000000 ns | 0 | 0 |
 
 Check `epicsEnvShow("ECMC_EC_SAMPLE_RATE")` in the IOC shell and remove any
 hardcoded DC override that assumes a different rate. The warning

@@ -198,12 +198,12 @@ record(waveform,"$(P)MCU-Updated"){
 
 record(ao,"${P}MCU-Cfg-UI-EC-Rows") {
   field(DESC, "UI: Panel rows")
-  field(VAL,  "1")
+  field(VAL,  "$(EC_UI_ROWS=1)")
 }
 
 record(ao,"${P}MCU-Cfg-UI-AX-Rows") {
   field(DESC, "UI: Panel rows")
-  field(VAL,  "1")
+  field(VAL,  "$(AX_UI_ROWS=1)")
 }
 
 record(ao,"${P}MCU-Cfg-UI-AXGRP-Rows") {

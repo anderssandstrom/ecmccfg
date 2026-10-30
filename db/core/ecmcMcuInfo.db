@@ -43,6 +43,15 @@ record(stringout,"$(P)MCU-Cfg-Mode") {
     field(VAL, ${MCU_MODE=""})
 }
 
+# Startup SIM setting; this is metadata, not a backend-selection command.
+record(bi,"$(P)MCU-Cfg-Sim-Mode") {
+    field(DESC, "IOC startup simulation mode")
+    field(INP, "${MCU_SIM=0}")
+    field(VAL, "${MCU_SIM=0}")
+    field(ZNAM, "REAL")
+    field(ONAM, "SIMULATED")
+}
+
 record(stringout,"$(P)MCU-Cfg-PVA") {
     field(DESC, "PVA enabled")
     field(VAL, ${MCU_PVA=""})

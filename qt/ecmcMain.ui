@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>610</width>
-    <height>704</height>
+    <height>740</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -3129,6 +3129,31 @@
     <property name="text">
      <string>Error:</string>
     </property>
+   </widget>
+   <widget class="caLabel" name="iocIoBackendLabel">
+    <property name="geometry">
+     <rect><x>10</x><y>707</y><width>110</width><height>20</height></rect>
+    </property>
+    <property name="text"><string>I/O backend:</string></property>
+   </widget>
+   <widget class="caLed" name="iocSimulationLed">
+    <property name="geometry">
+     <rect><x>125</x><y>704</y><width>25</width><height>25</height></rect>
+    </property>
+    <property name="toolTip"><string>Startup SIM setting: green = real, amber = simulated.</string></property>
+    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-Cfg-Sim-Mode</string></property>
+    <property name="falseColor"><color><red>0</red><green>160</green><blue>0</blue></color></property>
+    <property name="trueColor"><color><red>255</red><green>170</green><blue>0</blue></color></property>
+   </widget>
+   <widget class="caLineEdit" name="iocSimulationMode">
+    <property name="geometry">
+     <rect><x>160</x><y>704</y><width>200</width><height>25</height></rect>
+    </property>
+    <property name="font"><font><weight>75</weight><bold>true</bold></font></property>
+    <property name="toolTip"><string>IOC startup SIM setting. This display does not select or change the backend.</string></property>
+    <property name="channel" stdset="0"><string notr="true">$(IOC):MCU-Cfg-Sim-Mode</string></property>
+    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+    <property name="formatType"><enum>caLineEdit::string</enum></property>
    </widget>
   </widget>
  </widget>

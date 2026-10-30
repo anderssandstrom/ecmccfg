@@ -46,6 +46,7 @@
 #- START_EPICS_FIRST  = 1/0, default 0 (ecmc starts first). Set to 1 to let
 #-                      EPICS initialization/autosave restore run before ECMC
 #-                      runtime and EtherCAT are started asynchronously.
+#- EC_TIMEOUT         = Timeout in seconds for EtherCAT bus (default 45s) 
 #-
 #- [set by module]
 #- ECMC_CONFIG_ROOT       = root directory of ${MODULE}
@@ -236,5 +237,8 @@ epicsEnvSet(ECMC_START_EPICS_FIRST, ${START_EPICS_FIRST=0})
 ecmcEpicsEnvSetCalcTernary(ECMC_START_EPICS_FIRST_CMD,"${ECMC_START_EPICS_FIRST}=1",'','#-')
 ecmcEpicsEnvSetCalcTernary(ECMC_START_ECMC_FIRST_CMD,"${ECMC_START_EPICS_FIRST}=0",'','#-')
 atInit "$(SCRIPTEXEC) ($(ECMC_CONFIG_ROOT)finalize.cmd)"
+
+#- Set default EtherCAT startup timeout
+ecmcConfigOrDie "Cfg.SetEcStartupTimeout(${EC_TIMEOUT=45})"
 
 on error halt

@@ -128,13 +128,23 @@ for the restore configuration and the narrow startup COMM-alarm workaround.
 ## EtherCAT startup timeout
 
 When EtherCAT startup fails with messages like `Max wait time 30 second(s)`,
-increase the EtherCAT startup timeout before ecmc enters runtime:
+increase the maximum EtherCAT startup wait using the `EC_TIMEOUT` startup
+parameter. The value is in seconds and defaults to **45 seconds** in `ecmccfg`:
+
+```bash
+require ecmccfg "EC_TIMEOUT=100"
+```
+
+`startup.cmd` applies this parameter with
+`Cfg.SetEcStartupTimeout(${EC_TIMEOUT=45})`. The underlying ecmc default is
+30 seconds when no timeout is explicitly configured.
+
+You can also override the timeout after loading `ecmccfg`, before ecmc enters
+runtime:
 
 ```bash
 ecmcConfigOrDie "Cfg.SetEcStartupTimeout(100)"
 ```
-
-The value is in seconds. The default timeout is 30 seconds.
 
 Place the command after `require ecmccfg` or `startup.cmd` has loaded ecmc,
 but before `setAppMode.cmd` or `finalize.cmd` starts runtime. In the normal

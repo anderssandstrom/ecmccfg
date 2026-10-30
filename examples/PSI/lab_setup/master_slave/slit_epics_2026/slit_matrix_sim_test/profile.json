@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "axes": {
+    "TR_LO": 5,
+    "TR_HI": 6,
+    "CENTERY": 12,
+    "GAPY": 13
+  },
+  "physical": {
+    "TR_LO": {
+      "drive_slave": 14,
+      "encoder_slave": 9,
+      "encoder_channel": "02",
+      "internal_counts_per_mm": 12800,
+      "absolute_counts_per_mm": 4096,
+      "absolute_offset_mm": -1380,
+      "absolute_bits": 26,
+      "brake": {
+        "slave": 5,
+        "channel": "01",
+        "open_delay_cycles": 250,
+        "close_ahead_cycles": 200
+      }
+    },
+    "TR_HI": {
+      "drive_slave": 12,
+      "encoder_slave": 9,
+      "encoder_channel": "01",
+      "internal_counts_per_mm": 12800,
+      "absolute_counts_per_mm": 4096,
+      "absolute_offset_mm": -1380,
+      "absolute_bits": 26,
+      "brake": {
+        "slave": 5,
+        "channel": "02",
+        "open_delay_cycles": 250,
+        "close_ahead_cycles": 200
+      }
+    }
+  }
+}

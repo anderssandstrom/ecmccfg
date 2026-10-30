@@ -62,8 +62,11 @@ underlying aSub/link fields and any sequence/GUI trigger records that invoke
 them. Run the IOC without root and grant only necessary EtherCAT device access.
 Access-security defaults are unchanged to preserve existing operation.
 
-The separate `MCU-Cmd` / `Cfg.IocshCmd` exposure in the ecmc repository is not
-changed by this EcTool patch. Restrict that command record independently; a
+EcTool hardening is separate from MCU-Cmd host-command policy. The companion
+change in the ecmc repository disables remote shell/code/file operations by
+default and offers a local startup-only `ecmcAllowNetworkHostCommands(1)` opt-in
+for commissioning before runtime. See ecmc's `documentation/MCU_CMD_SECURITY.md`.
+On older ecmc builds without that change, restrict MCU-Cmd independently; a
 client with IOC-shell access can bypass protections elsewhere in the IOC.
 
 The worker waits for each helper to finish; no new execution timeout is imposed

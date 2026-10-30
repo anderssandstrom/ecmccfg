@@ -473,6 +473,8 @@ No direct entry declarations; follow the referenced snippets above.
 
 Documented configuration options:
 
+- WATCHDOG_DIVIDER Watchdog divider, default 2498 (100 us tick)
+- WATCHDOG_INTERVALS Watchdog intervals, default 1000 (100 ms)
 - [out] SDO 0x1011:01 --> 1684107116 \b reset
 
 Referenced hardware snippets (may be conditional):

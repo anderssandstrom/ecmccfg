@@ -13,8 +13,14 @@
 #-d */
 
 #- Add ecmc general records
+#- Default EtherCAT panel rows: 1 for 0-10 slaves, 2 for 11-20, 3 above 20.
+ecmcEpicsEnvSetCalc(ECMC_TEMP_EC_UI_ROWS,"1+(${ECMC_ECSLAVE_COUNT=0}>10)+(${ECMC_ECSLAVE_COUNT=0}>20)","%d")
+#- Default axis panel rows: 1 for 0-10 axes, 2 for 11-20, 3 above 20.
+ecmcEpicsEnvSetCalc(ECMC_TEMP_AX_UI_ROWS,"1+(${ECMC_AXIS_COUNT=0}>10)+(${ECMC_AXIS_COUNT=0}>20)","%d")
 ecmcFileExist("ecmcGeneral.db",1,1)
-dbLoadRecords("ecmcGeneral.db","P=${ECMC_PREFIX},PORT=${ECMC_ASYN_PORT},ADDR=0,TIMEOUT=1,T_SMP_MS=${T_SMP_MS=${ECMC_SAMPLE_RATE_MS}},TSE=${ECMC_TSE},ECMC_PROC_HOOK=${ECMC_PROC_HOOK=''},T_SMP_HOOK_MS=${ECMC_T_SMP_HOOK_MS=${T_SMP_MS=${ECMC_SAMPLE_RATE_MS}}}")
+dbLoadRecords("ecmcGeneral.db","P=${ECMC_PREFIX},PORT=${ECMC_ASYN_PORT},ADDR=0,TIMEOUT=1,T_SMP_MS=${T_SMP_MS=${ECMC_SAMPLE_RATE_MS}},TSE=${ECMC_TSE},ECMC_PROC_HOOK=${ECMC_PROC_HOOK=''},T_SMP_HOOK_MS=${ECMC_T_SMP_HOOK_MS=${T_SMP_MS=${ECMC_SAMPLE_RATE_MS}}},EC_UI_ROWS=${ECMC_TEMP_EC_UI_ROWS},AX_UI_ROWS=${ECMC_TEMP_AX_UI_ROWS}")
+epicsEnvUnset(ECMC_TEMP_EC_UI_ROWS)
+epicsEnvUnset(ECMC_TEMP_AX_UI_ROWS)
 
 #- Add realtime logger records
 ecmcFileExist("ecmcRtLog.db",1,1)

@@ -59,6 +59,34 @@ is missing. The watchdog error most likely happened during IOC startup and is
 not the main problem.
 
 ## Error/warning
+
+### EL7201 watchdog configuration and DC timing
+
+If an EL7201 refuses PREOP to SAFEOP with AL status `0x001F` ("Invalid
+watchdog configuration"), check the watchdog settings. The `EL7201` hardware
+script uses divider `2498` and intervals `1000`, giving a 100 ms timeout
+independent of the IOC rate. Earlier versions calculated both values from the
+sample rate, giving approximately 401 ms at 1 kHz and 1.6 s at 500 Hz.
+The script accepts `WATCHDOG_DIVIDER` and `WATCHDOG_INTERVALS` overrides.
+See [Beckhoff's explanation of 0x001F](https://infosys.beckhoff.com/content/1033/ethercatsystem/1072459275.html).
+
+DC timing is calculated separately from `ECMC_EC_SAMPLE_RATE`. Set the master
+rate through `EC_RATE` when loading `ecmccfg`, before configuring the slave.
+The `EL7201` script currently defaults to zero Sync0 shift as a trial for
+intermittent PLL errors during startup. `SYNC_0_SHIFT` can override this in ns;
+the `EL7201_STD` and `EL7201_OPT` profiles retain their half-cycle defaults.
+
+| Master rate | Sync0 period | Sync0 shift | Sync1 period |
+| --- | --- | --- | --- |
+| 1000 Hz | 1000000 ns | 0 | 0 |
+| 500 Hz | 2000000 ns | 0 | 0 |
+
+Check `epicsEnvShow("ECMC_EC_SAMPLE_RATE")` in the IOC shell and remove any
+hardcoded DC override that assumes a different rate. The warning
+`Slave did not sync after 5000 ms` concerns distributed-clock convergence;
+check the subsequent log messages and whether the slave reaches OP before
+attributing it to the watchdog configuration.
+
 If the drive is in an error or warning state and cannot be enabled, common
 reasons are:
 * missing power supply

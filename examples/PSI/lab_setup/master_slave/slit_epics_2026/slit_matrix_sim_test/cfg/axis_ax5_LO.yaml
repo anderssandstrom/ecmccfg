@@ -22,6 +22,9 @@ drive:
   type: 0
   enable: 0                     # Enable bit in the Beckhoff control word
   enabled: 1                    # Enabled bit in the Beckhoff status word
+  reset: 1                    # EL70xx control bit 1 resets the drive fault
+  error:
+    - 3                       # EL70xx status bit 3 -> drive alarm 0
   control: ec${M_ID=0}.s$(DRV_SLAVE).driveControl01
   status: ec${M_ID=0}.s$(DRV_SLAVE).driveStatus01
   setpoint: ec${M_ID=0}.s$(DRV_SLAVE).velocitySetpoint01

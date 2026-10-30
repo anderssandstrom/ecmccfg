@@ -1,6 +1,6 @@
 # Identifies this isolated acceptance-test setup. Not an operator command.
 record(longin,"$(P)SIM:SlitTest:Schema") {
   field(DESC,"Slit acceptance-test schema")
-  field(INP,"1")
-  field(VAL,"1")
+  field(INP,"2")
+  field(VAL,"2")
 }

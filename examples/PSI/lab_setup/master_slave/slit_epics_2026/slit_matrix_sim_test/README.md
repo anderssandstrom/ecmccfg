@@ -51,3 +51,8 @@ The runner observes these native output PVs; it never writes brake values to
 manufacture a pass. CA checks functional sequence windows, while the existing
 ECMC C++ brake tests cover exact cycle boundaries. The plant does not model
 brake mechanics or coil/armature feedback.
+
+Configuration schema 2 adds the EL70xx drive alarm/reset links: drive status
+bit 3 is alarm 0, control bit 1 is reset. A drive-fault injection is expected
+to latch ERROR_DRV_HW_ALARM_0 (0x1460e). Restart this IOC after updating the
+configuration; the runner rejects an older schema marker before issuing writes.

@@ -41,6 +41,18 @@ encoder:
   absOffset: 0          # Encoder offset in eng units (for absolute encoders)
   position: ec${M_ID=0}.s$(ENC_SLAVE).positionActual$(ENC_CHANNEL)
 
+  # Also makes ecmccfg load the motor homing command records.
+  homing:
+    type: 1
+    position: 0
+    velocity:
+      to: 0.2
+      from: 0.1
+    acceleration: 1
+    deceleration: 1
+    latchCount: 1
+    postMoveEnable: false
+
 controller:
   Kp: 2.00
   Ki: 0.000

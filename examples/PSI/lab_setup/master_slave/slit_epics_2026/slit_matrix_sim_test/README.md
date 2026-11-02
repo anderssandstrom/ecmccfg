@@ -56,3 +56,30 @@ Configuration schema 2 adds the EL70xx drive alarm/reset links: drive status
 bit 3 is alarm 0, control bit 1 is reset. A drive-fault injection is expected
 to latch ERROR_DRV_HW_ALARM_0 (0x1460e). Restart this IOC after updating the
 configuration; the runner rejects an older schema marker before issuing writes.
+
+## Homing tests
+
+Both physical-axis YAMLs declare `encoder.homing`; this is required for
+ecmccfg to load `ecmcMotorRecordhome.template` and the `-HomProc.OMSL`,
+`-HomPos`, speed and acceleration records. Setting Cfg homing defaults alone
+does not create those PVs.
+
+The updated startup links drive-status bit 13 to each physical home sensor,
+configures encoder homing defaults (procedure 1, 0.2/0.1 mm/s, acceleration and
+deceleration 1), turn count 1, no post-home move, and a 12-second sequence
+watchdog. `test-marker.db` supplies `SIM:SlitTest:HomingSchema=2`. Restart this
+IOC from the updated directory before running the new module; no ECMC binary
+change is required for these test additions.
+
+```sh
+python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case homing
+```
+
+Both motor home fields and native commands exercise procedures 1–10, configured
+14, manual reference (native 15 / motor 25), and absolute 21/22 (closed loop).
+STOP during search/reversal/cam crossing, disable, drive/encoder faults and
+missing cam are also covered. Busy, DMOV, MOVN, Homed and reference geometry are
+checked. Other test modules retain their existing manually injected limits;
+position-based sensors are enabled only during homing cases. The plant keeps a
+separate physical travel bound and restores encoder references without resetting
+raw counters. See ECMC `tests/integration/slit/README.md` for details and limits.

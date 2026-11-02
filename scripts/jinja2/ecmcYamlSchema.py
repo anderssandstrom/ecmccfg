@@ -142,7 +142,7 @@ class Schema:
                 {'type': 'string', 'regex': '^\$(\{|\()\w*(=\d*(\.\d*)?)?(\}|\))$'}
             ]
             },
-            'postMoveEnable': {'type': 'boolean', 'dependencies': ['postMovePosition']},
+            'postMoveEnable': {'type': 'boolean'},
             'postMovePosition': {'oneof': [
                 {'type': 'float'},
                 {'type': 'string', 'regex': '^\$(\{|\()\w*(=\d*(\.\d*)?)?(\}|\))$'}

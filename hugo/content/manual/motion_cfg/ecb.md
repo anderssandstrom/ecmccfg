@@ -32,3 +32,20 @@ The ecb module startup file sets this automatically.
   `controller.freezeIAtRmp`, use the same generated configuration commands with
   either the `ecb` or `jinja` backend.
 - For CLI details and schema behavior, see the `ecb` repository documentation.
+
+## Optional post-homing move
+
+For both `homing` and `encoder.homing`, `postMoveEnable: false` does not
+require `postMovePosition`. If a target is supplied, it is retained in the
+generated configuration; zero and EPICS macro targets are supported.
+
+When `postMoveEnable: true`, specify `postMovePosition`. The shared templates
+emit an explicit error and `ecmcExit` if it is missing, before enabling the
+post-homing move. This behavior is the same for the Python and ECB renderers;
+the missing-target rejection occurs in the generated startup script.
+
+Regression test (with the Python dependencies and ECB installed):
+
+```sh
+ECB=/path/to/ecb python3 -m unittest discover -s tests -p test_homing_post_move.py -v
+```

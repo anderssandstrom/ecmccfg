@@ -132,10 +132,19 @@ epicsEnvSet(ENC_EGU,'{{ encoderUnit }}')
         epicsEnvSet(HOME_POS, {{ encoder.homing.position }})
     {%- endif %}
     {%- if encoder.homing.postMoveEnable is defined %}
-        ecmcConfigOrDie "Cfg.SetAxisHomePostMoveEnable(${ECMC_AXIS_NO},{{ encoder.homing.postMoveEnable|int }})"
-        ecmcConfigOrDie "Cfg.SetAxisHomePostMoveTargetPosition(${ECMC_AXIS_NO},{{ encoder.homing.postMovePosition|default(0)}})"
-        epicsEnvSet(POST_ENA, {{ encoder.homing.postMoveEnable|int }})
-        epicsEnvSet(POST_POS, {{ encoder.homing.postMovePosition|default(0) }})
+        {%- if encoder.homing.postMoveEnable and encoder.homing.postMovePosition is not defined %}
+            # ERROR: encoder.homing.postMovePosition is required when postMoveEnable is true.
+            ecmcExit
+        {%- else %}
+            ecmcConfigOrDie "Cfg.SetAxisHomePostMoveEnable(${ECMC_AXIS_NO},{{ encoder.homing.postMoveEnable|int }})"
+            {%- if encoder.homing.postMovePosition is defined %}
+                ecmcConfigOrDie "Cfg.SetAxisHomePostMoveTargetPosition(${ECMC_AXIS_NO},{{ encoder.homing.postMovePosition }})"
+            {%- endif %}
+            epicsEnvSet(POST_ENA, {{ encoder.homing.postMoveEnable|int }})
+            {%- if encoder.homing.postMovePosition is defined %}
+                epicsEnvSet(POST_POS, {{ encoder.homing.postMovePosition }})
+            {%- endif %}
+        {%- endif %}
     {%- endif %}
     {%- if encoder.homing.latchCount is defined %}
         ecmcConfigOrDie "Cfg.SetAxisHomeLatchCountOffset(${ECMC_AXIS_NO},{{ encoder.homing.latchCount }})"

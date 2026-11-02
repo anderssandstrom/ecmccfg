@@ -502,7 +502,6 @@
       },
       "encoder.homing.postMoveEnable": {
         "type": "boolean",
-        "dependencies": "homing.postMovePosition",
         "required": false
       },
       "encoder.homing.postMovePosition": {
@@ -853,7 +852,6 @@
       },
       "homing.postMoveEnable": {
         "type": "boolean",
-        "dependencies": "homing.postMovePosition",
         "required": false
       },
       "homing.postMovePosition": {

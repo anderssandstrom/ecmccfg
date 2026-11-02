@@ -20,10 +20,19 @@
         epicsEnvSet(HOME_POS, {{ homing.position }})
     {%- endif %}
     {%- if homing.postMoveEnable is defined %}
-        ecmcConfigOrDie "Cfg.SetAxisHomePostMoveEnable(${ECMC_AXIS_NO},{{ homing.postMoveEnable|int }})"
-        ecmcConfigOrDie "Cfg.SetAxisHomePostMoveTargetPosition(${ECMC_AXIS_NO},{{ homing.postMovePosition|default(0)}})"
-        epicsEnvSet(POST_ENA, {{ homing.postMoveEnable|int }})
-        epicsEnvSet(POST_POS, {{ homing.postMovePosition|default(0) }})
+        {%- if homing.postMoveEnable and homing.postMovePosition is not defined %}
+            # ERROR: homing.postMovePosition is required when postMoveEnable is true.
+            ecmcExit
+        {%- else %}
+            ecmcConfigOrDie "Cfg.SetAxisHomePostMoveEnable(${ECMC_AXIS_NO},{{ homing.postMoveEnable|int }})"
+            {%- if homing.postMovePosition is defined %}
+                ecmcConfigOrDie "Cfg.SetAxisHomePostMoveTargetPosition(${ECMC_AXIS_NO},{{ homing.postMovePosition }})"
+            {%- endif %}
+            epicsEnvSet(POST_ENA, {{ homing.postMoveEnable|int }})
+            {%- if homing.postMovePosition is defined %}
+                epicsEnvSet(POST_POS, {{ homing.postMovePosition }})
+            {%- endif %}
+        {%- endif %}
     {%- endif %}
 
     {%- if homing.latchCount is defined %}

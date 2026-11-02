@@ -21,17 +21,17 @@ the MCU-Cfg-Sim-Mode metadata PV installed. No real EtherCAT master is claimed.
 In the ECMC repository, list or execute modular tests:
 
 ```sh
-python3 tools/simulation/slit_test/run.py --config /path/to/this/directory
-python3 tools/simulation/slit_test/run.py --prefix SIMSLIT: --run --case feedback --loop closed
-python3 tools/simulation/slit_test/run.py --prefix SIMSLIT: --run --case limits
-python3 tools/simulation/slit_test/run.py --prefix SIMSLIT: --run
+python3 tests/integration/slit/run.py --config /path/to/this/directory
+python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case feedback --loop closed
+python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case limits
+python3 tests/integration/slit/run.py --prefix SIMSLIT: --run
 ```
 
 Pass --config if the two repositories are not siblings in the normal workspace.
 The runner owns the drive/EL5042 model and checks this configuration's schema
 marker before issuing writes. Do not run another simulator on slaves 9/12/14.
 Full test semantics, scaling, fault injection and JSON/JUnit report instructions
-are in ECMC `tools/simulation/slit_test/README.md`.
+are in ECMC `tests/integration/slit/README.md`.
 
 The plant/testing infrastructure was checked offline; this configuration and
 its acceptance scenarios still need their first live IOC run. Real distributed
@@ -40,7 +40,7 @@ clock timing and physical motor dynamics are not represented.
 Brake tests are a separate selectable module:
 
 ```sh
-python3 tools/simulation/slit_test/run.py --prefix SIMSLIT: --run --case brake
+python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case brake
 ```
 
 Restart the test IOC after this configuration update. Simulated EL2008 slave 5

@@ -76,6 +76,10 @@ Use extra domains only when you have a clear reason. For most systems, the defau
 
 ## Simulation Entries
 
+For replacing a physical EtherCAT instance with the memory backend, see
+[Simulation backend (SIM=1)]({{< relref "/manual/general_cfg/ethercat/simulation.md" >}}).
+The entries below are local dummy signals and do not select that backend.
+
 Simulation entries are local `ecmc` memory-backed EtherCAT entries. They are useful when an axis object needs an EtherCAT-style link, but the value is produced locally rather than by a real slave.
 
 Two entries, `ZERO` and `ONE`, are created by default on the internal simulation slave. Additional entries can be added with `Cfg.EcAddSimEntry(...)`.

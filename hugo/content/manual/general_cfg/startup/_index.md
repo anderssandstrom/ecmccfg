@@ -13,6 +13,7 @@ startup.cmd takes the following arguments:
  EthercatMC_VER    = 3.0.2 (obsolete)
  INIT              = initAll
  MASTER_ID         = 0 <-- put negative number to disable master, aka non ec-mode
+ SIM               = 0/1, default 0. Use typed memory I/O instead of physical EtherCAT
  SCRIPTEXEC        = iocshLoad
  NAMING            = mXsXXX (default), ClassicNaming, ESSnaming
  EC_RATE           = 1000
@@ -52,6 +53,14 @@ Normally these arguments are set when the module is required:
 ```
 require ecmccfg "ENG_MODE=1,MASTER_ID=2"
 ```
+
+## Simulation backend
+
+Use `require ecmccfg "MASTER_ID=0,SIM=1,EC_RATE=1000"` to select the memory
+backend before slave configuration. `SIM=0` is the default; `MASTER_ID=-1`
+retains masterless behavior. Feedback comes from separate models or PV writes.
+See [Simulation backend (SIM=1)]({{< relref "/manual/general_cfg/ethercat/simulation.md" >}})
+for generated SIM PVs, Python models, GUI controls and limitations.
 
 ## Asyn trace output
 

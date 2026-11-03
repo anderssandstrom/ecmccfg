@@ -13,6 +13,12 @@ Configure and verify the EtherCAT system before commissioning motion.
 3. [EtherCAT endpoint timing]({{< relref "/manual/general_cfg/ethercat/ethercat_timing.md" >}}) — configure delays, phase, timestamps, and diagnostic PVs.
 4. [Verify DC timing with position compare]({{< relref "/manual/general_cfg/ethercat/verify_dc_timing_position_compare.md" >}}) — check timed outputs against a touch probe.
 
+## Test without physical EtherCAT
+
+[Simulation backend (SIM=1)]({{< relref "/manual/general_cfg/ethercat/simulation.md" >}})
+uses typed memory with the normal signal names. Separate Python models provide
+drive feedback; generated SIM PVs support manual injection and a live GUI.
+
 ## Additional configuration
 
 - [FSoE and TwinSAFE]({{< relref "/manual/general_cfg/ethercat/fsoe.md" >}}) — safety-telegram forwarding and panels.

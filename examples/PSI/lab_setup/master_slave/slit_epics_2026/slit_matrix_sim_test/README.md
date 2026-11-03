@@ -103,8 +103,8 @@ physical position and drive counter remain unchanged. Tests cover both relay
 polarities, different startup/idle delays, early/late ready, motor/native
 requests, wake with the drive still enabled, timeout, STOP, and atTarget versus
 tighter controller-deadband settling. Power must remain on for the configured
-post-settling dwell; a loss of qualification resets the timer. Eleven cases are
-planned per loop, with two disturbance cases skipped in open loop. Cleanup
+post-settling dwell; a loss of qualification resets the timer. Twelve cases are
+planned per loop, with three feedback-change cases skipped in open loop. Cleanup
 restores ordinary supply simulation and native settings before the next group.
 
 Off-state rollover coverage alternates zero and an all-ones raw counter word.
@@ -114,3 +114,14 @@ wake-up without rehoming or resetting between cycles. Standalone production
 tests also cover a valid sample near the upper counter boundary, operation
 without a ready input, and preservation of already accumulated positive and
 negative turns across power cycles.
+
+The wake-position-jump case injects positive and negative EL5042 measurement
+steps while encoder power is off, each exceeding five atTarget tolerances.
+Retained feedback must stay unchanged until wake-up. Relative motion must then
+use the fresh shifted position, without adding physical travel to compensate
+for the measurement step. The case requires closed-loop EL5042 feedback and
+leaves the following-error monitor enabled.
+
+```sh
+python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case encoder_power --test wake_position_jump --loop closed
+```

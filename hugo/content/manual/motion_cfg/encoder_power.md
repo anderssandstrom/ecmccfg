@@ -116,7 +116,7 @@ From the ECMC repository, with the updated IOC running:
 python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case encoder_power
 ```
 
-Eleven cases run in each loop mode; two feedback-disturbance cases are skipped in
+Twelve cases run in each loop mode; three feedback-change cases are skipped in
 open loop. Coverage includes active-high/low relay outputs, short/long idle
 power-off delays, minimum startup delay versus early/late ready, motor and
 native requests, relative wake with the amplifier still enabled, timeout and
@@ -136,3 +136,14 @@ wake-up without rehoming or resetting between cycles. Standalone production
 tests also cover a valid sample near the upper counter boundary, operation
 without a ready input, and preservation of already accumulated positive and
 negative turns across power cycles.
+
+The wake-position-jump case injects positive and negative EL5042 measurement
+steps while encoder power is off, each exceeding five atTarget tolerances.
+Retained feedback must stay unchanged until wake-up. Relative motion must then
+use the fresh shifted position, without adding physical travel to compensate
+for the measurement step. The case requires closed-loop EL5042 feedback and
+leaves the following-error monitor enabled.
+
+```sh
+python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case encoder_power --test wake_position_jump --loop closed
+```

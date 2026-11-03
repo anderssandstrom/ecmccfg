@@ -999,13 +999,16 @@
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="caLineEdit" name="nativeTargetWriteMode">
-    <property name="geometry"><rect><x>80</x><y>0</y><width>132</width><height>18</height></rect></property>
-    <property name="toolTip"><string>Native target mode: Write starts move means each target-position write triggers an ABS/REL move, including auto-enable when configured. Execute required is the default.</string></property>
+     <widget class="caLabel" name="nativeTargetWriteMode">
+    <property name="geometry"><rect><x>76</x><y>1</y><width>48</width><height>16</height></rect></property>
+    <property name="font"><font><pointsize>7</pointsize><bold>true</bold></font></property>
+    <property name="text"><string>NO EXEC</string></property>
+    <property name="alignment"><set>Qt::AlignCenter</set></property>
+    <property name="toolTip"><string>EXEC is not required: each native target-position write starts an ABS/REL move, including auto-enable when configured. This badge is shown only while that mode is enabled.</string></property>
     <property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-AutoExecuteOnTargetPos-RB</string></property>
+    <property name="visibility"><enum>caLabel::IfNotZero</enum></property>
+    <property name="foreground"><color><red>0</red><green>0</green><blue>0</blue></color></property>
     <property name="background"><color><red>255</red><green>220</green><blue>140</blue></color></property>
-    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
-    <property name="unitsEnabled"><bool>false</bool></property>
    </widget>
    <widget class="caTextEntry" name="catextentry_18">
       <property name="geometry">

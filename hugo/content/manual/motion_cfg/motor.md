@@ -20,6 +20,16 @@ For YAML configuration of the motor record itself, see
 For example-driven setups, see
 [motor record examples]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}}).
 
+## Native target-write mode
+
+The native target-position interface can optionally start ABS/REL motion on a
+write, similar to writing motor-record `.VAL`. **With this mode enabled, the
+axis can move without a separate EXECUTE request**, including automatic drive
+enable when configured. It is disabled by default and does not change the
+motor record's own `.VAL` behavior. See
+[Native target-write motion]({{< relref "/manual/motion_cfg/native_target_write.md" >}})
+for the commands and the **NO EXEC** panel indication.
+
 ## Common use cases
 
 ### Auto save restore

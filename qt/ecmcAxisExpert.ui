@@ -642,6 +642,14 @@
      <string notr="true">$(DEV):$(Axis)-EnaCmd</string>
     </property>
    </widget>
+   <widget class="caLineEdit" name="nativeTargetWriteMode">
+    <property name="geometry"><rect><x>325</x><y>25</y><width>176</width><height>18</height></rect></property>
+    <property name="toolTip"><string>Native target mode: Write starts move means each target-position write triggers an ABS/REL move, including auto-enable when configured. Execute required is the default.</string></property>
+    <property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-AutoExecuteOnTargetPos-RB</string></property>
+    <property name="background"><color><red>255</red><green>220</green><blue>140</blue></color></property>
+    <property name="colorMode"><enum>caLineEdit::Static</enum></property>
+    <property name="unitsEnabled"><bool>false</bool></property>
+   </widget>
    <widget class="caTextEntry" name="catextentry_13">
     <property name="geometry">
      <rect>

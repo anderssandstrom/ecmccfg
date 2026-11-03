@@ -61,24 +61,52 @@ record(longin,"${P}${AXIS_NAME}-Stat"){
   field(DTYP, "asynInt32")
   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ax$(AXIS_NO).status?")
   field(SCAN, "I/O Intr")
-  field(FLNK, "${P}${AXIS_NAME}-SeqState.PROC")
+  field(FLNK, "${P}${AXIS_NAME}-AutoExecCalc_.PROC")
   field(TSE,  "$(TSE=-2)")
+}
+
+record(longin,"${P}${AXIS_NAME}-StatExt"){
+  field(DESC, "Sequence and interlock status")
+  field(PINI, "$(PINI=1)")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ax$(AXIS_NO).status2?")
+  field(SCAN, "I/O Intr")
+  field(FLNK, "${P}${AXIS_NAME}-SeqState.PROC")
+  field(TSE, "$(TSE=-2)")
+}
+
+# Derive mode from the existing Int32 status reader. A second asyn reader
+# with UInt32Digital can select the wrong publication type at record init.
+record(calc,"${P}${AXIS_NAME}-AutoExecCalc_"){
+  field(DESC, "Native target mode bit")
+  field(PINI, "$(PINI=1)")
+  field(INPA, "${P}${AXIS_NAME}-Stat.VAL")
+  field(CALC, "(A>>24)&1")
+  field(FLNK, "${P}${AXIS_NAME}-AutoExecuteOnTargetPos-RB.PROC")
+}
+
+record(bi,"${P}${AXIS_NAME}-AutoExecuteOnTargetPos-RB"){
+  field(DESC, "Native target write mode")
+  field(PINI, "$(PINI=1)")
+  field(INP, "${P}${AXIS_NAME}-AutoExecCalc_.VAL")
+  field(ZNAM, "Execute required")
+  field(ONAM, "Write starts move")
+  field(FLNK, "${P}${AXIS_NAME}-Stat2Calc_.PROC")
 }
 
 record(calc,"${P}${AXIS_NAME}-SeqState") {
   field(DESC, "Seq state")
   field(PINI, "$(PINI=1)")
-  field(CALC,"A>>24 & 0x7")
-  field(INPA,"${P}${AXIS_NAME}-Stat.VAL")
+  field(CALC,"A & 0xFF")
+  field(INPA,"${P}${AXIS_NAME}-StatExt.VAL")
   field(FLNK, "${P}${AXIS_NAME}-LastIlock.PROC")
 }
 
 record(calc,"${P}${AXIS_NAME}-LastIlock") {
   field(DESC, "Last interlock")
   field(PINI, "$(PINI=1)")
-  field(CALC, "A>>27 & 0x1F")
-  field(INPA, "${P}${AXIS_NAME}-Stat.VAL")
-  field(FLNK, "${P}${AXIS_NAME}-Stat2Calc_.PROC")
+  field(CALC, "A>>8 & 0xFF")
+  field(INPA, "${P}${AXIS_NAME}-StatExt.VAL")
 }
 
 record(calc,"${P}${AXIS_NAME}-Stat2Calc_") {

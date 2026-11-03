@@ -13,7 +13,8 @@ END = '<!-- END GENERATED AXIS YAML REFERENCE -->'
 
 
 def render(sections):
-    table = ['| Key | Description | Requirement |', '| --- | --- | --- |']
+    table = ['| Key | Description | Requirement | Default when parent section is present |',
+             '| --- | --- | --- | --- |']
     headings = []
     seen = set()
     for section in sections:
@@ -21,13 +22,16 @@ def render(sections):
         for group in section['groups']:
             label = ' / '.join('`' + key + '`' for key in group['keys'])
             requirement = group['requirement']
-            headings.append('- ' + label + ' (' + requirement + ') — ' + group['description'])
+            defaults = ["`" + entry['key'] + "`: " + str(entry['default'])
+                        for entry in group['entries'] if 'default' in entry]
+            suffix = ' Defaults: ' + '; '.join(defaults) + '.' if defaults else ''
+            headings.append('- ' + label + ' (' + requirement + ') — ' + group['description'] + suffix)
             for entry in group['entries']:
                 key = entry['key']
                 if key in seen:
                     raise ValueError('Duplicate reference key: ' + key)
                 seen.add(key)
-                table.append('| `' + key + '` | ' + (entry['summary'] or group['description']) + ' | ' + requirement + ' |')
+                table.append('| `' + key + '` | ' + (entry['summary'] or group['description']) + ' | ' + requirement + ' | ' + str(entry.get('default', '—')) + ' |')
         headings.append('')
     return {'axisYamlSettingsTable.md': '\n'.join(table),
             'axisYamlSettingsHeadings.md': '\n'.join(headings).rstrip()}

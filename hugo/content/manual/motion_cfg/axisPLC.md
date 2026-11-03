@@ -26,31 +26,31 @@ The code can be provided either inline in the YAML or in a separate file.
 ### Inline
 ```yaml
 plc:
-  enable: yes
-  externalCommands: yes
+  enable: true
+  externalCommands: true
   code:
     - ax3.enc.actpos:=(ax1.enc.actpos+ax2.enc.actpos)/2
-  filter:
-    velocity:
-      enable: yes
+  velocity_filter:
+    encoder:
+      enable: true
       size: 100
     trajectory:
-      enable: yes
+      enable: true
       size: 100
 ```
 
 ### File
 ```yaml
 plc:
-  enable: yes
-  externalCommands: yes
+  enable: true
+  externalCommands: true
   file: cfg/heave.plc
-  filter:
-    velocity:
-      enable: yes
+  velocity_filter:
+    encoder:
+      enable: true
       size: 100
     trajectory:
-      enable: yes
+      enable: true
       size: 100
 ```
 
@@ -66,15 +66,20 @@ variables like `{{ var.ty1 }}`.
 ## Main keys
 
 - `enable`
-  enable the axis PLC
+  enable the axis PLC; required when the axis `plc` block is present
 - `externalCommands`
-  allow the PLC to influence axis commands and setpoints
+  allow the PLC to influence axis commands and setpoints; default false
 - `code`
   inline PLC lines
 - `file`
   external PLC file
-- `filter`
-  optional filtering of encoder or trajectory velocity values used by the PLC
+- `velocity_filter`
+  optional `encoder` and `trajectory` velocity filtering. Each block defaults
+  to `enable: false`, `size: 1` (cycles). Set `enable: true` to use it.
+
+The older `filter.velocity` and `filter.trajectory` syntax remains supported
+but is deprecated. `file` and `code` are optional; when both are supplied,
+inline lines are appended after the file content.
 
 ## When to use inline vs file
 

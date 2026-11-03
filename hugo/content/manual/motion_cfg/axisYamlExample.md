@@ -12,12 +12,16 @@ for explanations and the [settings table]({{< relref "/manual/motion_cfg/axisYam
 for key lookup. This example includes optional and alternative settings; it is
 not a minimal configuration to run unchanged.
 
+The example uses the Python loader's boolean syntax for `monitoring.stall.enable`.
+With ECB, change that value to integer `1` (or `0` to disable): the current ECB
+schema uses an integer for this field while the Python schema uses a boolean.
+
 ## All yaml settings
 ```
 axis:
   id: 1                                               # Axis id
-  type: joint                                         # axis type selector for future use
-  mode: CSV                                           # supported mode, CSV and CSP, defaults CSV
+  type: joint                                         # physical axis (1); virtual/end_effector is 2
+  mode: CSV                                           # CSV, CSP or CSP_PC; default CSV
   # Please switch to ecmc auto-enable/disable (axis.autoEnable) instead of the motor record.
   parameters: 'axisPar' # additional parameters       # Additional params to motor record driver
   #                                                       "powerAutoOnOff=<value>;"  //2: What you want, 1:do not use, 0 to disable
@@ -74,14 +78,14 @@ drive:
   brake:
     enable: false
     output: ec0...                                    # Ethercat link to brake output
-    openDelay: 0                                      # Brake timing parameter in cycles (default 1kHz)
-    closeAhead: 0                                     # Brake timing parameter in cycles (default 1kHz)
-  reset: 1                                            # Reset   (if no drive reset bit then leave empty)
-  warning: 2                                          # Warning (if no drive warning bit then leave empty)
+    openDelay: 0                                      # Brake timing in EtherCAT cycles; default 0
+    closeAhead: 0                                     # Brake timing in EtherCAT cycles; default 0
+  reset: 1                                            # Reset bit; omit key if unused
+  warning: 2                                          # Warning bit; omit key if unused
   error:                                              # max 3
-    - 3                                               # Error 0 (if no drive error bit then leave empty)
-    - 7                                               # Error 1 (if no drive error bit then leave empty)
-    - 14                                              # Error 2 (if no drive error bit then leave empty)
+    - 3                                               # Error bit 0; omit unused list items
+    - 7                                               # Error bit 1
+    - 14                                              # Error bit 2
 
 encoder:
   numerator: 360                                      # Scaling numerator example 360 deg/rev
@@ -114,8 +118,8 @@ encoder:
     timestamp: ''                                     # Optional 32/64-bit DC timestamp for the same latch event
     control: 0                                        # Bit in encoder control word to arm latch. Used for some homing seqs
     status: 0                                         # Bit in encoder status word for latch triggered status. Used for some homing seqs
-    armCmd:                                           # Value in dec to arm latch/touch probe to write to encoder.control
-    armBits:                                          # Bit size of encoder.latch.armCmd
+    armCmd: 1                                         # Value written to encoder.control; default 1
+    armBits: 1                                        # Bit length of armCmd; default 1
   touchProbe:                                         # Optional touch-probe mapping, separate from homing latch
     position: ec0.s$(ENC_SLAVE).touchProbePositionPos01_1 # Latched touch-probe position
     timestamp: ec0.s$(ENC_SLAVE).touchProbeTimestampPos01_1 # Optional 32/64-bit DC timestamp for same edge
@@ -149,7 +153,7 @@ encoder:
 #    enable: true                                     # enable (defaults to 1 if not set)
   lookuptable:                                        # Lookup tables are only applied when encoder is homed
     filename: ./cfg/enc.corr                          # Load correction lookup table file. Value will be subtracted from encoder value.
-#    enable: 1                                        # Enable correction table (default enabled if loaded).
+#    enable: true                                     # Enable correction table (default enabled if loaded).
 #    scale: 1                                         # Scale applied to LUT (if you want value to be added then set scale to -1.0)
 #    range: 360                                       # LUT modulo value (Lut should cover the range 0..range)
 
@@ -172,7 +176,7 @@ controller:
 #    Kp: 0.1                                           # Kp for when close to target
 #    Ki: 0.1                                           # Ki for when close to target
 #    Kd: 0.1                                           # Kd for when close to target
-#    tol: 0.1                                          # Distance from target for when inner PID params will be used, defaults to atTarget tol
+#    tol: 0.1                                          # Distance band for inner PID; schema default 0
 
 trajectory:
   type: 1                                             # Default 0 = trapezoidal, 1 = S-curve (ruckig)

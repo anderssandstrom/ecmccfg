@@ -98,12 +98,15 @@ controller:
   Kd: 0
 
 trajectory:
-  axis: 1
+  axis:
+    velocity: 10
+    acceleration: 20
 
 input:
   limit:
-    forward: ec0.s$(DRV_SLAVE).ONE
-    backward: ec0.s$(DRV_SLAVE).ONE
+    forward: ec0.s$(DRV_SLAVE).ONE.0
+    backward: ec0.s$(DRV_SLAVE).ONE.0
+  home: ec0.s$(DRV_SLAVE).ONE.0
 ```
 
 ## Companion References
@@ -127,40 +130,68 @@ Related motion docs:
 The configuration is separated into the following mandatory sections:
 
 - [axis](#axis)
-- [epics](#epics)
 - [drive (only mandatory for physical axis)](#drive)
 - [encoder](#encoder)
-- [controller](#controller)
 - [trajectory](#trajectory)
 - [input](#input)
 
 In addition, the following optional sections are available:
 
-- [output](#output)
+- [epics](#epics)
+- [controller](#controller) (physical axes)
+- [axis PLC]({{< relref "/manual/motion_cfg/axisPLC.md" >}})
+- [positionCompare](#positioncompare)
 - [homing](#homing)
 - [softlimits](#softlimits)
 - [monitoring](#monitoring)
 
-Each section provides an example; optional keys are commented.
+### Required keys and defaults
+
+Required sections and required keys are different: an optional section can
+require children once supplied, such as `drive.brake.enable` and
+`drive.brake.output`. Defaults for children normally apply only when their
+parent section exists. For example, `controller: {}` supplies the PID defaults;
+omitting `controller` also uses the template's PID defaults.
+
+The defaults in the [settings table](../axisyaml-table/) are taken from the
+current schemas and rendering templates. A dash means no YAML default is
+documented; it does not mean zero or disabled. If no command is rendered, the
+value remains under ecmc's initialization/runtime configuration.
+
+Set axis ids, PV names and hardware scaling explicitly even where the loader
+provides fallbacks. In particular, the default drive/encoder numerator is zero,
+which is not a usable hardware scale.
+
+The Python loader discards unknown keys; ECB rejects them. A misspelled key can
+therefore be silently ignored by Python. The loaders also differ for some
+optional monitoring blocks; supply `enable` and its dependent values together
+when configuring a monitor. See the reference table for conditional requirements.
+
+One current type mismatch is `monitoring.stall.enable`: Python accepts a YAML
+boolean (`true`/`false`), while the ECB schema requires an integer (`1`/`0`).
+Use the form appropriate to the selected loader. The other monitoring enables
+use booleans in both schemas.
 
 ***
 
 ## axis
-mandatory
-- `id`: unique numeric identifier of the axis
+The `axis` section is required. Explicitly set:
+
+- `id`: unique numeric identifier of the axis. If omitted, the template derives
+  the next id from `ECMC_AXIS_NO`; explicit ids avoid load-order dependencies.
 
 optional
-- `type`: type of the axis
-- `mode`: operating mode of the drive
+- `type`: type of the axis; default `joint` (physical axis, type 1)
+- `mode`: operating mode of the drive; default `CSV`; allowed `CSV`, `CSP`, `CSP_PC`
 - `parameters`: additional motor driver options, separated by semicolons. For autosave-restored dial limits use `restoreMotorSoftLims=1;`; this also enables ongoing soft-limit synchronization. See [autosave]({{< relref "/manual/motion_cfg/autosave.md" >}}).
 
 ```yaml
 axis:
   id: 1
   # type: joint   # axis types:
-                  # 1 (equiv: physical, axis, j, motor, real)
-                  # 2 (equiv: virtual, end_effector, end-effector, ee, e)
-  # mode: CSV     # supported modes: CSV and CSP
+                  # 1 (equiv: physical, joint, j, motor, real)
+                  # 2 (equiv: virtual, end_effector, endeffector, ee, e)
+  # mode: CSV     # supported modes: CSV, CSP and CSP_PC
   # parameters: powerAutoOnOff=2;powerOnDelay=6.0;powerOffDelay=1.0;
 ```
 
@@ -215,16 +246,16 @@ EPICS configuration.
 The EPICS motor record can now be disabled.
 {{% /notice %}}
 
-mandatory
-
-- `name`: name of the PV
+The `epics` section is optional. Set `name` explicitly for a unique PV name;
+the fallback is `axis`.
 
 optional
 
 - `precision`: PREC field; default 3
 - `unit`: EGU field; optional default mm
 - `motorRecord`
-  * `enable`: set to false to disable motor record
+  * `enable`: default true; set to false to disable motor record. Omitting the
+    whole `motorRecord` block also creates a motor record.
   * `description`: DESC field; default ''
   * `fieldInit`: string with additional field initial values; default ''
   * `syncSoftLimits`: sync motor record and ecmc soft limits; default false. `axis.parameters: "restoreMotorSoftLims=1;"` also enables synchronization, even when this YAML setting is omitted or false. When synchronization is disabled, motor record `HLM`/`LLM` and ecmc soft limits can differ. When changed from false to true at runtime, the current ecmc soft limits are copied to the motor record. While enabled, later motor record soft-limit changes are written back to ecmc.
@@ -251,12 +282,16 @@ epics:
 ## drive
 mandatory for physical axis
 
-- `numerator`: scaling numerator
-- `denominator`: scaling denominator
-- `type`: type of drive: `0`=stepper, `1`=DS402, aka servo or complex stepper
 - `control`: control word entry
-- `status`: status word entry
 - `setpoint`: setpoint entry, **position** or **velocity**, depending on mode
+- `status`: status word entry used by the drive template. The schemas do not
+  require it, but the standard hardware drive setup links it unconditionally.
+
+Scaling and drive type have loader defaults, but must match the hardware:
+
+- `numerator`: scaling numerator; default 0 (configure explicitly)
+- `denominator`: scaling denominator; default 1, minimum 1
+- `type`: default 0; `0`=simple bit-controlled drive, `1`=DS402
 
 {{% notice info %}}
 Floating-point EtherCAT entries are supported in ecmc, but the rules differ by use case:
@@ -268,8 +303,14 @@ Floating-point EtherCAT entries are supported in ecmc, but the rules differ by u
 
 optional
 
-- `reduceTorque`: control word _bit_ to set for reduced torque mode
+- `enable`: enable bit; default 0 for non-DS402, ignored for DS402
+- `enabled`: enabled-status bit; default 1 for non-DS402, ignored for DS402
+- `reduceTorque`: control word _bit_ to set for reduced torque mode; supply
+  together with `reduceTorqueEnable`
+- `reduceTorqueEnable`: boolean enabling reduced-torque handling
 - `brake`
+  * `enable`: required boolean when `brake` is present
+  * `output`: required EtherCAT output entry when `brake` is present
   * `openDelay`: number of cycles to wait after enable to disengage the brake
   * `closeAhead`: number of cycles to wait after the brake was engaged
 - `reset`: control word _bit_ to set in order to reset the drive
@@ -285,7 +326,10 @@ drive:
   status: ec0.s$(DRV_SLAVE).driveStatus01
   setpoint: ec0.s$(DRV_SLAVE).velocitySetpoint01
   # reduceTorque: 2 # Reduce torque bit in drive control word
+  # reduceTorqueEnable: true
   # brake:
+  #   enable: true
+  #   output: ec0.s$(BRAKE_SLAVE).binaryOutput01.0
   #   openDelay: 0  # Brake timing parameter in EtherCAT cycles
   #   closeAhead: 0 # Brake timing parameter in EtherCAT cycles
   # reset: 1        # Reset bit in control word
@@ -297,15 +341,20 @@ drive:
 ```
 
 ## encoder
-mandatory
+The `encoder` section is required. The scaling and format keys have defaults,
+but should be configured explicitly for the selected hardware:
 
-- `numerator`: scaling numerator, equivalent distance to the maximum drive frequency (default: 2000 Hz i.e. 2000 full steps), also effectively absolute maximum velocity
-- `denominator`: scaling denominator
-- `type`: type of encoder: `0`=incremental, `1`=absolute
-- `bits`: raw data bit count
-- `absBits`: Absolute bit count (for absolute encoders) always least significant part of 'bits'
-- `absOffset`: Encoder offset in engineering units (for absolute encoders)
-- `position`: position entry
+- `numerator`: engineering units per `denominator` raw counts; default 0
+- `denominator`: scaling denominator; default 1, minimum 1
+- `type`: `0`=incremental (default), `1`=absolute
+- `bits`: raw data bit count; default 16
+- `absBits`: absolute bit count, in the least significant part of `bits`; default 25
+- `absOffset`: absolute encoder offset in engineering units; default 0
+- `position`: hardware position entry for `source: 0`; not used for PLC position
+  feedback (`source: 1`)
+
+The default `absBits: 25` is not consistent with the default `bits: 16` for an
+absolute encoder. Set both to the actual encoder format when selecting `type: 1`.
 
 `encoder.bits` and `encoder.mask` are applied to the encoder value maintained
 by ecmc after reading the configured position entry. They do not alter the raw
@@ -316,15 +365,15 @@ optional
 
 - `source`: position source, 0=from EC entry ; 1=from PLC
 - `control`: control word entry; mandatory when **reset** is set.
-- `status`: status word entry; mandatory when **error** or **warning** are set
+- `status`: status word entry; mandatory when **ready**, **error** or **warning** are set
 - `reset`: control word _bit_ to set in order to reset the encoder
 - `warning`: status word _bit_ for encoder warning
 - `error`: list of status _bits_ for encoder errors
-- `velocityFilterSize`: size of the velocity filter (cycles)
-- `positionFilterSize`: size of the position filter (cycles)
-- `positionFilterEnable`: position filter enable
+- `filter.velocity`: `size` (default 100 cycles), `enable` (default true)
+- `filter.position`: `size` (default 10 cycles), `enable` (default true)
+  These defaults apply when the corresponding filter block is supplied.
 - `latch`:
-  * `position`: ''
+  * `position`: required latched position entry when `latch` is present
   * `timestamp`: ''
   * `control`: ''
   * `status`: ''
@@ -397,9 +446,9 @@ In current ecmc, those two keys are accepted for floating-point encoder entries 
 ignored during validation, and a warning is printed. It is still recommended to set
 them consistently in YAML for clarity.
 
-optional
-
-- `velocityFilterSize`: Add filtering if the encoder is too coarse to reliably determine velocity each PLC cycle
+Use `filter.velocity` if the encoder is too coarse to reliably determine
+velocity each EtherCAT cycle. The old flat keys `velocityFilterSize`,
+`positionFilterSize` and `positionFilterEnable` are not current YAML settings.
 
 ## controller
 Parameters for centralized PID controller.
@@ -409,10 +458,11 @@ These settings are only valid for:
 * CSV mode
 * CSP_PC mode (CSP with one encoder setup as useAsCSPDrvEnc). In this mode there are double position control loops, one in ecmc and one in drive.
 
-mandatory
-- `Kp`: proportional
+The `controller` section is optional. Defaults are `Kp: 1`, `Ki: 0`,
+`Kd: 0`, `Kff: 1`, including when the entire section is omitted.
 
 optional
+- `Kp`: proportional; default 1
 - `Ki`: integral; default 0
 - `Kd`: differential; default 0
 - `Kff`: feed forward; default 1
@@ -463,7 +513,7 @@ controller:
   #  Kp: 0.1
   #  Ki: 0.1
   #  Kd: 0.1
-  #tol: 0.1
+  #  tol: 0.1
 ```
 
 ## trajectory
@@ -484,12 +534,15 @@ optional
 - `source`: source of position setpoint, 0=trajectory generator of axis ; 1=from PLC
 - `type`: type of velocity profile: 0=trapezoidal ; 1=s-curve
 - `axis`
-  - `deceleration`: deceleration setpoint for initialization (in EGU/sec2)
-  - `emergencyDeceleration`: deceleration setpoint for emergencies. Defaults to acceleration setpoint if not specified.
-  - `jerk`: jerk for s-curved profiles (in EGU/sec3)
+  - `deceleration`: deceleration setpoint (EGU/sec2); defaults to acceleration
+  - `emergencyDeceleration`: emergency deceleration (EGU/sec2); defaults to
+    `10 * max(acceleration, deceleration)`
+  - `jerk`: jerk for s-curved profiles (EGU/sec3); defaults numerically to acceleration
 - `jog`
-  - `velocity`: velocity setpoint the axis will be initialized to for jogging
-  - `acceleration`: acceleration setpoint for initialization, for jogging
+  - `velocity`: ECMC jog velocity defaults to `axis.velocity`; motor-record JVEL
+    defaults to `axis.velocity / 10`. Set this key explicitly to use the same value.
+  - `acceleration`: motor-record jog acceleration; defaults to `axis.acceleration`.
+    This key does not set a separate ECMC jog acceleration.
 - `modulo`
   - `range`: modulo range
   - `type`: modulo type
@@ -601,17 +654,29 @@ used by GUIs to show or hide position-compare controls.
 
 ## input
 Links to the binary input sensors for limit switches, home sensor and external interlock.
-All four inputs must be provided.
-If an input is not used, set it to the `ONE.0` entry of a slave.
+The `limit` block and its `forward` and `backward` entries are required.
+`home` and `interlock` are optional. For an unused limit input, use the `ONE.0`
+entry of a slave.
 See the example for details.
+
+Although the schemas make `home` optional, the current `axisHWLinks.jinja2`
+template reads it unconditionally for panel-link records. ECB fails to render
+if it is omitted, and Python produces empty hardware-link arguments. Supply
+`home`, using `ONE.0` if there is no home sensor, until that template is corrected.
 
 mandatory
 
 - `limit`
   - `forward`: limit switch sensor input in the forward direction.
   - `backward`: limit switch sensor input in the backward direction.
+
+Optional:
+
 - `home`: binary input for the home sensor
-- `extinterlock`: binary input for external interlock.
+- `interlock`: binary input for external interlock
+- `homePolarity`, `interlockPolarity`, `limit.forwardPolarity`,
+  `limit.backwardPolarity`: polarity overrides; if omitted, no polarity command
+  is issued
 
 ```yaml
 input:
@@ -622,7 +687,7 @@ input:
   interlock: ec0.s$(DRV_SLAVE).ONE.0    #  EtherCAT entry for interlock switch input
 ```
 The inputs can also be overridden with the keyword "plcOverride". In this case these values must be written in PLC code instead.
-```
+```text
 ...
 input:
   limit:
@@ -639,21 +704,14 @@ plc:
 ```
 
 ## output
-Two outputs can be used with `ECMC`.
 
-{{% notice info %}}
-The brake output was moved to the `drive` key, as it is directly coupled to the drive state.
-{{% /notice %}}
-
-optional
-- `health`: sum parameter for axis health
-
-```yaml
-# output:
-#   health: ''      # EtherCAT entry for health output
-```
+There is no current top-level `output` YAML section. Use `axis.healthOutput`
+for the axis health output and `drive.brake` for the brake output.
 
 ## homing
+Prefer `encoder.homing`. Top-level `homing` is retained for legacy configurations;
+do not define both locations in the same axis file.
+
 This section is mostly obsolete at PSI, as for all new installations using EtherCAT, absolute encoders are mandatory.
 In case a legacy system or temporary installation requires an incremental encoder, or even open loop operation, several procedures for referencing are available.
 
@@ -662,14 +720,17 @@ optional
 - `type`: referencing procedure
 - `position`: position of the reference mark in engineering units
 - `postMoveEnable`: post homing move
-- `postMovePosition`: post homing move target
-- `switchPolarity`: home switch polarity, for NO switches
+- `postMovePosition`: post-homing target; required when `postMoveEnable: true`
 - `latchCount`: latch counter
 - `velocity`: velocities
   * `to`: to the cam
   * `from`: off the cam
-- `acceleration`: acceleration time in s
-- `deceleration`: deceleration time in s
+- `acceleration`: homing acceleration in EGU/sec2
+- `deceleration`: homing deceleration in EGU/sec2
+- `timeout`: homing sequence timeout in seconds
+
+Home-switch polarity belongs in `input.homePolarity`; `homing.switchPolarity`
+is not a supported key.
 
 ```yaml
 # homing:
@@ -677,7 +738,6 @@ optional
 #   position: 0
 #   postMoveEnable: false
 #   postMovePosition: 0
-#   switchPolarity: 0 ## 0: NC, 1: NO
 #   latchCount: 0
 #   velocity:
 #     to: 2.72
@@ -728,6 +788,11 @@ optional
 - `backwardEnable`: backward on/off.
 - `backward`: soft limit in the backward direction.
 
+Supply each directional position together with its enable flag. The Python
+schema also requires `enable` when either directional enable flag is present.
+The template applies the block only when `enable: true`; a missing block does
+not emit soft-limit configuration commands.
+
 ```yaml
 # softlimits:
 #   enable: true
@@ -738,7 +803,9 @@ optional
 ```
 
 ## monitoring
-Three entities can be monitored, (1) lag, aka following error, (2) target, aka in position, (3) velocity.
+Monitoring covers following error (`lag`), in-position detection (`target`),
+maximum velocity (`velocity`), velocity tracking (`velocityDifference`) and
+failure to reach the target (`stall`).
 
 {{% notice info %}}
 It is highly advisable to always use the `lag` and `target` monitoring fo closed-loop axis.
@@ -746,26 +813,47 @@ Failure to do so will most likely result in unexpected behavior.
 {{% /notice %}}
 
 {{% notice info %}}
-The `monitoring` key, **must** be included in the config, despite all features being optional.
-It's a means to let the integrator think twice to skip it all together.
+The `monitoring` section is optional in both schemas. Configure it explicitly
+for a working axis: target monitoring supplies motion-completion detection,
+and following-error monitoring is recommended for closed-loop axes.
 {{% /notice %}}
+
+When supplying `lag` or `target`, include `enable`, `tolerance` and `time`.
+For `velocity` and `velocityDifference`, include `enable`, `max` and
+`time.trajectory`; `time.drive` is optional. Dependencies still apply when
+`enable` is false. An empty `monitoring: {}` does not enable monitoring.
+
+The monitoring `time` values below are **EtherCAT cycles**, not milliseconds.
+At 1 kHz, 100 cycles is 100 ms; at 500 Hz it is 200 ms.
+
+The current `monitoring.jinja2` template checks `monitoring.velocity.time.drive`
+before rendering `velocityDifference.time.drive`. Consequently, configuring
+`velocityDifference` alone can fail during rendering, and its drive delay can
+be skipped unless the velocity drive delay is also supplied. If using this
+feature, provide both monitor blocks and both `time.drive` values explicitly.
+This is a template limitation, not an intended dependency between the monitors.
 
 optional
 
 - `lag`
   * `enable`: enable lag monitoring
   * `tolerance`: tolerance in engineering units
-  * `time`: time for the condition to be true in ms
+  * `time`: time for the condition to be true in EtherCAT cycles
 - `target`
   * `enable`: enable target monitoring. This is mandatory for use with motor record.
   * `tolerance`: tolerance in engineering units
-  * `time`: time for the condition to be true in ms
+  * `time`: time for the condition to be true in EtherCAT cycles
 - `velocity`
   * `enable`: enable velocity monitoring
   * `max`: upper limit for velocity
   * `time`
-    * `trajectory`: time for the condition to be in violation in ms
-    * `drive`: time for the condition to be in violation in ms
+    * `trajectory`: violation delay in EtherCAT cycles
+    * `drive`: drive-interlock delay in EtherCAT cycles
+- `velocityDifference`: same `enable`, `max` and `time` structure as `velocity`;
+  compares actual velocity with the trajectory velocity
+- `stall`: optional `enable` and `time.timeout` (minimum timeout in EtherCAT
+  cycles), `time.factor` (dimensionless motion-time multiplier); requires target
+  monitoring for target detection
 
 ```yaml
 monitoring:
@@ -773,10 +861,10 @@ monitoring:
   #   enable: false
   #   tolerance: 5
   #   time: 100
-  # target:
-  #   enable: true
-  #   tolerance: 0.125
-  #   time: 100
+  target:
+    enable: true
+    tolerance: 0.125
+    time: 100  # EtherCAT cycles
   # velocity:
   #   enable: false
   #   max: 100

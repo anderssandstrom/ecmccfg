@@ -1,3 +1,18 @@
+# Encoder relay power state; one native Int32 interface for input and updates.
+record(mbbi,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-PwrState") {
+  field(DESC, "Encoder power state")
+  field(PINI, "1")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ax$(AXIS_NO).enc.powerstate$(ENC_NO)?")
+  field(SCAN, "I/O Intr")
+  field(TSE, "$(TSE=-2)")
+  field(ZRVL, "0") field(ZRST, "Ordinary mode")
+  field(ONVL, "1") field(ONST, "Off: stale position")
+  field(TWVL, "2") field(TWST, "Warming up")
+  field(THVL, "3") field(THST, "Ready")
+  field(FRVL, "4") field(FRST, "Fault") field(FRSV, "MAJOR")
+}
+
 #Asyn parameters for one encoder
 record(ai,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-PosAct"){
   field(PINI, "1")

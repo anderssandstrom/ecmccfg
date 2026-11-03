@@ -1,5 +1,5 @@
 {
-  "schema": 2,
+  "schema": 3,
   "axes": {
     "TR_LO": 5,
     "TR_HI": 6,
@@ -20,6 +20,10 @@
         "channel": "01",
         "open_delay_cycles": 250,
         "close_ahead_cycles": 200
+      },
+      "encoder_power": {
+        "slave": 5,
+        "channel": "03"
       }
     },
     "TR_HI": {
@@ -35,6 +39,10 @@
         "channel": "02",
         "open_delay_cycles": 250,
         "close_ahead_cycles": 200
+      },
+      "encoder_power": {
+        "slave": 5,
+        "channel": "04"
       }
     }
   }

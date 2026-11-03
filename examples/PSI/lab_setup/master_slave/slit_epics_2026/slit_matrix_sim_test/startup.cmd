@@ -86,6 +86,13 @@ ecmcConfigOrDie "Cfg.SetAxisHomePosition(6,0)"
 ecmcConfigOrDie "Cfg.SetAxisHomePostMoveEnable(6,0)"
 ecmcConfigOrDie "Cfg.SelectAxisEncConfig(6,2)"
 
+# Optional relay-power tests use spare EL2008 outputs for EL5042 supplies.
+# The mode remains disabled until its test case explicitly selects it.
+ecmcConfigOrDie "Cfg.SelectAxisEncConfig(5,2)"
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject(ec0.s5.binaryOutput03,ax5.enc.power)"
+ecmcConfigOrDie "Cfg.SelectAxisEncConfig(6,2)"
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject(ec0.s5.binaryOutput04,ax6.enc.power)"
+
 # Coherent zero-position counter images and ready flags before runtime starts.
 # Absolute position = raw/4096 - 1380, so physical zero is raw=5652480.
 ecmcConfigOrDie "Cfg.SimSetValue(ec0.s9.positionActual01,5652480)"

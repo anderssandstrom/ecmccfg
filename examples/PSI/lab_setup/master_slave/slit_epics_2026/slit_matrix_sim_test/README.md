@@ -83,3 +83,34 @@ checked. Other test modules retain their existing manually injected limits;
 position-based sensors are enabled only during homing cases. The plant keeps a
 separate physical travel bound and restores encoder references without resetting
 raw counters. See ECMC `tests/integration/slit/README.md` for details and limits.
+
+## Encoder relay power tests (schema 3)
+
+Schema 3 links spare EL2008 output 03 to LO encoder 2 power and output 04 to HI
+encoder 2 power. Encoder power control stays disabled at startup. Install the
+ECMC encoder-power implementation and the ecmccfg `Enc02-PwrState` readback,
+then restart this dedicated IOC with the updated configuration.
+
+From the ECMC repository:
+
+```sh
+python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case encoder_power
+```
+
+The group temporarily couples the plant's EL5042 supply to its relay output.
+An unpowered encoder publishes positionActual zero and ready low while the
+physical position and drive counter remain unchanged. Tests cover both relay
+polarities, different startup/idle delays, early/late ready, motor/native
+requests, wake with the drive still enabled, timeout, STOP, and atTarget versus
+tighter controller-deadband settling. Power must remain on for the configured
+post-settling dwell; a loss of qualification resets the timer. Eleven cases are
+planned per loop, with two disturbance cases skipped in open loop. Cleanup
+restores ordinary supply simulation and native settings before the next group.
+
+Off-state rollover coverage alternates zero and an all-ones raw counter word.
+The test verifies that the injected jump exceeds ECMC's rollover threshold,
+checks retained encoder position while off, and repeats relative moves after
+wake-up without rehoming or resetting between cycles. Standalone production
+tests also cover a valid sample near the upper counter boundary, operation
+without a ready input, and preservation of already accumulated positive and
+negative turns across power cycles.

@@ -1,16 +1,75 @@
-# Encoder relay power state; one native Int32 interface for input and updates.
+# One native Int32 reader for the complete encoder status word. Derived records
+# must not bind a second asyn interface to the same native parameter.
+record(longin,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-Stat") {
+  field(DESC, "Encoder status word")
+  field(PINI, "1")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ax$(AXIS_NO).enc.status$(ENC_NO)?")
+  field(SCAN, "I/O Intr")
+  field(TSE, "$(TSE=-2)")
+  field(FLNK, "${P}${AXIS_NAME}-Enc0$(ENC_NO)-PwrStateCalc_.PROC")
+}
+
+record(calc,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-PwrStateCalc_") {
+  field(INPA, "${P}${AXIS_NAME}-Enc0$(ENC_NO)-Stat.VAL")
+  field(CALC, "(A>>8)&7")
+  field(FLNK, "${P}${AXIS_NAME}-Enc0$(ENC_NO)-PwrState.PROC")
+}
+
 record(mbbi,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-PwrState") {
   field(DESC, "Encoder power state")
   field(PINI, "1")
-  field(DTYP, "asynInt32")
-  field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ax$(AXIS_NO).enc.powerstate$(ENC_NO)?")
-  field(SCAN, "I/O Intr")
-  field(TSE, "$(TSE=-2)")
+  field(INP, "${P}${AXIS_NAME}-Enc0$(ENC_NO)-PwrStateCalc_.VAL")
   field(ZRVL, "0") field(ZRST, "Ordinary mode")
   field(ONVL, "1") field(ONST, "Off: stale position")
   field(TWVL, "2") field(TWST, "Warming up")
   field(THVL, "3") field(THST, "Ready")
   field(FRVL, "4") field(FRST, "Fault") field(FRSV, "MAJOR")
+  field(FLNK, "${P}${AXIS_NAME}-Enc0$(ENC_NO)-StatBits_.PROC")
+}
+
+record(mbbiDirect,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-StatBits_") {
+  field(INP, "${P}${AXIS_NAME}-Enc0$(ENC_NO)-Stat.VAL")
+  field(FLNK, "${P}${AXIS_NAME}-Enc0$(ENC_NO)-PwrEnable-RB.PROC")
+}
+
+record(bi,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-PwrEnable-RB") {
+  field(DESC, "Power control enabled")
+  field(INP, "${P}${AXIS_NAME}-Enc0$(ENC_NO)-StatBits_.B0")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+  field(FLNK, "${P}${AXIS_NAME}-Enc0$(ENC_NO)-PwrOn.PROC")
+}
+
+record(bi,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-PwrOn") {
+  field(DESC, "Relay power commanded on")
+  field(INP, "${P}${AXIS_NAME}-Enc0$(ENC_NO)-StatBits_.B1")
+  field(ZNAM, "Off")
+  field(ONAM, "On")
+  field(FLNK, "${P}${AXIS_NAME}-Enc0$(ENC_NO)-Ready.PROC")
+}
+
+record(bi,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-Ready") {
+  field(DESC, "Encoder feedback ready")
+  field(INP, "${P}${AXIS_NAME}-Enc0$(ENC_NO)-StatBits_.B2")
+  field(ZNAM, "Not ready")
+  field(ONAM, "Ready")
+  field(FLNK, "${P}${AXIS_NAME}-Enc0$(ENC_NO)-Homed.PROC")
+}
+
+record(bi,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-Homed") {
+  field(DESC, "Encoder referenced")
+  field(INP, "${P}${AXIS_NAME}-Enc0$(ENC_NO)-StatBits_.B3")
+  field(ZNAM, "Not homed")
+  field(ONAM, "Homed")
+  field(FLNK, "${P}${AXIS_NAME}-Enc0$(ENC_NO)-Absolute.PROC")
+}
+
+record(bi,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-Absolute") {
+  field(DESC, "Configured encoder type")
+  field(INP, "${P}${AXIS_NAME}-Enc0$(ENC_NO)-StatBits_.B4")
+  field(ZNAM, "Incremental")
+  field(ONAM, "Absolute")
 }
 
 #Asyn parameters for one encoder

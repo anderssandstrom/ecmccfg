@@ -3820,23 +3820,11 @@
     <widget class="caLineEdit" name="calineedit_52">
      <property name="geometry">
       <rect>
-       <x>70</x>
-       <y>10</y>
-       <width>61</width>
+       <x>50</x>
+       <y>42</y>
+       <width>29</width>
        <height>20</height>
       </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>20</height>
-      </size>
      </property>
      <property name="channel" stdset="0">
       <string notr="true">$(DEV):$(Axis)-EncCnt</string>
@@ -3864,114 +3852,44 @@
     <widget class="caLabel" name="calabel_98">
      <property name="geometry">
       <rect>
-       <x>-20</x>
-       <y>10</y>
-       <width>80</width>
+       <x>8</x>
+       <y>42</y>
+       <width>40</width>
        <height>20</height>
       </rect>
      </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>20</height>
-      </size>
-     </property>
      <property name="text">
       <string>Count:</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
      </property>
     </widget>
     <widget class="QGroupBox" name="groupBox_5">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>60</y>
-       <width>181</width>
-       <height>171</height>
+       <x>8</x>
+       <y>66</y>
+       <width>163</width>
+       <height>185</height>
       </rect>
      </property>
      <property name="toolTip">
-      <string extracomment="The primary encoder is used for control."/>
+      <string>The active encoder supplies control feedback. Fixed mode changes require a stopped, disabled axis. Existing position and encoder-source controls retain their normal meaning.</string>
      </property>
      <property name="title">
       <string>Control:</string>
      </property>
-     <widget class="caLineEdit" name="calineedit_46">
-      <property name="geometry">
-       <rect>
-        <x>70</x>
-        <y>30</y>
-        <width>91</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>18</height>
-       </size>
-      </property>
-      <property name="channel" stdset="0">
-       <string notr="true">$(DEV):$(Axis)-SetEncIdCmd-RB</string>
-      </property>
-      <property name="background">
-       <color alpha="222">
-        <red>192</red>
-        <green>192</green>
-        <blue>192</blue>
-       </color>
-      </property>
-      <property name="colorMode">
-       <enum>caLineEdit::Static</enum>
-      </property>
-      <property name="precisionMode">
-       <enum>caLineEdit::Channel</enum>
-      </property>
-      <property name="limitsMode">
-       <enum>caLineEdit::User</enum>
-      </property>
-      <property name="unitsEnabled">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="caLabel" name="calabel_101">
-      <property name="geometry">
-       <rect>
-        <x>-20</x>
-        <y>30</y>
-        <width>80</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>16</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>Enc index:</string>
-      </property>
-     </widget>
      <widget class="caLineEdit" name="calineedit_51">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>70</y>
-        <width>91</width>
-        <height>16</height>
+        <x>61</x>
+        <y>44</y>
+        <width>94</width>
+        <height>20</height>
        </rect>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>18</height>
-       </size>
       </property>
       <property name="channel" stdset="0">
        <string notr="true">$(DEV):$(Axis)-VelAct</string>
@@ -3999,17 +3917,11 @@
      <widget class="caLineEdit" name="calineedit_50">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>50</y>
-        <width>91</width>
-        <height>16</height>
+        <x>61</x>
+        <y>22</y>
+        <width>94</width>
+        <height>20</height>
        </rect>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>18</height>
-       </size>
       </property>
       <property name="channel" stdset="0">
        <string notr="true">$(DEV):$(Axis)-PosAct</string>
@@ -4037,86 +3949,65 @@
      <widget class="caLabel" name="calabel_102">
       <property name="geometry">
        <rect>
-        <x>-20</x>
-        <y>50</y>
-        <width>80</width>
-        <height>16</height>
+        <x>5</x>
+        <y>22</y>
+        <width>55</width>
+        <height>20</height>
        </rect>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>16</height>
-       </size>
       </property>
       <property name="text">
        <string>Pos act: </string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
       </property>
      </widget>
      <widget class="caLabel" name="calabel_103">
       <property name="geometry">
        <rect>
-        <x>-20</x>
-        <y>70</y>
-        <width>80</width>
-        <height>16</height>
+        <x>5</x>
+        <y>44</y>
+        <width>55</width>
+        <height>20</height>
        </rect>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>16</height>
-       </size>
       </property>
       <property name="text">
        <string>Vel act: </string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
       </property>
      </widget>
      <widget class="caLabel" name="calabel_65">
       <property name="geometry">
        <rect>
-        <x>-10</x>
-        <y>90</y>
-        <width>71</width>
+        <x>5</x>
+        <y>66</y>
+        <width>55</width>
         <height>20</height>
        </rect>
       </property>
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>20</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>20</height>
-       </size>
-      </property>
       <property name="text">
        <string>Set pos:</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
       </property>
      </widget>
      <widget class="caTextEntry" name="catextentry_16">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>90</y>
-        <width>91</width>
+        <x>61</x>
+        <y>66</y>
+        <width>94</width>
         <height>20</height>
        </rect>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>20</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>20</height>
-       </size>
       </property>
       <property name="readOnly">
        <bool>false</bool>
@@ -4131,17 +4022,11 @@
      <widget class="caLineEdit" name="calineedit_16">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>140</y>
-        <width>91</width>
+        <x>61</x>
+        <y>112</y>
+        <width>94</width>
         <height>20</height>
        </rect>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>18</height>
-       </size>
       </property>
       <property name="channel" stdset="0">
        <string notr="true">$(DEV):$(Axis)-EncSrcTyp-RB</string>
@@ -4159,42 +4044,29 @@
      <widget class="caLabel" name="calabel_73">
       <property name="geometry">
        <rect>
-        <x>-20</x>
-        <y>120</y>
-        <width>81</width>
+        <x>5</x>
+        <y>90</y>
+        <width>55</width>
         <height>20</height>
        </rect>
       </property>
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>20</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>20</height>
-       </size>
-      </property>
       <property name="text">
        <string>Source:</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
       </property>
      </widget>
      <widget class="caMenu" name="camenu_8">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>120</y>
-        <width>91</width>
+        <x>61</x>
+        <y>90</y>
+        <width>94</width>
         <height>20</height>
        </rect>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>18</height>
-       </size>
       </property>
       <property name="layoutDirection">
        <enum>Qt::LeftToRight</enum>
@@ -4203,26 +4075,52 @@
        <string notr="true">$(DEV):$(Axis)-EncSrcTyp-Cmd</string>
       </property>
      </widget>
+     <widget class="QLabel" name="encoderModeHint">
+      <property name="geometry">
+       <rect>
+        <x>7</x>
+        <y>141</y>
+        <width>148</width>
+        <height>36</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Mode changes require a stopped, disabled axis.</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+     </widget>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
     </widget>
     <widget class="QGroupBox" name="groupBox_6">
      <property name="geometry">
       <rect>
-       <x>220</x>
-       <y>20</y>
-       <width>120</width>
-       <height>211</height>
+       <x>181</x>
+       <y>91</y>
+       <width>164</width>
+       <height>160</height>
       </rect>
      </property>
      <property name="title">
-      <string>Details:</string>
+      <string>Details / power:</string>
      </property>
      <widget class="caFrame" name="caframe_8">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>50</y>
-        <width>71</width>
-        <height>31</height>
+        <x>6</x>
+        <y>37</y>
+        <width>152</width>
+        <height>17</height>
        </rect>
       </property>
       <property name="macro">
@@ -4240,10 +4138,10 @@
       <widget class="caRelatedDisplay" name="carelateddisplay_32">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>0</x>
          <y>0</y>
-         <width>61</width>
-         <height>21</height>
+         <width>25</width>
+         <height>17</height>
         </rect>
        </property>
        <property name="labels">
@@ -4255,15 +4153,50 @@
        <property name="args">
         <string>ENC_ID=$(ENC_ID),DEV=$(DEV),Axis=$(Axis),IOC=$(IOC)</string>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+      </widget>
+      <widget class="caLineEdit" name="encoderPowerState2">
+       <property name="geometry">
+        <rect>
+         <x>31</x>
+         <y>0</y>
+         <width>121</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="channel" stdset="0">
+        <string>$(DEV):$(Axis)-Enc02-PwrState</string>
+       </property>
+       <property name="toolTip">
+        <string>Encoder 2: Ordinary mode = relay power control disabled; Off = retained/stale position; Warming up = not yet valid; Ready = feedback available; Fault = power/readiness error.</string>
+       </property>
+       <property name="colorMode">
+        <enum>caLineEdit::Alarm_Default</enum>
+       </property>
+       <property name="precision">
+        <number>0</number>
+       </property>
+       <property name="unitsEnabled">
+        <bool>false</bool>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
       </widget>
      </widget>
      <widget class="caFrame" name="caframe_11">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>110</y>
-        <width>71</width>
-        <height>31</height>
+        <x>6</x>
+        <y>88</y>
+        <width>152</width>
+        <height>17</height>
        </rect>
       </property>
       <property name="macro">
@@ -4281,10 +4214,10 @@
       <widget class="caRelatedDisplay" name="carelateddisplay_31">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>0</x>
          <y>0</y>
-         <width>61</width>
-         <height>21</height>
+         <width>25</width>
+         <height>17</height>
         </rect>
        </property>
        <property name="labels">
@@ -4296,15 +4229,50 @@
        <property name="args">
         <string>ENC_ID=$(ENC_ID),DEV=$(DEV),Axis=$(Axis),IOC=$(IOC)</string>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+      </widget>
+      <widget class="caLineEdit" name="encoderPowerState5">
+       <property name="geometry">
+        <rect>
+         <x>31</x>
+         <y>0</y>
+         <width>121</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="channel" stdset="0">
+        <string>$(DEV):$(Axis)-Enc05-PwrState</string>
+       </property>
+       <property name="toolTip">
+        <string>Encoder 5: Ordinary mode = relay power control disabled; Off = retained/stale position; Warming up = not yet valid; Ready = feedback available; Fault = power/readiness error.</string>
+       </property>
+       <property name="colorMode">
+        <enum>caLineEdit::Alarm_Default</enum>
+       </property>
+       <property name="precision">
+        <number>0</number>
+       </property>
+       <property name="unitsEnabled">
+        <bool>false</bool>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
       </widget>
      </widget>
      <widget class="caFrame" name="caframe_12">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>130</y>
-        <width>71</width>
-        <height>31</height>
+        <x>6</x>
+        <y>105</y>
+        <width>152</width>
+        <height>17</height>
        </rect>
       </property>
       <property name="macro">
@@ -4322,10 +4290,10 @@
       <widget class="caRelatedDisplay" name="carelateddisplay_26">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>0</x>
          <y>0</y>
-         <width>61</width>
-         <height>21</height>
+         <width>25</width>
+         <height>17</height>
         </rect>
        </property>
        <property name="labels">
@@ -4337,15 +4305,50 @@
        <property name="args">
         <string>ENC_ID=$(ENC_ID),DEV=$(DEV),Axis=$(Axis),IOC=$(IOC)</string>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+      </widget>
+      <widget class="caLineEdit" name="encoderPowerState6">
+       <property name="geometry">
+        <rect>
+         <x>31</x>
+         <y>0</y>
+         <width>121</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="channel" stdset="0">
+        <string>$(DEV):$(Axis)-Enc06-PwrState</string>
+       </property>
+       <property name="toolTip">
+        <string>Encoder 6: Ordinary mode = relay power control disabled; Off = retained/stale position; Warming up = not yet valid; Ready = feedback available; Fault = power/readiness error.</string>
+       </property>
+       <property name="colorMode">
+        <enum>caLineEdit::Alarm_Default</enum>
+       </property>
+       <property name="precision">
+        <number>0</number>
+       </property>
+       <property name="unitsEnabled">
+        <bool>false</bool>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
       </widget>
      </widget>
      <widget class="caFrame" name="caframe_13">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>150</y>
-        <width>71</width>
-        <height>31</height>
+        <x>6</x>
+        <y>122</y>
+        <width>152</width>
+        <height>17</height>
        </rect>
       </property>
       <property name="macro">
@@ -4363,10 +4366,10 @@
       <widget class="caRelatedDisplay" name="carelateddisplay_30">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>0</x>
          <y>0</y>
-         <width>61</width>
-         <height>21</height>
+         <width>25</width>
+         <height>17</height>
         </rect>
        </property>
        <property name="labels">
@@ -4378,15 +4381,50 @@
        <property name="args">
         <string>ENC_ID=$(ENC_ID),DEV=$(DEV),Axis=$(Axis),IOC=$(IOC)</string>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+      </widget>
+      <widget class="caLineEdit" name="encoderPowerState7">
+       <property name="geometry">
+        <rect>
+         <x>31</x>
+         <y>0</y>
+         <width>121</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="channel" stdset="0">
+        <string>$(DEV):$(Axis)-Enc07-PwrState</string>
+       </property>
+       <property name="toolTip">
+        <string>Encoder 7: Ordinary mode = relay power control disabled; Off = retained/stale position; Warming up = not yet valid; Ready = feedback available; Fault = power/readiness error.</string>
+       </property>
+       <property name="colorMode">
+        <enum>caLineEdit::Alarm_Default</enum>
+       </property>
+       <property name="precision">
+        <number>0</number>
+       </property>
+       <property name="unitsEnabled">
+        <bool>false</bool>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
       </widget>
      </widget>
      <widget class="caFrame" name="caframe_9">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>70</y>
-        <width>71</width>
-        <height>31</height>
+        <x>6</x>
+        <y>54</y>
+        <width>152</width>
+        <height>17</height>
        </rect>
       </property>
       <property name="macro">
@@ -4404,10 +4442,10 @@
       <widget class="caRelatedDisplay" name="carelateddisplay_25">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>0</x>
          <y>0</y>
-         <width>61</width>
-         <height>21</height>
+         <width>25</width>
+         <height>17</height>
         </rect>
        </property>
        <property name="labels">
@@ -4419,15 +4457,50 @@
        <property name="args">
         <string>ENC_ID=$(ENC_ID),DEV=$(DEV),Axis=$(Axis),IOC=$(IOC)</string>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+      </widget>
+      <widget class="caLineEdit" name="encoderPowerState3">
+       <property name="geometry">
+        <rect>
+         <x>31</x>
+         <y>0</y>
+         <width>121</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="channel" stdset="0">
+        <string>$(DEV):$(Axis)-Enc03-PwrState</string>
+       </property>
+       <property name="toolTip">
+        <string>Encoder 3: Ordinary mode = relay power control disabled; Off = retained/stale position; Warming up = not yet valid; Ready = feedback available; Fault = power/readiness error.</string>
+       </property>
+       <property name="colorMode">
+        <enum>caLineEdit::Alarm_Default</enum>
+       </property>
+       <property name="precision">
+        <number>0</number>
+       </property>
+       <property name="unitsEnabled">
+        <bool>false</bool>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
       </widget>
      </widget>
      <widget class="caFrame" name="caframe_10">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>90</y>
-        <width>71</width>
-        <height>31</height>
+        <x>6</x>
+        <y>71</y>
+        <width>152</width>
+        <height>17</height>
        </rect>
       </property>
       <property name="macro">
@@ -4445,10 +4518,10 @@
       <widget class="caRelatedDisplay" name="carelateddisplay_28">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>0</x>
          <y>0</y>
-         <width>61</width>
-         <height>21</height>
+         <width>25</width>
+         <height>17</height>
         </rect>
        </property>
        <property name="labels">
@@ -4460,15 +4533,50 @@
        <property name="args">
         <string>ENC_ID=$(ENC_ID),DEV=$(DEV),Axis=$(Axis),IOC=$(IOC)</string>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+      </widget>
+      <widget class="caLineEdit" name="encoderPowerState4">
+       <property name="geometry">
+        <rect>
+         <x>31</x>
+         <y>0</y>
+         <width>121</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="channel" stdset="0">
+        <string>$(DEV):$(Axis)-Enc04-PwrState</string>
+       </property>
+       <property name="toolTip">
+        <string>Encoder 4: Ordinary mode = relay power control disabled; Off = retained/stale position; Warming up = not yet valid; Ready = feedback available; Fault = power/readiness error.</string>
+       </property>
+       <property name="colorMode">
+        <enum>caLineEdit::Alarm_Default</enum>
+       </property>
+       <property name="precision">
+        <number>0</number>
+       </property>
+       <property name="unitsEnabled">
+        <bool>false</bool>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
       </widget>
      </widget>
      <widget class="caFrame" name="caframe_7">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>30</y>
-        <width>71</width>
-        <height>31</height>
+        <x>6</x>
+        <y>20</y>
+        <width>152</width>
+        <height>17</height>
        </rect>
       </property>
       <property name="macro">
@@ -4486,10 +4594,10 @@
       <widget class="caRelatedDisplay" name="carelateddisplay_29">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>0</x>
          <y>0</y>
-         <width>61</width>
-         <height>21</height>
+         <width>25</width>
+         <height>17</height>
         </rect>
        </property>
        <property name="labels">
@@ -4501,15 +4609,50 @@
        <property name="args">
         <string>ENC_ID=$(ENC_ID),DEV=$(DEV),Axis=$(Axis),IOC=$(IOC)</string>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+      </widget>
+      <widget class="caLineEdit" name="encoderPowerState1">
+       <property name="geometry">
+        <rect>
+         <x>31</x>
+         <y>0</y>
+         <width>121</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="channel" stdset="0">
+        <string>$(DEV):$(Axis)-Enc01-PwrState</string>
+       </property>
+       <property name="toolTip">
+        <string>Encoder 1: Ordinary mode = relay power control disabled; Off = retained/stale position; Warming up = not yet valid; Ready = feedback available; Fault = power/readiness error.</string>
+       </property>
+       <property name="colorMode">
+        <enum>caLineEdit::Alarm_Default</enum>
+       </property>
+       <property name="precision">
+        <number>0</number>
+       </property>
+       <property name="unitsEnabled">
+        <bool>false</bool>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
       </widget>
      </widget>
      <widget class="caFrame" name="caframe_14">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>170</y>
-        <width>71</width>
-        <height>31</height>
+        <x>6</x>
+        <y>139</y>
+        <width>152</width>
+        <height>17</height>
        </rect>
       </property>
       <property name="macro">
@@ -4527,10 +4670,10 @@
       <widget class="caRelatedDisplay" name="carelateddisplay_27">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>0</x>
          <y>0</y>
-         <width>61</width>
-         <height>21</height>
+         <width>25</width>
+         <height>17</height>
         </rect>
        </property>
        <property name="labels">
@@ -4542,8 +4685,262 @@
        <property name="args">
         <string>ENC_ID=$(ENC_ID),DEV=$(DEV),Axis=$(Axis),IOC=$(IOC)</string>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+      </widget>
+      <widget class="caLineEdit" name="encoderPowerState8">
+       <property name="geometry">
+        <rect>
+         <x>31</x>
+         <y>0</y>
+         <width>121</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="channel" stdset="0">
+        <string>$(DEV):$(Axis)-Enc08-PwrState</string>
+       </property>
+       <property name="toolTip">
+        <string>Encoder 8: Ordinary mode = relay power control disabled; Off = retained/stale position; Warming up = not yet valid; Ready = feedback available; Fault = power/readiness error.</string>
+       </property>
+       <property name="colorMode">
+        <enum>caLineEdit::Alarm_Default</enum>
+       </property>
+       <property name="precision">
+        <number>0</number>
+       </property>
+       <property name="unitsEnabled">
+        <bool>false</bool>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
       </widget>
      </widget>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="caLabel" name="calabel_101">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>42</y>
+       <width>45</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Active:</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="calineedit_46">
+     <property name="geometry">
+      <rect>
+       <x>137</x>
+       <y>42</y>
+       <width>34</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(DEV):$(Axis)-SetEncIdCmd-RB</string>
+     </property>
+     <property name="background">
+      <color alpha="222">
+       <red>192</red>
+       <green>192</green>
+       <blue>192</blue>
+      </color>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Static</enum>
+     </property>
+     <property name="precisionMode">
+      <enum>caLineEdit::Channel</enum>
+     </property>
+     <property name="limitsMode">
+      <enum>caLineEdit::User</enum>
+     </property>
+     <property name="unitsEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="encoderModeLabel">
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>1</y>
+       <width>163</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Feedback mode</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="QLabel" name="encoderAcceptedLabel">
+     <property name="geometry">
+      <rect>
+       <x>181</x>
+       <y>1</y>
+       <width>164</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Accepted</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="caMenu" name="encoderModeMenu">
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>19</y>
+       <width>163</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="channel" stdset="0">
+      <string>$(DEV):$(Axis)-EncMode</string>
+     </property>
+     <property name="toolTip">
+      <string>Auto power uses the source/backup pair configured at startup. Encoder 1…8 selects fixed feedback by index and retains its own reference. Changes require a stopped, disabled axis; powered feedback waits for warm-up and readiness.</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="encoderModeAccepted">
+     <property name="geometry">
+      <rect>
+       <x>181</x>
+       <y>19</y>
+       <width>164</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="channel" stdset="0">
+      <string>$(DEV):$(Axis)-EncMode-RB</string>
+     </property>
+     <property name="toolTip">
+      <string>Accepted mode. The active encoder index below can differ during automatic handover or while the requested encoder warms up.</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Static</enum>
+     </property>
+     <property name="precision">
+      <number>0</number>
+     </property>
+     <property name="unitsEnabled">
+      <bool>false</bool>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="QLabel" name="encoderForceLabel">
+     <property name="geometry">
+      <rect>
+       <x>181</x>
+       <y>42</y>
+       <width>33</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Hold:</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="caMenu" name="encoderForceOnMenu">
+     <property name="geometry">
+      <rect>
+       <x>216</x>
+       <y>42</y>
+       <width>129</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="channel" stdset="0">
+      <string>$(DEV):$(Axis)-EncForceOn</string>
+     </property>
+     <property name="toolTip">
+      <string>Force ON holds the configured source powered for inspection until explicitly released. It does not start motion or change fixed feedback selection. Releasing to Auto restarts the settling delay.</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="encoderForceOnAccepted">
+     <property name="geometry">
+      <rect>
+       <x>258</x>
+       <y>67</y>
+       <width>87</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="channel" stdset="0">
+      <string>$(DEV):$(Axis)-EncForceOn-RB</string>
+     </property>
+     <property name="toolTip">
+      <string>Accepted inspection hold; faults take precedence over Force ON.</string>
+     </property>
+     <property name="colorMode">
+      <enum>caLineEdit::Static</enum>
+     </property>
+     <property name="precision">
+      <number>0</number>
+     </property>
+     <property name="unitsEnabled">
+      <bool>false</bool>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+    <widget class="QLabel" name="encoderHoldAcceptedLabel">
+     <property name="geometry">
+      <rect>
+       <x>181</x>
+       <y>67</y>
+       <width>70</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Accepted:</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="tab_3">

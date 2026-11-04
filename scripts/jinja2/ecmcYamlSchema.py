@@ -287,6 +287,25 @@ class Schema:
         }
     }
 
+    encoderPowerSchema = {
+        'type': 'dict',
+        'schema': {
+            'enable': {'type': 'boolean', 'default': False},
+            'output': {'type': 'string'},
+            'activeHigh': {'type': 'boolean', 'default': True},
+            'startupDelay': {'type': 'float', 'min': 0, 'default': 0.1},
+            'startupTimeout': {'type': 'float', 'min': 0, 'default': 5.0},
+            'idleDelay': {'type': 'float', 'min': 0, 'default': 2.0},
+            'backup': {
+                'type': 'dict',
+                'schema': {
+                    'encoder': {'required': True, 'type': 'integer', 'min': 1, 'max': 8},
+                    'maxPositionDifference': {'required': True, 'type': 'float', 'min': 0},
+                }
+            },
+        }
+    }
+
     encoderSchema = {
         'type': 'dict',
         'required': True,
@@ -346,6 +365,7 @@ class Schema:
                 }
             },
             'touchProbe': touchProbeSchema,
+            'power': encoderPowerSchema,
             'primary': {'type': ['boolean', 'integer' ]},
             'homing': homingSchema,
             'useAsCSPDrvEnc': {'type': ['boolean', 'integer' ]},

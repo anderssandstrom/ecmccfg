@@ -101,6 +101,97 @@ class YamlParityTests(unittest.TestCase):
                 position='ec$(MASTER_ID).s$(ENC_SID).positionActual01'))))
             self.compare(source, 'encoder')
 
+    def power_document(self):
+        document = self.yaml.safe_load((FIXTURES/'physical_csv.yaml').read_text())
+        document['encoder'].update(type=1, bits=32, absBits=26)
+        document['monitoring'] = dict(target=dict(enable=True, tolerance=.01, time=100))
+        return document
+
+    def test_encoder_power_enabled_and_command_order(self):
+        for standalone in (False, True):
+            for high in (False, True):
+                document = self.power_document()
+                document['encoder']['power'] = dict(enable=True, output='ec0.s2.BO05.0',
+                    activeHigh=high, startupDelay=.01, startupTimeout=.05, idleDelay=2.0)
+                if standalone:
+                    document = dict(encoder=document['encoder'])
+                    document['encoder']['power']['backup'] = dict(encoder=1, maxPositionDifference=.02)
+                with self.subTest(standalone=standalone, high=high), tempfile.TemporaryDirectory() as tmp:
+                    source = Path(tmp)/'power.yaml'
+                    source.write_text(self.yaml.safe_dump(document))
+                    generated = self.compare(source, 'encoder' if standalone else 'axis')
+                    def index(command):
+                        return next(i for i, line in enumerate(generated) if command in line)
+                    self.assertLess(index('Cfg.SetAxisEncPwrDelay(${ECMC_AXIS_NO},0)'),
+                                    index('Cfg.SetAxisEncPwrTimeout('))
+                    self.assertLess(index('Cfg.SetAxisEncPwrTimeout('),
+                                    index('Cfg.SetAxisEncPwrDelay(${ECMC_AXIS_NO},0.01)'))
+                    self.assertLess(index('Cfg.SetAxisEncPwrDelay(${ECMC_AXIS_NO},0.01)'),
+                                    index('Cfg.SetAxisEncPwrEnable(${ECMC_AXIS_NO},1)'))
+                    self.assertIn('Cfg.SetAxisEncPwrPol(${ECMC_AXIS_NO},'+str(int(high))+')',
+                                  '\n'.join(generated))
+                    self.assertIn('ec0.s2.BO05.0', '\n'.join(generated))
+                    if standalone:
+                        self.assertLess(index('Cfg.AddAxisEnc('), index('Cfg.SetAxisEncPwrEnable('))
+                        self.assertLess(index('Cfg.SetAxisEncPwrEnable('), index('Cfg.SetAxisEncPwrBackup('))
+                    else:
+                        self.assertLess(index('Cfg.SetAxisMonAtTargetTol('), index('Cfg.SetAxisEncPwrEnable('))
+                        self.assertFalse(any('SetAxisEncPwrBackup' in line for line in generated))
+
+    def test_encoder_power_defaults_and_opt_out(self):
+        for settings in (None, {}, dict(enable=False), dict(enable=True, output='ec0.s2.BO05.0')):
+            document = self.power_document()
+            if settings is not None: document['encoder']['power'] = settings
+            with self.subTest(settings=settings), tempfile.TemporaryDirectory() as tmp:
+                source = Path(tmp)/'power.yaml'
+                source.write_text(self.yaml.safe_dump(document))
+                generated = self.compare(source)
+                power = [line for line in generated if 'Cfg.SetAxisEncPwr' in line]
+                if settings is None:
+                    self.assertEqual(power, [])
+                elif not settings.get('enable', False):
+                    self.assertEqual(power, ['ecmcConfigOrDie "Cfg.SetAxisEncPwrEnable(${ECMC_AXIS_NO},0)"'])
+                else:
+                    for expected in ('PwrDelay(${ECMC_AXIS_NO},0.1)', 'PwrTimeout(${ECMC_AXIS_NO},5)',
+                                     'PwrOffDelay(${ECMC_AXIS_NO},2)', 'PwrPol(${ECMC_AXIS_NO},1)'):
+                        self.assertTrue(any(expected in line for line in power), expected)
+
+    def test_encoder_power_schema_rejects_bad_values(self):
+        settings = [dict(enable='not-a-boolean'), dict(startupDelay=-1), dict(startupTimeout=-1),
+                    dict(idleDelay=-1), dict(activeHigh='not-a-boolean'), dict(output=17),
+                    dict(backup=dict(encoder=0, maxPositionDifference=.02)),
+                    dict(backup=dict(encoder=9, maxPositionDifference=.02)),
+                    dict(backup=dict(encoder=1)),
+                    dict(backup=dict(encoder=1, maxPositionDifference=-1))]
+        for power in settings:
+            document = self.power_document()
+            document['encoder']['power'] = power
+            with self.subTest(power=power), tempfile.TemporaryDirectory() as tmp:
+                source = Path(tmp)/'bad-power.yaml'
+                source.write_text(self.yaml.safe_dump(document))
+                for name, result, _ in self.render(source, Path(tmp)):
+                    self.assertNotEqual(result.returncode, 0, name+' accepted '+str(power))
+                    self.assertIn('power', result.stdout+result.stderr)
+
+    def test_encoder_power_startup_guards(self):
+        for change, diagnostic in (({}, 'output'), (dict(startupDelay=5, startupTimeout=5), 'startupTimeout'),
+                                    (dict(backup=dict(encoder=1,maxPositionDifference=0)), 'maxPositionDifference'),
+                                    (dict(incremental=True), 'absolute encoder')):
+            document = self.power_document()
+            power = dict(enable=True, output='ec0.s2.BO05.0')
+            if not change: del power['output']
+            elif change.get('incremental'): document['encoder']['type'] = 0
+            else: power.update(change)
+            document['encoder']['power'] = power
+            with self.subTest(change=change), tempfile.TemporaryDirectory() as tmp:
+                source = Path(tmp)/'guard.yaml'
+                source.write_text(self.yaml.safe_dump(document))
+                for name, result, output in self.render(source, Path(tmp)):
+                    self.assertEqual(result.returncode, 0, result.stdout+result.stderr)
+                    self.assertIn('ecmcExit', output, name)
+                    self.assertIn(diagnostic, output)
+                    self.assertNotIn('Cfg.SetAxisEncPwrEnable(${ECMC_AXIS_NO},1)', output)
+
     def test_axis_plc_file_and_inline_code(self):
         document = self.yaml.safe_load((FIXTURES / 'virtual_monitoring.yaml').read_text())
         with tempfile.TemporaryDirectory() as tmp:

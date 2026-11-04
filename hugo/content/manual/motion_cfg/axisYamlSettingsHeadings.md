@@ -165,6 +165,14 @@ unchanged. Both reference views are generated from the same audited source.
 - `encoder.desc` (optional) — Encoder description.
 - `encoder.unit` (optional) — Encoder engineering unit.
 - `encoder.homing.timeout` (optional) — Homing sequence timeout in seconds.
+- `encoder.power.enable` (optional; see encoder power configuration) — Enable automatic encoder relay power control. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}). Defaults: `encoder.power.enable`: false.
+- `encoder.power.output` (optional; see encoder power configuration) — Writable EtherCAT bit path; required when enabled. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}).
+- `encoder.power.activeHigh` (optional; see encoder power configuration) — Logical ON writes 1 when true, 0 when false. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}). Defaults: `encoder.power.activeHigh`: true.
+- `encoder.power.startupDelay` (optional; see encoder power configuration) — Minimum warm-up delay, seconds. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}). Defaults: `encoder.power.startupDelay`: 0.1.
+- `encoder.power.startupTimeout` (optional; see encoder power configuration) — Maximum wake time, seconds; greater than startupDelay. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}). Defaults: `encoder.power.startupTimeout`: 5.0.
+- `encoder.power.idleDelay` (optional; see encoder power configuration) — Continuous atTarget/tighter-deadband dwell before off, seconds. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}). Defaults: `encoder.power.idleDelay`: 2.0.
+- `encoder.power.backup.encoder` (optional; see encoder power configuration) — Already-configured always-powered incremental backup index, 1…8. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}).
+- `encoder.power.backup.maxPositionDifference` (optional; see encoder power configuration) — Positive permitted wake discrepancy, engineering units. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}).
 
 ## controller
 

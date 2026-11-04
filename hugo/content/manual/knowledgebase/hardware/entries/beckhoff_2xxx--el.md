@@ -29,6 +29,7 @@ for naming, direction and inclusion rules.
 - [ecmcEL2624.cmd](#snippet-ecmcel2624)
 - [ecmcEL2634.cmd](#snippet-ecmcel2634)
 - [ecmcEL2788.cmd](#snippet-ecmcel2788)
+- [ecmcEL2794.cmd](#snippet-ecmcel2794)
 - [ecmcEL2808.cmd](#snippet-ecmcel2808)
 - [ecmcEL2819.cmd](#snippet-ecmcel2819)
 - [ecmcEL2828.cmd](#snippet-ecmcel2828)
@@ -310,6 +311,18 @@ No direct entry declarations; follow the referenced snippets above.
 Referenced hardware snippets (may be conditional):
 
 - [Beckhoff_2XXX/ecmcEX2008.cmd]({{< relref "/manual/knowledgebase/hardware/entries/beckhoff_2xxx.md#snippet-ecmcex2008" >}})
+
+No direct entry declarations; follow the referenced snippets above.
+
+<a id="snippet-ecmcel2794"></a>
+
+## ecmcEL2794.cmd
+
+[Source: hardware/Beckhoff_2XXX/EL/ecmcEL2794.cmd](https://github.com/paulscherrerinstitute/ecmccfg/blob/master/hardware/Beckhoff_2XXX/EL/ecmcEL2794.cmd)
+
+Referenced hardware snippets (may be conditional):
+
+- [Beckhoff_2XXX/ecmcEX2004.cmd]({{< relref "/manual/knowledgebase/hardware/entries/beckhoff_2xxx.md#snippet-ecmcex2004" >}})
 
 No direct entry declarations; follow the referenced snippets above.
 

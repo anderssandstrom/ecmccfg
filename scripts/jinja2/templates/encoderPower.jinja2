@@ -1,0 +1,49 @@
+#- Optional encoder relay power and feedback handover. Omission emits no commands.
+{%- if encoder.power is defined %}
+    {%- if encoder.power.enable|default(false) %}
+        {%- set _encoderPowerValid = true %}
+        {%- if (encoder.power.output is not defined) or (encoder.power.output == "") %}
+# ERROR: encoder.power.output is required when encoder.power.enable is true.
+ecmcExit
+        {%- set _encoderPowerValid = false %}
+        {%- endif %}
+        {%- if encoder.type != 1 %}
+# ERROR: encoder.power requires an absolute encoder (encoder.type: 1).
+ecmcExit
+        {%- set _encoderPowerValid = false %}
+        {%- endif %}
+        {%- if encoder.source|default(0) != 0 %}
+# ERROR: encoder.power requires internal encoder feedback (encoder.source: 0).
+ecmcExit
+        {%- set _encoderPowerValid = false %}
+        {%- endif %}
+        {%- if not (encoder.power.startupTimeout|default(5.0) > encoder.power.startupDelay|default(0.1)) %}
+# ERROR: encoder.power.startupTimeout must exceed encoder.power.startupDelay.
+ecmcExit
+        {%- set _encoderPowerValid = false %}
+        {%- endif %}
+        {%- if (encoder.power.backup is defined) and (encoder.power.backup.maxPositionDifference <= 0) %}
+# ERROR: encoder.power.backup.maxPositionDifference must be positive.
+ecmcExit
+        {%- set _encoderPowerValid = false %}
+        {%- endif %}
+        {%- if _encoderPowerValid %}
+ecmcConfigOrDie "Cfg.SelectAxisEncConfig(${ECMC_AXIS_NO},${ECMC_ENC_CFG_ID})"
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject("{{ encoder.power.output }}","ax${ECMC_AXIS_NO}.enc.power")"
+ecmcConfigOrDie "Cfg.SetAxisEncPwrPol(${ECMC_AXIS_NO},{{ encoder.power.activeHigh|default(true)|int }})"
+# Reset the default delay before setting a possibly smaller timeout.
+ecmcConfigOrDie "Cfg.SetAxisEncPwrDelay(${ECMC_AXIS_NO},0)"
+ecmcConfigOrDie "Cfg.SetAxisEncPwrTimeout(${ECMC_AXIS_NO},{{ encoder.power.startupTimeout|default(5.0) }})"
+ecmcConfigOrDie "Cfg.SetAxisEncPwrDelay(${ECMC_AXIS_NO},{{ encoder.power.startupDelay|default(0.1) }})"
+ecmcConfigOrDie "Cfg.SetAxisEncPwrOffDelay(${ECMC_AXIS_NO},{{ encoder.power.idleDelay|default(2.0) }})"
+# Native validation requires positive, enabled atTarget monitoring.
+ecmcConfigOrDie "Cfg.SetAxisEncPwrEnable(${ECMC_AXIS_NO},1)"
+            {%- if encoder.power.backup is defined %}
+# Backup must already exist and be an always-powered incremental encoder.
+ecmcConfigOrDie "Cfg.SetAxisEncPwrBackup(${ECMC_AXIS_NO},{{ encoder.power.backup.encoder }},{{ encoder.power.backup.maxPositionDifference }})"
+            {%- endif %}
+        {%- endif %}
+    {%- else %}
+ecmcConfigOrDie "Cfg.SetAxisEncPwrEnable(${ECMC_AXIS_NO},0)"
+    {%- endif %}
+{%- endif %}

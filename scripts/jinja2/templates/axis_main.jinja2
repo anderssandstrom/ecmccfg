@@ -21,6 +21,7 @@
 {% include 'homing.jinja2' %}
 {% include 'soft_limit.jinja2' %}
 {% include 'monitoring.jinja2' %}
+{% include 'encoderPower.jinja2' %}
 {% include 'epicsAxis.jinja2' %}
 {%- if (epics is defined) and (epics.motorRecord is defined) and (epics.motorRecord.enable == false) %}
     #- skip MotorRecord

@@ -125,3 +125,17 @@ leaves the following-error monitor enabled.
 ```sh
 python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case encoder_power --test wake_position_jump --loop closed
 ```
+
+## Optional counter handover
+
+With the updated ECMC handover build installed, run:
+
+```sh
+python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case encoder_handover --loop closed
+```
+
+The existing absolute encoder 2 and internal counter 1 are used. No new links
+or schema change is required. Cases temporarily enable handover and verify
+primary selection before/after power-off, repeated wake, positive/negative wake
+mismatch faults without automatic replay, and readiness timeout. The mode stays
+disabled in the normal fixture and is removed during test cleanup.

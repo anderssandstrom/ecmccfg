@@ -45,7 +45,7 @@ def check_status_chain():
             expression = fields['CALC']
             assert re.fullmatch(r'[A0-9a-fA-FxX\s()&|<>+*/.=-]+', expression), expression
             values[name] = eval(expression, {'__builtins__': {}}, {'A': read(fields['INPA'])})
-        elif kind in ('bi', 'mbbiDirect'):
+        elif kind in ('bi', 'mbbi', 'mbbiDirect'):
             values[name] = read(fields['INP'])
         link = fields.get('FLNK')
         if link:
@@ -57,6 +57,19 @@ def check_status_chain():
         name = prefix+suffix
         values[name] = raw
         process(name)
+
+    control = records[prefix+'-EncMode'][1]
+    assert control['DTYP'] == 'asynUInt32Digital'
+    assert '0x3c000' in control['OUT'] and control['SHFT'] == '14'
+    assert control['ZRST'] == 'Auto power' and control['EIST'] == 'Encoder 8'
+    assert '0x40000' in records[prefix+'-EncForceOn'][1]['OUT']
+    for selection in range(9):
+        for hold in (0, 1):
+            publish('-Stat', (selection<<25)|(hold<<29))
+            assert values[prefix+'-EncMode-RB'] == selection
+            assert values[prefix+'-EncForceOn-RB'] == hold
+            assert values[prefix+'-Busy'] == 0
+            assert values[prefix+'-AutoExecuteOnTargetPos-RB'] == 0
 
     publish('-Stat', 0x61e6c8)
     assert values[prefix+'-Busy'] == 1
@@ -75,7 +88,47 @@ def check_status_chain():
         assert values[prefix+'-AutoExecuteOnTargetPos-RB'] == selected
 
 
+def check_encoder_status_chain():
+    root = Path(__file__).resolve().parents[1]
+    text = (root/'db/core/ecmcEnc.db').read_text()
+    records = {name: (kind, dict(re.findall(r'field\(\s*(\w+)\s*,\s*"([^"]*)"\s*\)', body)))
+               for kind, name, body in re.findall(r'record\((\w+),\s*"([^"]+)"\)\s*\{(.*?)\n\}', text, re.S)}
+    prefix = '${P}${AXIS_NAME}-Enc0$(ENC_NO)'
+    readers = [(name, fields) for name, (_, fields) in records.items()
+               if '.enc.status$(ENC_NO)?' in fields.get('INP', '')]
+    assert len(readers) == 1 and readers[0][0] == prefix+'-Stat'
+    assert readers[0][1]['DTYP'] == 'asynInt32'
+    assert '.enc.powerstate' not in text
+    values = {}
+    def read(link):
+        name, _, field = link.partition('.')
+        value = values.get(name, 0)
+        return (int(value) >> int(field[1:], 16)) & 1 if field.startswith('B') else value
+    def process(name, visited):
+        assert name not in visited, 'encoder forward-link cycle'
+        visited.add(name)
+        kind, fields = records[name]
+        if kind == 'calc':
+            assert fields['CALC'] == '(A>>8)&7'
+            values[name] = (read(fields['INPA']) >> 8) & 7
+        elif kind in ('mbbi', 'mbbiDirect', 'bi'):
+            values[name] = read(fields['INP'])
+        if fields.get('FLNK'):
+            process(fields['FLNK'].removesuffix('.PROC'), visited)
+    for state in range(5):
+        for flags in range(32):
+            values[prefix+'-Stat'] = (state<<8)|flags
+            process(prefix+'-Stat', set())
+            assert values[prefix+'-PwrState'] == state
+            for bit, suffix in enumerate(('PwrEnable-RB','PwrOn','Ready','Homed','Absolute')):
+                assert values[prefix+'-'+suffix] == ((flags>>bit)&1)
+    assert records[prefix+'-PwrState'][1]['FRSV'] == 'MAJOR'
+
+
 class AxisStatusRecordChainTests(unittest.TestCase):
+    def test_encoder_status_decodes_power_and_flags(self):
+        check_encoder_status_chain()
+
     def test_status_and_mode_updates_share_one_asyn_reader(self):
         check_status_chain()
 

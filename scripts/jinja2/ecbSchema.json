@@ -3,11 +3,11 @@
     "axis": {
       "axis.type=1": {
         "required": "axisSchema driveSchema encoderSchema trajectorySchema inputSchema",
-        "optional": "metaSchema homingSchema encoderHomingSchema encoderLutSchema encoderDelayCompSchema encoderLatchSchema encoderTouchProbeSchema touchProbeSchema positionCompareSchema varSchema epicsSchema controllerSchema controllerInnerSchema axisPlcSchema softlimitsSchema monitoringLagSchema monitoringTargetSchema monitoringVelocitySchema monitoringVelocityTimeSchema monitoringVelocityDifferenceSchema monitoringStallSchema driveBrakeSchema trajectoryModuloSchema epicsMotorRecordPvtSchema axisAutoEnableSchema"
+        "optional": "metaSchema homingSchema encoderHomingSchema encoderLutSchema encoderDelayCompSchema encoderLatchSchema encoderTouchProbeSchema touchProbeSchema positionCompareSchema varSchema epicsSchema controllerSchema controllerInnerSchema axisPlcSchema softlimitsSchema monitoringLagSchema monitoringTargetSchema monitoringVelocitySchema monitoringVelocityTimeSchema monitoringVelocityDifferenceSchema monitoringStallSchema driveBrakeSchema trajectoryModuloSchema epicsMotorRecordPvtSchema axisAutoEnableSchema encoderPowerSchema encoderPowerBackupSchema"
       },
       "axis.type=2": {
         "required": "axisSchema encoderSchema trajectorySchema inputSchema",
-        "optional": "metaSchema homingSchema encoderHomingSchema encoderLutSchema encoderDelayCompSchema encoderLatchSchema encoderTouchProbeSchema touchProbeSchema positionCompareSchema varSchema epicsSchema axisPlcSchema softlimitsSchema monitoringLagSchema monitoringTargetSchema monitoringVelocitySchema monitoringVelocityTimeSchema monitoringVelocityDifferenceSchema monitoringStallSchema trajectoryModuloSchema epicsMotorRecordPvtSchema axisAutoEnableSchema"
+        "optional": "metaSchema homingSchema encoderHomingSchema encoderLutSchema encoderDelayCompSchema encoderLatchSchema encoderTouchProbeSchema touchProbeSchema positionCompareSchema varSchema epicsSchema axisPlcSchema softlimitsSchema monitoringLagSchema monitoringTargetSchema monitoringVelocitySchema monitoringVelocityTimeSchema monitoringVelocityDifferenceSchema monitoringStallSchema trajectoryModuloSchema epicsMotorRecordPvtSchema axisAutoEnableSchema encoderPowerSchema encoderPowerBackupSchema"
       }
     },
     "plc": {
@@ -19,7 +19,7 @@
     "encoder": {
       "meta.schemaNumber=0": {
         "required": "encoderSchema",
-        "optional": "metaSchema encoderHomingSchema encoderLutSchema encoderDelayCompSchema encoderLatchSchema encoderTouchProbeSchema touchProbeSchema"
+        "optional": "metaSchema encoderHomingSchema encoderLutSchema encoderDelayCompSchema encoderLatchSchema encoderTouchProbeSchema touchProbeSchema encoderPowerSchema encoderPowerBackupSchema"
       }
     }
   },
@@ -1280,6 +1280,59 @@
       "plc.code": {
         "type": "list",
         "required": false
+      }
+    }
+  },
+  "encoderPowerSchema": {
+    "identifier": "encoder.power",
+    "schema": {
+      "encoder.power.enable": {
+        "type": "boolean",
+        "required": false,
+        "default": false
+      },
+      "encoder.power.output": {
+        "type": "string",
+        "required": false
+      },
+      "encoder.power.activeHigh": {
+        "type": "boolean",
+        "required": false,
+        "default": true
+      },
+      "encoder.power.startupDelay": {
+        "type": "integer float",
+        "required": false,
+        "default": 0.1,
+        "min": 0
+      },
+      "encoder.power.startupTimeout": {
+        "type": "integer float",
+        "required": false,
+        "default": 5.0,
+        "min": 0
+      },
+      "encoder.power.idleDelay": {
+        "type": "integer float",
+        "required": false,
+        "default": 2.0,
+        "min": 0
+      }
+    }
+  },
+  "encoderPowerBackupSchema": {
+    "identifier": "encoder.power.backup",
+    "schema": {
+      "encoder.power.backup.encoder": {
+        "type": "integer",
+        "required": true,
+        "min": 1,
+        "max": 8
+      },
+      "encoder.power.backup.maxPositionDifference": {
+        "type": "integer float",
+        "required": true,
+        "min": 0
       }
     }
   }

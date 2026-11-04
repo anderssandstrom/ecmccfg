@@ -1320,7 +1320,7 @@
             "encoder.homing.acceleration"
           ],
           "requirement": "optional",
-          "description": "Homing acceleration in engineering units/s².",
+          "description": "Homing acceleration in engineering units/s\u00b2.",
           "entries": [
             {
               "key": "encoder.homing.acceleration",
@@ -1333,7 +1333,7 @@
             "encoder.homing.deceleration"
           ],
           "requirement": "optional",
-          "description": "Homing deceleration in engineering units/s².",
+          "description": "Homing deceleration in engineering units/s\u00b2.",
           "entries": [
             {
               "key": "encoder.homing.deceleration",
@@ -1586,6 +1586,115 @@
               "summary": ""
             }
           ]
+        },
+        {
+          "keys": [
+            "encoder.power.enable"
+          ],
+          "requirement": "optional; see encoder power configuration",
+          "description": "Enable automatic encoder relay power control. See [encoder power control]({{< relref \"/manual/motion_cfg/encoder_power.md\" >}}).",
+          "entries": [
+            {
+              "key": "encoder.power.enable",
+              "summary": "Enable automatic encoder relay power control.",
+              "default": "false"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.power.output"
+          ],
+          "requirement": "optional; see encoder power configuration",
+          "description": "Writable EtherCAT bit path; required when enabled. See [encoder power control]({{< relref \"/manual/motion_cfg/encoder_power.md\" >}}).",
+          "entries": [
+            {
+              "key": "encoder.power.output",
+              "summary": "Writable EtherCAT bit path; required when enabled."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.power.activeHigh"
+          ],
+          "requirement": "optional; see encoder power configuration",
+          "description": "Logical ON writes 1 when true, 0 when false. See [encoder power control]({{< relref \"/manual/motion_cfg/encoder_power.md\" >}}).",
+          "entries": [
+            {
+              "key": "encoder.power.activeHigh",
+              "summary": "Logical ON writes 1 when true, 0 when false.",
+              "default": "true"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.power.startupDelay"
+          ],
+          "requirement": "optional; see encoder power configuration",
+          "description": "Minimum warm-up delay, seconds. See [encoder power control]({{< relref \"/manual/motion_cfg/encoder_power.md\" >}}).",
+          "entries": [
+            {
+              "key": "encoder.power.startupDelay",
+              "summary": "Minimum warm-up delay, seconds.",
+              "default": "0.1"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.power.startupTimeout"
+          ],
+          "requirement": "optional; see encoder power configuration",
+          "description": "Maximum wake time, seconds; greater than startupDelay. See [encoder power control]({{< relref \"/manual/motion_cfg/encoder_power.md\" >}}).",
+          "entries": [
+            {
+              "key": "encoder.power.startupTimeout",
+              "summary": "Maximum wake time, seconds; greater than startupDelay.",
+              "default": "5.0"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.power.idleDelay"
+          ],
+          "requirement": "optional; see encoder power configuration",
+          "description": "Continuous atTarget/tighter-deadband dwell before off, seconds. See [encoder power control]({{< relref \"/manual/motion_cfg/encoder_power.md\" >}}).",
+          "entries": [
+            {
+              "key": "encoder.power.idleDelay",
+              "summary": "Continuous atTarget/tighter-deadband dwell before off, seconds.",
+              "default": "2.0"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.power.backup.encoder"
+          ],
+          "requirement": "optional; see encoder power configuration",
+          "description": "Already-configured always-powered incremental backup index, 1\u20268. See [encoder power control]({{< relref \"/manual/motion_cfg/encoder_power.md\" >}}).",
+          "entries": [
+            {
+              "key": "encoder.power.backup.encoder",
+              "summary": "Already-configured always-powered incremental backup index, 1\u20268."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "encoder.power.backup.maxPositionDifference"
+          ],
+          "requirement": "optional; see encoder power configuration",
+          "description": "Positive permitted wake discrepancy, engineering units. See [encoder power control]({{< relref \"/manual/motion_cfg/encoder_power.md\" >}}).",
+          "entries": [
+            {
+              "key": "encoder.power.backup.maxPositionDifference",
+              "summary": "Positive permitted wake discrepancy, engineering units."
+            }
+          ]
         }
       ]
     },
@@ -1834,7 +1943,7 @@
             "trajectory.axis.deceleration"
           ],
           "requirement": "optional",
-          "description": "Deceleration in engineering units/s²; defaults to axis acceleration.",
+          "description": "Deceleration in engineering units/s\u00b2; defaults to axis acceleration.",
           "entries": [
             {
               "key": "trajectory.axis.deceleration",
@@ -1848,12 +1957,12 @@
             "trajectory.axis.emergencyDeceleration"
           ],
           "requirement": "optional",
-          "description": "Emergency deceleration in engineering units/s²; defaults to ten times the greater of axis acceleration and deceleration.",
+          "description": "Emergency deceleration in engineering units/s\u00b2; defaults to ten times the greater of axis acceleration and deceleration.",
           "entries": [
             {
               "key": "trajectory.axis.emergencyDeceleration",
               "summary": "",
-              "default": "10 × max(acceleration, deceleration)"
+              "default": "10 \u00d7 max(acceleration, deceleration)"
             }
           ]
         },
@@ -1862,7 +1971,7 @@
             "trajectory.axis.jerk"
           ],
           "requirement": "optional",
-          "description": "S-curve jerk in engineering units/s³; the fallback is numerically equal to axis acceleration.",
+          "description": "S-curve jerk in engineering units/s\u00b3; the fallback is numerically equal to axis acceleration.",
           "entries": [
             {
               "key": "trajectory.axis.jerk",
@@ -2789,7 +2898,7 @@
             "homing.acceleration"
           ],
           "requirement": "optional",
-          "description": "Homing acceleration in engineering units/s².",
+          "description": "Homing acceleration in engineering units/s\u00b2.",
           "entries": [
             {
               "key": "homing.acceleration",
@@ -2802,7 +2911,7 @@
             "homing.deceleration"
           ],
           "requirement": "optional",
-          "description": "Homing deceleration in engineering units/s².",
+          "description": "Homing deceleration in engineering units/s\u00b2.",
           "entries": [
             {
               "key": "homing.deceleration",

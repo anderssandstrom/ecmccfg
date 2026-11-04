@@ -43,7 +43,7 @@ versus scaled feedback on the [Nanotec N6]({{< relref "/manual/knowledgebase/har
 | [Beckhoff_1XXX/EPP]({{< relref "/manual/knowledgebase/hardware/entries/beckhoff_1xxx--epp.md" >}}) | 1 | 0 |
 | [Beckhoff_2XXX]({{< relref "/manual/knowledgebase/hardware/entries/beckhoff_2xxx.md" >}}) | 3 | 28 |
 | [Beckhoff_2XXX/ED]({{< relref "/manual/knowledgebase/hardware/entries/beckhoff_2xxx--ed.md" >}}) | 2 | 18 |
-| [Beckhoff_2XXX/EL]({{< relref "/manual/knowledgebase/hardware/entries/beckhoff_2xxx--el.md" >}}) | 21 | 120 |
+| [Beckhoff_2XXX/EL]({{< relref "/manual/knowledgebase/hardware/entries/beckhoff_2xxx--el.md" >}}) | 22 | 120 |
 | [Beckhoff_2XXX/EP]({{< relref "/manual/knowledgebase/hardware/entries/beckhoff_2xxx--ep.md" >}}) | 3 | 14 |
 | [Beckhoff_2XXX/EPP]({{< relref "/manual/knowledgebase/hardware/entries/beckhoff_2xxx--epp.md" >}}) | 2 | 0 |
 | [Beckhoff_3XXX]({{< relref "/manual/knowledgebase/hardware/entries/beckhoff_3xxx.md" >}}) | 3 | 9 |

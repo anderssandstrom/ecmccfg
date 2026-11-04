@@ -147,6 +147,14 @@ Notes:
 | `encoder.desc` | Encoder description. | optional | — |
 | `encoder.unit` | Encoder engineering unit. | optional | — |
 | `encoder.homing.timeout` | Homing sequence timeout in seconds. | optional | — |
+| `encoder.power.enable` | Enable automatic encoder relay power control. | optional; see encoder power configuration | false |
+| `encoder.power.output` | Writable EtherCAT bit path; required when enabled. | optional; see encoder power configuration | — |
+| `encoder.power.activeHigh` | Logical ON writes 1 when true, 0 when false. | optional; see encoder power configuration | true |
+| `encoder.power.startupDelay` | Minimum warm-up delay, seconds. | optional; see encoder power configuration | 0.1 |
+| `encoder.power.startupTimeout` | Maximum wake time, seconds; greater than startupDelay. | optional; see encoder power configuration | 5.0 |
+| `encoder.power.idleDelay` | Continuous atTarget/tighter-deadband dwell before off, seconds. | optional; see encoder power configuration | 2.0 |
+| `encoder.power.backup.encoder` | Already-configured always-powered incremental backup index, 1…8. | optional; see encoder power configuration | — |
+| `encoder.power.backup.maxPositionDifference` | Positive permitted wake discrepancy, engineering units. | optional; see encoder power configuration | — |
 | `controller.Kp` | Kp proportional gain | optional | 1 |
 | `controller.Ki` | Ki integral gain | optional | 0 |
 | `controller.Kd` | Kd derivative gain | optional | 0 |

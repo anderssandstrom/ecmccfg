@@ -282,13 +282,22 @@ class EncoderPowerTests(EncoderPowerCase):
 
     def test_stop_cancels_power_up(self):
         self.config('EncPwrDelay', .7)
+        # Preparation settles within the fixture's position tolerance; the
+        # physical starting point need not be exactly zero. Detect displacement
+        # from that point, including any motion before STOP is acknowledged.
+        before = self.rig.plant.physical_position(self.axis)
         self.start(.2)
         self.rig.wait(lambda: self.state() == 2, 'warmup before STOP', 3)
         self.rig.put(self.axis, '-StpCmd', 1)
+        self.rig.wait(lambda: self.healthy()
+                      and self.rig.get(self.axis, '-Busy') == 0
+                      and self.rig.get(self.axis, '-ExeCmd-RB') == 0,
+                      'cancelled request idle with Execute cleared', 3)
         self.rig.assert_stays(lambda: self.healthy()
-                              and abs(self.rig.plant.physical_position(self.axis)) < .002,
+                              and self.rig.get(self.axis, '-Busy') == 0
+                              and self.rig.get(self.axis, '-ExeCmd-RB') == 0
+                              and abs(self.rig.plant.physical_position(self.axis) - before) < .002,
                               'STOP cancels pending move rather than replaying after readiness', 1)
-        self.rig.wait(lambda: self.rig.get(self.axis, '-Busy') == 0, 'cancelled request idle', 3)
 
     def disturbance(self, bias, deadband):
         if self.loop != 'closed': self.skipTest('disturbance requires primary EL5042 feedback')

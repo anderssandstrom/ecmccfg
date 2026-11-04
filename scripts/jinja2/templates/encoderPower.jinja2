@@ -39,7 +39,7 @@ ecmcConfigOrDie "Cfg.SetAxisEncPwrOffDelay(${ECMC_AXIS_NO},{{ encoder.power.idle
 # Native validation requires positive, enabled atTarget monitoring.
 ecmcConfigOrDie "Cfg.SetAxisEncPwrEnable(${ECMC_AXIS_NO},1)"
             {%- if encoder.power.backup is defined %}
-# Backup must already exist and be an always-powered incremental encoder.
+# Final axis validation checks the always-powered incremental backup; it may be configured later.
 ecmcConfigOrDie "Cfg.SetAxisEncPwrBackup(${ECMC_AXIS_NO},{{ encoder.power.backup.encoder }},{{ encoder.power.backup.maxPositionDifference }})"
             {%- endif %}
         {%- endif %}

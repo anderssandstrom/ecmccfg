@@ -42,5 +42,6 @@ ecmcConfigOrDie "Cfg.SetAxisHomeSwitchEnable(6,0)"
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd "FILE=./cfg/axis_main.plc,INC=./cfg,PLC_MACROS='AX_CEN=12,AX_GAP=13,AX_LO=5,AX_HI=6'"
 ${SCRIPTEXEC} ${ecmccfg_DIR}addMasterSlaveSM.cmd "NAME=Slit_SM,MST_GRP_NAME=virtualAxes,SLV_GRP_NAME=realAxes"
 
-# Startup config only: no motion commands, counter images or fake ready flags.
-# The normal ecmccfg finalize/iocInit path starts the configured real master.
+# The launcher initializes the IOC after loading this file; the registered
+# atInit hook finalizes ECMC and starts the real EtherCAT master.
+# No motion commands, counter images or fake ready flags are issued.

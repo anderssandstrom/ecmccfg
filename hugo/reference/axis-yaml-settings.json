@@ -1675,11 +1675,11 @@
             "encoder.power.backup.encoder"
           ],
           "requirement": "optional; see encoder power configuration",
-          "description": "Already-configured always-powered incremental backup index, 1\u20268. See [encoder power control]({{< relref \"/manual/motion_cfg/encoder_power.md\" >}}).",
+          "description": "Always-powered incremental backup index (checked at final startup validation), 1\u20268. See [encoder power control]({{< relref \"/manual/motion_cfg/encoder_power.md\" >}}).",
           "entries": [
             {
               "key": "encoder.power.backup.encoder",
-              "summary": "Already-configured always-powered incremental backup index, 1\u20268."
+              "summary": "Always-powered incremental backup index (checked at final startup validation), 1\u20268."
             }
           ]
         },

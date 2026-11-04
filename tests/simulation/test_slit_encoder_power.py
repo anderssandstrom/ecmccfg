@@ -237,3 +237,47 @@ for power_off_time, accepted in ((1.0, True), (.4, False)):
             assert any('post-settling dwell' in name and when < 1.0
                        for name, when in observations)
 print('Motor power dwell: native timing precedes delayed DMOV/MOVN; premature encoder power-off remains a failure.')
+
+
+# STOP checks displacement, not proximity to an ideal zero. Exercise the real
+# live-case method with the observed initial offset and with replay faults.
+for initial, replay, accepted in ((-.00274, None, True), (.003, None, True),
+                                  (-.00274, 'position', False),
+                                  (-.00274, '-Busy', False),
+                                  (-.00274, '-ExeCmd-RB', False)):
+    clock = Clock()
+    clock.now = 0.
+    class StopRig:
+        def __init__(self):
+            self.stopped = False
+            self.plant = SimpleNamespace(physical_position=self.position)
+        def position(self, axis):
+            return initial + (.02 if replay == 'position' and clock.now >= .8 else 0)
+        def get(self, axis, suffix):
+            assert suffix in ('-Busy', '-ExeCmd-RB')
+            return int(not self.stopped or (replay == suffix and clock.now >= .8))
+        def put(self, axis, suffix, value):
+            assert (suffix, value) == ('-StpCmd', 1)
+            self.stopped = True
+        def check_native_error(self, axis): pass
+        def snapshot(self): return {'time': clock.now, 'position': self.position('TR_HI')}
+        def wait(self, predicate, description, timeout=15):
+            end = clock.now + timeout
+            while clock.now < end:
+                if predicate(): return
+                clock.advance(.025)
+            raise AssertionError('timeout: ' + description)
+        assert_stays = Rig.assert_stays
+    case = EncoderPowerTests('test_stop_cancels_power_up')
+    case.rig = StopRig()
+    case.config = lambda key, value: None
+    case.start = lambda target: None
+    case.state = lambda: 2
+    with patch.object(power_cases.time, 'monotonic', clock.monotonic):
+        try:
+            case.test_stop_cancels_power_up()
+        except AssertionError:
+            assert not accepted, (initial, replay)
+        else:
+            assert accepted, (initial, replay)
+print('STOP during encoder warmup: initial position offsets pass; displacement, Busy or Execute replay still fail.')

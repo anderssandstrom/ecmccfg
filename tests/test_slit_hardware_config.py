@@ -10,6 +10,10 @@ SIM = ROOT/'tests/integration/slit/ioc'
 class SlitHardwareConfigTests(unittest.TestCase):
     def test_real_backend_and_confirmed_single_encoder_wiring(self):
         startup = (HW/'startup.cmd').read_text()
+        # The installed iocsh launcher uses grep, including comments, to decide
+        # whether this file already initializes the IOC. A mention in a comment
+        # used to suppress the launcher's automatic call and leave a bare prompt.
+        self.assertNotIn('iocInit', startup)
         self.assertIn('SIM=0', startup)
         self.assertIn('HWSLIT', startup)
         self.assertIn('Cfg.SetIoBackend(0,0)', startup)

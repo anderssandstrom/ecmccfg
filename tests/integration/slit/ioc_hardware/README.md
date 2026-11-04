@@ -7,6 +7,12 @@ cd /path/to/ecmccfg/tests/integration/slit/ioc_hardware
 iocsh startup.cmd
 ```
 
+The `iocsh` launcher calls `iocInit` after loading the startup file. Its registered
+`atInit` hook applies the EtherCAT configuration and starts ECMC runtime. The
+launcher checks for the literal text `iocInit` anywhere in the startup file,
+including comments, and suppresses its automatic call if it finds it. Keep that
+text out of `startup.cmd` unless an explicit initialization command is intended.
+
 Default IOC/PV prefix: **HWSLIT:**. The startup explicitly selects `SIM=0` and
 asserts real backend 0 on EtherCAT master 0. Engineering PVs remain available.
 `HARDWARE_IOC`, `ECMCCFG_HW_VER` and `ECMC_HW_VER` override the IOC name and

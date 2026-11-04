@@ -171,7 +171,7 @@ unchanged. Both reference views are generated from the same audited source.
 - `encoder.power.startupDelay` (optional; see encoder power configuration) — Minimum warm-up delay, seconds. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}). Defaults: `encoder.power.startupDelay`: 0.1.
 - `encoder.power.startupTimeout` (optional; see encoder power configuration) — Maximum wake time, seconds; greater than startupDelay. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}). Defaults: `encoder.power.startupTimeout`: 5.0.
 - `encoder.power.idleDelay` (optional; see encoder power configuration) — Continuous atTarget/tighter-deadband dwell before off, seconds. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}). Defaults: `encoder.power.idleDelay`: 2.0.
-- `encoder.power.backup.encoder` (optional; see encoder power configuration) — Already-configured always-powered incremental backup index, 1…8. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}).
+- `encoder.power.backup.encoder` (optional; see encoder power configuration) — Always-powered incremental backup index (checked at final startup validation), 1…8. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}).
 - `encoder.power.backup.maxPositionDifference` (optional; see encoder power configuration) — Positive permitted wake discrepancy, engineering units. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}).
 
 ## controller

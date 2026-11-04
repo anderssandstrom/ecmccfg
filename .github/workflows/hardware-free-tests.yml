@@ -64,3 +64,4 @@ jobs:
         run: |
           export PATH="/usr/lib/qt5/bin:$PATH"
           python3 tests/run_tests.py --verbose --strict
+          python3 tests/run_simulation_checks.py

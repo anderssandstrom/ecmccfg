@@ -38,3 +38,10 @@ hugo/public
 **/.codex
 **/.codex/
 .iocsh_history
+
+# Versioned external simulation clients (other local tools stay ignored).
+!/tools/
+/tools/*
+!/tools/simulation/
+/test-results/
+__pycache__/

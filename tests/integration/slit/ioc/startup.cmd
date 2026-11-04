@@ -1,5 +1,5 @@
 # Dedicated simulation-only slit acceptance IOC; run from this directory.
-# Based on ../slit_matrix/startup_test_sim.cmd; original configuration is untouched.
+# Based on examples/PSI/lab_setup/master_slave/slit_epics_2026/slit_matrix/startup_test_sim.cmd.
 # Use a separate IOC/PV namespace so the test never shares normal device PVs.
 epicsEnvSet("IOC", "${TEST_IOC=SIMSLIT}")
 require ecmccfg ${ECMCCFG_TEST_VER=sandst_a} "MASTER_ID=0,ENG_MODE=1,EC_RATE=1000,ECMC_VER=${ECMC_TEST_VER=sandst_a},SIM=1"

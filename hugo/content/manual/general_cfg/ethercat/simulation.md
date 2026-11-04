@@ -92,10 +92,10 @@ are generated; aliases and built-in `ZERO`/`ONE` do not create duplicate PVs.
 
 ## External Python models and GUI
 
-The tools are in the **ECMC source repository**, under `tools/simulation/`.
+The tools are in the **ecmccfg repository**, under `tools/simulation/`.
 Install PyEpics in the client environment and use the normal Channel Access
 network settings, including `EPICS_CA_ADDR_LIST` when needed. Start the SIM IOC
-first, then run these commands from the ECMC repository root:
+first, then run these commands from the ecmccfg repository root:
 
 ```sh
 python3 -m pip install pyepics
@@ -192,12 +192,12 @@ tolerance remains unchanged.
 ## Dedicated slit acceptance tests
 
 The separate configuration
-`examples/PSI/lab_setup/master_slave/slit_epics_2026/slit_matrix_sim_test/`
+`tests/integration/slit/ioc/`
 provides a simulation-only slit IOC with its own `SIMSLIT:` namespace. The
-ECMC repository's modular integration runner supplies its coupled plant:
+colocated modular integration runner supplies its coupled plant:
 
 ```sh
-# From the ECMC repository root, with the dedicated IOC already running.
+# From the ecmccfg repository root, with the dedicated IOC already running.
 python3 tests/integration/slit/run.py --prefix SIMSLIT: --run
 ```
 
@@ -205,7 +205,7 @@ The default run includes open and closed loop. Select groups with, for example,
 `--case limits`, `--case homing`, `--case isolation` or `--case target_write`.
 The suite covers motion, limits, faults, encoder feedback/noise, brakes, reduced
 torque, synchronization, native/motor interfaces and homing. See
-`tests/integration/slit/README.md` and `tools/simulation/README.md` in ECMC for
+`tests/integration/slit/README.md` and `tools/simulation/README.md` in ecmccfg for
 setup, selection, reports, model settings and applicability limits.
 
 This backend is separate from the local dummy entries described under

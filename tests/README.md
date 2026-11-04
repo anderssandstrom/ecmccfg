@@ -139,3 +139,17 @@ and duty bounds, generators and output routing; invalid options; per-master/
 slave capabilities; startup order; shared-unit, generator, electrical and
 output-ownership conflicts; cleanup and preservation of unrelated output bits. They capture SDO commands and
 model bit writes; they do not operate a drive.
+
+## Python simulation and slit checks
+
+```sh
+python3 tests/run_simulation_checks.py
+python3 tests/integration/slit/run.py --case encoder_power
+```
+
+The first command runs isolated hardware-free checks from `tests/simulation/`.
+The second prints the live test plan without connecting to EPICS. To run live
+acceptance tests, start `tests/integration/slit/ioc/startup.cmd` from that IOC
+directory and use `--prefix SIMSLIT: --run`. See
+[integration/slit/README.md](integration/slit/README.md) and
+[the Python simulator tools](../tools/simulation/README.md).

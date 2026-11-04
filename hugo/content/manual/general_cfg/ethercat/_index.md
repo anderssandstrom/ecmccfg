@@ -21,6 +21,7 @@ drive feedback; generated SIM PVs support manual injection and a live GUI.
 
 ## Additional configuration
 
+- [Slave firmware and identity]({{< relref "/manual/general_cfg/ethercat/slave_identity.md" >}}) — startup firmware, revision and serial-number PVs.
 - [FSoE and TwinSAFE]({{< relref "/manual/general_cfg/ethercat/fsoe.md" >}}) — safety-telegram forwarding and panels.
 - [ESI parser]({{< relref "/manual/general_cfg/ethercat/esi_parser.md" >}}) — legacy ESI XML conversion utility.
 

@@ -159,6 +159,57 @@ record(stringin, "${ECMC_P}HWType"){
   })
 }
 
+# Startup snapshots. These soft records have no device input or polling.
+record(stringin, "${ECMC_P}HWFw"){
+  field(DESC, "Slave firmware (SDO 0x100A)")
+  field(VAL, "Unknown")
+  info(Q:group, {
+    "${ECMC_G}": {
+      "hwFw": {+channel:"VAL"}
+    }
+  })
+}
+
+record(stringin, "${ECMC_P}HWRev"){
+  field(DESC, "Slave SII revision (hex)")
+  field(VAL, "Unknown")
+  info(Q:group, {
+    "${ECMC_G}": {
+      "hwRev": {+channel:"VAL"}
+    }
+  })
+}
+
+record(stringin, "${ECMC_P}HWSer"){
+  field(DESC, "Slave SII serial (unsigned)")
+  field(VAL, "Unknown")
+  info(Q:group, {
+    "${ECMC_G}": {
+      "hwSer": {+channel:"VAL"}
+    }
+  })
+}
+
+record(stringin, "${ECMC_P}HWFwStat"){
+  field(DESC, "Firmware startup read status")
+  field(VAL, "$(IDENTITY_STATUS=Not read)")
+  info(Q:group, {
+    "${ECMC_G}": {
+      "hwFwStat": {+channel:"VAL"}
+    }
+  })
+}
+
+record(stringin, "${ECMC_P}HWIdStat"){
+  field(DESC, "Revision/serial startup read status")
+  field(VAL, "$(IDENTITY_STATUS=Not read)")
+  info(Q:group, {
+    "${ECMC_G}": {
+      "hwIdStat": {+channel:"VAL"}
+    }
+  })
+}
+
 # This record is used to make an "pointer" to next slave
 # 1. First the record is registerd in this database
 # 2. This database is loaded at exe of addSlave.cmd

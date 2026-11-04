@@ -12,3 +12,5 @@ python3 tests/integration/slit/run.py
 
 With the dedicated IOC already running, add `--prefix SIMSLIT: --run`.
 `tests/run_tests.py` and `tests/run_simulation_checks.py` never run live cases.
+
+For manual real-hardware commissioning, see [the hardware slit IOC](slit/ioc_hardware/README.md).

@@ -99,6 +99,9 @@ class Startup:
                                          else format(float(result), '.15g'))
                 continue
             words = shlex.split(line)
+            if line.startswith('ecmcReadEcSlaveIdentity('):
+                self.commands.append(line)
+                continue
             if words[0] == 'ecmcConfigOrDie':
                 self.commands.append(words[1])
                 continue
@@ -115,7 +118,11 @@ class Startup:
                     macros = dict(item.split('=', 1) for item in arguments(child.get('MACROS', '')))
                     self.substitutions.append((child['SUBST_FILE'], macros))
                 elif filename == 'applyTemplate.cmd':
-                    macros = dict(item.split('=', 1) for item in arguments(child.get('PARAM', '')))
+                    lexer = shlex.shlex(child.get('PARAM', ''), posix=True)
+                    lexer.whitespace = ','
+                    lexer.whitespace_split = True
+                    lexer.commenters = ''
+                    macros = dict(item.strip().split('=', 1) for item in lexer)
                     self.templates.append((child['TEMPLATE_FILE'], macros))
                 else:
                     target = HW / filename

@@ -87,6 +87,9 @@ in `environment.yml`; transitive dependencies are resolved by Conda.
 - Sequential slave loading: 98 combinations check that previous CSTCA/CSV
   configurations do not leak options into the next slave's defaults.
 - Startup-validator regression cases.
+- Slave identity startup gating and static firmware/revision/serial records,
+  including older ECMC builds, simulation and disabled reads. The native
+  reader's payload and IOC-shell tests live in ECMC `tests/test_ec_slave_identity.py`.
 - ECB versus Python/Jinja command generation for physical CSV, PSI CSP,
   virtual axes, macros, monitoring, optional defaults, homing, axis PLC files and settings
   and additional encoder configuration. Both must reject missing required

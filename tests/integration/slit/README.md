@@ -781,3 +781,10 @@ severities must stay clear. Clearing diagnostics permits normal motion. A
 closed-loop case retains the error through wake-up and requires hardware-alarm
 fault `0x14410`, with the queued target rejected and no physical motion. No IOC
 configuration changes are needed: the existing EL5042 warning/alarm links are used.
+
+## Real hardware commissioning IOC
+
+A separate [hardware configuration](ioc_hardware/README.md) is available in
+`ioc_hardware/`. It uses real EtherCAT, prefix `HWSLIT:`, one BiSS encoder on
+TR_HI and an EL2794 relay at slave 25/channel 1. TR_LO is pure open loop. This
+configuration is operated manually; the simulation runner remains SIM-only.

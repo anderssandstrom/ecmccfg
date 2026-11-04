@@ -44,6 +44,11 @@ ecmcConfigOrDie "Cfg.SetAxisEncPwrBackup(${ECMC_AXIS_NO},{{ encoder.power.backup
             {%- endif %}
         {%- endif %}
     {%- else %}
+        {%- if encoder.power.output is defined and encoder.power.output != "" %}
+# Configure the relay link without activating automatic power control.
+ecmcConfigOrDie "Cfg.SelectAxisEncConfig(${ECMC_AXIS_NO},${ECMC_ENC_CFG_ID})"
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject("{{ encoder.power.output }}","ax${ECMC_AXIS_NO}.enc.power")"
+        {%- endif %}
 ecmcConfigOrDie "Cfg.SetAxisEncPwrEnable(${ECMC_AXIS_NO},0)"
     {%- endif %}
 {%- endif %}

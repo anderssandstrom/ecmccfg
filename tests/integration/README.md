@@ -14,3 +14,7 @@ With the dedicated IOC already running, add `--prefix SIMSLIT: --run`.
 `tests/run_tests.py` and `tests/run_simulation_checks.py` never run live cases.
 
 For manual real-hardware commissioning, see [the hardware slit IOC](slit/ioc_hardware/README.md).
+
+The separate [real-hardware slit suite](slit_hardware/README.md) supports bounded
+normal moves and status checks against that hardware IOC. It is plan-only unless
+`--run` is supplied and is never executed by the offline regression runners.

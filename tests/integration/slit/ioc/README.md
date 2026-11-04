@@ -45,7 +45,7 @@ python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case brake
 
 Restart the test IOC after this configuration update. Simulated EL2008 slave 5
 output 01 controls the LO brake and output 02 controls the HI brake. Output 0
-means applied, 1 released. Both axes enable the production brake state machine;
+means applied, 1 released. Both axis YAML files configure `drive.brake` and enable the production brake state machine;
 opening delay is 250 cycles and close-ahead delay is 200 cycles at 1000 Hz.
 The runner observes these native output PVs; it never writes brake values to
 manufacture a pass. CA checks functional sequence windows, while the existing
@@ -64,10 +64,10 @@ ecmccfg to load `ecmcMotorRecordhome.template` and the `-HomProc.OMSL`,
 `-HomPos`, speed and acceleration records. Setting Cfg homing defaults alone
 does not create those PVs.
 
-The updated startup links drive-status bit 13 to each physical home sensor,
-configures encoder homing defaults (procedure 1, 0.2/0.1 mm/s, acceleration and
-deceleration 1), turn count 1, no post-home move, and a 12-second sequence
-watchdog. `test-marker.db` supplies `SIM:SlitTest:HomingSchema=2`. Restart this
+The physical-axis YAML files link drive-status bit 13 through `input.home`.
+Their `encoder.homing` settings and the additional BiSS encoder YAML set
+procedure 1, 0.2/0.1 mm/s, acceleration/deceleration 1, latch count 1, no
+post-home move, and a 12-second sequence watchdog. `test-marker.db` supplies `SIM:SlitTest:HomingSchema=2`. Restart this
 IOC from the updated directory before running the new module; no ECMC binary
 change is required for these test additions.
 
@@ -87,7 +87,9 @@ raw counters. See ecmccfg `tests/integration/slit/README.md` for details and lim
 ## Encoder relay power tests (schema 3)
 
 Schema 3 links spare EL2008 output 03 to LO encoder 2 power and output 04 to HI
-encoder 2 power. Encoder power control stays disabled at startup. Install the
+encoder 2 power. `cfg/biss-c.yaml` declares the relay through
+`encoder.power.output`, with `enable: false`; `ENC_PWR_CH` selects channel 03
+or 04 when that YAML is loaded. Encoder power control stays disabled at startup. Install the
 ECMC encoder-power implementation and the ecmccfg `Enc02-PwrState` readback,
 then restart this dedicated IOC with the updated configuration.
 

@@ -34,6 +34,13 @@ drive:
   reduceTorque: 2                                     # Reduce torque bit in drive control word
   reduceTorqueEnable: True                            # Enable reduce torque functionality
 
+  # RT cycles at 1000 Hz: 250 ms release, 200 ms close-ahead.
+  brake:
+    enable: true
+    output: ec0.s5.binaryOutput02
+    openDelay: 250
+    closeAhead: 200
+
 encoder:
   desc: Openloop
   numerator: 1          # 1egu = 1mm
@@ -55,6 +62,7 @@ encoder:
     deceleration: 1
     latchCount: 1
     postMoveEnable: false
+    timeout: 12
 
 controller:
   Kp: 2.000
@@ -72,15 +80,16 @@ input:
   limit:
     forward: ec${M_ID=0}.s$(DRV_SLAVE).driveStatus01.12   # 1111969 cnts // 55.5984 mm
     backward: ec${M_ID=0}.s$(DRV_SLAVE).driveStatus01.11  #  109007 cnts //  5.4504 mm
-  home: ec${M_ID=0}.s-1.ONE.0                   # unused
+  home: ec${M_ID=0}.s$(DRV_SLAVE).driveStatus01.13
+  homePolarity: 0
   interlock: ec${M_ID=0}.s-1.ONE.0                   # unused
 
 softlimits:
   enable: true
   backwardEnable: true
   forwardEnable: true
-  forward: 1
-  backward: -1
+  forward: 1.0
+  backward: -1.0
 
 monitoring:
   lag:

@@ -1606,11 +1606,11 @@
             "encoder.power.output"
           ],
           "requirement": "optional; see encoder power configuration",
-          "description": "Writable EtherCAT bit path; required when enabled. See [encoder power control]({{< relref \"/manual/motion_cfg/encoder_power.md\" >}}).",
+          "description": "Writable EtherCAT bit path; required when enabled. A supplied output is also linked when enable is false. See [encoder power control]({{< relref \"/manual/motion_cfg/encoder_power.md\" >}}).",
           "entries": [
             {
               "key": "encoder.power.output",
-              "summary": "Writable EtherCAT bit path; required when enabled."
+              "summary": "Writable EtherCAT bit path; required when enabled. A supplied output is also linked when enable is false."
             }
           ]
         },
@@ -2338,8 +2338,8 @@
           "keys": [
             "input.home"
           ],
-          "requirement": "schema optional; required by current hardware-link template",
-          "description": "Home switch entry. The hardware-link template reads it unconditionally; supply ONE.0 if unused to avoid ECB render failure or empty Python link arguments.",
+          "requirement": "optional",
+          "description": "Home switch entry. Omit when unused; no sensor link is generated and the panel link is N/A.",
           "entries": [
             {
               "key": "input.home",

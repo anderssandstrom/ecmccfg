@@ -166,7 +166,7 @@ unchanged. Both reference views are generated from the same audited source.
 - `encoder.unit` (optional) — Encoder engineering unit.
 - `encoder.homing.timeout` (optional) — Homing sequence timeout in seconds.
 - `encoder.power.enable` (optional; see encoder power configuration) — Enable automatic encoder relay power control. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}). Defaults: `encoder.power.enable`: false.
-- `encoder.power.output` (optional; see encoder power configuration) — Writable EtherCAT bit path; required when enabled. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}).
+- `encoder.power.output` (optional; see encoder power configuration) — Writable EtherCAT bit path; required when enabled. A supplied output is also linked when enable is false. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}).
 - `encoder.power.activeHigh` (optional; see encoder power configuration) — Logical ON writes 1 when true, 0 when false. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}). Defaults: `encoder.power.activeHigh`: true.
 - `encoder.power.startupDelay` (optional; see encoder power configuration) — Minimum warm-up delay, seconds. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}). Defaults: `encoder.power.startupDelay`: 0.1.
 - `encoder.power.startupTimeout` (optional; see encoder power configuration) — Maximum wake time, seconds; greater than startupDelay. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}). Defaults: `encoder.power.startupTimeout`: 5.0.
@@ -231,7 +231,7 @@ unchanged. Both reference views are generated from the same audited source.
 - `input.limit.forwardPolarity` (optional) — Forward limit polarity.
 - `input.limit.backward` (required) — Backward limit switch entry.
 - `input.limit.backwardPolarity` (optional) — Backward limit polarity.
-- `input.home` (schema optional; required by current hardware-link template) — Home switch entry. The hardware-link template reads it unconditionally; supply ONE.0 if unused to avoid ECB render failure or empty Python link arguments.
+- `input.home` (optional) — Home switch entry. Omit when unused; no sensor link is generated and the panel link is N/A.
 - `input.homePolarity` (optional) — Home switch polarity; used only when input.home is linked to hardware.
 - `input.interlock` (optional) — Interlock input entry.
 - `input.interlockPolarity` (optional) — Interlock polarity.

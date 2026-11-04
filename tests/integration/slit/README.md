@@ -787,4 +787,5 @@ configuration changes are needed: the existing EL5042 warning/alarm links are us
 A separate [hardware configuration](ioc_hardware/README.md) is available in
 `ioc_hardware/`. It uses real EtherCAT, prefix `HWSLIT:`, one BiSS encoder on
 TR_HI and an EL2794 relay at slave 25/channel 1. TR_LO is pure open loop. This
-configuration is operated manually; the simulation runner remains SIM-only.
+configuration can be operated manually or with the separate
+[hardware suite](../slit_hardware/README.md); the simulation runner remains SIM-only.

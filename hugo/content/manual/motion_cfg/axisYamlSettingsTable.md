@@ -148,7 +148,7 @@ Notes:
 | `encoder.unit` | Encoder engineering unit. | optional | — |
 | `encoder.homing.timeout` | Homing sequence timeout in seconds. | optional | — |
 | `encoder.power.enable` | Enable automatic encoder relay power control. | optional; see encoder power configuration | false |
-| `encoder.power.output` | Writable EtherCAT bit path; required when enabled. | optional; see encoder power configuration | — |
+| `encoder.power.output` | Writable EtherCAT bit path; required when enabled. A supplied output is also linked when enable is false. | optional; see encoder power configuration | — |
 | `encoder.power.activeHigh` | Logical ON writes 1 when true, 0 when false. | optional; see encoder power configuration | true |
 | `encoder.power.startupDelay` | Minimum warm-up delay, seconds. | optional; see encoder power configuration | 0.1 |
 | `encoder.power.startupTimeout` | Maximum wake time, seconds; greater than startupDelay. | optional; see encoder power configuration | 5.0 |
@@ -203,7 +203,7 @@ Notes:
 | `input.limit.forwardPolarity` | Polarity of forward limit switch | optional | — |
 | `input.limit.backward` | EtherCAT entry for high limit switch input | required | — |
 | `input.limit.backwardPolarity` | Polarity of backward limit switch | optional | — |
-| `input.home` | Home switch entry. The hardware-link template reads it unconditionally; supply ONE.0 if unused to avoid ECB render failure or empty Python link arguments. | schema optional; required by current hardware-link template | — |
+| `input.home` | Home switch entry. Omit when unused; no sensor link is generated and the panel link is N/A. | optional | — |
 | `input.homePolarity` | Home switch polarity; used only when input.home is linked to hardware. | optional | — |
 | `input.interlock` | EtherCAT entry for interlock switch input | optional | — |
 | `input.interlockPolarity` | Polarity of interlock switch | optional | — |

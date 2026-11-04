@@ -26,21 +26,10 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Motor-Generic-2Phase-Steppe
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd "FILE=./cfg/axis_ax5_LO.yaml,DRV_SLAVE=14,ENC_SLAVE=14,ENC_CHANNEL=01,M_ID=0"
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd "FILE=./cfg/axis_vax5_YCEN.yaml,AX_ID=12,M_ID=0,DRV_SLAVE=14"
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd "FILE=./cfg/axis_vax6_YGAP.yaml,AX_ID=13,M_ID=0,DRV_SLAVE=14"
-# Brake delays are RT cycles at 1000 Hz: release after 250 ms, close 200 ms
-# before amplifier disable. EL2008 brake assignments retain the slit fixture wiring.
-ecmcConfigOrDie "Cfg.LinkEcEntryToObject(ec0.s5.binaryOutput01,ax5.drv.brake)"
-ecmcConfigOrDie "Cfg.SetAxisDrvBrakeOpenDelayTime(5,250)"
-ecmcConfigOrDie "Cfg.SetAxisDrvBrakeCloseAheadTime(5,200)"
-ecmcConfigOrDie "Cfg.SetAxisDrvBrakeEnable(5,1)"
-ecmcConfigOrDie "Cfg.LinkEcEntryToObject(ec0.s5.binaryOutput02,ax6.drv.brake)"
-ecmcConfigOrDie "Cfg.SetAxisDrvBrakeOpenDelayTime(6,250)"
-ecmcConfigOrDie "Cfg.SetAxisDrvBrakeCloseAheadTime(6,200)"
-ecmcConfigOrDie "Cfg.SetAxisDrvBrakeEnable(6,1)"
-# No synthetic home-cam bits: configure real home inputs before cam homing.
-ecmcConfigOrDie "Cfg.SetAxisHomeSwitchEnable(5,0)"
-ecmcConfigOrDie "Cfg.SetAxisHomeSwitchEnable(6,0)"
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd "FILE=./cfg/axis_main.plc,INC=./cfg,PLC_MACROS='AX_CEN=12,AX_GAP=13,AX_LO=5,AX_HI=6'"
 ${SCRIPTEXEC} ${ecmccfg_DIR}addMasterSlaveSM.cmd "NAME=Slit_SM,MST_GRP_NAME=virtualAxes,SLV_GRP_NAME=realAxes"
+
+dbLoadRecords("./hardware-test.db", "P=${ECMC_PREFIX}")
 
 # The launcher initializes the IOC after loading this file; the registered
 # atInit hook finalizes ECMC and starts the real EtherCAT master.

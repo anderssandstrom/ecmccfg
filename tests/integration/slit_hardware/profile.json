@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "axes": {
+    "TR_LO": 5,
+    "TR_HI": 6,
+    "CENTERY": 12,
+    "GAPY": 13
+  },
+  "physical": {
+    "TR_LO": [
+      -10.0,
+      10.0
+    ],
+    "TR_HI": [
+      -10.0,
+      10.0
+    ]
+  },
+  "step": 0.05,
+  "velocity": 0.1,
+  "tolerance": 0.015,
+  "timeout": 20,
+  "encoder_power": {
+    "axis": "TR_HI",
+    "encoder": 2,
+    "backup": 1,
+    "timeout": 10
+  }
+}

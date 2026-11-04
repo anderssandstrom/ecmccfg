@@ -89,7 +89,7 @@ in `environment.yml`; transitive dependencies are resolved by Conda.
 - Startup-validator regression cases.
 - Slave identity startup gating and static firmware/revision/serial records,
   including older ECMC builds, simulation and disabled reads. The native
-  reader's payload and IOC-shell tests live in ECMC `tests/test_ec_slave_identity.py`.
+  generic SDO-string reader tests live in ECMC `tests/test_sdo_string.py`.
 - ECB versus Python/Jinja command generation for physical CSV, PSI CSP,
   virtual axes, macros, monitoring, optional defaults, homing, axis PLC files and settings
   and additional encoder configuration. Both must reject missing required

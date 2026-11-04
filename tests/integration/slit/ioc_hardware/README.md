@@ -36,7 +36,9 @@ The virtual slit kinematics, dynamic soft limits and master/slave state machine
 are unchanged. Both physical axes use real drive-status input bits 11/12 for
 backward/forward limits. No dedicated home cam or external interlock is wired
 by this file; the inherited constant inactive interlock is explicit in the YAML.
-Cam homing is disabled and no synthetic status bit 13 is linked.
+The physical YAML files omit `input.home`, leaving home-switch monitoring
+disabled; no synthetic status bit 13 is linked. Brake links and timings are
+declared in `drive.brake` in those same YAML files.
 
 ## Encoder feedback and auto-power
 
@@ -77,7 +79,8 @@ not a measured absolute mechanical reference.
 ## Operation
 
 Operate manually through normal motor/native motion PVs and panels under
-`HWSLIT:`. This directory contains configuration only, with no Python plant,
-simulation profile, simulation marker or fault-injection runner. The existing
-slit acceptance runner intentionally remains SIM-only and must reject this IOC.
+`HWSLIT:`. This directory contains the IOC configuration. A separate
+[hardware acceptance suite](../../slit_hardware/README.md) checks normal moves,
+statuses and encoder power cycling without a simulated plant or fault injection.
+The existing simulation acceptance runner intentionally remains SIM-only and must reject this IOC.
 The hardware configuration does not change the existing `ioc/` simulation setup.

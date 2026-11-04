@@ -197,10 +197,11 @@ if DEFAULT_CONFIG.exists():
         axis_yaml = yaml_path.read_text()
         assert 'reduceTorque: 2' in axis_yaml and 'reduceTorqueEnable: True' in axis_yaml
         brake = profile['physical'][axis]['brake']
-        assert f'ec0.s5.binaryOutput{brake["channel"]},ax{number}.drv.brake' in startup
-        assert f'Cfg.SetAxisDrvBrakeEnable({number},1)' in startup
-        assert f'Cfg.SetAxisDrvBrakeOpenDelayTime({number},250)' in startup
-        assert f'Cfg.SetAxisDrvBrakeCloseAheadTime({number},200)' in startup
+        import yaml
+        assert yaml.safe_load(axis_yaml)['drive']['brake'] == {
+            'enable': True, 'output': f'ec0.s5.binaryOutput{brake["channel"]}',
+            'openDelay': 250, 'closeAhead': 200}
+        assert 'Cfg.SetAxisDrvBrake' not in startup
     lo = (DEFAULT_CONFIG / 'cfg/axis_ax5_LO.yaml').read_text()
     assert 's$(DRV_SLAVE).driveStatus01.12' in lo and 's$(DRV_SLAVE).ONE.1' not in lo
     # Render the actual drive template to establish that the fixture's fault

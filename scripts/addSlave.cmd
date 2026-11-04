@@ -75,20 +75,9 @@ ${DEFAULT_SUBS}${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}applySubstitutions.cmd" "SUBST_
 epicsEnvUnset(DEFAULT_SUBS)
 epicsEnvUnset(ECMC_SUBST_TYPE)
 
-#- Static identity PVs are always loaded with the standard slave records.
-#- New ECMC builds advertise the native string reader; older builds keep an
-#- explicit status instead of attempting an unknown IOC-shell command.
-ecmcEpicsEnvSetCalcTernary(ECMC_TEMP_SLAVE_IDENTITY_STATUS,"${ECMC_EC_SLAVE_IDENTITY_SUPPORTED=0}>0","Not read","Not supported")
-ecmcEpicsEnvSetCalcTernary(ECMC_TEMP_SLAVE_IDENTITY_STATUS,"${READ_IDENTITY=${ECMC_READ_SLAVE_IDENTITY=1}}=0","Disabled","${ECMC_TEMP_SLAVE_IDENTITY_STATUS}")
-ecmcEpicsEnvSetCalcTernary(ECMC_TEMP_SLAVE_IDENTITY_STATUS,"${ECMC_DEV_MODE=0}>0","Development mode","${ECMC_TEMP_SLAVE_IDENTITY_STATUS}")
-ecmcEpicsEnvSetCalcTernary(ECMC_TEMP_SLAVE_IDENTITY_STATUS,"${ECMC_SIM=0}>0","Simulation","${ECMC_TEMP_SLAVE_IDENTITY_STATUS}")
-ecmcEpicsEnvSetCalcTernary(ECMC_TEMP_SLAVE_IDENTITY_CMD,"${ECMC_EC_SLAVE_IDENTITY_SUPPORTED=0}>0 and ${READ_IDENTITY=${ECMC_READ_SLAVE_IDENTITY=1}}>0 and ${ECMC_SIM=0}=0 and ${ECMC_DEV_MODE=0}=0","","#- ")
-
+#- Read startup metadata and load the standard slave records.
 ecmcEpicsEnvSetCalcTernary(DEFAULT_SLAVE_PVS, "${DEFAULT_SLAVE_PVS=True}", "","#- ")
-${DEFAULT_SLAVE_PVS}${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}applyTemplate.cmd" "TEMPLATE_FILE=ecmcEcSlave.template,ECMC_P=${ECMC_P},ECMC_G=${ECMC_G=},PARAM='IDENTITY_STATUS=${ECMC_TEMP_SLAVE_IDENTITY_STATUS}'"
-${DEFAULT_SLAVE_PVS}${ECMC_TEMP_SLAVE_IDENTITY_CMD}ecmcReadEcSlaveIdentity(${ECMC_EC_SLAVE_NUM},"${ECMC_P}")
-epicsEnvUnset(ECMC_TEMP_SLAVE_IDENTITY_STATUS)
-epicsEnvUnset(ECMC_TEMP_SLAVE_IDENTITY_CMD)
+${DEFAULT_SLAVE_PVS}${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}slaveIdentity.cmd" "READ_IDENTITY=${READ_IDENTITY=${ECMC_READ_SLAVE_IDENTITY=1}}"
 ${DEFAULT_SLAVE_PVS}${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}applySubstitutions.cmd" "SUBST_FILE=ecmcEcTiming.substitutions,ECMC_P=${ECMC_P}"
 #- Expose existing discovery metadata under the simulation prefix.
 ecmcEpicsEnvSetCalcTernary(ECMC_SIM_META_CMD, "${ECMC_SIM=0}=1", "", "#-")

@@ -368,8 +368,11 @@ encoder:
 | `backup.maxPositionDifference` | Positive permitted source/backup discrepancy on wake, engineering units | none |
 
 Omitting `power` generates no power commands. An empty group or `enable: false`
-selects ordinary operation. Omitting `backup` retains the power-control behavior
-without automatic feedback handover. Use YAML booleans `true`/`false`, and finite,
+selects ordinary operation. With `enable: false`, a supplied `output` still links
+the relay to that encoder, without enabling automatic power control. Timing,
+polarity and backup settings are applied only when enabling the mode. This lets
+a test fixture declare its wiring in YAML and opt into power control at runtime.
+Omitting `backup` retains power control without automatic feedback handover. Use YAML booleans `true`/`false`, and finite,
 nonnegative delays. The existing `encoder.ready` input remains optional. Existing
 `monitoring.target` and controller deadband settings supply the settling criteria;
 the new group does not silently enable or change these monitors.

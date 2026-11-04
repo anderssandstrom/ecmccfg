@@ -17,3 +17,21 @@ encoder:
 #  delayComp:                                          # Delay compensation for time between application of setpoint to reading of encoder (normally atleast 2 cycles)
 #    time: 0                                           # Delay time between set and act [cycles]
 #    enable: true                                        # enable (defaults to 1 if not set)
+
+  # Same home procedure as counter encoder 1; supplied by the simulation cam.
+  homing:
+    type: 1
+    position: 0
+    velocity:
+      to: 0.2
+      from: 0.1
+    acceleration: 1
+    deceleration: 1
+    latchCount: 1
+    postMoveEnable: false
+    timeout: 12
+
+  # Link the relay now; each test explicitly opts into auto-power at runtime.
+  power:
+    enable: false
+    output: ec0.s5.binaryOutput${ENC_PWR_CH}

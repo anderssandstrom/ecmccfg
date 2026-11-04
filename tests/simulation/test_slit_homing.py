@@ -162,11 +162,15 @@ if DEFAULT_CONFIG.exists():
         assert data['encoder']['homing']['velocity'] == {'to': .2, 'from': .1}
         del data['encoder']['homing']
         assert 'dbLoadRecords(ecmcMotorRecordhome.template' not in home_records.render(**data)
-    for axis, slave in ((5,14),(6,12)):
-        assert f'ec0.s{slave}.driveStatus01.13,ax{axis}.mon.homesensor' in startup
-        assert f'Cfg.SetAxisHomeSwitchEnable({axis},1)' in startup
-        assert f'Cfg.SetAxisEncHomeLatchCountOffset({axis},1)' in startup
-        for enc in (1,2): assert f'Cfg.SelectAxisEncConfig({axis},{enc})' in startup
+    for axis, label in ((5,'LO'),(6,'HI')):
+        document = yaml.safe_load((DEFAULT_CONFIG/f'cfg/axis_ax{axis}_{label}.yaml').read_text())
+        assert document['input']['home'] == 'ec${M_ID=0}.s$(DRV_SLAVE).driveStatus01.13'
+        assert document['input']['homePolarity'] == 0
+        for encoder_file in (f'axis_ax{axis}_{label}.yaml', 'biss-c.yaml'):
+            home = yaml.safe_load((DEFAULT_CONFIG/'cfg'/encoder_file).read_text())['encoder']['homing']
+            assert home['type'] == 1 and home['timeout'] == 12 and home['latchCount'] == 1
+    assert 'Cfg.SetAxisHome' not in startup
+    assert 'ax5.mon.homesensor' not in startup and 'ax6.mon.homesensor' not in startup
 print('Slit homing: sensor geometry, physical bounds, motor/native matrix and strict delayed completion flags passed.')
 
 # Execute the real reference cleanup with deliberately inconsistent references.

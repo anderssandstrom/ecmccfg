@@ -5,8 +5,8 @@ chapter = false
 +++
 
 `addSlave.cmd` loads static identity records next to the existing `HWType` PV.
-With a matching ECMC build, it reads them once during configuration, after the
-hardware script and record loading, before runtime and `iocInit`.
+`slaveIdentity.cmd` reads the values once after the hardware script, before
+runtime and `iocInit`, and passes them as initial values when loading the records.
 
 | Slave PV suffix | Value |
 | --- | --- |
@@ -37,6 +37,11 @@ The EPICS string field holds 39 characters; a longer firmware string is shortene
 and marked `Truncated`. Identity read failures leave revision and serial
 `Unknown`. These optional reads do not abort startup.
 
+Firmware containing quotes, backslashes, dollar signs, commas or semicolons
+is marked `Unsupported database text` and displayed as `Unknown`, so device
+text cannot become IOC-shell syntax or database macros. The generic reader
+also exposes the raw text in an environment variable for direct inspection.
+
 A successful serial read can return `0`. This is the device's reported value,
 not a guarantee of a unique manufacturing serial. Some Beckhoff devices encode
 production information in this field; see the
@@ -45,8 +50,9 @@ production information in this field; see the
 
 ## Enable or disable reads
 
-Reads are enabled by default for real hardware when the native helper is
-available. Disable them for one slave with:
+Reads are enabled by default for real hardware. Revision and serial use the
+existing `EcGetSlaveRevisionNum` and `EcGetSlaveSerialNum` commands; firmware
+additionally requires the generic string helper. Disable reads for one slave with:
 
 ```bash
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "HW_DESC=EL2794,READ_IDENTITY=0"
@@ -67,15 +73,30 @@ suppresses these records and their reads along with the other standard slave PVs
 ## ECMC support
 
 Firmware string capture requires an ECMC build registering
-`ecmcReadEcSlaveIdentity(slavePosition, pvPrefix)`. Such builds export
-`ECMC_EC_SLAVE_IDENTITY_SUPPORTED=1`; rebuild and install ECMC as well as
-ecmccfg to enable capture. The helper uses EPICS's static database API before
-`iocInit` and refuses calls after database initialization or outside ECMC
-configuration mode.
+`ecmcEpicsEnvSetSdoString`. Such builds export `ECMC_SDO_STRING_SUPPORTED=1`;
+rebuild and install ECMC as well as ecmccfg to enable firmware capture. The
+helper reads an arbitrary VISIBLE_STRING SDO in configuration mode and sets
+environment variables. All slave-specific policy, numeric identity reads and
+database loading are in ecmccfg. No native code writes these PVs.
 
-On older ECMC builds, the new PVs still exist with `Unknown` values and
-`Not supported` statuses. The startup script does not attempt the missing helper.
-Do not set the capability environment variable manually.
+For example, read firmware into `MY_FW`, limited to the 39 characters of an
+EPICS string field:
+
+```bash
+ecmcEpicsEnvSetSdoString(MY_FW,13,0x100a,0,39)
+epicsEnvShow("MY_FW")
+epicsEnvShow("MY_FW_STATUS")
+```
+
+Arguments are environment-variable name, slave position, index, subindex and
+optional character limit (0 or omitted means 255). Each call resets the result
+and sets `<name>_STATUS`. `<name>_DB_VALUE` contains text safe for the startup
+macro path, or `Unknown` if the read failed or the text contains unsupported
+characters. The raw `<name>` value remains available after a successful read.
+
+On older ECMC builds, revision and serial still use their existing commands.
+Only firmware remains `Unknown` with status `Not supported`; the startup script
+does not attempt the missing helper. Do not set the capability variable manually.
 
 The legacy `slaveVerify.cmd` option `READ_FW=1` remains a two-byte numeric read
 into `ECMC_EC_SLAVE_FW`; it does not populate these PVs and is not the generic

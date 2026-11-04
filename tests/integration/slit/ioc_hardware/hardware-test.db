@@ -1,0 +1,6 @@
+# Identifies this real-hardware slit fixture for the hardware acceptance runner.
+record(longin,"$(P)HardwareSlitTest:Schema") {
+  field(DESC,"Hardware slit test fixture schema")
+  field(INP,"1")
+  field(VAL,"1")
+}

@@ -659,10 +659,10 @@ The `limit` block and its `forward` and `backward` entries are required.
 entry of a slave.
 See the example for details.
 
-Although the schemas make `home` optional, the current `axisHWLinks.jinja2`
-template reads it unconditionally for panel-link records. ECB fails to render
-if it is omitted, and Python produces empty hardware-link arguments. Supply
-`home`, using `ONE.0` if there is no home sensor, until that template is corrected.
+Omit `home` when no home sensor is connected. No home-input link is generated,
+and the encoder monitor retains its default disabled home-switch state. The
+panel hardware-link record is still created with `N/A` and slave ID `-1`.
+Python/Jinja and ECB both support this omission.
 
 mandatory
 

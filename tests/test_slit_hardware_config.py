@@ -14,6 +14,10 @@ class SlitHardwareConfigTests(unittest.TestCase):
         # whether this file already initializes the IOC. A mention in a comment
         # used to suppress the launcher's automatic call and leave a bare prompt.
         self.assertNotIn('iocInit', startup)
+        self.assertIn('dbLoadRecords("./hardware-test.db", "P=${ECMC_PREFIX}")', startup)
+        marker = (HW/'hardware-test.db').read_text()
+        self.assertIn('HardwareSlitTest:Schema', marker)
+        self.assertIn('field(VAL,"1")', marker)
         self.assertIn('SIM=0', startup)
         self.assertIn('HWSLIT', startup)
         self.assertIn('Cfg.SetIoBackend(0,0)', startup)
@@ -27,8 +31,8 @@ class SlitHardwareConfigTests(unittest.TestCase):
             self.assertNotIn(token, startup)
         self.assertFalse((HW/'profile.json').exists())
         self.assertFalse((HW/'test-marker.db').exists())
-        for number in (5,6):
-            self.assertIn(f'Cfg.SetAxisHomeSwitchEnable({number},0)', startup)
+        self.assertNotIn('Cfg.SetAxisHomeSwitchEnable', startup)
+        self.assertNotIn('Cfg.SetAxisDrvBrake', startup)
         for name in ('axis_main.plc','axis_kin_slit.plc_inc'):
             self.assertEqual((HW/'cfg'/name).read_bytes(), (SIM/'cfg'/name).read_bytes())
 
@@ -52,6 +56,11 @@ class SlitHardwareConfigTests(unittest.TestCase):
                 self.assertEqual(document['encoder']['type'], 0)
                 self.assertNotIn('power',document['encoder'])
                 self.assertNotIn('homing',document['encoder'])
+                self.assertNotIn('home', document['input'])
+                brake = document['drive']['brake']
+                self.assertTrue(brake['enable'])
+                self.assertEqual(brake['openDelay'], 250)
+                self.assertEqual(brake['closeAhead'], 200)
                 self.assertTrue(document['monitoring']['target']['enable'])
                 self.assertGreater(document['monitoring']['target']['tolerance'], 0)
                 for suffix, bit in (('forward',12),('backward',11)):

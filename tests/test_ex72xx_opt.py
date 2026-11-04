@@ -99,9 +99,6 @@ class Startup:
                                          else format(float(result), '.15g'))
                 continue
             words = shlex.split(line)
-            if line.startswith('ecmcReadEcSlaveIdentity('):
-                self.commands.append(line)
-                continue
             if words[0] == 'ecmcConfigOrDie':
                 self.commands.append(words[1])
                 continue

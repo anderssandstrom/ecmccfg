@@ -156,6 +156,61 @@ class YamlParityTests(unittest.TestCase):
                                      'PwrOffDelay(${ECMC_AXIS_NO},2)', 'PwrPol(${ECMC_AXIS_NO},1)'):
                         self.assertTrue(any(expected in line for line in power), expected)
 
+    def test_encoder_power_disabled_can_link_output_without_enabling(self):
+        for standalone in (False, True):
+            document = self.power_document()
+            document['encoder']['power'] = dict(enable=False, output='ec0.s2.BO05.0')
+            if standalone: document = dict(encoder=document['encoder'])
+            with self.subTest(standalone=standalone), tempfile.TemporaryDirectory() as tmp:
+                source = Path(tmp)/'disabled-power.yaml'
+                source.write_text(self.yaml.safe_dump(document))
+                generated = self.compare(source, 'encoder' if standalone else 'axis')
+                linked = next(i for i, line in enumerate(generated) if 'ax${ECMC_AXIS_NO}.enc.power' in line)
+                disabled = next(i for i, line in enumerate(generated) if 'Cfg.SetAxisEncPwrEnable(' in line)
+                self.assertIn('ec0.s2.BO05.0', generated[linked])
+                self.assertLess(linked, disabled)
+                self.assertIn('Cfg.SelectAxisEncConfig(${ECMC_AXIS_NO},${ECMC_ENC_CFG_ID})',
+                              '\n'.join(generated))
+                self.assertEqual([line for line in generated if 'Cfg.SetAxisEncPwr' in line],
+                                 ['ecmcConfigOrDie "Cfg.SetAxisEncPwrEnable(${ECMC_AXIS_NO},0)"'])
+
+    def test_slit_ioc_yaml_settings_replace_startup_overrides(self):
+        slit = ROOT/'tests/integration/slit'
+        for fixture in ('ioc', 'ioc_hardware'):
+            directory = slit/fixture
+            startup = (directory/'startup.cmd').read_text()
+            self.assertNotIn('Cfg.SetAxisDrvBrake', startup)
+            self.assertNotIn('Cfg.SetAxisHome', startup)
+            self.assertNotIn('.enc.power)', startup)
+            for source in sorted((directory/'cfg').glob('*.yaml')):
+                with self.subTest(fixture=fixture, yaml=source.name):
+                    generated = self.compare(source, 'encoder' if source.name == 'biss-c.yaml' else 'axis')
+                    text = '\n'.join(generated)
+                    if source.name.startswith('axis_ax'):
+                        label = '01' if '_LO.' in source.name else '02'
+                        self.assertIn(f'ec0.s5.binaryOutput{label}', text)
+                        self.assertIn('Cfg.SetAxisDrvBrakeEnable(${ECMC_AXIS_NO},1)', text)
+                        self.assertIn('Cfg.SetAxisDrvBrakeOpenDelayTime(${ECMC_AXIS_NO},250)', text)
+                        self.assertIn('Cfg.SetAxisDrvBrakeCloseAheadTime(${ECMC_AXIS_NO},200)', text)
+                        if fixture == 'ioc':
+                            self.assertIn('s$(DRV_SLAVE).driveStatus01.13', text)
+                            self.assertIn('Cfg.SetAxisHomeSwitchEnable(${ECMC_AXIS_NO},1)', text)
+                        else:
+                            self.assertNotIn('Cfg.SetAxisHomeSwitchEnable(${ECMC_AXIS_NO},1)', text)
+                            self.assertNotIn('.mon.homesensor', text)
+                    if fixture == 'ioc' and (source.name.startswith('axis_ax') or source.name == 'biss-c.yaml'):
+                        self.assertIn('Cfg.SetAxisHomeSeqId(${ECMC_AXIS_NO},1)', text)
+                        self.assertIn('Cfg.SetAxisSeqTimeout(${ECMC_AXIS_NO},12)', text)
+                        self.assertIn('Cfg.SetAxisHomeLatchCountOffset(${ECMC_AXIS_NO},1)', text)
+                        self.assertIn('Cfg.SetAxisHomePostMoveEnable(${ECMC_AXIS_NO},0)', text)
+                    if fixture == 'ioc' and source.name == 'biss-c.yaml':
+                        self.assertIn('ec0.s5.binaryOutput${ENC_PWR_CH}', text)
+                        self.assertIn('Cfg.SetAxisEncPwrEnable(${ECMC_AXIS_NO},0)', text)
+                        self.assertNotIn('Cfg.SetAxisEncPwrEnable(${ECMC_AXIS_NO},1)', text)
+            if fixture == 'ioc':
+                self.assertIn('ENC_CH=01,ENC_PWR_CH=04', startup)
+                self.assertIn('ENC_CH=02,ENC_PWR_CH=03', startup)
+
     def test_encoder_power_schema_rejects_bad_values(self):
         settings = [dict(enable='not-a-boolean'), dict(startupDelay=-1), dict(startupTimeout=-1),
                     dict(idleDelay=-1), dict(activeHigh='not-a-boolean'), dict(output=17),

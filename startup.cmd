@@ -37,7 +37,7 @@
 #-                     baseplates, processed in order before addMaster.cmd
 #- MX_REPORT         = Print slaves before and after each MX rescan (default 0)
 #- MX_RESCAN_DELAY   = Delay before each MX rescan in seconds (default 3)
-#- MAX_PARAM_COUNT   = Maximum asyn param count, defaults to 1650
+#- MAX_PARAM_COUNT   = Maximum asyn param count, defaults to 1675
 #- PNL_COLOR_ID      = Panel color ID, defaults to 0
 #- ECMC_REQUIRE_ECMC = Command used to load ecmc. Defaults to "require ecmc".
 #-                    Set to "#-" when ecmc is already registered by a classic IOC.
@@ -104,7 +104,7 @@ epicsEnvSet(ECMC_BEC_MODE,${BEC_MODE=0})
 
 #-------------------------------------------------------------------------------
 #- Set max asyn param count ECMC_ASYN_PORT_MAX_PARAMS can override
-epicsEnvSet("ECMC_ASYN_PORT_MAX_PARAMS",${ECMC_ASYN_PORT_MAX_PARAMS=${MAX_PARAM_COUNT=1650}})
+epicsEnvSet("ECMC_ASYN_PORT_MAX_PARAMS",${ECMC_ASYN_PORT_MAX_PARAMS=${MAX_PARAM_COUNT=1675}})
 
 #-------------------------------------------------------------------------------
 #- call init-script, defaults to 'initAll'

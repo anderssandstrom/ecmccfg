@@ -396,14 +396,16 @@ also loaded with `VAL=1` and can be used by GUIs to show or hide touch-probe
 controls.
 
 Probe commands share the native encoder control word `ax<axis>.enc.control<ENC>`
-through the `asynUInt32Digital` interface. The parameter is created only for
-encoders with touch-probe records; individual command/readback PVs use masks:
+through the `asynUInt32Digital` interface. The shared parameter exists for every
+encoder; probe-specific records are loaded when configured. Individual
+command/readback PVs use masks:
 
 | Bit | Command PV suffix | Readback PV suffix | Meaning |
 | --- | --- | --- | --- |
 | 0 (`0x1`) | `-TP-EnableCmd` | `-TP-Enable-RB` | Enable probe-control writes |
 | 1 (`0x2`) | `-TP-ArmCmd` | `-TP-Armed` | Arm capture while control is enabled |
 | 2 (`0x4`) | `-TP-AutoRearmCmd` | `-TP-AutoRearm-RB` | Automatically rearm after capture |
+| 3 (`0x8`) | `-ForceOn` | `-ForceOn-RB` | Hold this encoder powered for inspection |
 
 These suffixes follow `<Axis>-Enc0<ENC>`. Enable control before arming. Clearing
 enable also disarms and sends the idle control word before releasing control.

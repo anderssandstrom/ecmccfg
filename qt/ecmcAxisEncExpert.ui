@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>200</width>
-    <height>793</height>
+    <height>823</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,12 +19,26 @@
      <x>10</x>
      <y>5</y>
      <width>181</width>
-     <height>681</height>
+     <height>711</height>
     </rect>
    </property>
    <property name="title">
     <string>Encoder:</string>
    </property>
+   <widget class="QLabel" name="encoderPowerHoldLabel">
+    <property name="geometry"><rect><x>10</x><y>680</y><width>63</width><height>22</height></rect></property>
+    <property name="text"><string>Pwr hold:</string></property>
+   </widget>
+   <widget class="caMenu" name="encoderPowerHold">
+    <property name="geometry"><rect><x>74</x><y>680</y><width>85</width><height>22</height></rect></property>
+    <property name="channel" stdset="0"><string>$(DEV):$(Axis)-Enc$(ENC_ID)-ForceOn</string></property>
+    <property name="toolTip"><string>Encoder control bit 3. Hold this encoder powered for inspection; does not select feedback or start motion. Release to Auto to resume the settling delay. Fault handling takes precedence.</string></property>
+   </widget>
+   <widget class="caLed" name="encoderPowerHoldAccepted">
+    <property name="geometry"><rect><x>163</x><y>686</y><width>10</width><height>10</height></rect></property>
+    <property name="channel" stdset="0"><string>$(DEV):$(Axis)-Enc$(ENC_ID)-ForceOn-RB</string></property>
+    <property name="toolTip"><string>Accepted Force ON hold for this encoder.</string></property>
+   </widget>
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
     <rect>
@@ -1516,7 +1530,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>690</y>
+     <y>720</y>
      <width>181</width>
      <height>91</height>
     </rect>

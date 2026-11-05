@@ -44,7 +44,7 @@ class HomingTests(unittest.TestCase):
         fields = ('-HomProc.OMSL', '-HomProc', '-HomPos', '-VelToHom', '-VelFrmHom', '-AccHom',
                   '-HomUseHVEL', '-MtnCmd_.DISA', '-MtnCmd_.DISV')
         saved_fields = {field: rig.get(axis, field) for field in fields}
-        saved_hold = rig.get(axis, '-EncForceOn-RB')
+        saved_hold = rig.get(axis, rig.encoder_force_suffix(True))
         complete = None
         with rig.native_configuration(axis):
             transport = rig.open_text_commands()
@@ -69,7 +69,7 @@ class HomingTests(unittest.TestCase):
                                    ('HomeAcc', cfg['acceleration']), ('HomeDec', cfg['deceleration']),
                                    ('HomePostMoveEnable', int(post)), ('HomePostMoveTargetPosition', cfg['post_move_position'])):
                     config(key, value)
-                rig.client.put(rig.prefix+axis+'-EncForceOn', 1)
+                rig.client.put(rig.prefix+axis+rig.encoder_force_suffix(), 1)
                 wait_checked(rig, lambda: rig.get(axis, '-Enc02-Ready') == 1
                              and rig.get(axis, '-SetEncIdCmd-RB') == 2, 'BiSS ready for measured homing travel', 10)
                 raw_name = rig.prefix+cfg['raw_position']
@@ -150,7 +150,7 @@ class HomingTests(unittest.TestCase):
                     if saved_cfg:
                         try: rig.text_command(f'Cfg.SelectAxisEncConfig({number},{int(previous_encoder)})')
                         except Exception as error: errors.append(str(error))
-                    try: rig.client.put(rig.prefix+axis+'-EncForceOn', saved_hold)
+                    try: rig.client.put(rig.prefix+axis+rig.encoder_force_suffix(), saved_hold)
                     except Exception as error: errors.append(str(error))
                 try: rig.close_text_commands(transport)
                 except Exception as error: errors.append(str(error))

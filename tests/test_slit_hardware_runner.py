@@ -55,7 +55,7 @@ class HardwareBoundary:
                       '-WrnId': 0, '-VelAct': 0, '-AtTarget': 1, '-Id': number, '-EnaAct': 0,
                       '.LLM': -10, '.HLM': 10, '-CfgDLLM-RB': -10, '-CfgDHLM-RB': 10,
                       '-CfgDLLM-En-RB': 1, '-CfgDHLM-En-RB': 1, '-EncMode-RB': 0,
-                      '-EncForceOn-RB': 0, '-EncCnt': 2 if axis == 'TR_HI' else 1,
+                      '-Enc02-ForceOn-RB': 0, '-EncCnt': 2 if axis == 'TR_HI' else 1,
                       '-SetEncIdCmd-RB': 2 if axis == 'TR_HI' else 1,
                       '-Enc02-PwrState': 3, '-Enc02-PwrEnable-RB': 1, '-Enc02-Ready': 1,
                       '-Enc02-PwrOn': 1, '-Enc02-Absolute': 1, '-Enc01-Absolute': 0, '-Enc01-Ready': 1,
@@ -151,7 +151,7 @@ class HardwareBoundary:
                     self.values['HW:'+axis+'-AtTarget'] = 0
                     self.values['HW:'+axis+'.DMOV'] = 0
                     self.values['HW:'+axis+'.MIP'] = 1
-        elif self.home_power_model and self.values['HW:TR_HI-EncForceOn-RB']:
+        elif self.home_power_model and self.values['HW:TR_HI-Enc02-ForceOn-RB']:
             self.values['HW:TR_HI-Enc02-PwrState'] = 3
             self.values['HW:TR_HI-Enc02-Ready'] = 1
             self.values['HW:TR_HI-Enc02-PwrOn'] = 1
@@ -389,7 +389,7 @@ class HardwareBoundary:
                 self.values['HW:'+axis+'.LLM'], self.values['HW:'+axis+'.HLM'] = min(limits), max(limits)
                 self.update_coordinates()
             return None
-        if name.endswith('-EncForceOn'):
+        if name.endswith('-Enc02-ForceOn'):
             self.values[name+'-RB'] = value
             return None
         for field, key in (('-HomProc', 'HomeSeqId'), ('-HomPos', 'HomePosition'), ('-VelToHom', 'HomeVelTowardsCam'), ('-VelFrmHom', 'HomeVelOffCam'), ('-AccHom', 'HomeAcc')):
@@ -538,7 +538,7 @@ class HardwareRunnerTests(unittest.TestCase):
             self.assertEqual(self.client.values['HW:'+axis+'.VELO'], .4)
         self.assertTrue(self.client.writes)
         self.assertTrue(all(n.endswith(('.VAL', '.VELO', '.STOP', '-SetEncPosCmd', '.DIR', '.OFF', '.FOFF',
-                                       '.SYNC', '-EncForceOn', '-CfgSyncSftLim', '-EnaCmd', '-ExeCmd',
+                                       '.SYNC', '-Enc02-ForceOn', '-CfgSyncSftLim', '-EnaCmd', '-ExeCmd',
                                        '-MtnCmd', '-MtnCmdData', '-TgtVelCmd', '-TgtPosCmd', '-TrjSrcTyp-Cmd', '-StpCmd', 'SM00-EnaCmd', 'SM00-StateCmd'))
                             or n == 'HW:MCU-ErrRst' or n.startswith(('HW:MCU-Cmd.', 'HW:PVT-')) or '-PVT-' in n
                             for n, _ in self.client.writes))
@@ -949,7 +949,7 @@ class HardwareRunnerTests(unittest.TestCase):
             self.assertEqual(t['snapshot']['TR_HI']['.DMOV'], 1)
         self.assertFalse(any(n.endswith('.VAL') for n, _ in self.client.writes))
         self.assertEqual(self.client.native_settings['TR_HI']['HomePostMoveEnable'], 0)
-        self.assertEqual(self.client.values['HW:TR_HI-EncForceOn-RB'], 0)
+        self.assertEqual(self.client.values['HW:TR_HI-Enc02-ForceOn-RB'], 0)
 
     def test_homing_is_opt_in_and_cannot_mix_with_normal_groups(self):
         with redirect_stdout(io.StringIO()):
@@ -1180,7 +1180,7 @@ class HardwareRunnerTests(unittest.TestCase):
         original = self.client.put
         def put(name, value, **kwargs):
             result = original(name, value, **kwargs)
-            if name == 'HW:TR_HI-EncForceOn':
+            if name == 'HW:TR_HI-Enc02-ForceOn':
                 self.client.values[name+'-RB'] = value
                 if value:
                     self.client.positions['TR_HI'] = 40  # first real BiSS sample
@@ -1194,8 +1194,8 @@ class HardwareRunnerTests(unittest.TestCase):
         self.assertEqual(code, 0, report)
         self.assertEqual(report['origins']['TR_LO'], 35)
         self.assertEqual(report['origins']['TR_HI'], 40)
-        holds = [(name, value) for name, value in self.client.writes if name.endswith('-EncForceOn')]
-        self.assertEqual(holds, [('HW:TR_HI-EncForceOn', 1), ('HW:TR_HI-EncForceOn', 0)])
+        holds = [(name, value) for name, value in self.client.writes if name.endswith('-Enc02-ForceOn')]
+        self.assertEqual(holds, [('HW:TR_HI-Enc02-ForceOn', 1), ('HW:TR_HI-Enc02-ForceOn', 0)])
         self.assertEqual(self.client.writes[:2], holds)
         self.assertAlmostEqual(self.client.positions['TR_LO'], 35)
         self.assertAlmostEqual(self.client.positions['TR_HI'], 40)
@@ -1209,7 +1209,7 @@ class HardwareRunnerTests(unittest.TestCase):
         code, report, _ = self.run_live_boundary(('--case', 'motion'))
         self.assertEqual(code, 1)
         self.assertIn('BiSS ready', report['error'])
-        self.assertEqual(self.client.writes, [('HW:TR_HI-EncForceOn', 1), ('HW:TR_HI-EncForceOn', 0)])
+        self.assertEqual(self.client.writes, [('HW:TR_HI-Enc02-ForceOn', 1), ('HW:TR_HI-Enc02-ForceOn', 0)])
         self.assertEqual(report['cleanup_errors'], [])
         self.assertTrue(self.client.closed)
 
@@ -1261,7 +1261,7 @@ class HardwareRunnerTests(unittest.TestCase):
         self.assertIn('reference write failed', report['error'])
         self.assertEqual(self.client.values['HW:TR_LO.SET'], 0)
         self.assertEqual(self.client.values['HW:TR_LO.FOFF'], 1)
-        self.assertEqual(self.client.values['HW:TR_HI-EncForceOn-RB'], 0)
+        self.assertEqual(self.client.values['HW:TR_HI-Enc02-ForceOn-RB'], 0)
         self.assertFalse(any(n.endswith('.VAL') for n, _ in self.client.writes))
         self.assertTrue(self.client.closed)
 

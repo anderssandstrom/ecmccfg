@@ -1,3 +1,24 @@
+# Shared encoder control word: probe enable/arm/auto-rearm bits 0..2,
+# inspection power hold bit 3. All clients use the same UInt32Digital interface.
+record(bo,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-ForceOn"){
+  info(asyn:READBACK,"1")
+  field(DESC, "Hold this encoder power ON")
+  field(DTYP, "asynUInt32Digital")
+  field(OUT, "@asynMask($(PORT),$(ADDR),0x8,$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ax$(AXIS_NO).enc.control$(ENC_NO)?")
+  field(ZNAM, "Auto")
+  field(ONAM, "Force ON")
+}
+
+record(bi,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-ForceOn-RB"){
+  field(DESC, "Accepted encoder power hold")
+  field(PINI, "1")
+  field(DTYP, "asynUInt32Digital")
+  field(INP, "@asynMask($(PORT),$(ADDR),0x8,$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ax$(AXIS_NO).enc.control$(ENC_NO)?")
+  field(SCAN, "I/O Intr")
+  field(ZNAM, "Auto")
+  field(ONAM, "Force ON")
+}
+
 # One native Int32 reader for the complete encoder status word. Derived records
 # must not bind a second asyn interface to the same native parameter.
 record(longin,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-Stat") {

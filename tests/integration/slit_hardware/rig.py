@@ -110,6 +110,10 @@ class Rig(Operations):
         self.healthy()
         self.authorized = True
 
+    def encoder_force_suffix(self, readback=False):
+        index = self.profile['encoder_power']['encoder']
+        return f'-Enc{index:02d}-ForceOn'+('-RB' if readback else '')
+
     def initialize_origins(self):
         """Establish valid feedback and optionally reference zero without motion."""
         if not self.authorized: raise RuntimeError('identity preflight required')
@@ -121,7 +125,7 @@ class Rig(Operations):
         use_source = mode in (0, encoder) and self.get(axis, stem+'-PwrEnable-RB') == 1
         if zero:
             self.require_disabled_for_reference()
-            if mode != 0 or self.get(axis, '-EncForceOn-RB') != 0 or not use_source:
+            if mode != 0 or self.get(axis, self.encoder_force_suffix(True)) != 0 or not use_source:
                 raise RuntimeError('zero reference requires Auto power, Force ON released and encoder power enabled')
         self.initializing_origins = True
         try:
@@ -132,10 +136,10 @@ class Rig(Operations):
                 if zero or not ready():
                     if self.get(axis, '-EnaAct') or self.get(axis, '-EnaCmd-RB'):
                         raise RuntimeError(axis + ': disable the drive before initial encoder wake')
-                    previous = self.get(axis, '-EncForceOn-RB')
+                    previous = self.get(axis, self.encoder_force_suffix(True))
                     if not previous:
                         self.saved_force_on = previous
-                        self.client.put(self.prefix+axis+'-EncForceOn', 1)
+                        self.client.put(self.prefix+axis+self.encoder_force_suffix(), 1)
                     self.wait(ready, 'BiSS ready and primary before capturing test origins', cfg['timeout'])
             if zero: self.reference_axes_zero()
             self.wait(lambda: self.idle() and all(
@@ -190,7 +194,7 @@ class Rig(Operations):
     def restore_encoder_hold(self):
         if self.saved_force_on is not None:
             axis = self.profile['encoder_power']['axis']
-            self.client.put(self.prefix+axis+'-EncForceOn', self.saved_force_on)
+            self.client.put(self.prefix+axis+self.encoder_force_suffix(), self.saved_force_on)
             self.saved_force_on = None
 
     def user_position(self, axis, dial):

@@ -845,7 +845,7 @@ the encoder dwell through drive disable.
 
 The generic `-EncMode` selector provides Auto power=0 or Encoder N=1…8 and
 requires a disabled axis. It does not encode hardware types. The slit fixture
-assigns encoder 1 to the counter and encoder 2 to absolute feedback. `-EncForceOn`
+assigns encoder 1 to the counter and encoder 2 to absolute feedback. `-Enc02-ForceOn`
 holds the configured source powered for inspection without changing fixed
 feedback selection. Both commands reuse existing axis control/status words;
 there are no extra native asyn parameters for these controls. See

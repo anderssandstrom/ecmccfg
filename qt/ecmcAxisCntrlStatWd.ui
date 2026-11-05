@@ -613,28 +613,6 @@
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="caToggleButton" name="control_encoderForceOn">
-      <property name="geometry">
-       <rect>
-        <x>8</x>
-        <y>382</y>
-        <width>195</width>
-        <height>18</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>18  Encoder force ON</string>
-      </property>
-      <property name="channel" stdset="0">
-       <string>$(DEV):$(Axis)-EncForceOn</string>
-      </property>
-      <property name="toolTip">
-       <string>Control bit 18. Diagnostic power hold; does not request motion. Release to restore automatic power policy.</string>
-      </property>
-      <property name="layoutDirection">
-       <enum>Qt::RightToLeft</enum>
-      </property>
-     </widget>
      <widget class="QLabel" name="controlReserved">
       <property name="geometry">
        <rect>
@@ -645,7 +623,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>19–31  Reserved</string>
+       <string>18–31  Reserved</string>
       </property>
      </widget>
      <widget class="caLineEdit" name="targetWriteMode">
@@ -2343,10 +2321,10 @@ Target writes bypass Execute.</string>
        </rect>
       </property>
       <property name="text">
-       <string>29  Encoder force ON</string>
+       <string>29  Reserved</string>
       </property>
       <property name="toolTip">
-       <string>Status bit 29: encoderForceOn.</string>
+       <string>Status bit 29: reserved.</string>
       </property>
      </widget>
      <widget class="caByte" name="statusBit29">
@@ -2362,7 +2340,7 @@ Target writes bypass Execute.</string>
        <string>$(DEV):$(Axis)-Stat</string>
       </property>
       <property name="toolTip">
-       <string>Status bit 29: encoderForceOn.</string>
+       <string>Status bit 29: reserved.</string>
       </property>
       <property name="startBit">
        <number>29</number>

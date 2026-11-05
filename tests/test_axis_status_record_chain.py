@@ -62,12 +62,12 @@ def check_status_chain():
     assert control['DTYP'] == 'asynUInt32Digital'
     assert '0x3c000' in control['OUT'] and control['SHFT'] == '14'
     assert control['ZRST'] == 'Auto power' and control['EIST'] == 'Encoder 8'
-    assert '0x40000' in records[prefix+'-EncForceOn'][1]['OUT']
+    assert prefix+'-EncForceOn' not in records
     for selection in range(9):
         for hold in (0, 1):
             publish('-Stat', (selection<<25)|(hold<<29))
             assert values[prefix+'-EncMode-RB'] == selection
-            assert values[prefix+'-EncForceOn-RB'] == hold
+            # Retired axis status bit 29 must not affect selection or Busy.
             assert values[prefix+'-Busy'] == 0
             assert values[prefix+'-AutoExecuteOnTargetPos-RB'] == 0
 

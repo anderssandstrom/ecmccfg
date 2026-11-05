@@ -69,7 +69,7 @@ class EncoderPowerTests(unittest.TestCase):
         axis, enc = cfg['axis'], cfg['encoder']
         stem = f'-Enc0{enc}'
         self.assertEqual(rig.get(axis, '-EncMode-RB'), 0, 'select Auto power before this group')
-        self.assertEqual(rig.get(axis, '-EncForceOn-RB'), 0, 'release Force ON before this group')
+        self.assertEqual(rig.get(axis, rig.encoder_force_suffix(True)), 0, 'release Force ON before this group')
         self.assertEqual(rig.get(axis, stem+'-PwrEnable-RB'), 1)
         self.assertEqual(rig.get(axis, stem+'-Absolute'), 1)
         self.assertEqual(rig.get(axis, '-Enc01-Absolute'), 0)

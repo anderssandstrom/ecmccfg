@@ -120,7 +120,7 @@ remain scratch buffers. Failures request profile Abort and motor STOP. Missing
 PVT records are detected before zero-reference/setup writes.
 
 The original `motion` and `virtual` groups use motor VAL, VELO and STOP. Before motion preflight, a sleeping
-BiSS encoder is temporarily woken using the axis `EncForceOn` inspection hold,
+BiSS encoder is temporarily woken using the configured encoder’s `Enc02-ForceOn` inspection hold,
 with the drive disabled. The runner waits for ready/primary selection and
 motor/native coordinate agreement, captures all starting positions, then restores
 the previous hold. With zero referencing disabled, fixed counter-only feedback mode is respected. The read-only

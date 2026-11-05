@@ -135,9 +135,9 @@ class EncoderHandoverTests(EncoderPowerCase):
         self.assertFalse(self.rig.stop_all())
         self.rig.wait_drive_disabled(self.axis)
         self.rig.put(self.axis, '-EncMode', 1)
-        self.rig.put(self.axis, '-EncForceOn', 1)
+        self.rig.put(self.axis, '-Enc02-ForceOn', 1)
         self.rig.wait(lambda: self.healthy() and self.state() == 3
-                      and self.rig.get(self.axis, '-EncForceOn-RB') == 1,
+                      and self.rig.get(self.axis, '-Enc02-ForceOn-RB') == 1,
                       'inspection hold powers encoder without motion', 3)
         self.assertEqual(self.primary(), 1)
         self.assertEqual(self.rig.get(self.axis, '-EnaAct'), 0)
@@ -145,7 +145,7 @@ class EncoderHandoverTests(EncoderPowerCase):
         self.arrive(.20)
         self.rig.assert_stays(lambda: self.healthy() and self.state() == 3
                               and self.primary() == 1, 'inspection hold survives completed motion', 1.1)
-        self.rig.put(self.axis, '-EncForceOn', 0)
+        self.rig.put(self.axis, '-Enc02-ForceOn', 0)
         self.rig.assert_stays(lambda: self.healthy() and self.state() == 3,
                               'release starts a fresh encoder dwell', .3)
         self.wait_off()

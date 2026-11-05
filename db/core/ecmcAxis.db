@@ -115,15 +115,6 @@ record(mbbo,"${P}${AXIS_NAME}-EncMode"){
   field(EIVL, "8") field(EIST, "Encoder 8")
 }
 
-record(bo,"${P}${AXIS_NAME}-EncForceOn"){
-  info(asyn:READBACK,"1")
-  field(DESC, "Hold encoder power for inspection")
-  field(DTYP, "asynUInt32Digital")
-  field(OUT, "@asynMask($(PORT),$(ADDR=0),0x40000,$(TIMEOUT=1))TYPE=asynUInt32Digital/ax$(AXIS_NO).control?")
-  field(ZNAM, "Auto")
-  field(ONAM, "Force ON")
-}
-
 record(calc,"${P}${AXIS_NAME}-EncModeCalc_"){
   field(INPA, "${P}${AXIS_NAME}-Stat.VAL")
   field(CALC, "(A>>25)&15")
@@ -142,20 +133,6 @@ record(mbbi,"${P}${AXIS_NAME}-EncMode-RB"){
   field(SXVL, "6") field(SXST, "Encoder 6")
   field(SVVL, "7") field(SVST, "Encoder 7")
   field(EIVL, "8") field(EIST, "Encoder 8")
-  field(FLNK, "${P}${AXIS_NAME}-EncForceOnCalc_.PROC")
-}
-
-record(calc,"${P}${AXIS_NAME}-EncForceOnCalc_"){
-  field(INPA, "${P}${AXIS_NAME}-Stat.VAL")
-  field(CALC, "(A>>29)&1")
-  field(FLNK, "${P}${AXIS_NAME}-EncForceOn-RB.PROC")
-}
-
-record(bi,"${P}${AXIS_NAME}-EncForceOn-RB"){
-  field(DESC, "Encoder diagnostic power hold")
-  field(INP, "${P}${AXIS_NAME}-EncForceOnCalc_.VAL")
-  field(ZNAM, "Auto")
-  field(ONAM, "Force ON")
   field(FLNK, "${P}${AXIS_NAME}-Stat2Calc_.PROC")
 }
 

@@ -38,11 +38,11 @@ dbLoadRecords(ecmcProfileMoveController.template,"P=${ECMC_PREFIX},R=PVT-,PORT=$
 ecmcFileExist("ecmcPVTTrigger.template",1,1)
 dbLoadRecords(ecmcPVTTrigger.template,"P=${ECMC_PREFIX},R=PVT-,PORT=${ECMC_ASYN_PORT},T_SMP_MS=${ECMC_EC_SAMPLE_RATE_MS},FLNK=${SOFT_TRG_FLNK=''}")
 
-ecmcIf("'${TRG_EC_ENTRY=NAN}'!='NAN'")
-${IF_TRUE}ecmcConfigOrDie "Cfg.LinkEcEntryToObject(${TRG_EC_ENTRY=NAN},pvtctrl.trigger.output)"
-${IF_TRUE}ecmcEpicsEnvSetCalc(ECMC_PVT_CNTRL_TRG_DUR_MS,"$(TRG_DUR_S=0.1)*1000")
-${IF_TRUE}ecmcConfigOrDie "Cfg.SetPVTControllerTrgDurMs($(ECMC_PVT_CNTRL_TRG_DUR_MS=100))"
-ecmcEndIf()
+ecmcEpicsEnvSetCalcTernary(ECMC_PVT_TRIGGER_CFG_CMD,"'${TRG_EC_ENTRY=NAN}'!='NAN'","","#-")
+${ECMC_PVT_TRIGGER_CFG_CMD}ecmcConfigOrDie "Cfg.LinkEcEntryToObject(${TRG_EC_ENTRY=NAN},pvtctrl.trigger.output)"
+${ECMC_PVT_TRIGGER_CFG_CMD}ecmcEpicsEnvSetCalc(ECMC_PVT_CNTRL_TRG_DUR_MS,"$(TRG_DUR_S=0.1)*1000")
+${ECMC_PVT_TRIGGER_CFG_CMD}ecmcConfigOrDie "Cfg.SetPVTControllerTrgDurMs($(ECMC_PVT_CNTRL_TRG_DUR_MS=100))"
+epicsEnvUnset(ECMC_PVT_TRIGGER_CFG_CMD)
 
 #-Cleanup
 epicsEnvUnset(ECMC_MAX_SIZE)

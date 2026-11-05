@@ -138,6 +138,34 @@ trips require their specific error code and verify reset does not replay motion.
 | `cases/position_compare.py` | Missing-clock negative control: compare remains armed without touching EL2252 output/activate/startTime, then cancels without claiming a fired event |
 
 
+## What the new parameter and probe cases prove
+
+A passing run establishes the assertions below. It is not full feature or code
+coverage. Four cases only set native parameters and check readback (the two
+filter setting cases and the controller/monitor setting cases). The other new
+cases exercise behavior or rejection paths, with these limits:
+
+| Feature | Observable behavior checked | Remaining gaps |
+| --- | --- | --- |
+| Velocity filter | Injected position noise produces velocity noise; enabling a 400-cycle window reduces RMS below 65% of baseline; bypass raises it again | Exact response, delay and attenuation versus window size; behavior at other IOC rates |
+| Position filter | A raw step traverses intermediate filtered values and eventually reaches its final value | No expected step-response curve or window-duration check. The bypass assertion only waits for the final value, so it could pass with smoothing still enabled |
+| Controller | Inner/outer P gain selection; signed output/I limits and release; nonzero I freeze/release/reset precedence; deadband suppression/reactivation; feedforward off/on | Outer D and inner I/D gains have readback checks only. Exact I accumulation rate, intermediate feedforward gains, and exact deadband timing are not established |
+| Monitoring | Below-limit motion, max-velocity trip/disable, monitor disable and raised-limit recovery; lag and frozen-feedback faults; at-target tolerance/dwell; no replay after reset | Exact trajectory/drive delay counts, negative-direction velocity trips, threshold boundary sweeps and concurrent-fault priority |
+| Touch probe | Positive electrical edges in both travel directions; position/raw timestamp transport; explicit rearm; disarmed/no-edge rejection; control disable forces disarm | Live automatic rearm after repeated events, negative electrical edges, multiple channels, native timestamp reconstruction/rollover and physical capture timing |
+| Position compare | Missing sample clock leaves the request waiting without scheduling output; cancellation does not claim an event | Successful output scheduling, target crossing, pulse/reset behavior and direction/late-event handling are not exercised by this SIM fixture |
+
+The tuning cases change settings through native text commands. They therefore
+do not establish that every corresponding YAML setting/default reaches the same
+native value; YAML generation checks are separate. CA observations also cannot
+establish exact realtime-cycle timing or real terminal electrical behavior.
+Offline simulator checks validate the model and selected test verdicts against
+deliberately wrong responses; they do not add live native feature coverage.
+
+The next coverage priorities are a position-filter bypass/response test that
+can reject an ignored enable flag, live repeated-event auto-rearm, behavioral
+inner-I/D and outer-D tests, and successful position-compare pulses once a native
+SIM sample-clock provider is available.
+
 There are 382 planned test executions with both loop modes selected. Primary
 EL5042 not-ready checks are explicitly skipped in open-loop mode. Every case
 uses `Rig.prepare()` to clear injected faults, stop/disable axes, reset errors,

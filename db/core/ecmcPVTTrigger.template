@@ -6,5 +6,5 @@ record(longin,"${P}${R}SftTrg"){
   field(SCAN, "I/O Intr")
   field(DESC, "PVT Soft trigger")
   field(TSE,  "$(TSE=-2)")
-  field(TSE,  "$(FLNK=)")
+  field(FLNK, "$(FLNK=)")
 }

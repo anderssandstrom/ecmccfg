@@ -17,7 +17,7 @@ sys.path.insert(0, str(ROOT / 'tests/integration'))
 from slit.plant import Plant, PlantThread
 from slit.rig import Client, Rig
 
-MODULES = ('motion', 'limits', 'enable', 'feedback', 'noise', 'sync', 'brake', 'torque', 'native', 'softlimit_sync', 'homing', 'interfaces', 'motor', 'isolation', 'target_write', 'encoder_power', 'encoder_handover')
+MODULES = ('motion', 'limits', 'enable', 'feedback', 'noise', 'sync', 'brake', 'torque', 'native', 'softlimit_sync', 'homing', 'interfaces', 'motor', 'isolation', 'target_write', 'encoder_power', 'encoder_handover', 'pvt')
 DEFAULT_REPORT = ROOT / 'test-results/slit/slit-report.json'
 DEFAULT_CONFIG = Path(__file__).resolve().parent / 'ioc'
 
@@ -128,6 +128,9 @@ def main(argv=None):
     exit_code = 0
     try:
         rig.guard()  # Before any plant writes or motion commands.
+        if not args.plant_only and any('.pvt.' in test.id() for test in selected):
+            from slit_pvt import check_profile_support
+            check_profile_support(client, args.prefix, profile['axes'])
         authorized = True
         plant.start()
         rig.wait(lambda: all(rig.get(axis, '-InStartup') == 0 for axis in rig.names), 'IOC axis startup completes', 15)

@@ -13,6 +13,9 @@ epics:
   precision: 4
   unit: mm
   motorRecord:
+    pvt:
+      npoints: 64
+      nreadback: 256
     description: "Low"
     fieldInit: "SPAM=0,DIR=Pos,OFF=0,RTRY=0,FOFF=Frozen,TWV=1"
 

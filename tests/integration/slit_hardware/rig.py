@@ -5,6 +5,7 @@ import time
 
 # Numeric PV access is shared; no simulated Plant or simulation Rig is used.
 from slit.rig import Client
+from .operations import Operations
 
 
 def validate_profile(profile):
@@ -30,12 +31,15 @@ def validate_profile(profile):
         raise ValueError('encoder-power mapping must match the hardware IOC')
 
 
-class Rig:
+class Rig(Operations):
     def __init__(self, profile, prefix, client):
         validate_profile(profile)
         self.profile, self.prefix, self.client = profile, prefix, client
         self.origins, self.saved_velocity, self.touched, self.trace = {}, {}, set(), []
         self.authorized = False
+        self.saved_state_machine, self.standalone_axis = None, None
+        self.standalone_positions = {}
+        self.brake_checks = False
         self.stop_requested, self.stop_errors = False, []
         self.initializing_origins, self.saved_force_on = False, None
 
@@ -43,6 +47,15 @@ class Rig:
     def read(self, suffix): return self.client.get(self.prefix + suffix)
 
     def healthy(self):
+        if self.standalone_axis is not None:
+            if self.read('SM00-EnaCmd') != 0 or self.read('SM00-StateCmd') != 0:
+                raise AssertionError('state machine must remain disabled and idle during standalone moves')
+            for axis in ('CENTERY', 'GAPY'):
+                if self.get(axis, '-EnaAct') or self.get(axis, '-Busy'):
+                    raise AssertionError(axis+': virtual axis must remain disabled and idle')
+            for axis, position in self.standalone_positions.items():
+                if axis != self.standalone_axis and abs(self.get(axis, '-PosAct')-position) > self.profile['tolerance']:
+                    raise AssertionError(axis+': uncommanded physical axis moved')
         for suffix, expected in (('MCU-Cfg-Sim-Mode', 0), ('MCU-AppMode', 1), ('m0-Stat-OK', 1)):
             if self.read(suffix) != expected:
                 raise AssertionError('IOC/bus state changed: ' + suffix)
@@ -169,18 +182,25 @@ class Rig:
             self.client.put(self.prefix+axis+'-EncForceOn', self.saved_force_on)
             self.saved_force_on = None
 
+    def user_position(self, axis, dial):
+        return self.get(axis, '.OFF') + (-1 if self.get(axis, '.DIR') else 1)*dial
+
+    def dial_position(self, axis, user):
+        return (-1 if self.get(axis, '.DIR') else 1)*(user-self.get(axis, '.OFF'))
+
     def validate_target(self, axis, target):
         if not math.isfinite(target): raise ValueError('non-finite target')
         for side in ('Bwd', 'Fwd'):
             if not self.get(axis, '-CfgD' + ('LLM' if side == 'Bwd' else 'HLM') + '-En-RB'):
                 raise RuntimeError(axis + ': native soft limits must be enabled')
-        low = max(self.get(axis, '.LLM'), self.get(axis, '-CfgDLLM-RB'))
-        high = min(self.get(axis, '.HLM'), self.get(axis, '-CfgDHLM-RB'))
-        # Virtual motor limits may be disabled (0/0); native dynamic limits still apply.
-        if axis in ('CENTERY', 'GAPY') and self.get(axis, '.LLM') == self.get(axis, '.HLM') == 0:
-            low, high = self.get(axis, '-CfgDLLM-RB'), self.get(axis, '-CfgDHLM-RB')
+        low, high = self.get(axis, '-CfgDLLM-RB'), self.get(axis, '-CfgDHLM-RB')
         if not low < target < high:
             raise RuntimeError(f'{axis}: target {target} outside active soft limits [{low}, {high}]')
+        user = self.user_position(axis, target)
+        motor_low, motor_high = self.get(axis, '.LLM'), self.get(axis, '.HLM')
+        if not (axis in ('CENTERY', 'GAPY') and motor_low == motor_high == 0):
+            if not motor_low < user < motor_high:
+                raise RuntimeError(f'{axis}: user target {user} outside motor limits [{motor_low}, {motor_high}]')
         positions = {a: self.get(a, '-PosAct') for a in self.profile['physical']}
         if axis in positions:
             positions[axis] = target
@@ -198,17 +218,17 @@ class Rig:
             for offset in (-self.profile['step'], 0, self.profile['step']):
                 self.validate_target(axis, self.origins[axis] + offset)
 
-    def put(self, axis, field, value):
+    def put(self, axis, field, value, *, notify=True):
         if not self.authorized: raise RuntimeError('hardware writes require successful preflight')
         if axis not in self.profile['axes'] or field not in ('.VAL', '.VELO', '.STOP'):
             raise RuntimeError('hardware runner only writes motor VAL, VELO and STOP')
         if field == '.VAL':
             self.stop_requested = False
             self.healthy()
-            self.validate_target(axis, value)
+            self.validate_target(axis, self.dial_position(axis, value))
         self.touched.add(axis)
         return self.client.put(self.prefix + axis + field, value,
-                               wait=field not in ('.VAL', '.STOP'), notify=field != '.STOP')
+                               wait=field not in ('.VAL', '.STOP'), notify=notify and field != '.STOP')
 
     def wait(self, predicate, description, timeout=None):
         end = time.monotonic() + (timeout or self.profile['timeout'])
@@ -229,7 +249,7 @@ class Rig:
         if axis not in self.saved_velocity:
             self.saved_velocity[axis] = self.get(axis, '.VELO')
         self.put(axis, '.VELO', self.profile['velocity'])
-        complete = self.put(axis, '.VAL', target)
+        complete = self.put(axis, '.VAL', self.user_position(axis, target))
         self.wait(lambda: self.get(axis, '-Busy') == 1 or self.get(axis, '.DMOV') == 0,
                   axis + ' motion starts')
         if self.get(axis, '.LVIO'): raise AssertionError(axis + ': move rejected by motor limits')
@@ -245,7 +265,8 @@ class Rig:
                             for field in ('-Busy', '.DMOV', '.MOVN')}
                      for name in self.profile['axes']}
             observed.update(target=target, tolerance=self.profile['tolerance'],
-                            put_complete=complete.is_set(), axes=flags,
+                            put_complete=complete is None or complete.is_set(), axes=flags,
+                            user_target=self.user_position(axis, target),
                             at_target=self.get(axis, '-AtTarget'),
                             motor_position=self.get(axis, '.RBV'),
                             native_position=self.get(axis, '-PosAct'))
@@ -253,7 +274,7 @@ class Rig:
                     and all(f['-Busy'] == 0 and f['.DMOV'] == 1 and f['.MOVN'] == 0
                             for f in flags.values())
                     and observed['at_target'] == 1
-                    and abs(observed['motor_position']-target) <= self.profile['tolerance']
+                    and abs(observed['motor_position']-observed['user_target']) <= self.profile['tolerance']
                     and abs(observed['native_position']-target) <= self.profile['tolerance'])
         try:
             self.wait(arrived, axis + ' completes commanded move')
@@ -281,10 +302,16 @@ class Rig:
             result[axis] = {}
             for field in ('.RBV', '.VAL', '.DMOV', '.MOVN', '.SEVR', '.LVIO', '-PosAct',
                           '-PosSet', '-Busy', '-EnaAct', '-AtTarget', '-ErrId', '-WrnId',
-                          '-SetEncIdCmd-RB', '-Enc02-PwrState'):
+                          '-SetEncIdCmd-RB', '-Enc02-PwrState', '.DIR', '.OFF', '.DVAL',
+                          '-AutoExecuteOnTargetPos-RB', '-ExeCmd-RB', '-MtnCmd', '-TgtPosCmd'):
                 if axis != 'TR_HI' and field == '-Enc02-PwrState': continue
                 try: result[axis][field] = self.get(axis, field)
                 except Exception as error: result[axis][field] = str(error)
+        if self.brake_checks:
+            for axis in self.profile['physical']:
+                for key, reader in (('brake_output', self.brake), ('drive_control', self.drive_control)):
+                    try: result[axis][key] = reader(axis)
+                    except Exception as error: result[axis][key] = str(error)
         return result
 
     def stop_all(self, retry=False):
@@ -302,6 +329,8 @@ class Rig:
         errors = []
         self.stop_all(retry=bool(self.stop_errors))
         errors.extend(self.stop_errors)
+        try: self.restore_state_machine()
+        except Exception as error: errors.append('restore state machine: '+str(error))
         try: self.restore_encoder_hold()
         except Exception as error: errors.append('restore encoder inspection hold: ' + str(error))
         if not self.touched: return errors

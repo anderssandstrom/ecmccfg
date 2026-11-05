@@ -99,13 +99,17 @@ def main(argv=None):
     try:
         rig.guard()
         suite = make_suite(rig, groups, args.test)
+        if any('pvt_' in test.id() for test in suite):
+            from slit_pvt import check_profile_support
+            check_profile_support(client, args.prefix, profile['axes'])
+        if any('brake_' in test.id() for test in suite): rig.check_brake_support()
         moving_axes = {axis for test in suite for axis in test.motion_axes}
         # A sleeping absolute encoder may disagree with the unreferenced startup
         # counter. Capture fresh coordinates before calculating any move target.
         if moving_axes: rig.initialize_origins()
         document['origins'] = dict(rig.origins)
-        # Validate planned travel before the first motor write; encoder wake above
-        # uses only a temporary inspection hold and never enables the drive.
+        # Validate planned travel before the first motion command. Preparation
+        # above may wake/re-reference feedback but never enables a drive.
         rig.preflight_moves(moving_axes)
         # TextTestRunner supplies the wrapped stream required by TextTestResult.
         def factory(*arguments):

@@ -789,3 +789,44 @@ A separate [hardware configuration](ioc_hardware/README.md) is available in
 TR_HI and an EL2794 relay at slave 25/channel 1. TR_LO is pure open loop. This
 configuration can be operated manually or with the separate
 [hardware suite](../slit_hardware/README.md); the simulation runner remains SIM-only.
+
+
+## PVT profile coverage
+
+Both physical and virtual axis YAML files enable PVT buffers (64 positions,
+256 readbacks); deploy the YAML updates and restart the simulation IOC before
+running the added profile cases:
+
+```sh
+python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case pvt
+```
+
+LO and HI Build/Execute/Readback cases, with and without triggers, run in each
+open/closed loop: eight live cases, making 274 planned cases for the complete suite. The existing
+controller finalization configures the shared PVT records automatically.
+
+The cases use the real asyn PVT controller and the external plant's measured
+feedback, with ±0.15 mm excursions and a return to the starting position.
+Interpolation extrema, velocity and acceleration are validated before building;
+execution must report success and measured feedback must traverse both sides of
+the start. Readback arrays must contain finite samples. Profile selection,
+settings and existing arrays are restored afterwards; failures abort the profile
+and stop axes. EL2008 channel 05 carries the PVT triggers. Missing PVT
+records fail preflight before the coupled plant starts writing.
+
+
+The PVT group also runs LO/HI trigger cases in both loops (eight PVT cases total):
+
+```sh
+python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case pvt --test triggers
+```
+
+Three pulses at points 3/4/5 must produce a monotonic software count ending at
+three and exactly three pulse-latched positions matching the positive excursion,
+negative excursion and return coordinate. Extra/missing triggers or wrong
+latched positions fail the case. Trigger settings are restored afterwards.
+Both fixtures link spare EL2008 slave 5/channel 05 (`ec0.s5.binaryOutput05.0`),
+active high with 400 ms pulses. Its `m0s005-BO05-RB` readback must show exactly
+three high/low pairs and be low before execution and after completion/abort.
+Untriggered profiles must keep the output low. Tests observe the process image,
+without directly writing output PVs. Restart the IOC after updating startup.cmd.

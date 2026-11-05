@@ -141,3 +141,13 @@ or schema change is required. Cases temporarily enable handover and verify
 primary selection before/after power-off, repeated wake, positive/negative wake
 mismatch faults without automatic replay, and readiness timeout. The mode stays
 disabled in the normal fixture and is removed during test cleanup.
+
+
+## PVT tests
+
+The axis YAML files enable profile buffers through `epics.motorRecord.pvt`.
+Restart this IOC after deploying the YAML update, then run the `pvt` group from
+[the suite](../README.md#pvt-profile-coverage). The normal ecmccfg finalization
+loads the shared profile controller. startup.cmd reserves EL2008 slave 5/channel
+05 for active-high 400 ms PVT pulses. Trigger tests check `SIMSLIT:PVT-SftTrg`,
+`SIMSLIT:m0s005-BO05-RB` and pulse-latched positions. The cases execute real profiles through the simulation backend.

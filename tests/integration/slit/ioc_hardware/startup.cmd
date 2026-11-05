@@ -29,6 +29,10 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd "FILE=./cfg/axis_vax6_YGAP.yaml,AX_
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd "FILE=./cfg/axis_main.plc,INC=./cfg,PLC_MACROS='AX_CEN=12,AX_GAP=13,AX_LO=5,AX_HI=6'"
 ${SCRIPTEXEC} ${ecmccfg_DIR}addMasterSlaveSM.cmd "NAME=Slit_SM,MST_GRP_NAME=virtualAxes,SLV_GRP_NAME=realAxes"
 
+# PVT controller finalization links spare EL2008 output 05 (active high).
+# 400 ms pulses remain observable through CA and fit between test triggers.
+epicsEnvSet(TRG_EC_ENTRY,"ec0.s5.binaryOutput05.0")
+epicsEnvSet(TRG_DUR_S,"0.4")
 dbLoadRecords("./hardware-test.db", "P=${ECMC_PREFIX}")
 
 # The launcher initializes the IOC after loading this file; the registered

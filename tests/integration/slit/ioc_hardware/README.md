@@ -84,3 +84,13 @@ Operate manually through normal motor/native motion PVs and panels under
 statuses and encoder power cycling without a simulated plant or fault injection.
 The existing simulation acceptance runner intentionally remains SIM-only and must reject this IOC.
 The hardware configuration does not change the existing `ioc/` simulation setup.
+
+
+All four axis YAML files also configure PVT buffers through
+`epics.motorRecord.pvt` (64 points, 256 readbacks). Normal finalization creates
+the shared controller. Restart after deploying these YAML changes to expose the
+PVT test PVs. PVT pulses use spare EL2008 slave 5/channel 05, active high with
+400 ms duration. The trigger cases check both `HWSLIT:PVT-SftTrg` and
+`HWSLIT:m0s005-BO05-RB`, as well as pulse-latched encoder positions. This
+readback is the commanded output process image, not independent electrical
+feedback. Deploy startup.cmd and restart to apply the trigger link.

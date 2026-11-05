@@ -12,6 +12,9 @@ epics:
   precision: 4
   unit: mm
   motorRecord:
+    pvt:
+      npoints: 64
+      nreadback: 256
     description: "Gap (Virtual)"
     fieldInit: "SPAM=0,RTRY=1,FOFF=Frozen,TWV=1"
 

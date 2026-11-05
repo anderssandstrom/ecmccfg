@@ -38,4 +38,8 @@ ecmcConfigOrDie "Cfg.SimSetValue(ec0.s9.encoderStatus01,4)"
 ecmcConfigOrDie "Cfg.SimSetValue(ec0.s9.encoderStatus02,4)"
 ecmcConfigOrDie "Cfg.SimSetValue(ec0.s12.driveStatus01,6145)"
 ecmcConfigOrDie "Cfg.SimSetValue(ec0.s14.driveStatus01,6145)"
+# PVT controller finalization links spare EL2008 output 05 (active high).
+# 400 ms pulses remain observable through CA and fit between test triggers.
+epicsEnvSet(TRG_EC_ENTRY,"ec0.s5.binaryOutput05.0")
+epicsEnvSet(TRG_DUR_S,"0.4")
 dbLoadRecords("./test-marker.db", "P=${ECMC_PREFIX}")

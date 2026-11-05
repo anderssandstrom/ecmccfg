@@ -4,3 +4,8 @@ record(longin,"$(P)HardwareSlitTest:Schema") {
   field(INP,"1")
   field(VAL,"1")
 }
+
+# Updated HI limit-homing configuration and motor home parameter records.
+record(longin,"$(P)HardwareSlitTest:HomingSchema") {
+  field(VAL,"1")
+}

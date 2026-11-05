@@ -1,5 +1,6 @@
 """Opt-in native target-write triggering through PV and text interfaces."""
 from .base import SlitCase
+from slit_motion_checks import MotionExpectation
 
 
 class TargetWriteTests(SlitCase):
@@ -7,6 +8,9 @@ class TargetWriteTests(SlitCase):
 
     def setUp(self):
         super().setUp()
+        previous = self.rig.motion_expectation
+        self.addCleanup(setattr, self.rig, 'motion_expectation', previous)
+        self.rig.motion_expectation = MotionExpectation(self.rig, self.axis)
         self.number = self.rig.profile['axes'][self.axis]
         transport = self.rig.open_text_commands()
         self.addCleanup(self.rig.close_text_commands, transport)

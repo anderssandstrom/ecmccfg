@@ -1,6 +1,10 @@
-"""Normal-operation hardware checks; no error injection or limit overruns."""
+"""Hardware motion, controlled stall recovery and opt-in limit homing checks."""
 import time
 import unittest
+from .homing import HomingTests, HOMING_NAMES
+from slit_recovery import concurrent_physical_moves
+from slit_recovery import StallCases, CoupledStopCases, STALL_NAMES, COUPLED_STOP_NAMES, stall_alarm, stop_blade_during_virtual
+from slit_pvt import PVTInterruptions, PVT_INTERRUPTION_NAMES, run_interrupted_profile
 
 
 class StatusTests(unittest.TestCase):
@@ -135,12 +139,17 @@ class MotorCoordinateTests(unittest.TestCase):
     def test_motor_hi_offset_and_direction(self): self.exercise('TR_HI')
 
 
-class PVTTests(unittest.TestCase):
+class PVTTests(PVTInterruptions, unittest.TestCase):
     def exercise(self, axis, triggers=False):
         from slit_pvt import run_profile
         self.rig.touched.add(axis)
         run_profile(self.rig, axis, self.rig.profile['step']/2,
                     self.rig.profile['velocity'], self.rig.validate_target, triggers=triggers)
+
+    def interrupt_profile(self, axis, method, phase):
+        self.rig.touched.add(axis)
+        run_interrupted_profile(self.rig, axis, self.rig.profile['step']/2,
+                                self.rig.profile['velocity'], self.rig.validate_target, method, phase)
 
     def test_pvt_lo_round_trip(self): self.exercise('TR_LO')
     def test_pvt_hi_round_trip(self): self.exercise('TR_HI')
@@ -220,10 +229,36 @@ class BrakeTests(unittest.TestCase):
     def test_brake_hi_stop_and_auto_disable(self): self.motion('TR_HI', stop=True)
 
 
+class StallTests(StallCases, unittest.TestCase):
+    def exercise_stall(self, axis, trigger):
+        with self.rig.native_configuration(axis):
+            stall_alarm(self.rig, axis, trigger, self.rig.profile['step'],
+                        self.rig.profile['velocity'], self.rig.validate_target)
+
+
+class CoupledStopTests(CoupledStopCases, unittest.TestCase):
+    def exercise_coupled_stop(self, master, blade, interface):
+        stop_blade_during_virtual(self.rig, master, blade, interface,
+                                  self.rig.profile['step'], self.rig.validate_target)
+
+
+class ConcurrentTests(unittest.TestCase):
+    def exercise(self, primary, secondary):
+        concurrent_physical_moves(self.rig, primary, secondary, self.rig.profile['step'],
+                                  self.rig.profile['velocity'], self.rig.validate_target)
+
+    def test_lo_moves_while_hi_is_nudged(self): self.exercise('TR_LO', 'TR_HI')
+    def test_hi_moves_while_lo_is_nudged(self): self.exercise('TR_HI', 'TR_LO')
+
+
 GROUPS = {
+    'homing': (HomingTests, HOMING_NAMES),
     'status': (StatusTests, ('test_idle_status_and_kinematics',)),
     'motion': (MotionTests, ('test_physical_lo_both_directions', 'test_physical_hi_both_directions',
                             'test_repeated_motor_targets', 'test_motor_stop_during_move')),
+    'stall': (StallTests, STALL_NAMES),
+    'coupled_stop': (CoupledStopTests, COUPLED_STOP_NAMES),
+    'concurrent': (ConcurrentTests, ('test_lo_moves_while_hi_is_nudged', 'test_hi_moves_while_lo_is_nudged')),
     'virtual': (VirtualTests, ('test_center_both_directions', 'test_gap_both_directions')),
     'encoder_power': (EncoderPowerTests, ('test_real_encoder_sleep_wake_and_backup',)),
     'native': (NativeTests, ('test_native_lo_absolute_and_relative', 'test_native_hi_absolute_and_relative')),
@@ -235,7 +270,7 @@ GROUPS = {
                            'test_brake_lo_motion_and_auto_disable', 'test_brake_hi_motion_and_auto_disable',
                            'test_brake_lo_stop_and_auto_disable', 'test_brake_hi_stop_and_auto_disable')),
     'pvt': (PVTTests, ('test_pvt_lo_round_trip', 'test_pvt_hi_round_trip',
-                       'test_pvt_lo_triggers', 'test_pvt_hi_triggers')),
+                       'test_pvt_lo_triggers', 'test_pvt_hi_triggers')+PVT_INTERRUPTION_NAMES),
 }
 
 
@@ -255,7 +290,7 @@ def standalone_method(cls, original):
 
 
 standalone_names = []
-for group in ('motion', 'native', 'target_write', 'motor', 'encoder_power', 'brake', 'pvt'):
+for group in ('motion', 'native', 'target_write', 'motor', 'encoder_power', 'brake', 'pvt', 'stall'):
     cls, names = GROUPS[group]
     for original in names:
         method = standalone_method(cls, original)
@@ -281,6 +316,10 @@ def make_suite(rig, groups, patterns=()):
                 'test_gap_both_directions': ('GAPY',),
                 'test_real_encoder_sleep_wake_and_backup': ('TR_HI',),
             }.get(original, ('TR_LO',) if '_lo_' in name else ('TR_HI',) if '_hi_' in name else ())
+            if group == 'concurrent': test.motion_axes = ('TR_LO', 'TR_HI')
+            if group == 'homing': test.motion_axes = ('TR_HI',)
+            if group == 'coupled_stop':
+                test.motion_axes = ('CENTERY',) if original.startswith('test_center') else ('GAPY',)
             test.rig = rig
             tests.append(test)
     return unittest.TestSuite(tests)

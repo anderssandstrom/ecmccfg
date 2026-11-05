@@ -1,6 +1,7 @@
 """Shared bounded asyn profile-move exercise for the separate slit runners."""
 import math
 import time
+from slit_motion_checks import observe_motion
 
 TRIGGER_READBACK = "m0s005-BO05-RB"
 
@@ -58,7 +59,7 @@ def check_profile_support(client, prefix, axes):
         raise RuntimeError('PVT preflight failed: deploy the updated slit axis YAML and restart the IOC; '+str(error)) from error
 
 
-def run_profile(rig, axis, amplitude, velocity, validate, triggers=False):
+def _run_profile(rig, axis, amplitude, velocity, validate, triggers=False, interruption=None):
     """Build/execute/read back one physical-axis profile; restore its controls."""
     axes = list(rig.profile['axes'])
     prefix, client = rig.prefix, rig.client
@@ -90,6 +91,7 @@ def run_profile(rig, axis, amplitude, velocity, validate, triggers=False):
     successful = False
     lows, highs = origin, origin
     verdict = {}
+    interrupted = None
     try:
         for name in axes:
             client.put(prefix+name+'-PVT-UseAxis', int(name == axis))
@@ -116,7 +118,7 @@ def run_profile(rig, axis, amplitude, velocity, validate, triggers=False):
         client.put(prefix+'PVT-SftTrg.PROC', 1)
         rig.wait(lambda: client.get(prefix+'PVT-SftTrg') == 0, 'PVT trigger counter resets before first pulse', 5)
         def finished():
-            nonlocal lows, highs
+            nonlocal lows, highs, interrupted
             for name in axes:
                 if rig.get(name, '-ErrId'): raise AssertionError(name+': controller fault during PVT')
             count = client.get(prefix+'PVT-SftTrg')
@@ -135,6 +137,12 @@ def run_profile(rig, axis, amplitude, velocity, validate, triggers=False):
             lows, highs = min(lows, position), max(highs, position)
             validate(axis, position)
             state, status = client.get(prefix+'PVT-ExecuteState'), client.get(prefix+'PVT-ExecuteStatus')
+            if interruption is not None:
+                method, phase = interruption
+                ready = (count == 0 and level == 0) if phase == 'before_first_pulse' else (level == 1 and count > 0 and abs(position-origin) > 2*tolerance)
+                if state in (1, 2, 3) and rig.get(axis, '-Busy') and ready:
+                    interrupted = interrupt_and_verify(rig, axis, method, phase, geometry, validate)
+                    return True
             if status in (2, 3, 4): raise AssertionError('PVT execution failed/aborted/timed out: '+str(status))
             if rig.get(axis, '.LVIO') or rig.get(axis, '.SEVR'):
                 raise AssertionError(axis+': motor limit violation/alarm during PVT')
@@ -145,6 +153,10 @@ def run_profile(rig, axis, amplitude, velocity, validate, triggers=False):
                     and rig.get(axis, '-AtTarget') == 1 and abs(position-origin) <= tolerance
                     and abs(rig.get(axis, '.RBV')-origin) <= tolerance)
         rig.wait(finished, 'PVT completes and returns to its start', geometry['duration']+15)
+        if interruption is not None:
+            if interrupted is None: raise AssertionError('PVT finished without reaching the requested interruption phase')
+            successful = True
+            return interrupted
         rig.wait(lambda: client.get(prefix+'PVT-SftTrg') == expected_pulses,
                  'PVT software trigger count matches requested pulses', 5)
         if client.get(prefix+TRIGGER_READBACK) != 0:
@@ -212,3 +224,117 @@ def run_profile(rig, axis, amplitude, velocity, validate, triggers=False):
             for field, value in native.items(): client.put(prefix+axis+field, value)
         except Exception as error: errors.append(str(error))
         if errors: raise RuntimeError('PVT cleanup: '+'; '.join(errors))
+
+
+def run_profile(rig, axis, amplitude, velocity, validate, triggers=False, interruption=None):
+    if interruption is not None:
+        if interruption[0] not in ('abort', 'stop', 'disable') or interruption[1] not in ('before_first_pulse', 'pulse_high'):
+            raise ValueError('unsupported PVT interruption')
+        if not triggers: raise ValueError('interruption tests require trigger observation')
+    with observe_motion(rig, axis):
+        return _run_profile(rig, axis, amplitude, velocity, validate, triggers, interruption)
+
+
+def interrupt_and_verify(rig, axis, method, phase, geometry, validate):
+    client, prefix = rig.client, rig.prefix
+    axes = list(rig.profile['axes'])
+    tolerance = rig.profile.get('tolerance', .015)
+    request = {'position': rig.get(axis, '-PosAct'), 'output': client.get(prefix+TRIGGER_READBACK),
+               'pulses': client.get(prefix+'PVT-SftTrg')}
+    if method == 'abort': command = prefix+'PVT-Abort'
+    elif method == 'stop': command = prefix+axis+'.STOP'
+    else: command = prefix+axis+'-EnaCmd'
+    # Only the selected stop interface is sent. A fallback abort here would hide
+    # a controller that ignored motor STOP or drive disable.
+    acceleration = rig.get(axis, '.ACCS')
+    # The fixture uses equal acceleration/deceleration. Allow half a second of
+    # command/publication latency in addition to the braking-distance bound.
+    travel_bound = geometry['peak_velocity']**2/(2*acceleration)+.5*geometry['peak_velocity']+3*tolerance
+    stop_timeout = min(10., 2.+geometry['peak_velocity']/acceleration)
+    client.put(command, 0 if method == 'disable' else 1, wait=False, notify=False)
+    def stopped():
+        for name in axes:
+            if rig.get(name, '-ErrId'): raise AssertionError(name+': unexpected native error during PVT interruption')
+        position_now = rig.get(axis, '-PosAct')
+        validate(axis, position_now)
+        if abs(position_now-request['position']) > travel_bound:
+            raise AssertionError('PVT exceeded allowed travel after interruption request')
+        return (client.get(prefix+'PVT-ExecuteState') == 0
+                and client.get(prefix+TRIGGER_READBACK) == 0
+                and all(rig.get(name, '-Busy') == 0 and rig.get(name, '.DMOV') == 1
+                        and rig.get(name, '.MOVN') == 0 for name in axes)
+                and abs(rig.get(axis, '-VelAct')) < .005)
+    rig.wait(stopped, axis+' PVT '+method+' reaches standstill and lowers trigger', stop_timeout)
+    status = client.get(prefix+'PVT-ExecuteStatus')
+    if status == 1: raise AssertionError('interrupted PVT was incorrectly reported as successful completion')
+    if method == 'abort' and status != 3: raise AssertionError('PVT Abort did not report aborted status')
+    if method == 'disable' and rig.get(axis, '-EnaAct') != 0:
+        raise AssertionError('PVT disable did not disable the axis')
+    controller_error = client.get(prefix+'MCU-ErrId')
+    if controller_error not in (0, 0x242003):
+        raise AssertionError(f'unexpected controller error after PVT interruption: {int(controller_error):#x}')
+    # The native PVT controller can latch AXIS_INTERLOCK on STOP/disable.
+    # Acknowledge only that known error, at standstill; never reset an unknown fault.
+    if controller_error:
+        client.put(prefix+'MCU-ErrRst', 1)
+        rig.wait(lambda: client.get(prefix+'MCU-ErrId') == 0, 'expected PVT interlock reset', 5)
+    position = rig.get(axis, '-PosAct')
+    held_pulses = client.get(prefix+'PVT-SftTrg')
+    hold = max(.6, min(2., geometry['interval']+.2))
+    def no_replay():
+        if not stopped(): raise AssertionError('interrupted PVT restarted or reasserted its trigger')
+        if abs(rig.get(axis, '-PosAct')-position) > tolerance:
+            raise AssertionError('interrupted PVT moved after standstill')
+        if client.get(prefix+'PVT-SftTrg') != held_pulses:
+            raise AssertionError('interrupted PVT emitted another software trigger')
+        if client.get(prefix+'PVT-ExecuteStatus') == 1:
+            raise AssertionError('interrupted PVT later reported success')
+        return True
+    for reenable in (False, True):
+        if reenable:
+            client.put(prefix+axis+'-EnaCmd', 1)
+            rig.wait(lambda: no_replay() and rig.get(axis, '-EnaAct') == 1,
+                     axis+' re-enables without replaying cancelled profile', 10)
+        end = time.monotonic()+hold
+        rig.wait(lambda: no_replay() and time.monotonic() >= end,
+                 axis+' cancelled profile remains stopped after '+('enable' if reenable else 'interruption'), hold+5)
+    result = {'action': 'PVT interrupted', 'axis': axis, 'method': method, 'phase': phase,
+              'request': request, 'stopped_position': position, 'travel_bound': travel_bound,
+              'stop_timeout': stop_timeout, 'status': status,
+              'controller_error': controller_error, 'snapshot': rig.snapshot()}
+    rig.trace.append(result)
+    return result
+
+
+def run_interrupted_profile(rig, axis, amplitude, velocity, validate, method, phase):
+    original = rig.get(axis, '-PosAct')
+    result = run_profile(rig, axis, amplitude, velocity, validate, triggers=True,
+                         interruption=(method, phase))
+    # A fresh Build/Execute must reset trigger counting and execute new motion.
+    run_profile(rig, axis, amplitude, velocity, validate, triggers=True)
+    if abs(rig.get(axis, '-PosAct')-original) > rig.profile.get('tolerance', .015):
+        validate(axis, original)
+        rig.move(axis, original)
+    rig.trace.append({'action': 'PVT interruption recovery completed', 'axis': axis,
+                      'method': method, 'phase': phase, 'original': original})
+    return result
+
+
+class PVTInterruptions:
+    """Live interruption matrix shared by the independent hardware/SIM runners."""
+
+
+def _interruption_method(axis, method, phase):
+    def exercise(self): self.interrupt_profile(axis, method, phase)
+    exercise.__name__ = 'test_pvt_'+('lo' if axis == 'TR_LO' else 'hi')+'_'+method+'_'+phase
+    return exercise
+
+
+PVT_INTERRUPTION_NAMES = []
+for _axis in ('TR_LO', 'TR_HI'):
+    for _method in ('abort', 'stop', 'disable'):
+        for _phase in ('before_first_pulse', 'pulse_high'):
+            _function = _interruption_method(_axis, _method, _phase)
+            setattr(PVTInterruptions, _function.__name__, _function)
+            PVT_INTERRUPTION_NAMES.append(_function.__name__)
+PVT_INTERRUPTION_NAMES = tuple(PVT_INTERRUPTION_NAMES)

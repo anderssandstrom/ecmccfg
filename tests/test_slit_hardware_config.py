@@ -55,7 +55,10 @@ class SlitHardwareConfigTests(unittest.TestCase):
             if filename.startswith('axis_ax'):
                 self.assertEqual(document['encoder']['type'], 0)
                 self.assertNotIn('power',document['encoder'])
-                self.assertNotIn('homing',document['encoder'])
+                if filename == 'axis_ax6_HI.yaml':
+                    self.assertEqual(document['encoder']['homing']['position'], -20)
+                    self.assertEqual(document['encoder']['homing']['velocity']['to'], 3)
+                else: self.assertNotIn('homing', document['encoder'])
                 self.assertNotIn('home', document['input'])
                 self.assertEqual(document['softlimits']['backward'], -10.0)
                 self.assertEqual(document['softlimits']['forward'], 10.0)

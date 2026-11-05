@@ -27,5 +27,20 @@
     "timeout": 10
   },
   "relative_to_start": true,
-  "reference_to_zero": true
+  "reference_to_zero": true,
+  "homing": {
+    "axis": "TR_HI",
+    "search_velocity": 3.0,
+    "edge_velocity": 0.2,
+    "acceleration": 10.0,
+    "deceleration": 10.0,
+    "home_position": -20.0,
+    "post_move_position": 0.0,
+    "timeout": 60.0,
+    "max_search_travel": 100.0,
+    "max_total_travel": 125.0,
+    "raw_position": "m0s009-Enc01-PosAct",
+    "raw_counts_per_mm": 4096.0,
+    "raw_bits": 26
+  }
 }

@@ -2,6 +2,7 @@
 from contextlib import contextmanager
 import time
 from slit.rig import Rig as SimulationTransport
+from slit_motion_checks import MotionExpectation
 
 
 class Operations:
@@ -164,6 +165,7 @@ class Operations:
         if self.get(axis, '-AutoExecuteOnTargetPos-RB') != int(on_write):
             raise RuntimeError('native target-write mode does not match the selected test')
         self.validate_target(axis, expected)
+        self.motion_expectation = MotionExpectation(self, axis)
         self.native_put(axis, '-MtnCmd', command)
         self.native_put(axis, '-MtnCmdData', 0)
         self.native_put(axis, '-TgtVelCmd', self.profile['velocity'])

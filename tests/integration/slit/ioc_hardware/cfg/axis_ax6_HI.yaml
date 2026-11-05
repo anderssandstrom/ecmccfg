@@ -46,6 +46,18 @@ drive:
     closeAhead: 200
 
 encoder:
+  # Explicit hardware tests use the wired limits, not a home cam.
+  homing:
+    type: 1
+    position: -20
+    velocity:
+      to: 3
+      from: 0.2
+    acceleration: 10
+    deceleration: 10
+    postMoveEnable: false
+    timeout: 60
+
   desc: Openloop
   numerator: 1          # 1egu = 1mm
   denominator: 12800    # Number of ticks when motor moves numerator (=1mm): 1 mm / 50 nm = 20000

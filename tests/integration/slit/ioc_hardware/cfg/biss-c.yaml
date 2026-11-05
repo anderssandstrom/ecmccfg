@@ -1,4 +1,16 @@
 encoder:
+  # Explicit hardware tests use the wired limits, not a home cam.
+  homing:
+    type: 1
+    position: -20
+    velocity:
+      to: 3
+      from: 0.2
+    acceleration: 10
+    deceleration: 10
+    postMoveEnable: false
+    timeout: 60
+
   desc: BISS-C
   numerator: 1                                        # Scaling numerator example 1 mm/rev
   denominator: 4096                                   # Scaling denominator example 4096 ticks per 360 degree

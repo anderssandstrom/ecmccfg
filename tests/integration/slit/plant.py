@@ -70,6 +70,9 @@ class Blade:
         self.config = config
         self.model = el7041.Model(el7041.Settings(), position_mm * config['internal_counts_per_mm'])
         self.faults = Faults()
+        self.backlash_mm = 0.0
+        self.mechanical_mm = position_mm
+        self.backlash_peak_gap = 0.0
         self.held_mm = position_mm
         self.homing_inputs = None
         self.encoder_mm = position_mm
@@ -85,7 +88,18 @@ class Blade:
 
     @property
     def position_mm(self):
+        return self.mechanical_mm if self.backlash_mm else self.drive_position_mm
+
+    @property
+    def drive_position_mm(self):
         return self.model.position_counts / self.config['internal_counts_per_mm']
+
+    def configure_backlash(self, width):
+        if isinstance(width, bool) or not math.isfinite(width) or width < 0:
+            raise ValueError('backlash must be finite and nonnegative')
+        self.mechanical_mm = self.drive_position_mm
+        self.backlash_mm = float(width)
+        self.backlash_peak_gap = 0.0
 
     def inject(self, **values):
         for name, value in values.items():
@@ -107,6 +121,10 @@ class Blade:
             self.model.trip()
             control = el7041.word16(control) & ~3  # Fault injection persists through reset/enable requests.
         feedback = self.model.step(control, velocity, seconds)
+        drive_position = self.drive_position_mm
+        half_gap = self.backlash_mm/2
+        self.mechanical_mm = max(drive_position-half_gap, min(drive_position+half_gap, self.mechanical_mm))
+        self.backlash_peak_gap = max(self.backlash_peak_gap, abs(drive_position-self.position_mm))
         status = feedback.drive_status
         if self.homing_inputs is not None:
             sensors = self.homing_inputs
@@ -172,6 +190,9 @@ class Plant:
                     'io_phase': self.io_phase, 'io_seconds': dict(self.io_seconds),
                     'io_max_seconds': dict(self.io_max_seconds), 'failure': self.failure_details,
                     'blades': {axis: {'position_mm': blade.position_mm,
+                                     'drive_position_mm': blade.drive_position_mm,
+                                     'backlash_mm': blade.backlash_mm,
+                                     'backlash_peak_gap_mm': blade.backlash_peak_gap,
                                      'homing_inputs': vars(blade.homing_inputs) if blade.homing_inputs else None,
                                      'encoder_mm': blade.encoder_mm,
                                      'encoder_noise_peak_mm': blade.faults.encoder_noise_mm,
@@ -208,6 +229,15 @@ class Plant:
             blade.encoder_power_polarity = active_high
             blade.encoder_power_delay = startup_delay
             blade.encoder_supply_seconds = 0.0
+
+    def configure_backlash(self, axis, width=0):
+        with self.lock: self.blades[axis].configure_backlash(width)
+
+    def backlash_state(self, axis):
+        with self.lock:
+            blade = self.blades[axis]
+            return {'width_mm': blade.backlash_mm, 'drive_mm': blade.drive_position_mm,
+                    'mechanical_mm': blade.position_mm, 'peak_gap_mm': blade.backlash_peak_gap}
 
     def configure_homing(self, axis, inputs=None):
         if inputs is not None and not isinstance(inputs, HomingInputs):

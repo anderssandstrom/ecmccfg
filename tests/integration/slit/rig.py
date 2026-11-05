@@ -3,6 +3,7 @@ import json
 import math
 import threading
 import time
+from slit_motion_checks import observe_motion
 
 
 class Client:
@@ -45,6 +46,7 @@ class Rig:
         self.profile, self.prefix, self.client, self.plant = profile, prefix, client, plant
         self.names = list(profile['axes'])
         self.trace = []
+        self.motion_expectation = None
 
     def name(self, axis, suffix): return self.prefix + axis + suffix
     def get(self, axis, suffix): return self.client.get(self.name(axis, suffix))
@@ -94,6 +96,7 @@ class Rig:
         end = time.monotonic() + timeout
         while time.monotonic() < end:
             self.plant.check()
+            if self.motion_expectation is not None: self.motion_expectation.check()
             if predicate(): return
             time.sleep(.02)
         raise AssertionError('timeout: ' + description + '\n' + json.dumps(self.snapshot(), indent=2))
@@ -303,12 +306,13 @@ class Rig:
     def native_move(self, axis, position, command=3, velocity=.4, expected=None):
         if command not in (2, 3) or (command == 2 and expected is None):
             raise ValueError('relative moves require an independently specified expected position')
-        self.stage_native(axis, command, position, velocity)
-        self.execute_native(axis)
-        self.wait_native_stopped(axis, position if expected is None else expected)
-        self.put(axis, '-ExeCmd', 0)
-        self.trace.append({'action': 'native move completed', 'axis': axis, 'command': command,
-                           'position': position, 'snapshot': self.snapshot()})
+        with observe_motion(self, axis, position if expected is None else expected):
+            self.stage_native(axis, command, position, velocity)
+            self.execute_native(axis)
+            self.wait_native_stopped(axis, position if expected is None else expected)
+            self.put(axis, '-ExeCmd', 0)
+            self.trace.append({'action': 'native move completed', 'axis': axis, 'command': command,
+                               'position': position, 'snapshot': self.snapshot()})
 
     def start_move(self, axis, target):
         try:
@@ -336,33 +340,34 @@ class Rig:
                                + json.dumps(snapshot, indent=2)) from error
 
     def move(self, axis, target, timeout=15):
-        complete = self.start_move(axis, target)
-        def arrived():
-            error = int(self.get(axis, '-ErrId'))
-            if error:
+        with observe_motion(self, axis, target):
+            complete = self.start_move(axis, target)
+            def arrived():
+                error = int(self.get(axis, '-ErrId'))
+                if error:
+                    snapshot = self.snapshot()
+                    self.trace.append({'action': 'move failed', 'axis': axis, 'target': target,
+                                       'error': error, 'snapshot': snapshot})
+                    raise AssertionError(f'{axis}: axis fault during motion 0x{error:x}\n'
+                                         'Motion diagnostics (before cleanup):\n' + json.dumps(snapshot, indent=2))
+                return (complete.is_set() and self.get(axis, '.DMOV') == 1 and self.get(axis, '-Busy') == 0
+                        and abs(self.get(axis, '-PosAct') - target) < .015)
+            self.wait(arrived, f'{axis} reaches {target}', timeout)
+            error = self.get(axis, '-ErrId')
+            if error: raise AssertionError(f'{axis}: unexpected error 0x{int(error):x}')
+            # Retain the values that triggered the verdict: independent CA reads
+            # and the later full snapshot can observe different motor polls.
+            verdict = {suffix: self.get(axis, suffix) for suffix in ('.LVIO', '.SEVR')}
+            if verdict['.LVIO'] or verdict['.SEVR']:
+                verdict.update({suffix: self.get(axis, suffix) for suffix in ('.STAT', '.MSTA')})
                 snapshot = self.snapshot()
-                self.trace.append({'action': 'move failed', 'axis': axis, 'target': target,
-                                   'error': error, 'snapshot': snapshot})
-                raise AssertionError(f'{axis}: axis fault during motion 0x{error:x}\n'
-                                     'Motion diagnostics (before cleanup):\n' + json.dumps(snapshot, indent=2))
-            return (complete.is_set() and self.get(axis, '.DMOV') == 1 and self.get(axis, '-Busy') == 0
-                    and abs(self.get(axis, '-PosAct') - target) < .015)
-        self.wait(arrived, f'{axis} reaches {target}', timeout)
-        error = self.get(axis, '-ErrId')
-        if error: raise AssertionError(f'{axis}: unexpected error 0x{int(error):x}')
-        # Retain the values that triggered the verdict: independent CA reads
-        # and the later full snapshot can observe different motor polls.
-        verdict = {suffix: self.get(axis, suffix) for suffix in ('.LVIO', '.SEVR')}
-        if verdict['.LVIO'] or verdict['.SEVR']:
-            verdict.update({suffix: self.get(axis, suffix) for suffix in ('.STAT', '.MSTA')})
-            snapshot = self.snapshot()
-            self.trace.append({'action': 'motor completion rejected', 'axis': axis, 'target': target,
-                               'verdict': verdict, 'snapshot': snapshot})
-            raise AssertionError(axis + ': motor completed with a limit violation/alarm\n'
-                                 + 'Triggering reads (before diagnostic snapshot):\n'
-                                 + json.dumps(verdict, indent=2) + '\n'
-                                 + json.dumps(snapshot, indent=2))
-        self.trace.append({'action': 'move', 'axis': axis, 'target': target, 'snapshot': self.snapshot()})
+                self.trace.append({'action': 'motor completion rejected', 'axis': axis, 'target': target,
+                                   'verdict': verdict, 'snapshot': snapshot})
+                raise AssertionError(axis + ': motor completed with a limit violation/alarm\n'
+                                     + 'Triggering reads (before diagnostic snapshot):\n'
+                                     + json.dumps(verdict, indent=2) + '\n'
+                                     + json.dumps(snapshot, indent=2))
+            self.trace.append({'action': 'move', 'axis': axis, 'target': target, 'snapshot': self.snapshot()})
 
     def kinematics(self):
         lo, hi = (self.get(axis, '-PosAct') for axis in ('TR_LO', 'TR_HI'))

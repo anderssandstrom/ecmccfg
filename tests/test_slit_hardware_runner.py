@@ -33,15 +33,25 @@ class HardwareBoundary:
         self.put_options = []
         self.timeout = 1
         self.pvt_active = None
+        self.home_active = None
+        self.home_power_model = False
+        self.concurrent = {}
         self.values['HW:m0s005-BO05-RB'] = 0
         self.brake_phases = {}
         self.closed, self.active, self.fault_on_move = False, None, False
+        self.native_settings = {a: {'MonAtTargetTol': .01, 'MonEnableAtTargetMon': 1,
+            'MonEnableStallMon': 1, 'MonStallMinTimeOut': 15000, 'MonStallTimeFactor': 10, 'EncConfigIndex': 2, 'HomeSeqId': 1, 'HomePosition': 0,
+            'HomeVelTowardsCam': .2, 'HomeVelOffCam': .1, 'HomeAcc': 1, 'HomeDec': 1,
+            'HomePostMoveEnable': 0, 'HomePostMoveTargetPosition': 0}
+            for a in ('TR_LO', 'TR_HI')}
+        self.stalled_pending = {}
         self.completed_at = 0
         self.interrupt_on_move, self.stall = False, False
         for axis, number in run.json.loads(run.DEFAULT_PROFILE.read_text())['axes'].items():
             fields = {'.DIR': 0, '.OFF': 0, '.SPMG': 3, '.DMOV': 1, '.MOVN': 0,
                       '.VELO': .4, '.VMAX': 5, '.SET': 0, '.FOFF': 1, '.SYNC': 0, '-Homed': 0, '.SEVR': 0, '.LVIO': 0, '-Busy': 0,
-                      '-InStartup': 0, '-EnaCmd-RB': 0, '-LimBwd': 1, '-LimFwd': 1, '-ErrId': 0,
+                      '-HomProc.OMSL': 1, '-HomProc': 1, '-HomPos': 0, '-VelToHom': .2, '-VelFrmHom': .1,
+                      '-AccHom': 1, '-HomUseHVEL': 0, '-MtnCmd_.DISA': 0, '-MtnCmd_.DISV': 1, '-SeqState': 0, '.MSTA': 0, '.MIP': 0, '.PACT': 0, '.STAT': 0, '-BusyLocal': 0, '-InStartup': 0, '-EnaCmd-RB': 0, '-LimBwd': 1, '-LimFwd': 1, '-ErrId': 0,
                       '-WrnId': 0, '-VelAct': 0, '-AtTarget': 1, '-Id': number, '-EnaAct': 0,
                       '.LLM': -10, '.HLM': 10, '-CfgDLLM-RB': -10, '-CfgDHLM-RB': 10,
                       '-CfgDLLM-En-RB': 1, '-CfgDHLM-En-RB': 1, '-EncMode-RB': 0,
@@ -55,7 +65,8 @@ class HardwareBoundary:
                       '-PVT-UseAxis': 0, '-PVT-Positions': [], '-PVT-Readbacks': []}
             for field, value in fields.items(): self.values['HW:'+axis+field] = value
         self.values.update({'HW:MCU-Cfg-Sim-Mode': 0, 'HW:MCU-AppMode': 1,
-                            'HW:m0-Stat-OK': 1, 'HW:HardwareSlitTest:Schema': 1,
+                            'HW:m0-Stat-OK': 1, 'HW:MCU-ErrId': 0, 'HW:HardwareSlitTest:Schema': 1, 'HW:HardwareSlitTest:HomingSchema': 1,
+                            'HW:m0s009-Enc01-PosAct.ESLO': 1, 'HW:m0s009-Enc01-PosAct.EOFF': 0,
                             'HW:SM00-EnaCmd': 1, 'HW:SM00-StateCmd': 0, 'HW:MCU-Cmd.TMOD': 0, 'HW:MCU-Cmd.IFMT': 0,
                             'HW:MCU-Cmd.OFMT': 0, 'HW:MCU-Cmd.SEVR': 0, 'HW:MCU-Cmd.AINP': 'OK'})
         self.values.update({'HW:PVT-'+key: value for key, value in {
@@ -79,6 +90,19 @@ class HardwareBoundary:
             self.values['HW:'+axis+'.RBV'] = self.values['HW:'+axis+'.OFF']+sign*pos
 
     def update(self):
+        self.values['HW:m0s009-Enc01-PosAct'] = 5652480+self.mechanical_positions['TR_HI']*4096
+        if self.home_active is not None:
+            self.update_home()
+            return
+        for blade, (start, destination, began) in list(self.concurrent.items()):
+            fraction = min(1., (self.clock.now-began)/.5)
+            old = self.positions[blade]
+            self.positions[blade] = start+(destination-start)*fraction
+            self.mechanical_positions[blade] += self.positions[blade]-old
+            if fraction >= 1:
+                for f,v in (('-Busy',0),('-VelAct',0),('.DMOV',1),('.MOVN',0)): self.values['HW:'+blade+f] = v
+                del self.concurrent[blade]
+            self.update_coordinates()
         if self.pvt_active:
             axis, points, started = self.pvt_active
             fraction = min(len(points)-1, max(0., (self.clock.now-started)*2.5))
@@ -106,24 +130,96 @@ class HardwareBoundary:
         if self.active:
             axis, target, end = self.active
             if self.fault_on_move: self.values['HW:TR_HI-ErrId'] = 123
-            start = max(end-.5, self.brake_phases.get(axis, (0, -1))[1])
+            start = max(self.active_started, self.brake_phases.get(axis, (0, -1))[1])
             fraction = 0 if self.stall else max(0, min(1, (self.clock.now-start)/(end-start)))
             self.values['HW:'+axis+'-VelAct'] = .1 if fraction > 0 else 0
             previous = dict(self.positions)
-            self.positions = {a: before+(self.destination[a]-before)*fraction
-                              for a, before in self.initial_positions.items()}
-            for axis in self.positions:
-                self.mechanical_positions[axis] += self.positions[axis]-previous[axis]
+            moving = (axis,) if axis in self.positions else tuple(self.positions)
+            for a in moving:
+                self.positions[a] = self.initial_positions[a]+(self.destination[a]-self.initial_positions[a])*fraction
+            for blade in self.positions:
+                self.mechanical_positions[blade] += self.positions[blade]-previous[blade]
             self.update_coordinates()
             if fraction >= 1:
+                unsettled = axis in self.native_settings and self.native_settings[axis]['MonAtTargetTol'] == 0
+                pending = list(self.pending)
                 self.stop()
                 self.completed_at = self.clock.now
+                if unsettled:
+                    for event in pending: event.clear()
+                    self.stalled_pending[axis] = pending
+                    self.values['HW:'+axis+'-AtTarget'] = 0
+                    self.values['HW:'+axis+'.DMOV'] = 0
+                    self.values['HW:'+axis+'.MIP'] = 1
+        elif self.home_power_model and self.values['HW:TR_HI-EncForceOn-RB']:
+            self.values['HW:TR_HI-Enc02-PwrState'] = 3
+            self.values['HW:TR_HI-Enc02-Ready'] = 1
+            self.values['HW:TR_HI-Enc02-PwrOn'] = 1
+            self.values['HW:TR_HI-SetEncIdCmd-RB'] = 2
         elif self.clock.now-self.completed_at > 2:
             self.values['HW:TR_HI-Enc02-PwrState'] = 1
             self.values['HW:TR_HI-SetEncIdCmd-RB'] = 1
             self.values['HW:TR_HI-Enc02-Ready'] = 0
             self.values['HW:TR_HI-Enc02-PwrOn'] = 0
             self.values['HW:TR_HI-Enc01-Homed'] = self.values['HW:TR_HI-Enc02-Homed']
+
+    def begin_home(self, axis, notify):
+        cfg = self.native_settings[axis]
+        edge = -40. if cfg['HomeSeqId'] == 1 else 40.
+        self.home_active = (axis, self.clock.now, self.mechanical_positions[axis], edge)
+        for f,v in (('-Busy',1),('-BusyLocal',1),('-Homed',0),('-SeqState',1),('.DMOV',0),('.MOVN',1),('.MIP',1)):
+            self.values['HW:'+axis+f] = v
+        if notify:
+            event = Event(); self.pending.append(event); return event
+        return None
+
+    def update_home(self):
+        axis, began, initial, edge = self.home_active
+        cfg = self.native_settings[axis]
+        elapsed = self.clock.now-began
+        old = self.mechanical_positions[axis]
+        if elapsed < .5:
+            actual = initial+(edge-initial)*elapsed/.5
+            self.positions[axis] += actual-old
+        elif elapsed < .8:
+            actual = edge
+            self.positions[axis] += actual-old
+            self.values['HW:'+axis+('-LimBwd' if edge < 0 else '-LimFwd')] = 0
+        else:
+            self.values['HW:'+axis+'-LimBwd'] = 1
+            self.values['HW:'+axis+'-LimFwd'] = 1
+            release = edge+(.01 if edge < 0 else -.01)
+            self.values['HW:'+axis+'-Homed'] = 1
+            if cfg['HomePostMoveEnable']:
+                fraction = min(1., (elapsed-.8)/.8)
+                self.positions[axis] = cfg['HomePosition']+(cfg['HomePostMoveTargetPosition']-cfg['HomePosition'])*fraction
+                actual = release+self.positions[axis]-cfg['HomePosition']
+                self.values['HW:'+axis+'-SeqState'] = 235
+            else:
+                actual = release
+                self.positions[axis] = cfg['HomePosition']
+            if not cfg['HomePostMoveEnable'] or elapsed >= 1.6:
+                self.home_active = None
+                self.stop()
+                self.values['HW:'+axis+'-SeqState'] = 0
+        self.mechanical_positions[axis] = actual
+        self.values['HW:m0s009-Enc01-PosAct'] = 5652480+actual*4096
+        self.values['HW:'+axis+'-VelAct'] = .1 if self.home_active else 0
+        self.update_coordinates()
+
+    def update_stall(self):
+        for axis, events in list(self.stalled_pending.items()):
+            cfg = self.native_settings[axis]
+            if cfg['MonEnableStallMon'] and self.clock.now-self.completed_at > cfg['MonStallMinTimeOut']/1000:
+                self.values['HW:'+axis+'-ErrId'] = 0x14c19
+                self.values['HW:'+axis+'-EnaAct'] = 0
+                self.values['HW:'+axis+'-EnaCmd-RB'] = 0
+                self.values['HW:'+axis+'.MSTA'] = 1 << 9
+                self.values['HW:'+axis+'.SEVR'] = 2
+                self.values['HW:'+axis+'.DMOV'] = 1
+                self.values['HW:'+axis+'.MIP'] = 0
+                for event in events: event.set()
+                del self.stalled_pending[axis]
 
     def enable_brake(self, axis, enabled):
         if axis not in self.positions: return
@@ -142,8 +238,15 @@ class HardwareBoundary:
             self.values['HW:m0s'+slave+'-Drv01-Cmd-RB'] = int(enabled or self.clock.now < transition)
 
     def stop(self):
+        self.home_active = None
+        self.concurrent.clear()
+        if self.pvt_active is not None:
+            self.pvt_active = None
+            self.values['HW:PVT-ExecuteState'] = 0
+            self.values['HW:PVT-ExecuteStatus'] = 3
+            self.values['HW:m0s005-BO05-RB'] = 0
         for axis in ('TR_LO', 'TR_HI', 'CENTERY', 'GAPY'):
-            for field, value in (('-Busy', 0), ('.DMOV', 1), ('.MOVN', 0), ('-VelAct', 0), ('-ExeCmd-RB', 0)):
+            for field, value in (('-Busy', 0), ('-BusyLocal', 0), ('.MIP', 0), ('.PACT', 0), ('.DMOV', 1), ('.MOVN', 0), ('-VelAct', 0), ('-ExeCmd-RB', 0)):
                 self.values['HW:'+axis+field] = value
         for event in self.pending: event.set()
         self.pending = []
@@ -152,6 +255,7 @@ class HardwareBoundary:
     def get(self, name):
         self.update()
         self.update_brakes()
+        self.update_stall()
         return self.values[name]
 
     def pv(self, name):
@@ -160,11 +264,14 @@ class HardwareBoundary:
     def put(self, name, value, **kwargs):
         self.writes.append((name, value))
         self.put_options.append((name, dict(kwargs)))
-        if name.endswith('.VAL') and kwargs.get('notify', True) and self.pending:
+        if name.endswith('.VAL') and kwargs.get('notify', True) and self.pending and self.active is not None and name == 'HW:'+self.active[0]+'.VAL':
             raise RuntimeError('second put-notify would queue behind active motor processing')
         self.values[name] = value
         if name.endswith('-TrjSrcTyp-Cmd'):
             self.values[name.replace('-Cmd', '-RB')] = value
+            return None
+        if name == 'HW:SM00-StateCmd':
+            self.values[name] = 0
             return None
         if name == 'HW:SM00-EnaCmd':
             self.values['HW:SM00-StateCmd'] = 0
@@ -183,7 +290,7 @@ class HardwareBoundary:
                 self.pvt_active = (axis, list(self.values['HW:'+axis+'-PVT-Positions']), self.clock.now)
                 self.values['HW:PVT-ExecuteState'] = 2
                 self.values['HW:PVT-ExecuteStatus'] = 0
-                for field, state in (('-Busy', 1), ('.DMOV', 0), ('.MOVN', 1), ('-EnaAct', 1)):
+                for field, state in (('-Busy', 1), ('-BusyLocal', 1), ('.DMOV', 0), ('.MOVN', 1), ('-EnaAct', 1)):
                     self.values['HW:'+axis+field] = state
             elif name == 'HW:PVT-Readback':
                 for axis in self.positions:
@@ -197,6 +304,11 @@ class HardwareBoundary:
                 self.values['HW:PVT-ExecuteState'] = 0
                 self.values['HW:PVT-ExecuteStatus'] = 3
             return None
+        if name == 'HW:MCU-ErrRst':
+            for a in ('TR_LO', 'TR_HI', 'CENTERY', 'GAPY'):
+                for f in ('-ErrId', '.MSTA', '.SEVR'): self.values['HW:'+a+f] = 0
+            self.values['HW:MCU-ErrId'] = 0
+            return None
         if name == 'HW:MCU-Cmd.AOUT':
             match = re.fullmatch(r'Cfg.SetAxisAutoExec\((\d+),(\d+)\)', value)
             if match:
@@ -207,21 +319,48 @@ class HardwareBoundary:
                 axis = 'TR_LO' if '(5)' in value else 'TR_HI'
                 reply = str(self.values['HW:'+axis+'-AutoExecuteOnTargetPos-RB'])
             elif value.startswith('GetAxisEnableAutoEnable'): reply = '1'
-            else: raise AssertionError('unsupported text command: '+value)
+            elif value.startswith('Cfg.SelectAxisEncConfig'):
+                number, index = map(int, re.findall(r'\d+', value))
+                self.native_settings['TR_LO' if number == 5 else 'TR_HI']['EncConfigIndex'] = index
+                reply = 'OK'
+            else:
+                configured = re.fullmatch(r'Cfg.SetAxis([A-Za-z]+)\((\d+),([-+.0-9eE]+)\)', value)
+                queried = re.fullmatch(r'GetAxis([A-Za-z]+)\((\d+)\)', value)
+                if configured:
+                    key, number, v = configured.groups()
+                    if key == 'HomePostMvPos': key = 'HomePostMoveTargetPosition'
+                    if key.startswith('Home'): self.home_power_model = True
+                    a = 'TR_LO' if int(number) == 5 else 'TR_HI'
+                    self.native_settings[a][key] = float(v)
+                    if key == 'MonAtTargetTol': self.values['HW:'+a+'-AtTarget'] = int(float(v) > 0)
+                    reply = 'OK'
+                elif queried:
+                    key, number = queried.groups()
+                    a = 'TR_LO' if int(number) == 5 else 'TR_HI'
+                    reply = str(self.native_settings[a][key])
+                else: raise AssertionError('unsupported text command: '+value)
             self.values['HW:MCU-Cmd.AINP'] = reply
             return None
-        for suffix in ('-EnaCmd', '-ExeCmd', '-MtnCmd', '-MtnCmdData', '-TgtVelCmd', '-TgtPosCmd'):
+        for suffix in ('-EnaCmd', '-ExeCmd', '-StpCmd', '-MtnCmd', '-MtnCmdData', '-TgtVelCmd', '-TgtPosCmd'):
             if name.endswith(suffix):
                 axis = name[3:-len(suffix)]
                 if suffix == '-EnaCmd':
+                    if value == 0 and self.pvt_active is not None and self.pvt_active[0] == axis:
+                        self.stop()
+                        self.values['HW:MCU-ErrId'] = 0x242003
                     self.enable_brake(axis, value)
                     self.values['HW:'+axis+'-EnaAct'] = value
                     self.values['HW:'+axis+'-EnaCmd-RB'] = value
                     if value:
                         for name in self.positions: self.values['HW:'+name+'-TrjSrcTyp-RB'] = 0
+                if suffix == '-StpCmd':
+                    self.stop()
+                    return None
                 if suffix == '-ExeCmd': self.values['HW:'+axis+'-ExeCmd-RB'] = value
                 if ((suffix == '-ExeCmd' and value == 1) or
                     (suffix == '-TgtPosCmd' and self.values['HW:'+axis+'-AutoExecuteOnTargetPos-RB'])):
+                    if self.values['HW:'+axis+'-MtnCmd'] == 10:
+                        return self.begin_home(axis, False)
                     target = self.values['HW:'+axis+'-TgtPosCmd']
                     if self.values['HW:'+axis+'-MtnCmd'] == 2: target += self.positions[axis]
                     return self.begin_move(axis, target, notify=False)
@@ -239,6 +378,13 @@ class HardwareBoundary:
         if name.endswith('-EncForceOn'):
             self.values[name+'-RB'] = value
             return None
+        for field, key in (('-HomProc', 'HomeSeqId'), ('-HomPos', 'HomePosition'), ('-VelToHom', 'HomeVelTowardsCam'), ('-VelFrmHom', 'HomeVelOffCam'), ('-AccHom', 'HomeAcc')):
+            if name.endswith(field):
+                a = name[3:-len(field)]
+                self.native_settings[a][key] = value
+                return None
+        if name.endswith(('.HOMF', '.HOMR')):
+            return self.begin_home(name[3:-5], kwargs.get('notify', True))
         if name.endswith('-SetEncPosCmd'):
             axis = name[3:-len('-SetEncPosCmd')]
             assert axis in ('TR_LO', 'TR_HI')
@@ -265,6 +411,13 @@ class HardwareBoundary:
         return self.begin_move(axis, target, **kwargs)
 
     def begin_move(self, axis, value, **kwargs):
+        if self.active is not None and axis in self.positions and self.active[0] in self.positions and axis != self.active[0]:
+            self.concurrent[axis] = (self.positions[axis], value, self.clock.now)
+            self.values['HW:'+axis+'-Busy'] = 1
+            self.values['HW:'+axis+'.DMOV'] = 0
+            self.values['HW:'+axis+'.MOVN'] = 1
+            self.values['HW:'+axis+'-VelAct'] = .1
+            return None
         if not self.values['HW:'+axis+'-EnaAct']: self.enable_brake(axis, 1)
         self.initial_positions = dict(self.positions)
         self.destination = dict(self.positions)
@@ -274,8 +427,14 @@ class HardwareBoundary:
             self.destination.update(TR_LO=value-(high-low)/2, TR_HI=value+(high-low)/2)
         else:
             self.destination.update(TR_LO=(low+high)/2-value/2, TR_HI=(low+high)/2+value/2)
-        self.active = (axis, value, self.clock.now+.5)
-        for field, state in (('-Busy', 1), ('.DMOV', 0), ('.MOVN', 1), ('-EnaAct', 1), ('-VelAct', .1)):
+        if axis in ('CENTERY', 'GAPY'):
+            for a in self.positions:
+                for f, v in (('-EnaAct', 1), ('-TrjSrcTyp-RB', 1), ('-VelAct', .1), ('-Busy', 1), ('.DMOV', 0)):
+                    self.values['HW:'+a+f] = v
+        self.active_started = self.clock.now
+        duration = 3. if self.values['HW:'+axis+'.VELO'] < .3 and axis in self.positions else .5
+        self.active = (axis, value, self.clock.now+duration)
+        for field, state in (('-Busy', 1), ('-BusyLocal', 1), ('.DMOV', 0), ('.MOVN', 1), ('-EnaAct', 1), ('-VelAct', .1)):
             self.values['HW:'+axis+field] = state
         self.values['HW:'+axis+'-VelAct'] = 0
         self.values['HW:TR_HI-Enc02-PwrState'] = 3
@@ -302,7 +461,7 @@ class HardwareRunnerTests(unittest.TestCase):
         with patch.object(run, 'Client', side_effect=AssertionError('connection attempted')):
             with redirect_stdout(io.StringIO()):
                 self.assertEqual(run.main([]), 0)
-        self.assertEqual(make_suite(None, GROUPS).countTestCases(), 49)
+        self.assertEqual(make_suite(None, GROUPS).countTestCases(), 97)
         self.assertEqual(make_suite(None, GROUPS, ('motor_stop',)).countTestCases(), 2)
 
     def test_bad_identity_modes_and_statuses_never_write(self):
@@ -355,7 +514,7 @@ class HardwareRunnerTests(unittest.TestCase):
     def test_all_cases_reference_zero_restore_velocities_and_use_expected_fields(self):
         code, report, xml = self.run_live_boundary()
         self.assertEqual(code, 0, report)
-        self.assertEqual(len(report['tests']), 49)
+        self.assertEqual(len(report['tests']), 91)
         self.assertTrue(all(t['status'] == 'passed' for t in report['tests']), report)
         self.assertEqual(xml.attrib['errors'], '0')
         self.assertTrue(self.client.closed)
@@ -366,8 +525,8 @@ class HardwareRunnerTests(unittest.TestCase):
         self.assertTrue(self.client.writes)
         self.assertTrue(all(n.endswith(('.VAL', '.VELO', '.STOP', '-SetEncPosCmd', '.DIR', '.OFF', '.FOFF',
                                        '.SYNC', '-EncForceOn', '-CfgSyncSftLim', '-EnaCmd', '-ExeCmd',
-                                       '-MtnCmd', '-MtnCmdData', '-TgtVelCmd', '-TgtPosCmd', '-TrjSrcTyp-Cmd', 'SM00-EnaCmd'))
-                            or n.startswith(('HW:MCU-Cmd.', 'HW:PVT-')) or '-PVT-' in n
+                                       '-MtnCmd', '-MtnCmdData', '-TgtVelCmd', '-TgtPosCmd', '-TrjSrcTyp-Cmd', '-StpCmd', 'SM00-EnaCmd', 'SM00-StateCmd'))
+                            or n == 'HW:MCU-ErrRst' or n.startswith(('HW:MCU-Cmd.', 'HW:PVT-')) or '-PVT-' in n
                             for n, _ in self.client.writes))
         self.assertAlmostEqual(self.client.mechanical_positions['TR_LO'], -.15)
         self.assertAlmostEqual(self.client.mechanical_positions['TR_HI'], .15)
@@ -394,12 +553,12 @@ class HardwareRunnerTests(unittest.TestCase):
         with patch.object(self.client, 'begin_move', begin), patch.object(self.client, 'put', put):
             code, report, _ = self.run_live_boundary(('--case', 'no_sm'))
         self.assertEqual(code, 0, report)
-        self.assertEqual(len(report['tests']), 23)
+        self.assertEqual(len(report['tests']), 39)
         self.assertEqual(self.client.values['HW:SM00-EnaCmd'], 1)
         for axis in self.profile['physical']:
             self.assertEqual(self.client.values['HW:'+axis+'-TrjSrcTyp-RB'], 1)
             self.assertEqual(self.client.values['HW:'+axis+'-EnaAct'], 0)
-        self.assertEqual(len([x for x in report['trace'] if x.get('action') == 'disable state machine']), 23)
+        self.assertEqual(len([x for x in report['trace'] if x.get('action') == 'disable state machine']), 39)
 
     def test_no_sm_fault_restores_state_machine_without_return_move(self):
         self.client.fault_on_move = True
@@ -594,6 +753,268 @@ class HardwareRunnerTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn('output must be low', report['error'])
         self.assertEqual(self.client.writes, [])
+
+    def test_all_live_pvt_interruption_paths_recover_in_both_sm_modes(self):
+        code, report, _ = self.run_live_boundary(('--case', 'pvt', '--case', 'no_sm', '--test', 'before_first_pulse', '--test', 'pulse_high'))
+        self.assertEqual(code, 0, report)
+        self.assertEqual(len(report['tests']), 24)
+        stopped = [x for x in report['trace'] if x.get('action') == 'PVT interrupted']
+        recovered = [x for x in report['trace'] if x.get('action') == 'PVT interruption recovery completed']
+        self.assertEqual(len(stopped), 24)
+        self.assertEqual(len(recovered), 24)
+        for item in stopped:
+            self.assertEqual(item['request']['output'], int(item['phase'] == 'pulse_high'))
+            self.assertNotEqual(item['status'], 1)
+        self.assertEqual(self.client.values['HW:MCU-ErrId'], 0)
+        self.assertEqual(self.client.values['HW:SM00-EnaCmd'], 1)
+        for axis in self.profile['physical']: self.assertAlmostEqual(self.client.positions[axis], 0)
+
+    def test_pvt_motor_stop_must_work_without_fallback_abort(self):
+        original = self.client.put
+        def put(name, value, **kwargs):
+            if name.endswith('.STOP') and self.client.pvt_active is not None: return None
+            return original(name, value, **kwargs)
+        with patch.object(self.client, 'put', put):
+            code, report, _ = self.run_live_boundary(('--case', 'pvt', '--test', 'lo_stop_pulse_high'))
+        self.assertEqual(code, 1)
+        self.assertRegex(report['tests'][0]['detail'], 'exceeded allowed travel|incorrectly reported as successful|reaches standstill')
+        self.assertIn(('HW:PVT-Abort', 1), self.client.writes)  # Failure cleanup only.
+        self.assertFalse(any(t.get('action') == 'PVT interruption recovery completed' for t in report['trace']))
+
+    def test_pvt_replay_after_reenable_is_detected(self):
+        original = self.client.put
+        cancelled = []
+        def put(name, value, **kwargs):
+            was_active = self.client.pvt_active is not None
+            result = original(name, value, **kwargs)
+            if name == 'HW:PVT-Abort' and was_active: cancelled.append(True)
+            if name == 'HW:TR_LO-EnaCmd' and value == 1 and cancelled:
+                self.client.positions['TR_LO'] += .1
+                self.client.update_coordinates()
+            return result
+        with patch.object(self.client, 'put', put):
+            code, report, _ = self.run_live_boundary(('--case', 'pvt', '--test', 'lo_abort_pulse_high'))
+        self.assertEqual(code, 1)
+        self.assertIn('moved after standstill', report['tests'][0]['detail'])
+
+    def test_managed_physical_move_rejects_uncommanded_blade_motion(self):
+        original = self.client.begin_move
+        def begin(axis, target, **kwargs):
+            result = original(axis, target, **kwargs)
+            self.client.concurrent['TR_HI'] = (self.client.positions['TR_HI'], self.client.positions['TR_HI']+.1, self.clock.now)
+            return result
+        with patch.object(self.client, 'begin_move', begin):
+            code, report, _ = self.run_live_boundary(('--case', 'motion', '--test', 'lo_both'))
+        self.assertEqual(code, 1)
+        self.assertIn('uncommanded physical axis moved', report['tests'][0]['detail'])
+        self.assertIsNone(self.client.active)
+
+    def test_center_move_rejects_wrong_blade_split_even_with_correct_center(self):
+        original = self.client.begin_move
+        def begin(axis, target, **kwargs):
+            result = original(axis, target, **kwargs)
+            self.client.destination['TR_LO'] += .1
+            self.client.destination['TR_HI'] -= .1
+            return result
+        with patch.object(self.client, 'begin_move', begin):
+            code, report, _ = self.run_live_boundary(('--case', 'virtual', '--test', 'center_both'))
+        self.assertEqual(code, 1)
+        self.assertIn('center move changed the uncommanded gap', report['tests'][0]['detail'])
+
+    def test_pvt_rejects_uncommanded_blade_motion(self):
+        original = self.client.update
+        def update():
+            original()
+            if self.client.pvt_active is not None:
+                self.client.positions['TR_HI'] += .02
+                self.client.update_coordinates()
+        with patch.object(self.client, 'update', update):
+            code, report, _ = self.run_live_boundary(('--case', 'pvt', '--test', 'lo_round_trip'))
+        self.assertEqual(code, 1)
+        self.assertIn('uncommanded physical axis moved', report['tests'][0]['detail'])
+        self.assertIn(('HW:PVT-Abort', 1), self.client.writes)
+
+    def test_simulation_rig_runs_the_shared_live_interruption_matrix(self):
+        from slit.rig import Rig as SimulationRig
+        from slit_pvt import run_interrupted_profile
+        for axis in ('TR_LO', 'TR_HI'):
+            for method in ('abort', 'stop', 'disable'):
+                for phase in ('before_first_pulse', 'pulse_high'):
+                    with self.subTest(axis=axis, method=method, phase=phase):
+                        clock = Clock()
+                        client = HardwareBoundary(clock)
+                        profile = copy.deepcopy(self.profile)
+                        profile['physical'] = {'TR_LO': {'drive_slave': 14}, 'TR_HI': {'drive_slave': 12}}
+                        rig = SimulationRig(profile, 'HW:', client, SimpleNamespace(check=lambda: None))
+                        def validate(name, value): self.assertLess(abs(value), .7)
+                        with patch('slit.rig.time.monotonic', clock.monotonic), patch('slit.rig.time.sleep', clock.sleep):
+                            run_interrupted_profile(rig, axis, .15, .2, validate, method, phase)
+                        self.assertTrue(any(t.get('action') == 'PVT interruption recovery completed' for t in rig.trace))
+                        self.assertEqual(client.values['HW:m0s005-BO05-RB'], 0)
+                        self.assertIsNone(rig.motion_expectation)
+
+    def test_simulation_motor_move_rejects_peer_drift(self):
+        from slit.rig import Rig as SimulationRig
+        profile = copy.deepcopy(self.profile)
+        profile['physical'] = {'TR_LO': {'drive_slave': 14}, 'TR_HI': {'drive_slave': 12}}
+        rig = SimulationRig(profile, 'HW:', self.client, SimpleNamespace(check=lambda: None))
+        original = self.client.begin_move
+        def begin(axis, target, **kwargs):
+            result = original(axis, target, **kwargs)
+            self.client.concurrent['TR_HI'] = (self.client.positions['TR_HI'], self.client.positions['TR_HI']+.1, self.clock.now)
+            return result
+        with patch.object(self.client, 'begin_move', begin), \
+                patch('slit.rig.time.monotonic', self.clock.monotonic), patch('slit.rig.time.sleep', self.clock.sleep):
+            with self.assertRaisesRegex(AssertionError, 'uncommanded physical axis moved'):
+                rig.move('TR_LO', .3)
+        self.assertIsNone(rig.motion_expectation)
+
+    def test_gap_move_rejects_wrong_center_even_with_correct_gap(self):
+        original = self.client.begin_move
+        def begin(axis, target, **kwargs):
+            result = original(axis, target, **kwargs)
+            self.client.destination['TR_LO'] += .1
+            self.client.destination['TR_HI'] += .1
+            return result
+        with patch.object(self.client, 'begin_move', begin):
+            code, report, _ = self.run_live_boundary(('--case', 'virtual', '--test', 'gap_both'))
+        self.assertEqual(code, 1)
+        self.assertIn('gap move changed the uncommanded center', report['tests'][0]['detail'])
+
+    def test_pvt_unknown_controller_error_is_not_reset(self):
+        original = self.client.put
+        def put(name, value, **kwargs):
+            result = original(name, value, **kwargs)
+            if name == 'HW:PVT-Abort': self.client.values['HW:MCU-ErrId'] = 0x123456
+            return result
+        with patch.object(self.client, 'put', put):
+            code, report, _ = self.run_live_boundary(('--case', 'pvt', '--test', 'lo_abort_pulse_high'))
+        self.assertEqual(code, 1)
+        self.assertIn('unexpected controller error', report['tests'][0]['detail'])
+        self.assertFalse(any(n == 'HW:MCU-ErrRst' for n, _ in self.client.writes))
+
+    def test_live_stall_monitor_reports_alarm_and_completes_motor_record(self):
+        code, report, _ = self.run_live_boundary(('--case', 'stall'))
+        self.assertEqual(code, 0, report)
+        self.assertEqual(len(report['tests']), 4)
+        alarms = [t for t in report['trace'] if t.get('action') == 'AtTarget stall alarm terminates motor record']
+        self.assertEqual(len(alarms), 4)
+        for alarm in alarms:
+            data = alarm['snapshot'][alarm['axis']]
+            self.assertEqual(data['-AtTarget'], 0)
+            self.assertEqual(data['-ErrId'], 0x14c19)
+            self.assertEqual(data['.DMOV'], 1)
+        for axis in self.profile['physical']:
+            self.assertEqual(self.client.native_settings[axis]['MonAtTargetTol'], .01)
+            self.assertEqual(self.client.values['HW:'+axis+'.MSTA'], 0)
+
+    def test_physical_stop_ends_each_virtual_move_and_recovers(self):
+        code, report, _ = self.run_live_boundary(('--case', 'coupled_stop'))
+        self.assertEqual(code, 0, report)
+        self.assertEqual(len(report['tests']), 8)
+        self.assertEqual(len([t for t in report['trace'] if t.get('action') == 'physical STOP interrupts virtual motion and recovers']), 8)
+
+    def test_limit_homing_and_post_move_use_el7031_and_complete_outside_limits(self):
+        code, report, _ = self.run_live_boundary(('--case', 'homing'))
+        self.assertEqual(code, 0, report)
+        self.assertEqual(len(report['tests']), 6)
+        homes = [t for t in report['trace'] if t.get('action') == 'real limit homing completed']
+        self.assertEqual(len(homes), 6)
+        self.assertEqual(sum(t['post_move'] for t in homes), 2)
+        self.assertEqual({t['sequence'] for t in homes}, {1, 2})
+        self.assertTrue(all(t['axis'] == 'TR_HI' and t['home_position'] == -20 for t in homes))
+        for t in homes:
+            self.assertEqual(t['snapshot']['TR_HI']['.DMOV'], 1)
+        self.assertFalse(any(n.endswith('.VAL') for n, _ in self.client.writes))
+        self.assertEqual(self.client.native_settings['TR_HI']['HomePostMoveEnable'], 0)
+        self.assertEqual(self.client.values['HW:TR_HI-EncForceOn-RB'], 0)
+
+    def test_homing_is_opt_in_and_cannot_mix_with_normal_groups(self):
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(run.main([]), 0)
+        with redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+            run.main(['--case', 'homing', '--case', 'motion'])
+        self.assertEqual(self.client.writes, [])
+
+    def test_missing_homing_marker_refuses_before_any_setup_writes(self):
+        del self.client.values['HW:HardwareSlitTest:HomingSchema']
+        code, report, _ = self.run_live_boundary(('--case', 'homing'))
+        self.assertEqual(code, 1)
+        self.assertEqual(self.client.writes, [])
+
+    def test_physical_homing_travel_guard_uses_raw_counts_not_reset_coordinate(self):
+        original = self.client.get
+        def get(name):
+            value = original(name)
+            if name == 'HW:m0s009-Enc01-PosAct' and self.client.home_active is not None:
+                return value+110*4096
+            return value
+        with patch.object(self.client, 'get', get):
+            code, report, _ = self.run_live_boundary(('--case', 'homing', '--test', 'low_limit_native'))
+        self.assertEqual(code, 1)
+        self.assertIn('measured travel budget', report['tests'][0]['detail'])
+        self.assertIsNone(self.client.home_active)
+
+    def test_post_home_move_must_not_complete_motor_record_early(self):
+        original = self.client.get
+        def get(name):
+            value = original(name)
+            if (name == 'HW:TR_HI.DMOV' and self.client.home_active is not None
+                    and self.client.values['HW:TR_HI-Homed'] and self.client.positions['TR_HI'] > -19): return 1
+            return value
+        with patch.object(self.client, 'get', get):
+            code, report, _ = self.run_live_boundary(('--case', 'homing', '--test', 'postmove_motor'))
+        self.assertEqual(code, 1)
+        self.assertIn('completed before the post-home move ended', report['tests'][0]['detail'])
+        self.assertIsNone(self.client.home_active)
+
+    def test_homing_allows_one_active_hi_limit_but_not_both(self):
+        self.rig.homing_session = True
+        self.client.values['HW:TR_HI-LimBwd'] = 0
+        self.rig.guard()
+        self.assertTrue(self.rig.authorized)
+        self.client.values['HW:TR_HI-LimFwd'] = 0
+        with self.assertRaisesRegex(RuntimeError, 'both limit switches active'):
+            self.rig.guard()
+
+    def test_stall_alarm_must_clear_busy_processing_not_just_set_error(self):
+        original = self.client.get
+        def get(name):
+            value = original(name)
+            if name == 'HW:TR_LO.PACT' and self.client.values['HW:TR_LO-ErrId'] == 0x14c19: return 1
+            return value
+        with patch.object(self.client, 'get', get):
+            code, report, _ = self.run_live_boundary(('--case', 'stall', '--test', 'lo_motor'))
+        self.assertEqual(code, 1)
+        self.assertIn('stall alarm terminates motor processing', report['tests'][0]['detail'])
+        self.assertFalse(any(t.get('action') == 'stall recovery completed' for t in report['trace']))
+
+    def test_ignored_physical_stop_during_virtual_motion_fails(self):
+        original = self.client.put
+        def put(name, value, **kwargs):
+            if name == 'HW:TR_HI.STOP' and self.client.active is not None and self.client.active[0] == 'CENTERY':
+                return None
+            return original(name, value, **kwargs)
+        with patch.object(self.client, 'put', put):
+            code, report, _ = self.run_live_boundary(('--case', 'coupled_stop', '--test', 'center_stop_hi_motor'))
+        self.assertEqual(code, 1)
+        self.assertIn('physical STOP was ignored', report['tests'][0]['detail'])
+
+    def test_post_home_reference_change_cannot_substitute_for_physical_move(self):
+        original = self.client.get
+        held = []
+        def get(name):
+            value = original(name)
+            if (name == 'HW:m0s009-Enc01-PosAct' and self.client.home_active is not None
+                    and self.client.values['HW:TR_HI-Homed']):
+                if not held: held.append(value)
+                return held[0]
+            if name == 'HW:m0s009-Enc01-PosAct' and held: return held[0]
+            return value
+        with patch.object(self.client, 'get', get):
+            code, report, _ = self.run_live_boundary(('--case', 'homing', '--test', 'postmove_native'))
+        self.assertEqual(code, 1)
+        self.assertIn('raw counts did not confirm', report['tests'][0]['detail'])
 
     def test_status_only_is_read_only(self):
         code, report, _ = self.run_live_boundary(('--case', 'status'))

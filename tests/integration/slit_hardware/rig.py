@@ -6,6 +6,7 @@ import time
 # Numeric PV access is shared; no simulated Plant or simulation Rig is used.
 from slit.rig import Client
 from .operations import Operations
+from slit_motion_checks import MotionExpectation
 
 
 def validate_profile(profile):
@@ -40,6 +41,8 @@ class Rig(Operations):
         self.saved_state_machine, self.standalone_axis = None, None
         self.standalone_positions = {}
         self.brake_checks = False
+        self.homing_session, self.homing_watch = False, None
+        self.motion_expectation = None
         self.stop_requested, self.stop_errors = False, []
         self.initializing_origins, self.saved_force_on = False, None
 
@@ -47,6 +50,7 @@ class Rig(Operations):
     def read(self, suffix): return self.client.get(self.prefix + suffix)
 
     def healthy(self):
+        if self.motion_expectation is not None: self.motion_expectation.check()
         if self.standalone_axis is not None:
             if self.read('SM00-EnaCmd') != 0 or self.read('SM00-StateCmd') != 0:
                 raise AssertionError('state machine must remain disabled and idle during standalone moves')
@@ -67,6 +71,9 @@ class Rig(Operations):
         return True
 
     def check_envelope(self, positions):
+        if self.homing_session:
+            if self.homing_watch is not None: self.homing_watch()
+            return
         for axis, value in positions.items():
             if self.initializing_origins and self.profile.get('relative_to_start', False): continue
             low, high = self.profile['physical'][axis]
@@ -87,7 +94,11 @@ class Rig(Operations):
                                      ('.DMOV', 1), ('.MOVN', 0), ('-Busy', 0), ('-InStartup', 0)):
                 if self.get(axis, suffix) != expected:
                     raise RuntimeError(axis + ': preflight requires ' + suffix + '=' + str(expected))
-            if not self.get(axis, '-LimBwd') or not self.get(axis, '-LimFwd'):
+            backward, forward = self.get(axis, '-LimBwd'), self.get(axis, '-LimFwd')
+            if self.homing_session and axis == 'TR_HI':
+                if not backward and not forward:
+                    raise RuntimeError(axis+': both limit switches active before homing')
+            elif not backward or not forward:
                 raise RuntimeError(axis + ': active hardware limit')
             self.origins[axis] = self.get(axis, '.RBV')
             if abs(self.origins[axis] - self.get(axis, '-PosAct')) > self.profile['tolerance']:
@@ -249,6 +260,7 @@ class Rig(Operations):
         if axis not in self.saved_velocity:
             self.saved_velocity[axis] = self.get(axis, '.VELO')
         self.put(axis, '.VELO', self.profile['velocity'])
+        self.motion_expectation = MotionExpectation(self, axis)
         complete = self.put(axis, '.VAL', self.user_position(axis, target))
         self.wait(lambda: self.get(axis, '-Busy') == 1 or self.get(axis, '.DMOV') == 0,
                   axis + ' motion starts')
@@ -285,6 +297,10 @@ class Rig(Operations):
             raise AssertionError(str(error) + '\nCompletion conditions before STOP:\n'
                                  + json.dumps(observed, indent=2)) from error
         if self.get(axis, '.LVIO'): raise AssertionError(axis + ': motor limit violation')
+        if self.motion_expectation is not None:
+            expected = self.motion_expectation.finish(target)
+            self.trace.append({'action': 'blade endpoints checked', 'axis': axis, 'expected': expected})
+            self.motion_expectation = None
         self.kinematics()
         self.trace.append({'axis': axis, 'target': target, 'snapshot': self.snapshot()})
 
@@ -303,7 +319,8 @@ class Rig(Operations):
             for field in ('.RBV', '.VAL', '.DMOV', '.MOVN', '.SEVR', '.LVIO', '-PosAct',
                           '-PosSet', '-Busy', '-EnaAct', '-AtTarget', '-ErrId', '-WrnId',
                           '-SetEncIdCmd-RB', '-Enc02-PwrState', '.DIR', '.OFF', '.DVAL',
-                          '-AutoExecuteOnTargetPos-RB', '-ExeCmd-RB', '-MtnCmd', '-TgtPosCmd'):
+                          '-AutoExecuteOnTargetPos-RB', '-ExeCmd-RB', '-MtnCmd', '-TgtPosCmd',
+                          '.MSTA', '.MIP', '.PACT', '.STAT', '-Homed', '-SeqState', '-LimBwd', '-LimFwd'):
                 if axis != 'TR_HI' and field == '-Enc02-PwrState': continue
                 try: result[axis][field] = self.get(axis, field)
                 except Exception as error: result[axis][field] = str(error)

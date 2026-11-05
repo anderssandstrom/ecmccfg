@@ -802,7 +802,7 @@ python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case pvt
 ```
 
 LO and HI Build/Execute/Readback cases, with and without triggers, run in each
-open/closed loop: eight live cases, making 274 planned cases for the complete suite. The existing
+open/closed loop: 32 live cases, making 340 planned cases for the complete suite. The existing
 controller finalization configures the shared PVT records automatically.
 
 The cases use the real asyn PVT controller and the external plant's measured
@@ -815,7 +815,7 @@ and stop axes. EL2008 channel 05 carries the PVT triggers. Missing PVT
 records fail preflight before the coupled plant starts writing.
 
 
-The PVT group also runs LO/HI trigger cases in both loops (eight PVT cases total):
+The PVT group also runs LO/HI trigger cases in both loops (32 PVT cases total):
 
 ```sh
 python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case pvt --test triggers
@@ -830,3 +830,78 @@ active high with 400 ms pulses. Its `m0s005-BO05-RB` readback must show exactly
 three high/low pairs and be low before execution and after completion/abort.
 Untriggered profiles must keep the output low. Tests observe the process image,
 without directly writing output PVs. Restart the IOC after updating startup.cmd.
+
+
+PVT interruption and motion-isolation checks
+------------------------------------------
+
+The PVT group adds LO/HI × Abort/motor STOP/axis disable × before the first
+pulse/while a pulse is high, in both open and closed loop. There are sixteen
+PVT cases per loop, or 32 across both loops. Run only the interruption cases:
+
+```sh
+python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case pvt --test before_first_pulse --test pulse_high
+```
+
+These are live-controller tests, not fake-IOC fault tests. They require the
+selected stop interface to stop the profile, lower the output and avoid a false
+success result. After standstill and a bounded observation period, re-enable
+must not replay the old profile or emit further triggers. A new triggered
+profile must build, execute and read back correctly, followed by a normal
+return to the original position. Only the known PVT controller interlock error
+`0x242003` may be reset at standstill; other errors fail without being cleared.
+
+Bounded motor/native helper moves, execute-on-write cases and PVT execution
+also check that the other physical blade stays put. Center/gap helper moves
+preserve the other virtual coordinate and verify both blade endpoints. Existing
+injected-fault cases keep their own fault-specific start/stop assertions. The
+checks need no extra wiring or independent instruments.
+
+Interruption stopping-time/travel checks use the profile's bounded peak speed
+and the fixture's equal acceleration/deceleration setting (`.ACCS`), with
+publication/command latency margins. They prevent an ignored interruption that
+simply runs to the normal endpoint from passing as a stop. The measured bounds
+and interruption phase are included in the JSON report; they are test verdicts,
+not independent measurements of electrical or mechanical safety performance.
+
+
+### Stall, coordinated STOP, disturbances and mechanical backlash
+
+The complete plan now contains **340 executions** across open and closed loop;
+mode-specific skips remain visible in the report. The added groups are:
+
+| Group | Cases per loop | Checks |
+| --- | --- | --- |
+| `stall` | 4 | Physical LO/HI, motor/native commands: zero AtTarget tolerance prevents completion, then the stall monitor must alarm, clear motor processing and permit a fresh move after reset |
+| `coupled_stop` | 8 | Stop either physical slave through motor STOP or native STOP during center/gap motion; require the group to stop, complete records and recover without replay |
+| `concurrent` | 2 | Command a small independent second-axis excursion while its peer continues to its original target |
+| `disturbance` | 3 | Closed-loop HI encoder bias while LO moves: a small disturbance must not stick the idle record, sustained lag trips only HI; a slave lag fault during virtual motion must stop the group |
+| `backlash` | 4 | HI mechanical lost motion: physical reversals, center/gap moves, large-backlash lag alarm or open-loop position error, and coordinated fault recovery |
+
+```sh
+python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case backlash
+python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case stall --case coupled_stop --case concurrent --case disturbance
+```
+
+Backlash is disabled by default and enabled only inside its dedicated cases.
+The internal drive counter moves immediately, while the modeled mechanical
+output stays within a play window around it. A reversal must take up the full
+window before the load follows. The external EL5042 feedback and position-based
+switches follow the mechanical output. This differs from an encoder bias: it
+models lost motion between motor and load.
+
+The small window is 0.024 mm and the large window is 0.1 mm. Tests compare
+native coordinates with independent modeled mechanical position and record both
+in the JSON trace. Open-loop control can complete while mechanical error remains;
+that limitation is an expected result, not a claim of mechanical accuracy.
+Closed-loop control must settle within tolerance for small backlash. Large
+backlash must produce the expected lag alarm and terminal motor state; a fault
+in a coordinated slave must stop the virtual group. All injected mechanical
+backlash is removed only after stopping/disabling the axes.
+
+The disturbance cases require external primary feedback and skip open loop.
+They temporarily set HI proportional gain to zero to isolate the injected
+measurement error from actual idle-axis motion. The large-backlash virtual
+fault case also requires closed loop. Fault tests accept only their named
+expected errors, check DMOV/MOVN/MIP/PACT and completion callbacks, reset at
+standstill, and issue fresh moves to prove recovery. Unexpected faults fail.

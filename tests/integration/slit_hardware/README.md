@@ -68,6 +68,10 @@ hardware to simulated open/closed-loop variants.
 | `brake` | LO/HI EL2008 brake outputs: amplifier/brake opening and closing order, release during motion and STOP deceleration, application after auto-disable |
 | `no_sm` | Physical motor moves/STOP, native, target-write, OFF/DIR, encoder sleep/wake and PVT repeated with the master/slave state machine disabled; virtual axes remain disabled, uncommanded physical axes stay stationary |
 | `pvt` | LO and HI profile Build/Execute/Readback, measured excursions both ways and return to start, controller success and fault checks |
+| `stall` | Four motor/native LO/HI cases: AtTarget remains false, stall alarm appears, motor processing terminates, reset and fresh move recover; also repeated in `no_sm` |
+| `coupled_stop` | Eight center/gap × LO/HI × motor/native STOP cases: stopping one physical slave stops coordinated motion and completes all records |
+| `concurrent` | Two independent physical moves with small commanded excursions on the other axis, whose peer must continue to its original target |
+| `homing` | Six opt-in TR_HI EL7031 limit-switch searches using native/motor interfaces, including backward-limit post moves |
 
 Repeated targets use ordinary asynchronous writes while the first move
 completion request remains active; the runner still checks motor/native idle,
@@ -83,7 +87,7 @@ the profile's physical envelope. Native soft limits must be enabled. The state
 machine must already be enabled. Zero-reference preparation and the encoder-power group require Auto power
 mode with Force ON released and encoder power control enabled.
 
-There are 49 live hardware cases (26 with state-machine management and 23 standalone repeats). Select the added groups independently:
+The default run contains 91 live hardware cases (52 with state-machine management and 39 standalone repeats). Six full-stroke homing cases are available separately, for 97 selectable cases in total. Select the added groups independently:
 
 ```sh
 python3 tests/integration/slit_hardware/run.py --prefix HWSLIT: --run --case native --case target_write --case motor
@@ -121,13 +125,13 @@ with the drive disabled. The runner waits for ready/primary selection and
 motor/native coordinate agreement, captures all starting positions, then restores
 the previous hold. With zero referencing disabled, fixed counter-only feedback mode is respected. The read-only
 `status` group does not wake the encoder or write any PVs. The suite uses the IOC's normal
-auto-enable and brake policy. Tests do not reset faults, change numerical soft
+auto-enable and brake policy. Tests do not reset unexpected faults or change numerical soft
 limits or feedback selection, or power relays directly. Native target-write mode
 and motor coordinate changes are confined to their cases and restored. The optional zero-reference preparation also writes the two physical
 `-SetEncPosCmd` PVs and motor SYNC, and intentionally keeps the new references.
 It does not write zero to the virtual axes; their feedback follows the PLC
 kinematics, and their motor targets are synchronized afterwards.
-It never starts a homing search or enables a drive. Successful
+Zero-reference preparation never starts a homing search or enables a drive. The separate opt-in `homing` group does perform searches and intentionally changes references. Successful
 motion cases return to their captured origins; on failure/interruption it stops
 all coupled axes and restores changed motor velocities without commanding a
 return move. Amplifier disable and encoder power-off follow the existing IOC
@@ -203,3 +207,104 @@ oscilloscope feedback. Brake channels 01/02 and simulation encoder supply
 channels 03/04 retain their assignments.
 Deploy the corrected `ecmcPVTTrigger.template` and restart the IOC for its
 software-trigger forward link fix (`FLNK`, previously incorrectly written to `TSE`).
+
+
+Motion isolation and PVT interruption coverage
+--------------------------------------------
+
+Normal motor/native moves and PVT runs check measured blade positions while
+waiting. A physical-axis move must leave the other blade stationary. Center
+moves must preserve the gap; gap moves must preserve the center. Completed
+motor/native moves also verify both independently calculated blade endpoints.
+These checks apply with state-machine management enabled as well as `no_sm`.
+
+The PVT group includes twelve interruption cases: LO/HI × Abort/motor STOP/axis
+disable × before the first pulse/while a pulse is high. The `no_sm` group repeats
+all twelve. Select these without running the entire suite:
+
+```sh
+python3 tests/integration/slit_hardware/run.py --prefix HWSLIT: --run --case pvt --test before_first_pulse --test pulse_high
+python3 tests/integration/slit_hardware/run.py --prefix HWSLIT: --run --case no_sm --test before_first_pulse --test pulse_high
+```
+
+Each case sends only the selected interruption command. A fallback Abort is
+reserved for failure cleanup, so it cannot mask an ignored STOP/disable. The
+controller must finish at standstill, lower the trigger output and report an
+interruption rather than successful completion. During a bounded dwell, and
+again after enable, the cancelled profile must neither move nor emit another
+software trigger. A fresh triggered Build/Execute/Readback must then succeed;
+the axis returns normally to its original coordinate after successful recovery.
+Failures never cause an automatic return move.
+
+STOP/disable can latch the native PVT `AXIS_INTERLOCK` error (`0x242003`). Only
+that known controller error may be acknowledged at standstill using `MCU-ErrRst`,
+after checking the axes have no native errors. Unexpected controller errors are
+reported and left intact. No fault injection, additional sensors or wiring is
+required. Position checks use existing feedback; output checks use the EtherCAT
+process image and do not independently verify motor mechanics or relay contacts.
+
+Interruption stopping-time/travel checks use the profile's bounded peak speed
+and the fixture's equal acceleration/deceleration setting (`.ACCS`), with
+publication/command latency margins. They prevent an ignored interruption that
+simply runs to the normal endpoint from passing as a stop. The measured bounds
+and interruption phase are included in the JSON report; they are test verdicts,
+not independent measurements of electrical or mechanical safety performance.
+
+
+### Recovery and independent-axis motion
+
+```sh
+python3 tests/integration/slit_hardware/run.py --prefix HWSLIT: --run --case stall --case coupled_stop --case concurrent
+```
+
+Stall cases retain enabled AtTarget monitoring and temporarily set its tolerance
+to zero. After the trajectory ends, they require AtTarget=0 and an incomplete
+motor request, followed by `ERROR_MON_STALL` (0x14c19), motor problem/alarm and
+Busy=0, DMOV=1, MOVN=0, MIP=0 and PACT=0. Known test faults are reset only at
+standstill; fresh motion proves the record is usable again. Monitor settings are
+restored. Coordinated STOP tests send only the selected physical-axis STOP,
+check no cancelled target replays, then verify fresh center/gap motion.
+
+Concurrent cases use commanded second-axis movements. They do not simulate an
+external force on real hardware. Encoder-bias and mechanical-backlash injection
+are confined to the simulation suite; neither requires additional wiring.
+
+### Explicit full-stroke limit homing
+
+Deploy the updated hardware fixture YAML and `hardware-test.db`, then restart
+the hardware IOC. The homing group requires its `HardwareSlitTest:HomingSchema`
+marker and must run separately from other groups. It is excluded from the
+default run:
+
+```sh
+python3 tests/integration/slit_hardware/run.py --prefix HWSLIT: --run --case homing
+python3 tests/integration/slit_hardware/run.py --prefix HWSLIT: --run --case homing --test postmove
+```
+
+Only TR_HI (EL7031, slave 12) is searched. Sequence 1 uses the backward limit;
+sequence 2 uses the forward limit. Native and motor-record interfaces are both
+covered. There is no home sensor on this rig, so cam/index routines are omitted.
+Search speed is 3 mm/s, edge speed 0.2 mm/s, acceleration/deceleration 10 mm/s²,
+and each operation is bounded by 60 seconds. These are the agreed rig settings;
+switch-to-stop clearance has not been independently measured by the suite.
+
+The home reference is −20 mm, outside the normal −10…+10 mm soft limits. The
+backward-limit post-move cases then physically move to 0 mm. They check Homed,
+limit activation/release, sequencer state and motor/native completion, and
+require the motor request to remain busy through the post move. Raw EL5042
+channel-1 counts verify actual post-move travel, independently of the coordinate
+reset. A reference change alone cannot satisfy that check.
+
+During this explicit group, a separate raw-counter travel guard replaces the
+normal ±10 mm test window: at most 100 mm displacement and 125 mm accumulated
+travel, including switch release/post movement. Numerical machine soft limits
+remain configured. One already-active HI end limit is allowed at entry; both
+active limits fail. LO must stay stationary. BiSS feedback remains powered
+through the search. Changed homing settings and inspection hold are restored
+after stopping/disabling the axis.
+
+Homing intentionally leaves the new reference in place. A limit-only case can
+finish near the end switch at −20 mm, outside the normal soft limits; no return
+move is issued after failure. The complete six-case group ends with a backward
+post move to 0 mm. Do not combine these coordinate-changing searches with the
+normal motion groups in the same invocation.

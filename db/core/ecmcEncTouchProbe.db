@@ -57,21 +57,70 @@ record(int64in,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-TP-EventTimeNs"){
   field(TSE,  "$(TSE=-2)")
 }
 
-record(longin,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-TP-Armed"){
+# All probe command/readback bits share one encoder control-word parameter.
+# bit 0: enable control writes; bit 1: arm; bit 2: automatic rearm.
+# Keep every binding UInt32Digital; mixing native asyn interface types for
+# the same parameter is unsupported.
+
+record(bo,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-TP-EnableCmd"){
+  field(DESC, "Touch probe control enable")
+  field(DTYP, "asynUInt32Digital")
+  field(OUT, "@asynMask($(PORT),$(ADDR),0x1,$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ax$(AXIS_NO).enc.control$(ENC_NO)?")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+  info(asyn:READBACK,"1")
+  field(SCAN, "Passive")
+}
+
+record(bi,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-TP-Enable-RB"){
+  field(DESC, "Touch probe control enable")
+  field(DTYP, "asynUInt32Digital")
+  field(INP, "@asynMask($(PORT),$(ADDR),0x1,$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ax$(AXIS_NO).enc.control$(ENC_NO)?")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
   field(PINI, "1")
-  field(DTYP, "asynInt32")
-  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ax$(AXIS_NO).enc.touchprobe.armed$(ENC_NO)?")
   field(SCAN, "I/O Intr")
-  field(DESC, "Touch probe armed")
-  field(TSE,  "$(TSE=-2)")
+  field(TSE, "$(TSE=-2)")
 }
 
 record(bo,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-TP-ArmCmd"){
-  info(asyn:READBACK,"1")
-  field(DESC, "Touch probe arm command")
-  field(DTYP, "asynInt32")
-  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ax$(AXIS_NO).enc.touchprobe.armcmd$(ENC_NO)?")
+  field(DESC, "Touch probe arm")
+  field(DTYP, "asynUInt32Digital")
+  field(OUT, "@asynMask($(PORT),$(ADDR),0x2,$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ax$(AXIS_NO).enc.control$(ENC_NO)?")
   field(ZNAM, "Disarm")
   field(ONAM, "Arm")
+  info(asyn:READBACK,"1")
   field(SCAN, "Passive")
+}
+
+record(bi,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-TP-Armed"){
+  field(DESC, "Touch probe arm")
+  field(DTYP, "asynUInt32Digital")
+  field(INP, "@asynMask($(PORT),$(ADDR),0x2,$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ax$(AXIS_NO).enc.control$(ENC_NO)?")
+  field(ZNAM, "Disarm")
+  field(ONAM, "Arm")
+  field(PINI, "1")
+  field(SCAN, "I/O Intr")
+  field(TSE, "$(TSE=-2)")
+}
+
+record(bo,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-TP-AutoRearmCmd"){
+  field(DESC, "Touch probe automatic rearm")
+  field(DTYP, "asynUInt32Digital")
+  field(OUT, "@asynMask($(PORT),$(ADDR),0x4,$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ax$(AXIS_NO).enc.control$(ENC_NO)?")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+  info(asyn:READBACK,"1")
+  field(SCAN, "Passive")
+}
+
+record(bi,"${P}${AXIS_NAME}-Enc0$(ENC_NO)-TP-AutoRearm-RB"){
+  field(DESC, "Touch probe automatic rearm")
+  field(DTYP, "asynUInt32Digital")
+  field(INP, "@asynMask($(PORT),$(ADDR),0x4,$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ax$(AXIS_NO).enc.control$(ENC_NO)?")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+  field(PINI, "1")
+  field(SCAN, "I/O Intr")
+  field(TSE, "$(TSE=-2)")
 }

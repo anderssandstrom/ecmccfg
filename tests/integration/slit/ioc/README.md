@@ -158,6 +158,13 @@ The fixture also declares EL7062_OPT slave 20 (CSV, TP and U32 TP timestamps)
 with independent axis `PROBE` (7), and EL2252 slave 21. `PROBE` uses drive type 1
 (DS402), has no motor record and does not participate in the slit kinematics.
 The runner owns its DS402 state machine, position feedback and probe-input model.
+The runner enables probe control with `PROBE-Enc01-TP-EnableCmd`, disables
+`PROBE-Enc01-TP-AutoRearmCmd` for single-shot tests, and then uses
+`PROBE-Enc01-TP-ArmCmd`. These use masks 1, 4 and 2 respectively on the shared
+native `ax7.enc.control1` UInt32Digital parameter. Clearing enable also disarms;
+cleanup clears both arm and enable. No startup arming command is needed.
+Install matching rebuilt ECMC and ecmccfg: the existing arm PV names remain,
+but their native binding replaces the old separate probe arm parameters.
 Use `--case touch_probe` for capture/rearm/negative controls and
 `--case position_compare` for the missing-clock wait/cancel control. The current
 native SIM backend has no sample-clock provider: successful timed output pulses

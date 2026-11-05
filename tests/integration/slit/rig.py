@@ -157,6 +157,7 @@ class Rig:
             try:
                 self.put(axis, '-PC-CancelCmd', 1)
                 self.put(axis, '-Enc01-TP-ArmCmd', 0)
+                self.put(axis, '-Enc01-TP-EnableCmd', 0)
                 self.put(axis, '-StpCmd', 1)
                 self.wait(lambda: self.get(axis, '-Busy') == 0,
                           'DS402 probe axis cleanup ramp-down', 5)

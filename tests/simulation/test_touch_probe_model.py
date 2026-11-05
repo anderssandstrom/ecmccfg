@@ -104,7 +104,7 @@ try: Rig({'schema':4, 'axes':{}, 'probe_axis': config}, 'TEST:', Client(), None)
 except RuntimeError as error: assert 'identity' in str(error)
 else: raise AssertionError('wrong DS402 axis accepted')
 
-assert len(list(make_suite(None, ('closed',), ('touch_probe','position_compare')))) == 4
+assert len(list(make_suite(None, ('closed',), ('touch_probe','position_compare')))) == 5
 print('DS402 probe: edges, status bits, one-shot hold/rearm, raw wraps, native CA feedback/withdrawal and auxiliary identity guard passed; no IOC.')
 
 # Execute the actual CA-case verdicts with controlled responses. An unexpected

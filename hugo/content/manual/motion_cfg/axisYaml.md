@@ -395,6 +395,26 @@ encoder-specific touch-probe PVs. The main readbacks are:
 also loaded with `VAL=1` and can be used by GUIs to show or hide touch-probe
 controls.
 
+Probe commands share the native encoder control word `ax<axis>.enc.control<ENC>`
+through the `asynUInt32Digital` interface. The parameter is created only for
+encoders with touch-probe records; individual command/readback PVs use masks:
+
+| Bit | Command PV suffix | Readback PV suffix | Meaning |
+| --- | --- | --- | --- |
+| 0 (`0x1`) | `-TP-EnableCmd` | `-TP-Enable-RB` | Enable probe-control writes |
+| 1 (`0x2`) | `-TP-ArmCmd` | `-TP-Armed` | Arm capture while control is enabled |
+| 2 (`0x4`) | `-TP-AutoRearmCmd` | `-TP-AutoRearm-RB` | Automatically rearm after capture |
+
+These suffixes follow `<Axis>-Enc0<ENC>`. Enable control before arming. Clearing
+enable also disarms and sends the idle control word before releasing control.
+Clearing arm alone retains enable. All bits default to zero; enable alone does
+not arm, and an arm request while disabled leaves the probe disarmed. Set
+auto-rearm to zero for single-shot capture. Native/PLC probe commands update the
+same control word, so PV masked writes preserve their other current bits.
+The existing arm PV names remain; their native binding replaces the former
+separate `enc.touchprobe.armcmd` and `enc.touchprobe.armed` parameters. Deploy
+matching ECMC and ecmccfg builds when updating these records.
+
 ```yaml
 encoder:
   numerator: 360

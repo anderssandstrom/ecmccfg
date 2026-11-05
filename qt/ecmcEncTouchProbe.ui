@@ -6,38 +6,43 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>340</width>
-    <height>240</height>
+    <width>420</width>
+    <height>360</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Touch probe $(Axis) encoder $(ENC_ID)</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0"><widget class="QLabel" name="labelValid"><property name="text"><string>Valid</string></property></widget></item>
-   <item row="0" column="1"><widget class="caLineEdit" name="valid"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-Valid</string></property></widget></item>
-   <item row="1" column="0"><widget class="QLabel" name="labelSeq"><property name="text"><string>Sequence</string></property></widget></item>
-   <item row="1" column="1"><widget class="caLineEdit" name="sequence"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-Seq</string></property></widget></item>
-   <item row="2" column="0"><widget class="QLabel" name="labelPos"><property name="text"><string>Position</string></property></widget></item>
-   <item row="2" column="1"><widget class="caLineEdit" name="position"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-Pos</string></property></widget></item>
-   <item row="3" column="0"><widget class="QLabel" name="labelTimeValid"><property name="text"><string>Timestamp valid</string></property></widget></item>
-   <item row="3" column="1"><widget class="caLineEdit" name="timeValid"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-TimeValid</string></property></widget></item>
-   <item row="4" column="0"><widget class="QLabel" name="labelTimeRaw"><property name="text"><string>Raw timestamp</string></property></widget></item>
-   <item row="4" column="1"><widget class="caLineEdit" name="timeRaw"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-TimeRaw</string></property></widget></item>
-   <item row="5" column="0"><widget class="QLabel" name="labelEventTime"><property name="text"><string>Event time [ns]</string></property></widget></item>
-   <item row="5" column="1"><widget class="caLineEdit" name="eventTime"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-EventTimeNs</string></property></widget></item>
-   <item row="6" column="0"><widget class="QLabel" name="labelArmed"><property name="text"><string>Armed</string></property></widget></item>
-   <item row="6" column="1"><widget class="caLineEdit" name="armed"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-Armed</string></property></widget></item>
-   <item row="7" column="0"><widget class="QLabel" name="labelArmCmd"><property name="text"><string>Arm cmd</string></property></widget></item>
-   <item row="7" column="1">
-    <widget class="caMessageButton" name="armCmd">
-     <property name="text"><string>Arm / Disarm</string></property>
+   <item row="6" column="0"><widget class="QLabel" name="labelValid"><property name="text"><string>Valid</string></property></widget></item>
+   <item row="6" column="1"><widget class="caLineEdit" name="valid"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-Valid</string></property></widget></item>
+   <item row="7" column="0"><widget class="QLabel" name="labelSeq"><property name="text"><string>Sequence</string></property></widget></item>
+   <item row="7" column="1"><widget class="caLineEdit" name="sequence"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-Seq</string></property></widget></item>
+   <item row="8" column="0"><widget class="QLabel" name="labelPos"><property name="text"><string>Position</string></property></widget></item>
+   <item row="8" column="1"><widget class="caLineEdit" name="position"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-Pos</string></property></widget></item>
+   <item row="9" column="0"><widget class="QLabel" name="labelTimeValid"><property name="text"><string>Timestamp valid</string></property></widget></item>
+   <item row="9" column="1"><widget class="caLineEdit" name="timeValid"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-TimeValid</string></property></widget></item>
+   <item row="10" column="0"><widget class="QLabel" name="labelTimeRaw"><property name="text"><string>Raw timestamp</string></property></widget></item>
+   <item row="10" column="1"><widget class="caLineEdit" name="timeRaw"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-TimeRaw</string></property></widget></item>
+   <item row="11" column="0"><widget class="QLabel" name="labelEventTime"><property name="text"><string>Event time [ns]</string></property></widget></item>
+   <item row="11" column="1"><widget class="caLineEdit" name="eventTime"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-EventTimeNs</string></property></widget></item>
+   <item row="3" column="0"><widget class="QLabel" name="labelArmed"><property name="text"><string>Armed</string></property></widget></item>
+   <item row="3" column="1"><widget class="caLineEdit" name="armed"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-Armed</string></property></widget></item>
+   <item row="2" column="0"><widget class="QLabel" name="labelArmCmd"><property name="text"><string>Arm / Disarm</string></property></widget></item>
+   <item row="2" column="1">
+    <widget class="caChoice" name="armCmd">
+     <property name="toolTip"><string>Enable probe control first. Arm remains selected until you choose Disarm or disable control.</string></property>
      <property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-ArmCmd</string></property>
-     <property name="label"><string notr="true">Arm / Disarm</string></property>
-     <property name="releaseMessage"><string notr="true">0</string></property>
-     <property name="pressMessage"><string notr="true">1</string></property>
-    </widget>
+    <property name="stackingMode" stdset="0"><enum>caChoice::Column</enum></property><property name="endBit"><number>1</number></property></widget>
    </item>
+   <item row="0" column="0"><widget class="QLabel" name="labelEnable"><property name="text"><string>Control enable</string></property></widget></item>
+   <item row="0" column="1"><widget class="caChoice" name="EnableCmd"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-EnableCmd</string></property><property name="stackingMode" stdset="0"><enum>caChoice::Column</enum></property><property name="endBit"><number>1</number></property></widget></item>
+   <item row="1" column="0"><widget class="QLabel" name="labelEnableRB"><property name="text"><string>Control enable readback</string></property></widget></item>
+   <item row="1" column="1"><widget class="caLineEdit" name="EnableRB"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-Enable-RB</string></property></widget></item>
+   <item row="4" column="0"><widget class="QLabel" name="labelAutoRearm"><property name="text"><string>Auto-rearm</string></property></widget></item>
+   <item row="4" column="1"><widget class="caChoice" name="AutoRearmCmd"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-AutoRearmCmd</string></property><property name="stackingMode" stdset="0"><enum>caChoice::Column</enum></property><property name="endBit"><number>1</number></property></widget></item>
+   <item row="5" column="0"><widget class="QLabel" name="labelAutoRearmRB"><property name="text"><string>Auto-rearm readback</string></property></widget></item>
+   <item row="5" column="1"><widget class="caLineEdit" name="AutoRearmRB"><property name="channel" stdset="0"><string notr="true">$(DEV):$(Axis)-Enc$(ENC_ID)-TP-AutoRearm-RB</string></property></widget></item>
   </layout>
  </widget>
  <customwidgets>
@@ -47,9 +52,9 @@
    <header>caLineEdit</header>
   </customwidget>
   <customwidget>
-   <class>caMessageButton</class>
-   <extends>QPushButton</extends>
-   <header>caMessageButton</header>
+   <class>caChoice</class>
+   <extends>QWidget</extends>
+   <header>caChoice</header>
   </customwidget>
  </customwidgets>
  <resources/>

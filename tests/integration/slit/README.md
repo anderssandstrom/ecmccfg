@@ -89,6 +89,13 @@ result PVs; the plant never writes those results. Captures use the positive
 stored flag (status bit 1), so merely enabling the probe (status bit 0) cannot
 create a result. Raw U32 position/timestamp rollover is checked offline.
 
+Probe controls share one native encoder control-word parameter. The runner sets
+`PROBE-Enc01-TP-EnableCmd=1` and `PROBE-Enc01-TP-AutoRearmCmd=0`, then arms through
+`PROBE-Enc01-TP-ArmCmd`. Cleanup clears both arm and enable. Disabling control
+also disarms; enabling it alone does not arm. Install matching ECMC/ecmccfg
+builds for these shared control-word PVs; the startup arming workaround has
+been removed.
+
 The current native SIM backend has no sample-clock provider. Probe raw timestamp
 transport is tested; reconstructed absolute event time is not validated. The
 position-compare test deliberately verifies the native wait-for-timing path and
@@ -131,7 +138,7 @@ trips require their specific error code and verify reset does not replay motion.
 | `cases/position_compare.py` | Missing-clock negative control: compare remains armed without touching EL2252 output/activate/startTime, then cancels without claiming a fired event |
 
 
-There are 380 planned test executions with both loop modes selected. Primary
+There are 382 planned test executions with both loop modes selected. Primary
 EL5042 not-ready checks are explicitly skipped in open-loop mode. Every case
 uses `Rig.prepare()` to clear injected faults, stop/disable axes, reset errors,
 select encoder/gains and return the blades to zero. Teardown clears fault
@@ -246,7 +253,7 @@ establish the disabled precondition is reported before injection.
 ```text
 raw velocity / 32768 × 10 = motor velocity in mm/s
 12800 internal counts = 1 mm
-EL5042 raw = round((physical_mm + 1380) × 4096), modulo 2^26
+EL5042 raw = round((physical_mm + 1382) × 4096), modulo 2^26
 EL5042 status bit 2 = ready; warning/error bits 0/1 remain clear
 ```
 
@@ -474,7 +481,7 @@ are restored.
 21/22 skip in open-loop mode because that mode's primary incremental encoder
 has no absolute bits. Encoder-not-ready abort cases also skip there. Thus the
 homing module alone plans 88 cases across both modes with 6 expected skips;
-the complete suite now plans 380 cases, including mode-specific skips.
+the complete suite now plans 382 cases, including mode-specific skips.
 Mode-specific skips are decided before setup writes or cleanup registration.
 Index-latch 11/12 and external-drive 26 require additional hardware handshakes
 and are not claimed as covered by the current slit plant.
@@ -513,7 +520,7 @@ native restart fails immediately; persistent incorrect motor flags time out.
 21/22 produce large engineering coordinates with this encoder's 26 absolute
 bits. Those cases temporarily widen both synchronized coordinate limits to
 +/-20000 mm; the physical bound remains +/-0.8 mm. Their expected phase is
-computed from the physical position, 4096 counts/mm, -1380 mm encoder offset,
+computed from the physical position, 4096 counts/mm, -1382 mm encoder offset,
 and the 2^26-count period. After every homing case, cleanup stops the plant's
 motion while maintaining feedback, references each encoder back to the actual
 physical position using manual homing, restores the loop's primary encoder,
@@ -555,7 +562,7 @@ python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case homing
 ```
 
 The interface cases use existing IOC records. The current full suite plans
-380 executions, including mode-specific skips, and uses the schema-4 fixture
+382 executions, including mode-specific skips, and uses the schema-4 fixture
 described under encoder supply relay tests below.
 
 
@@ -650,7 +657,7 @@ and a fresh coordinated move are checked afterward; jog settings are restored.
 Rejection of blocked commands may report write errors at the requested record;
 that must not become a latched controller error on the virtual or physical axes.
 
-The complete default plan is 380 executions, including mode-specific skips.
+The complete default plan is 382 executions, including mode-specific skips.
 The isolation cases themselves are Python-only; the current default fixture
 also includes the encoder relay links described below.
 
@@ -845,7 +852,7 @@ python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case pvt
 ```
 
 LO and HI Build/Execute/Readback cases, with and without triggers, run in each
-open/closed loop: 32 live cases within the current 380-execution complete plan. The existing
+open/closed loop: 32 live cases within the current 382-execution complete plan. The existing
 controller finalization configures the shared PVT records automatically.
 
 The cases use the real asyn PVT controller and the external plant's measured
@@ -910,7 +917,7 @@ not independent measurements of electrical or mechanical safety performance.
 
 ### Stall, coordinated STOP, disturbances and mechanical backlash
 
-The complete plan now contains **380 executions** across open and closed loop;
+The complete plan now contains **382 executions** across open and closed loop;
 mode-specific skips remain visible in the report. The added groups are:
 
 | Group | Cases per loop | Checks |

@@ -44,3 +44,27 @@ class TouchProbeTests(ProbeCase):
         self.move(.15)
         self.rig.assert_stays(lambda: self.healthy() and self.sequence() == before,
                               'enabled status bit is not a position-stored flag', .3)
+
+    def test_control_enable_is_independent_of_arm(self):
+        self.arm()
+        before = self.sequence()
+        self.rig.put(self.axis, '-Enc01-TP-EnableCmd', 0)
+        config = self.rig.profile['probe_axis']
+        control = self.rig.prefix + f'SIM:ec0:s{config["slave"]}:touchProbeControl01'
+        self.rig.wait(lambda: self.healthy()
+                      and self.rig.get(self.axis, '-Enc01-TP-Enable-RB') == 0
+                      and self.rig.get(self.axis, '-Enc01-TP-Armed') == 0
+                      and self.rig.client.get(control) == 0,
+                      'clearing control enable disarms and transmits idle', 3)
+        self.rig.put(self.axis, '-Enc01-TP-ArmCmd', 1)
+        self.rig.assert_stays(lambda: self.healthy()
+                              and self.rig.get(self.axis, '-Enc01-TP-Enable-RB') == 0
+                              and self.rig.get(self.axis, '-Enc01-TP-Armed') == 0
+                              and self.rig.client.get(control) == 0
+                              and self.sequence() == before,
+                              'arm cannot bypass disabled probe control', .3)
+        self.rig.put(self.axis, '-Enc01-TP-EnableCmd', 1)
+        self.rig.wait(lambda: self.rig.get(self.axis, '-Enc01-TP-Enable-RB') == 1
+                      and self.rig.get(self.axis, '-Enc01-TP-Armed') == 0,
+                      're-enable preserves disarmed state', 3)
+        self.capture(.1, .25)

@@ -112,8 +112,17 @@ like:
 <Axis>-Enc01-TP-Pos
 <Axis>-Enc01-TP-TimeRaw
 <Axis>-Enc01-TP-EventTimeNs
+<Axis>-Enc01-TP-EnableCmd
+<Axis>-Enc01-TP-Enable-RB
 <Axis>-Enc01-TP-ArmCmd
+<Axis>-Enc01-TP-Armed
+<Axis>-Enc01-TP-AutoRearmCmd
+<Axis>-Enc01-TP-AutoRearm-RB
 ```
+
+Enable probe control with `-TP-EnableCmd=1` before arming. Use
+`-TP-AutoRearmCmd=0` for single-shot capture. Enable, arm and auto-rearm use bits
+0–2 of the shared encoder control word; disabling control also disarms.
 
 The matching caQtDM panels are `ecmcAxisPositionCompare.ui` and
 `ecmcEncTouchProbe.ui`.

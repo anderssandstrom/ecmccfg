@@ -11,6 +11,12 @@ class ProbeCase(SlitCase):
         self.axis = config['name']
         self.addCleanup(self.clean_probe)
         self.rig.plant.configure_probe()
+        # Separate ownership from arming. Use single-shot captures so an
+        # enable request alone cannot latch or automatically rearm a result.
+        self.rig.put(self.axis, '-Enc01-TP-AutoRearmCmd', 0)
+        self.rig.put(self.axis, '-Enc01-TP-EnableCmd', 1)
+        self.rig.wait(lambda: self.rig.get(self.axis, '-Enc01-TP-Enable-RB') == 1,
+                      'probe control enabled through the shared encoder control word', 3)
         self.rig.put(self.axis, '-RstCmd', 1)
         self.rig.wait(lambda: self.rig.get(self.axis, '-ErrId') == 0
                       and self.rig.get(self.axis, '-InStartup') == 0,

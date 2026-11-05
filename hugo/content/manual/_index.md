@@ -28,7 +28,8 @@ For terminology such as `axis`, `axis PLC`, `component`, `plugin`, and
 | Need | Start with |
 | --- | --- |
 | A working configuration to adapt | [Examples]({{< relref "/manual/examples.md" >}}) and [Best practice]({{< relref "/manual/best_practice.md" >}}) |
-| IOC startup or hardware-free operation (`MASTER_ID=-1`) | [Startup and IOC configuration]({{< relref "/manual/general_cfg/startup/_index.md" >}}) |
+| IOC startup or masterless logic (`MASTER_ID=-1`) | [Startup and IOC configuration]({{< relref "/manual/general_cfg/startup/_index.md" >}}) |
+| Simulated I/O and external device models (`SIM=1`) | [Simulation backend]({{< relref "/manual/general_cfg/ethercat/simulation.md" >}}) |
 | EtherCAT setup and commissioning | [EtherCAT and commissioning]({{< relref "/manual/general_cfg/ethercat/_index.md" >}}) |
 | Axis configuration and motion behavior | [Motion]({{< relref "/manual/motion_cfg/_index.md" >}}) |
 | PLC logic and EPICS variable exposure | [PLC configuration]({{< relref "/manual/plc_cfg/_index.md" >}}) and [PLC best practice]({{< relref "/manual/plc_cfg/best_practice.md" >}}) |
@@ -46,20 +47,26 @@ For new configurations, the normal path is:
 4. load axes with `loadYamlAxis.cmd`
 5. load PLCs with `loadYamlPlc.cmd` or `loadPLCFile.cmd`
 6. add optional features such as data storage or plugins
-7. switch to runtime with `setAppMode.cmd` or `finalize.cmd`
+7. initialize the IOC; the registered `finalize.cmd` hook applies configuration and starts runtime in the configured order
 
-Minimal startup skeleton:
+Illustrative startup structure (adapt the hardware and supply the YAML/PLC files):
 
-```bash
+```iocsh
 require ecmccfg <VERSION>
 
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=EK1100"
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=EL7062"
-${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Motor-Generic-2Phase-Stepper, CH_ID=1, MACROS='I_MAX_MA=1000, I_STDBY_MA=100, U_NOM_MV=24000, R_COIL_MOHM=1230,L_COIL_UH=500'"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "SLAVE_ID=0,HW_DESC=EK1100"
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "SLAVE_ID=1,HW_DESC=EL7031"
+${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Motor-Generic-2Phase-Stepper,MACROS='I_MAX_MA=1000,I_STDBY_MA=100,U_NOM_MV=24000,R_COIL_MOHM=1230'"
 
-${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd, "FILE=./cfg/ax1.yaml, ECMC_TMPDIR=/tmp/"
-${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd, "FILE=./cfg/main.plc, SAMPLE_RATE_MS=100"
+${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd "FILE=./cfg/ax1.yaml"
+${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd "FILE=./cfg/main.plc,SAMPLE_RATE_MS=100"
 ```
+
+The axis YAML must link to the entries of the configured terminal and use the
+actual motor/encoder scaling. Component values above are examples. IOC
+initialization may be performed by your launcher or explicitly by your startup
+script. The `atInit` hook runs when `iocInit` is invoked; registering it alone
+does not initialize EPICS. See [startup ordering]({{< relref "/manual/general_cfg/startup/_index.md#what-startup-builds" >}}).
 
 For the detailed step-by-step breakdown of the startup structure, see
 [introduction](./introduction/).

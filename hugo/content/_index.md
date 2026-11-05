@@ -32,8 +32,16 @@ You should have received a copy of the GNU General Public License
 
 <a href="https://github.com/paulscherrerinstitute/ecmccfg" target="_blank" rel="top language">![GitHub top language](https://img.shields.io/github/languages/top/paulscherrerinstitute/ecmccfg?style=for-the-badge)</a>
 
-## Documentation
-- [Manual](./manual/) for configuration and usage
-- [Quickstart](./manual/quickstart/) to bring up a single axis
-- [Troubleshooting](./manual/troubleshooting/) for common issues
-- [Examples](./manual/examples/) to reuse configs and scripts
+## Start here
+
+- [Quickstart]({{< relref "/manual/quickstart.md" >}}): prepare an IOC and bring up an axis using YAML.
+- [Manual]({{< relref "/manual/_index.md" >}}): choose a commissioning or reference topic.
+- [Simulation (SIM=1)]({{< relref "/manual/general_cfg/ethercat/simulation.md" >}}): run the realtime engine with memory-backed I/O and external device models.
+- [Examples]({{< relref "/manual/examples.md" >}}): adapt complete configurations and test fixtures.
+- [Troubleshooting]({{< relref "/manual/knowledgebase/troubleshooting.md" >}}): diagnose startup and runtime problems.
+
+`ecmccfg` supplies IOC scripts, YAML loaders, EPICS records and operator panels.
+The ECMC module supplies the realtime motion and PLC engine. Hardware operation,
+simulation (`SIM=1`) and masterless logic (`MASTER_ID=-1`) share the same engine;
+see [the layer overview]({{< relref "/manual/general_cfg/startup/_index.md#how-the-layers-fit-together" >}})
+for how they differ.

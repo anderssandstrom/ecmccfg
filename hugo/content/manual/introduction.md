@@ -1,5 +1,5 @@
 +++
-title = "introduction"
+title = "Introduction"
 weight = 5
 chapter = false
 +++
@@ -69,8 +69,8 @@ This behavior can be modified by arguments.
   ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,        "HW_DESC=EL2008, SLAVE_ID=7"
   # slave 9 {EL2008}, with optional SLAVE_ID and P_SCRIPT
   ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,        "HW_DESC=EL2008, SLAVE_ID=9, P_SCRIPT=mXsXXX"
-  # slave 10 {EL3204}, without any of the default PVs
-  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,        "HW_DESC=EL3204, DEFAULT_SUBS=false, DEFAULT_SLAVE_PVS=true"
+  # slave 10 {EL3204}, without default substitutions or slave-status PVs
+  ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,        "HW_DESC=EL3204, DEFAULT_SUBS=false, DEFAULT_SLAVE_PVS=false"
 
   ```
 
@@ -103,7 +103,9 @@ In order to manually set `binaryOutput01` to `1` at startup, the following can b
 Axis configuration is explained in detail in the [motion configuration section]({{< relref "/manual/motion_cfg/_index.md" >}}).
 The preferred way to configure axes is with the `yaml` based configuration.
 It unifies the way (1) physical axes, (2) virtual axes and (3) synchronization is handled.
-It is theoretically possible to use a mix of `yaml` and classic configuration, but this is untested.
+YAML and classic loaders create the same native objects. Prefer one axis
+configuration path per axis; avoid configuring the same axis twice. Use
+`loadYamlEnc.cmd` to add further encoders to the currently configured axis.
 
   * yaml config
   ```bash
@@ -119,6 +121,10 @@ See [motion best practice]({{< relref "/manual/motion_cfg/best_practice/_index.m
 {{% /notice %}}
 
 ##### adding a virtual motor axis
+Use `loadYamlAxis.cmd` with `axis.type: virtual` (or `end_effector`) for new
+configurations. The YAML loader handles its encoder/trajectory sources and
+optional axis PLC. The classic equivalent below remains available:
+
   ```bash
   ${SCRIPTEXEC} ${ecmccfg_DIR}configureVirtualAxis.cmd,     "CONFIG=./cfg/axis_11_virt"
   ```
@@ -156,3 +162,16 @@ for syntax, variables, patterns, and function reference, and
 [PLC best practice]({{< relref "/manual/plc_cfg/best_practice.md" >}})
 for recommended structure and EPICS variable mapping.
 {{% /notice %}}
+
+### Complete startup
+
+`require ecmccfg` registers `finalize.cmd` through `atInit`. That hook applies
+the configured I/O and starts ECMC when the IOC is initialized. A shell prompt
+by itself does not show that initialization happened: look for `iocRun: All
+initialization complete`. Some launchers invoke `iocInit` automatically; others
+expect it in the startup script. See [startup ordering and readiness]({{< relref "/manual/general_cfg/startup/_index.md" >}})
+for `START_EPICS_FIRST` and the motion startup gate.
+
+For `SIM=1`, slave declarations build memory-backed I/O rather than verifying a
+physical bus. An external model must provide feedback. This differs from
+`MASTER_ID=-1`, which omits the EtherCAT master. See [Simulation backend]({{< relref "/manual/general_cfg/ethercat/simulation.md" >}}).

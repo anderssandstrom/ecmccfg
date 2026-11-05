@@ -34,7 +34,7 @@ plugins, and data services.
 ## First IOC
 
 1. Follow the [Quickstart]({{< relref "/manual/quickstart.md" >}}) and [Introduction]({{< relref "/manual/introduction.md" >}}) for the startup structure.
-2. Set [startup macros]({{< relref "/manual/general_cfg/startup/_index.md" >}}) and choose a [mode]({{< relref "/manual/general_cfg/startup/modes.md" >}}). For hardware-free operation, see `MASTER_ID=-1` in the startup reference.
+2. Set [startup macros]({{< relref "/manual/general_cfg/startup/_index.md" >}}) and choose a [mode]({{< relref "/manual/general_cfg/startup/modes.md" >}}). Use `MASTER_ID=-1` for masterless logic/virtual axes, or [SIM=1]({{< relref "/manual/general_cfg/ethercat/simulation.md" >}}) for memory-backed I/O with device models.
 3. Review [PV processing rates]({{< relref "/manual/general_cfg/startup/PVProcessingRate.md" >}}) and [host recommendations]({{< relref "/manual/general_cfg/startup/best_practice.md" >}}).
 4. Run the [startup validator]({{< relref "/manual/general_cfg/startup/startup_validator.md" >}}) before starting the IOC.
 

@@ -54,6 +54,24 @@ selection, and YAML files.
 - [Motion sequence PLC example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/plcs/motion/stepper_bissc_forw_back_seq)
 - [Data storage buffer](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/best_practice/general/data_storage)
 
+## Simulation and hardware acceptance fixtures
+
+The dedicated slit setup lives alongside its runners in this repository:
+
+| Purpose | Repository path |
+| --- | --- |
+| Memory-backed slit IOC | `tests/integration/slit/ioc/startup.cmd` |
+| External plant and simulation cases | `tests/integration/slit/run.py` |
+| Real-hardware slit IOC | `tests/integration/slit/ioc_hardware/startup.cmd` |
+| Real-hardware acceptance cases | `tests/integration/slit_hardware/run.py` |
+| Offline simulator/harness checks (no IOC) | `python3 tests/run_simulation_checks.py` |
+
+See [Simulation backend]({{< relref "/manual/general_cfg/ethercat/simulation.md" >}})
+and the two runner READMEs for setup and case selection. The simulation runner
+requires a SIM IOC; it injects feedback and faults. The hardware runner checks
+a separate hardware fixture and performs real motion. Hardware homing is an
+explicit separate group, excluded from its default run.
+
 ## Legacy ESS examples
 
 The `examples/ESS/` tree is mainly useful when reading or maintaining older

@@ -43,7 +43,8 @@ Observe the CLI output for details.
 
 ### publish
 Once you're happy with the changes, push them to the `master` branch.
-This will trigger the CI/CD pipeline and the result will be visible [here](https://elnetmotion.gitpages.psi.ch/elnet-web/).
+This triggers the GitHub Pages workflow in `.github/workflows/gh-pages.yml`.
+The published manual is [here](https://paulscherrerinstitute.github.io/ecmccfg/).
 
 
 ### Content structure and shared references

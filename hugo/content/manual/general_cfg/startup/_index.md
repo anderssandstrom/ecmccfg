@@ -75,7 +75,7 @@ startup.cmd takes the following arguments:
 ```
  Arguments
  [optional]
- ECMC_VER          = 9.5.4
+ ECMC_VER          = 11.1.1 (default in startup.cmd; override for your installation)
  EthercatMC_VER    = 3.0.2 (obsolete)
  INIT              = initAll
  MASTER_ID         = 0 <-- put negative number to disable master, aka non ec-mode
@@ -83,7 +83,7 @@ startup.cmd takes the following arguments:
  SCRIPTEXEC        = iocshLoad
  NAMING            = mXsXXX (default), ClassicNaming, ESSnaming
  EC_RATE           = 1000
- MODE              = FULL / DAQ
+ MODE              = FULL / DAQ / NO_MR
     FULL:  Init ecmc with support for both motion and DAQ (DEFAULT)
     DAQ:   Init ecmc with support for only daq (not motion)
     NO_MR: Init ecmc with support for motion (without motor record) and DAQ
@@ -92,9 +92,10 @@ startup.cmd takes the following arguments:
  ENG_MODE          = 1/0. If ENG_MODE is set then PVs used for commissioning will be available
  EC_TOOL_PATH      = Path to ethercat tool defaults to ethercat tool in ECmasterECMC_DIR,
  otherwise            "/opt/etherlab/bin/ethercat"
- MAX_PARAM_COUNT   = Maximum asyn param count, defaults to 1500
+ MAX_PARAM_COUNT   = Maximum asyn param count, defaults to 1675
+ ECMC_ASYN_PORT_MAX_PARAMS = Explicit capacity override; takes precedence over MAX_PARAM_COUNT
  ECMC_ASYN_TRACE_MASK = asyn trace mask for the main ecmc asyn port, defaults to 0x1
- ECMC_STARTUP_GATE = 1/0. Set explicitly to 1 to hold motion until complete
+ ECMC_STARTUP_GATE = 1/0, default 0. Set explicitly to 1 to hold motion until complete
                      native-axis and loaded motor-record startup.
  START_EPICS_FIRST = 1/0, default 0. Start EPICS records before ECMC runtime
                      and EtherCAT when set to 1.

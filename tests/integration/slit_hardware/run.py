@@ -100,7 +100,12 @@ def main(argv=None):
         rig.guard()
         suite = make_suite(rig, groups, args.test)
         moving_axes = {axis for test in suite for axis in test.motion_axes}
-        # Validate the planned travel before the first write of any test.
+        # A sleeping absolute encoder may disagree with the unreferenced startup
+        # counter. Capture fresh coordinates before calculating any move target.
+        if moving_axes: rig.initialize_origins()
+        document['origins'] = dict(rig.origins)
+        # Validate planned travel before the first motor write; encoder wake above
+        # uses only a temporary inspection hold and never enables the drive.
         rig.preflight_moves(moving_axes)
         # TextTestRunner supplies the wrapped stream required by TextTestResult.
         def factory(*arguments):

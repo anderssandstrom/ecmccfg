@@ -1,4 +1,5 @@
 """Bounded motor moves and read-only status checks for the hardware slit IOC."""
+import json
 import math
 import time
 
@@ -12,6 +13,9 @@ def validate_profile(profile):
         raise ValueError('profile must describe hardware slit schema 1 and its four axis IDs')
     if set(profile['physical']) != {'TR_LO', 'TR_HI'}:
         raise ValueError('physical travel bounds required for TR_LO and TR_HI')
+    for flag in ('relative_to_start', 'reference_to_zero'):
+        if not isinstance(profile.get(flag, False), bool):
+            raise ValueError(flag + ' must be boolean')
     for axis, limits in profile['physical'].items():
         if len(limits) != 2 or not all(math.isfinite(v) for v in limits) or limits[0] >= limits[1]:
             raise ValueError('invalid travel bounds: ' + axis)
@@ -33,6 +37,7 @@ class Rig:
         self.origins, self.saved_velocity, self.touched, self.trace = {}, {}, set(), []
         self.authorized = False
         self.stop_requested, self.stop_errors = False, []
+        self.initializing_origins, self.saved_force_on = False, None
 
     def get(self, axis, field): return self.client.get(self.prefix + axis + field)
     def read(self, suffix): return self.client.get(self.prefix + suffix)
@@ -50,7 +55,11 @@ class Rig:
 
     def check_envelope(self, positions):
         for axis, value in positions.items():
+            if self.initializing_origins and self.profile.get('relative_to_start', False): continue
             low, high = self.profile['physical'][axis]
+            if self.profile.get('relative_to_start', False):
+                origin = self.origins[axis]
+                low, high = origin+low, origin+high
             if not math.isfinite(value) or not low <= value <= high:
                 raise AssertionError(f'{axis}: position {value} outside hardware test bounds [{low}, {high}]')
 
@@ -61,7 +70,7 @@ class Rig:
         for axis, number in self.profile['axes'].items():
             if self.get(axis, '-Id') != number:
                 raise RuntimeError('axis identity mismatch: ' + axis)
-            for suffix, expected in (('.DIR', 0), ('.OFF', 0), ('.SPMG', 3),
+            for suffix, expected in (('.DIR', 0), ('.OFF', 0), ('.SPMG', 3), ('.SET', 0),
                                      ('.DMOV', 1), ('.MOVN', 0), ('-Busy', 0), ('-InStartup', 0)):
                 if self.get(axis, suffix) != expected:
                     raise RuntimeError(axis + ': preflight requires ' + suffix + '=' + str(expected))
@@ -76,6 +85,89 @@ class Rig:
             raise RuntimeError('hardware suite requires the configured slit state machine enabled')
         self.healthy()
         self.authorized = True
+
+    def initialize_origins(self):
+        """Establish valid feedback and optionally reference zero without motion."""
+        if not self.authorized: raise RuntimeError('identity preflight required')
+        cfg = self.profile['encoder_power']
+        axis, encoder = cfg['axis'], cfg['encoder']
+        stem = f'-Enc0{encoder}'
+        mode = self.get(axis, '-EncMode-RB')
+        zero = self.profile.get('reference_to_zero', False)
+        use_source = mode in (0, encoder) and self.get(axis, stem+'-PwrEnable-RB') == 1
+        if zero:
+            self.require_disabled_for_reference()
+            if mode != 0 or self.get(axis, '-EncForceOn-RB') != 0 or not use_source:
+                raise RuntimeError('zero reference requires Auto power, Force ON released and encoder power enabled')
+        self.initializing_origins = True
+        try:
+            if use_source:
+                ready = lambda: (self.get(axis, stem+'-PwrState') == 3
+                                 and self.get(axis, stem+'-Ready') == 1
+                                 and self.get(axis, '-SetEncIdCmd-RB') == encoder)
+                if zero or not ready():
+                    if self.get(axis, '-EnaAct') or self.get(axis, '-EnaCmd-RB'):
+                        raise RuntimeError(axis + ': disable the drive before initial encoder wake')
+                    previous = self.get(axis, '-EncForceOn-RB')
+                    if not previous:
+                        self.saved_force_on = previous
+                        self.client.put(self.prefix+axis+'-EncForceOn', 1)
+                    self.wait(ready, 'BiSS ready and primary before capturing test origins', cfg['timeout'])
+            if zero: self.reference_axes_zero()
+            self.wait(lambda: self.idle() and all(
+                abs(self.get(a, '.RBV')-self.get(a, '-PosAct')) <= self.profile['tolerance']
+                for a in self.profile['axes']), 'motor/native coordinates agree after encoder wake')
+            positions = {a: self.get(a, '-PosAct') for a in self.profile['axes']}
+            self.origins = {a: 0.0 for a in positions} if zero else positions
+            self.trace.append({'action': 'capture startup positions', 'origins': dict(self.origins),
+                               'measured_positions': positions, 'reference_to_zero': zero,
+                               'relative_to_start': self.profile.get('relative_to_start', False)})
+        finally:
+            self.initializing_origins = False
+        self.restore_encoder_hold()
+        if zero:
+            self.wait(lambda: self.get(axis, stem+'-PwrState') == 1
+                      and self.get(axis, '-SetEncIdCmd-RB') == cfg['backup']
+                      and self.get(axis, '-Enc01-Homed') == 1
+                      and abs(self.get(axis, '-Enc01-PosAct')) <= self.profile['tolerance'],
+                      'tracking counter inherits zero reference before BiSS sleeps', cfg['timeout'])
+        self.healthy()
+
+    def require_disabled_for_reference(self):
+        if not self.idle() or any(self.get(a, '-EnaAct') or self.get(a, '-EnaCmd-RB')
+                                 or abs(self.get(a, '-VelAct')) > .005
+                                 for a in self.profile['physical']):
+            raise RuntimeError('disable both physical drives and wait for standstill before zero reference')
+
+    def reference_axes_zero(self):
+        self.require_disabled_for_reference()
+        for axis in self.profile['physical']:
+            self.require_disabled_for_reference()
+            self.touched.add(axis)
+            self.client.put(self.prefix+axis+'-SetEncPosCmd', 0)
+            self.wait(lambda: self.idle()
+                      and abs(self.get(axis, '-PosAct')) <= self.profile['tolerance']
+                      and abs(self.get(axis, '.RBV')) <= self.profile['tolerance']
+                      and self.get(axis, '-Homed') == 1,
+                      axis + ' acknowledges the non-moving reference change')
+        self.wait(lambda: self.idle() and all(
+            abs(self.get(a, '-PosAct')) <= self.profile['tolerance']
+            and abs(self.get(a, '.RBV')) <= self.profile['tolerance']
+            for a in self.profile['axes']), 'physical/virtual feedback accepts zero reference')
+        for axis in self.profile['axes']:
+            self.client.put(self.prefix+axis+'.SYNC', 1)
+        self.wait(lambda: all(self.get(a, '.SYNC') == 0
+                  and abs(self.get(a, '.VAL')) <= self.profile['tolerance']
+                  for a in self.profile['axes']), 'motor targets synchronize to zero without motion')
+        self.require_disabled_for_reference()
+        self.trace.append({'action': 'non-moving zero reference',
+                           'axes': list(self.profile['physical']), 'snapshot': self.snapshot()})
+
+    def restore_encoder_hold(self):
+        if self.saved_force_on is not None:
+            axis = self.profile['encoder_power']['axis']
+            self.client.put(self.prefix+axis+'-EncForceOn', self.saved_force_on)
+            self.saved_force_on = None
 
     def validate_target(self, axis, target):
         if not math.isfinite(target): raise ValueError('non-finite target')
@@ -147,11 +239,30 @@ class Rig:
         self.finish(axis, target, self.start(axis, target))
 
     def finish(self, axis, target, complete):
-        self.wait(lambda: complete.is_set() and self.idle()
-                  and self.get(axis, '-AtTarget') == 1
-                  and abs(self.get(axis, '.RBV') - target) <= self.profile['tolerance']
-                  and abs(self.get(axis, '-PosAct') - target) <= self.profile['tolerance'],
-                  axis + ' completes commanded move')
+        observed = {}
+        def arrived():
+            flags = {name: {field: self.get(name, field)
+                            for field in ('-Busy', '.DMOV', '.MOVN')}
+                     for name in self.profile['axes']}
+            observed.update(target=target, tolerance=self.profile['tolerance'],
+                            put_complete=complete.is_set(), axes=flags,
+                            at_target=self.get(axis, '-AtTarget'),
+                            motor_position=self.get(axis, '.RBV'),
+                            native_position=self.get(axis, '-PosAct'))
+            return (observed['put_complete']
+                    and all(f['-Busy'] == 0 and f['.DMOV'] == 1 and f['.MOVN'] == 0
+                            for f in flags.values())
+                    and observed['at_target'] == 1
+                    and abs(observed['motor_position']-target) <= self.profile['tolerance']
+                    and abs(observed['native_position']-target) <= self.profile['tolerance'])
+        try:
+            self.wait(arrived, axis + ' completes commanded move')
+        except AssertionError as error:
+            # Preserve the conditions observed before STOP changes Busy/DMOV.
+            self.trace.append({'action': 'incomplete move', 'axis': axis,
+                               'completion_conditions': dict(observed)})
+            raise AssertionError(str(error) + '\nCompletion conditions before STOP:\n'
+                                 + json.dumps(observed, indent=2)) from error
         if self.get(axis, '.LVIO'): raise AssertionError(axis + ': motor limit violation')
         self.kinematics()
         self.trace.append({'axis': axis, 'target': target, 'snapshot': self.snapshot()})
@@ -187,9 +298,13 @@ class Rig:
             except Exception as error: self.stop_errors.append(str(error))
 
     def cleanup(self):
-        if not self.authorized or not self.touched: return []
+        if not self.authorized: return []
+        errors = []
         self.stop_all(retry=bool(self.stop_errors))
-        errors = list(self.stop_errors)
+        errors.extend(self.stop_errors)
+        try: self.restore_encoder_hold()
+        except Exception as error: errors.append('restore encoder inspection hold: ' + str(error))
+        if not self.touched: return errors
         end = time.monotonic() + self.profile['timeout']
         try:
             while not self.idle():

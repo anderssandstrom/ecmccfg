@@ -115,11 +115,11 @@ unchanged. Both reference views are generated from the same audited source.
 - `encoder.reset` (optional) — Reset bit.
 - `encoder.warning` (optional) — Warning bit.
 - `encoder.error` (optional, up to 3 entries) — Up to three error bit indices or full EtherCAT paths. Omit unused entries; do not use empty/null list items. The schema requires status when error is supplied.
-- `encoder.filter` (optional) — Encoder-side filtering.
-- `encoder.filter.velocity.size` (optional) — Velocity filter window in EtherCAT cycles. Defaults: `encoder.filter.velocity.size`: 100.
-- `encoder.filter.velocity.enable` (optional) — Enable velocity filter. Defaults: `encoder.filter.velocity.enable`: true.
-- `encoder.filter.position.size` (optional) — Position filter window in EtherCAT cycles. Defaults: `encoder.filter.position.size`: 10.
-- `encoder.filter.position.enable` (optional) — Enable position filter. Defaults: `encoder.filter.position.enable`: true.
+- `encoder.filter` (optional) — Encoder filtering uses nested velocity and position blocks, each with size and enable. See the encoder-filter example in the YAML configuration guide.
+- `encoder.filter.velocity.size` (optional) — Velocity filter window in EtherCAT samples/cycles; applies when encoder.filter.velocity is supplied. Defaults: `encoder.filter.velocity.size`: 100.
+- `encoder.filter.velocity.enable` (optional) — Enable the encoder velocity filter; defaults to true when encoder.filter.velocity is supplied. Defaults: `encoder.filter.velocity.enable`: true.
+- `encoder.filter.position.size` (optional) — Position filter window in EtherCAT samples/cycles; applies when encoder.filter.position is supplied. Defaults: `encoder.filter.position.size`: 10.
+- `encoder.filter.position.enable` (optional) — Enable the encoder position filter; defaults to true when encoder.filter.position is supplied. Defaults: `encoder.filter.position.enable`: true.
 - `encoder.latch` (optional) — Homing latch settings. For EL7062/ED7062 touch-probe use outside homing, prefer the separate `touchProbe` section.
 - `encoder.latch.position` (required when encoder.latch is present) — Latched value link.
 - `encoder.latch.timestamp` (optional) — Optional DC timestamp for the same latch event.

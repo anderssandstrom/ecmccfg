@@ -103,10 +103,10 @@ Notes:
 | `encoder.source` | 0 = Encoder value from EtherCAT hardware, 1 = Encoder value from PLC | optional | 0 |
 | `encoder.reset` | Reset | optional | — |
 | `encoder.warning` | Warning | optional | — |
-| `encoder.filter.velocity.size` | Velocity filter window in EtherCAT cycles. | optional | 100 |
-| `encoder.filter.velocity.enable` | enable velocity filter | optional | true |
-| `encoder.filter.position.size` | Position filter window in EtherCAT cycles. | optional | 10 |
-| `encoder.filter.position.enable` | enable encoder value filter | optional | true |
+| `encoder.filter.velocity.size` | Velocity filter window in EtherCAT samples/cycles; applies when encoder.filter.velocity is supplied. | optional | 100 |
+| `encoder.filter.velocity.enable` | Enable the encoder velocity filter; defaults to true when encoder.filter.velocity is supplied. | optional | true |
+| `encoder.filter.position.size` | Position filter window in EtherCAT samples/cycles; applies when encoder.filter.position is supplied. | optional | 10 |
+| `encoder.filter.position.enable` | Enable the encoder position filter; defaults to true when encoder.filter.position is supplied. | optional | true |
 | `encoder.latch.position` | Link to latched value. Used for some homing seqs | required when encoder.latch is present | — |
 | `encoder.latch.timestamp` | Optional 32/64-bit DC timestamp for the same latch event | optional | — |
 | `encoder.latch.control` | Bit in encoder control word to arm latch. Used for some homing seqs | optional | 0 |

@@ -16,6 +16,22 @@ you know the visible problem, but not yet which detailed page to use.
 
 ## Startup and EtherCAT
 
+- **PSI: IOC stays before `iocInit` and startup never completes**: the PSI
+  `iocsh` launcher suppresses its automatic `iocInit` call when it finds the
+  text `iocInit` in the startup file. This can happen even when the text is
+  inside a comment, for example:
+
+  ```text
+  # iocInit
+  ```
+
+  In that case, the commented command is never executed and the launcher also
+  skips initialization, leaving the IOC in its pre-initialization state.
+  If relying on the launcher's automatic initialization, remove the text
+  `iocInit` entirely from the startup file, including comments. If deliberately
+  managing initialization yourself, ensure an active `iocInit` call is executed
+  after configuration. Restart the IOC after correcting the file.
+
 - **Startup errors after loading `ecmccfg` twice**: check that the startup file
   contains only one `require ecmccfg` call. Accidentally keeping both a versioned
   call and an unversioned call can cause startup errors. For example, remove the

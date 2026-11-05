@@ -76,8 +76,8 @@ softlimits:
   enable: true
   backwardEnable: true
   forwardEnable: true
-  forward: 1.0
-  backward: -1.0
+  forward: 10.0
+  backward: -10.0
 
 monitoring:
   lag:

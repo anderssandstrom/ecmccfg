@@ -34,20 +34,22 @@ class HardwareBoundary:
         self.interrupt_on_move, self.stall = False, False
         for axis, number in run.json.loads(run.DEFAULT_PROFILE.read_text())['axes'].items():
             fields = {'.DIR': 0, '.OFF': 0, '.SPMG': 3, '.DMOV': 1, '.MOVN': 0,
-                      '.VELO': .4, '.VMAX': 5, '.SEVR': 0, '.LVIO': 0, '-Busy': 0,
-                      '-InStartup': 0, '-LimBwd': 1, '-LimFwd': 1, '-ErrId': 0,
+                      '.VELO': .4, '.VMAX': 5, '.SET': 0, '.FOFF': 1, '.SYNC': 0, '-Homed': 0, '.SEVR': 0, '.LVIO': 0, '-Busy': 0,
+                      '-InStartup': 0, '-EnaCmd-RB': 0, '-LimBwd': 1, '-LimFwd': 1, '-ErrId': 0,
                       '-WrnId': 0, '-VelAct': 0, '-AtTarget': 1, '-Id': number, '-EnaAct': 0,
-                      '.LLM': -1, '.HLM': 1, '-CfgDLLM-RB': -1, '-CfgDHLM-RB': 1,
+                      '.LLM': -10, '.HLM': 10, '-CfgDLLM-RB': -10, '-CfgDHLM-RB': 10,
                       '-CfgDLLM-En-RB': 1, '-CfgDHLM-En-RB': 1, '-EncMode-RB': 0,
                       '-EncForceOn-RB': 0, '-EncCnt': 2 if axis == 'TR_HI' else 1,
                       '-SetEncIdCmd-RB': 2 if axis == 'TR_HI' else 1,
                       '-Enc02-PwrState': 3, '-Enc02-PwrEnable-RB': 1, '-Enc02-Ready': 1,
-                      '-Enc02-PwrOn': 1, '-Enc02-Absolute': 1, '-Enc01-Absolute': 0, '-Enc01-Ready': 1}
+                      '-Enc02-PwrOn': 1, '-Enc02-Absolute': 1, '-Enc01-Absolute': 0, '-Enc01-Ready': 1,
+                      '-Enc01-Homed': 0, '-Enc02-Homed': 0}
             for field, value in fields.items(): self.values['HW:'+axis+field] = value
         self.values.update({'HW:MCU-Cfg-Sim-Mode': 0, 'HW:MCU-AppMode': 1,
                             'HW:m0-Stat-OK': 1, 'HW:HardwareSlitTest:Schema': 1,
                             'HW:SM00-EnaCmd': 1})
         self.positions = {'TR_LO': -.15, 'TR_HI': .15}
+        self.mechanical_positions = dict(self.positions)
         self.update_coordinates()
         for axis in ('TR_LO', 'TR_HI', 'CENTERY', 'GAPY'):
             self.values['HW:'+axis+'.VAL'] = self.values['HW:'+axis+'-PosAct']
@@ -55,7 +57,7 @@ class HardwareBoundary:
     def update_coordinates(self):
         low, high = self.positions['TR_LO'], self.positions['TR_HI']
         for axis, pos in dict(self.positions, CENTERY=(low+high)/2, GAPY=high-low).items():
-            for field in ('-PosAct', '-PosSet', '.RBV'):
+            for field in ('-PosAct', '-PosSet', '.RBV', '-Enc01-PosAct', '-Enc02-PosAct'):
                 self.values['HW:'+axis+field] = pos
 
     def update(self):
@@ -63,8 +65,11 @@ class HardwareBoundary:
             axis, target, end = self.active
             if self.fault_on_move: self.values['HW:TR_HI-ErrId'] = 123
             fraction = 0 if self.stall else min(1, (self.clock.now-(end-.5))/.5)
+            previous = dict(self.positions)
             self.positions = {a: before+(self.destination[a]-before)*fraction
                               for a, before in self.initial_positions.items()}
+            for axis in self.positions:
+                self.mechanical_positions[axis] += self.positions[axis]-previous[axis]
             self.update_coordinates()
             if fraction >= 1:
                 self.stop()
@@ -74,6 +79,7 @@ class HardwareBoundary:
             self.values['HW:TR_HI-SetEncIdCmd-RB'] = 1
             self.values['HW:TR_HI-Enc02-Ready'] = 0
             self.values['HW:TR_HI-Enc02-PwrOn'] = 0
+            self.values['HW:TR_HI-Enc01-Homed'] = self.values['HW:TR_HI-Enc02-Homed']
 
     def stop(self):
         for axis in ('TR_LO', 'TR_HI', 'CENTERY', 'GAPY'):
@@ -90,6 +96,23 @@ class HardwareBoundary:
     def put(self, name, value, **kwargs):
         self.writes.append((name, value))
         self.values[name] = value
+        if name.endswith('-EncForceOn'):
+            self.values[name+'-RB'] = value
+            return None
+        if name.endswith('-SetEncPosCmd'):
+            axis = name[3:-len('-SetEncPosCmd')]
+            assert axis in ('TR_LO', 'TR_HI')
+            assert self.values['HW:'+axis+'-EnaAct'] == 0
+            self.positions[axis] = value  # reference only; mechanics do not move
+            self.update_coordinates()
+            self.values['HW:'+axis+'-Homed'] = 1
+            self.values['HW:'+axis+('-Enc02-Homed' if axis == 'TR_HI' else '-Enc01-Homed')] = 1
+            return None
+        if name.endswith('.SYNC'):
+            axis = name[3:-5]
+            self.values['HW:'+axis+'.VAL'] = self.values['HW:'+axis+'.RBV']
+            self.values[name] = 0
+            return None
         if name.endswith('.STOP'):
             self.stop()
             return None
@@ -149,7 +172,7 @@ class HardwareRunnerTests(unittest.TestCase):
         # Exercise a deliberately tighter custom envelope independently of IOC limits.
         self.profile["physical"] = {axis: [-.5, .5] for axis in self.profile["physical"]}
         self.rig.guard()
-        for axis, target in (('TR_LO', .6), ('TR_HI', -2), ('CENTERY', .49), ('GAPY', 1.1)):
+        for axis, target in (('TR_LO', .6), ('TR_HI', -2), ('CENTERY', .6), ('GAPY', 1.4)):
             with self.subTest(axis=axis):
                 with self.assertRaises((RuntimeError, AssertionError)):
                     self.rig.start(axis, target)
@@ -168,27 +191,38 @@ class HardwareRunnerTests(unittest.TestCase):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
         report = Path(temporary.name)/'hardware.json'
+        profile_path = Path(temporary.name)/'profile.json'
+        profile_path.write_text(json.dumps(self.profile))
         with patch.dict(sys.modules, {'epics': SimpleNamespace(PV=object())}), \
                 patch.object(run, 'Client', return_value=self.client), \
                 patch('slit_hardware.rig.time.monotonic', self.clock.monotonic), \
                 patch('slit_hardware.rig.time.sleep', self.clock.sleep), \
                 redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
-            code = run.main(['--prefix', 'HW:', '--run', '--report', str(report), *extra])
+            code = run.main(['--prefix', 'HW:', '--run', '--report', str(report),
+                             '--profile', str(profile_path), *extra])
         return code, json.loads(report.read_text()), ET.parse(report.with_suffix('.xml')).getroot()
 
-    def test_all_cases_restore_origins_velocities_and_write_only_motor_fields(self):
+    def test_all_cases_reference_zero_restore_velocities_and_use_expected_fields(self):
         code, report, xml = self.run_live_boundary()
         self.assertEqual(code, 0, report)
         self.assertEqual(len(report['tests']), 8)
         self.assertTrue(all(t['status'] == 'passed' for t in report['tests']), report)
         self.assertEqual(xml.attrib['errors'], '0')
         self.assertTrue(self.client.closed)
-        self.assertAlmostEqual(self.client.positions['TR_LO'], -.15)
-        self.assertAlmostEqual(self.client.positions['TR_HI'], .15)
+        self.assertAlmostEqual(self.client.positions['TR_LO'], 0)
+        self.assertAlmostEqual(self.client.positions['TR_HI'], 0)
         for axis in self.profile['axes']:
             self.assertEqual(self.client.values['HW:'+axis+'.VELO'], .4)
         self.assertTrue(self.client.writes)
-        self.assertTrue(all(n.endswith(('.VAL', '.VELO', '.STOP')) for n, _ in self.client.writes))
+        self.assertTrue(all(n.endswith(('.VAL', '.VELO', '.STOP', '-SetEncPosCmd',
+                                       '.SYNC', '-EncForceOn')) for n, _ in self.client.writes))
+        self.assertAlmostEqual(self.client.mechanical_positions['TR_LO'], -.15)
+        self.assertAlmostEqual(self.client.mechanical_positions['TR_HI'], .15)
+        self.assertEqual(report['origins'], {a: 0 for a in self.profile['axes']})
+        for axis in self.profile['physical']:
+            self.assertEqual(self.client.values['HW:'+axis+'.SET'], 0)
+            self.assertEqual(self.client.values['HW:'+axis+'.FOFF'], 1)
+            self.assertEqual(self.client.values['HW:'+axis+'-Enc01-Homed'], 1)
 
     def test_status_only_is_read_only(self):
         code, report, _ = self.run_live_boundary(('--case', 'status'))
@@ -250,6 +284,164 @@ class HardwareRunnerTests(unittest.TestCase):
         self.assertEqual(len(report['cleanup_errors']), 4)
         self.assertEqual(xml.attrib['errors'], '1')
         self.assertTrue(self.client.closed)
+
+
+    def test_larger_moves_reject_narrow_ioc_limits(self):
+        self.assertEqual(self.profile['step'], 5.0)
+        self.assertEqual(self.profile['velocity'], 1.0)
+        for axis in self.profile['axes']:
+            for field, value in (('.LLM', -1), ('.HLM', 1),
+                                 ('-CfgDLLM-RB', -1), ('-CfgDHLM-RB', 1)):
+                self.client.values['HW:'+axis+field] = value
+        self.rig.guard()
+        with self.assertRaisesRegex(RuntimeError, 'outside active soft limits'):
+            self.rig.preflight_moves(('TR_LO', 'TR_HI'))
+        self.assertEqual(self.client.writes, [])
+
+    def test_timeout_preserves_actual_completion_conditions(self):
+        self.client.positions['TR_HI'] = .900634765625
+        self.client.update_coordinates()
+        self.client.values['HW:TR_HI-AtTarget'] = 0
+        self.rig.guard()
+        complete = Event()
+        complete.set()
+        with patch('slit_hardware.rig.time.monotonic', self.clock.monotonic), \
+                patch('slit_hardware.rig.time.sleep', self.clock.sleep):
+            with self.assertRaisesRegex(AssertionError, 'Completion conditions before STOP'):
+                self.rig.finish('TR_HI', .05, complete)
+        observed = self.rig.trace[-1]['completion_conditions']
+        self.assertEqual(observed['target'], .05)
+        self.assertEqual(observed['native_position'], .900634765625)
+        self.assertEqual(observed['motor_position'], .900634765625)
+        self.assertEqual(observed['at_target'], 0)
+        self.assertTrue(observed['put_complete'])
+        self.assertEqual(observed['axes']['TR_HI'], {'-Busy': 0, '.DMOV': 1, '.MOVN': 0})
+
+
+    def test_relative_window_uses_fresh_encoder_position_outside_absolute_ten_mm(self):
+        self.profile['reference_to_zero'] = False
+        self.client.positions.update(TR_LO=35, TR_HI=0)  # startup counter is not yet referenced
+        self.client.update_coordinates()
+        for axis in self.profile['axes']:
+            for field, value in (('.LLM', -100), ('.HLM', 100),
+                                 ('-CfgDLLM-RB', -100), ('-CfgDHLM-RB', 100)):
+                self.client.values['HW:'+axis+field] = value
+        self.client.values['HW:TR_HI-Enc02-PwrState'] = 1
+        self.client.values['HW:TR_HI-Enc02-Ready'] = 0
+        self.client.values['HW:TR_HI-SetEncIdCmd-RB'] = 1
+        original = self.client.put
+        def put(name, value, **kwargs):
+            result = original(name, value, **kwargs)
+            if name == 'HW:TR_HI-EncForceOn':
+                self.client.values[name+'-RB'] = value
+                if value:
+                    self.client.positions['TR_HI'] = 40  # first real BiSS sample
+                    self.client.update_coordinates()
+                    self.client.values['HW:TR_HI-Enc02-PwrState'] = 3
+                    self.client.values['HW:TR_HI-Enc02-Ready'] = 1
+                    self.client.values['HW:TR_HI-SetEncIdCmd-RB'] = 2
+            return result
+        self.client.put = put
+        code, report, _ = self.run_live_boundary()
+        self.assertEqual(code, 0, report)
+        self.assertEqual(report['origins']['TR_LO'], 35)
+        self.assertEqual(report['origins']['TR_HI'], 40)
+        holds = [(name, value) for name, value in self.client.writes if name.endswith('-EncForceOn')]
+        self.assertEqual(holds, [('HW:TR_HI-EncForceOn', 1), ('HW:TR_HI-EncForceOn', 0)])
+        self.assertEqual(self.client.writes[:2], holds)
+        self.assertAlmostEqual(self.client.positions['TR_LO'], 35)
+        self.assertAlmostEqual(self.client.positions['TR_HI'], 40)
+        self.assertIn(('HW:TR_LO.VAL', 40), self.client.writes)
+        self.assertIn(('HW:TR_HI.VAL', 45), self.client.writes)
+
+    def test_failed_startup_wake_restores_hold_without_motor_writes(self):
+        self.client.values['HW:TR_HI-Enc02-PwrState'] = 1
+        self.client.values['HW:TR_HI-Enc02-Ready'] = 0
+        self.client.values['HW:TR_HI-SetEncIdCmd-RB'] = 1
+        code, report, _ = self.run_live_boundary(('--case', 'motion'))
+        self.assertEqual(code, 1)
+        self.assertIn('BiSS ready', report['error'])
+        self.assertEqual(self.client.writes, [('HW:TR_HI-EncForceOn', 1), ('HW:TR_HI-EncForceOn', 0)])
+        self.assertEqual(report['cleanup_errors'], [])
+        self.assertTrue(self.client.closed)
+
+    def test_sleeping_source_is_not_woken_with_drive_enabled(self):
+        self.client.values['HW:TR_HI-Enc02-PwrState'] = 1
+        self.client.values['HW:TR_HI-SetEncIdCmd-RB'] = 1
+        self.client.values['HW:TR_HI-EnaAct'] = 1
+        code, report, _ = self.run_live_boundary(('--case', 'motion'))
+        self.assertEqual(code, 1)
+        self.assertIn('disable', report['error'])
+        self.assertEqual(self.client.writes, [])
+
+    def test_existing_absolute_profile_keeps_absolute_envelope(self):
+        del self.profile['relative_to_start']
+        self.client.positions['TR_HI'] = 35
+        self.client.update_coordinates()
+        with self.assertRaisesRegex(AssertionError, 'outside hardware test bounds'):
+            self.rig.guard()
+        self.assertEqual(self.client.writes, [])
+
+
+    def test_zero_reference_after_wake_preserves_physical_position(self):
+        self.client.positions.update(TR_LO=35, TR_HI=40)
+        self.client.mechanical_positions = dict(self.client.positions)
+        self.client.update_coordinates()
+        self.rig.guard()
+        with patch('slit_hardware.rig.time.monotonic', self.clock.monotonic), \
+                patch('slit_hardware.rig.time.sleep', self.clock.sleep):
+            self.rig.initialize_origins()
+        self.assertEqual(self.client.positions, {'TR_LO': 0, 'TR_HI': 0})
+        self.assertEqual(self.client.mechanical_positions, {'TR_LO': 35, 'TR_HI': 40})
+        self.assertFalse(any(n.endswith('.VAL') for n, _ in self.client.writes))
+        self.assertEqual(self.rig.origins, {a: 0 for a in self.profile['axes']})
+        self.assertEqual([(n, v) for n, v in self.client.writes if n.endswith('-SetEncPosCmd')],
+                         [('HW:TR_LO-SetEncPosCmd', 0), ('HW:TR_HI-SetEncPosCmd', 0)])
+        self.assertFalse(any(n.endswith(('.SET', '.FOFF', '.DVAL')) for n, _ in self.client.writes))
+        self.assertEqual(self.client.values['HW:TR_HI-Enc01-Homed'], 1)
+        self.assertEqual(self.client.values['HW:TR_HI-Enc02-Homed'], 1)
+        self.rig.preflight_moves(self.profile['axes'])
+
+    def test_zero_reference_failure_restores_encoder_hold(self):
+        original = self.client.put
+        def put(name, value, **kwargs):
+            if name.endswith('-SetEncPosCmd'): raise RuntimeError('reference write failed')
+            return original(name, value, **kwargs)
+        self.client.put = put
+        code, report, _ = self.run_live_boundary(('--case', 'motion'))
+        self.assertEqual(code, 1)
+        self.assertIn('reference write failed', report['error'])
+        self.assertEqual(self.client.values['HW:TR_LO.SET'], 0)
+        self.assertEqual(self.client.values['HW:TR_LO.FOFF'], 1)
+        self.assertEqual(self.client.values['HW:TR_HI-EncForceOn-RB'], 0)
+        self.assertFalse(any(n.endswith('.VAL') for n, _ in self.client.writes))
+        self.assertTrue(self.client.closed)
+
+
+    def test_zero_reference_waits_for_motor_acknowledgement(self):
+        original_put, original_get = self.client.put, self.client.get
+        acknowledgements = {}
+        def put(name, value, **kwargs):
+            result = original_put(name, value, **kwargs)
+            if name.endswith('-SetEncPosCmd'):
+                axis = name[3:-len('-SetEncPosCmd')]
+                self.client.values['HW:'+axis+'.DMOV'] = 0
+                acknowledgements['HW:'+axis+'.DMOV'] = self.clock.now+.2
+            return result
+        def get(name):
+            if name in acknowledgements and self.clock.now >= acknowledgements[name]:
+                self.client.values[name] = 1
+                del acknowledgements[name]
+            return original_get(name)
+        self.client.put, self.client.get = put, get
+        self.rig.guard()
+        with patch('slit_hardware.rig.time.monotonic', self.clock.monotonic), \
+                patch('slit_hardware.rig.time.sleep', self.clock.sleep):
+            self.rig.initialize_origins()
+        self.assertFalse(acknowledgements)
+        self.assertEqual(self.client.values['HW:TR_LO.SET'], 0)
+        self.assertEqual(self.client.values['HW:TR_HI.SET'], 0)
+        self.assertFalse(any(n.endswith('.VAL') for n, _ in self.client.writes))
 
 
 if __name__ == '__main__': unittest.main()

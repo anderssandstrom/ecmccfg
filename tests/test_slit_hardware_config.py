@@ -57,6 +57,8 @@ class SlitHardwareConfigTests(unittest.TestCase):
                 self.assertNotIn('power',document['encoder'])
                 self.assertNotIn('homing',document['encoder'])
                 self.assertNotIn('home', document['input'])
+                self.assertEqual(document['softlimits']['backward'], -10.0)
+                self.assertEqual(document['softlimits']['forward'], 10.0)
                 brake = document['drive']['brake']
                 self.assertTrue(brake['enable'])
                 self.assertEqual(brake['openDelay'], 250)

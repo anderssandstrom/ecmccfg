@@ -108,11 +108,11 @@ encoder:
     - 11                                              # Error 2
   filter:
     velocity:
-      size: 100                                       # Filter size for velocity
-      enable: true                                    # enable velocity filter
+      size: 100                                       # Velocity filter window in EtherCAT samples
+      enable: true                                    # Enable encoder velocity filter
     position:
-      size: 100                                       # Filter size for encoder value
-      enable: true                                    # enable encoder value filter
+      size: 100                                       # Position filter window in EtherCAT samples (default 10)
+      enable: true                                    # Enable encoder position filter
   latch:
     position: ''                                      # Link to latched value. Used for some homing seqs
     timestamp: ''                                     # Optional 32/64-bit DC timestamp for the same latch event

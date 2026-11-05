@@ -413,9 +413,13 @@ encoder:
   #   - 5           # Error 0
   #   - 9           # Error 1
   #   - 11          # Error 2
-  # velocityFilterSize: 100
-  # positionFilterSize: 1
-  # positionFilterEnable: false
+  # filter:
+  #   velocity:
+  #     size: 100       # Samples: 100 ms at 1 kHz, 200 ms at 500 Hz
+  #     enable: true
+  #   position:
+  #     size: 1
+  #     enable: false
   # latch:
   #   position: ''
   #   timestamp: ''
@@ -446,9 +450,41 @@ In current ecmc, those two keys are accepted for floating-point encoder entries 
 ignored during validation, and a warning is printed. It is still recommended to set
 them consistently in YAML for clarity.
 
-Use `filter.velocity` if the encoder is too coarse to reliably determine
-velocity each EtherCAT cycle. The old flat keys `velocityFilterSize`,
-`positionFilterSize` and `positionFilterEnable` are not current YAML settings.
+### Encoder filters
+
+Configure encoder velocity and position filters under `encoder.filter`:
+
+```yaml
+encoder:
+  filter:
+    velocity:
+      size: 100
+      enable: true
+    position:
+      size: 10
+      enable: true
+```
+
+Merge this into the existing `encoder` section; either filter can be configured
+independently. `size` is the window length in EtherCAT samples/cycles. For example,
+100 samples correspond to 100 ms at 1 kHz and 200 ms at 500 Hz.
+
+When a filter block is supplied, its default `enable` is true. The default
+`size` is 100 for velocity and 10 for position. Omitting a filter block emits
+no configuration commands for that filter. Use the velocity filter if the
+encoder is too coarse to reliably determine velocity each EtherCAT cycle.
+
+The old flat encoder keys are unused by the current rendering template:
+
+| Old key inside `encoder` | Current key |
+| --- | --- |
+| `velocityFilterSize` | `filter.velocity.size` |
+| `positionFilterSize` | `filter.position.size` |
+| `positionFilterEnable` | `filter.position.enable` |
+
+Python discards these old flat keys; ECB still accepts them in its schema, but
+they do not configure the filters. Explicitly use `filter.velocity.enable` to
+enable or disable the encoder velocity filter.
 
 ## controller
 Parameters for centralized PID controller.

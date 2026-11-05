@@ -66,7 +66,7 @@ configuration has been checked offline, not commissioned against physical hardwa
 
 - Internal counter scale: 12800 counts/mm; CSV command scale: 32768 counts per 10 mm/s.
 - TR_HI BiSS: 4096 counts/mm, 26 absolute bits, engineering offset -1380 mm.
-- Physical soft limits: -1 to +1 mm; physical motion velocity: 1 mm/s.
+- Physical soft limits: -10 to +10 mm; physical motion velocity: 1 mm/s.
 - HI motor: 1000 mA maximum, 500 mA standby, 24 V, coil resistance 1230 mOhm.
 - LO motor: 1000 mA maximum, 500 mA standby, 48 V, coil resistance 1230 mOhm.
 - Brake release/close-ahead: 250/200 RT cycles at 1000 Hz.

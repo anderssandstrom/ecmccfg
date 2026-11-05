@@ -16,14 +16,16 @@
       10.0
     ]
   },
-  "step": 0.05,
-  "velocity": 0.1,
+  "step": 5.0,
+  "velocity": 1.0,
   "tolerance": 0.015,
-  "timeout": 20,
+  "timeout": 30,
   "encoder_power": {
     "axis": "TR_HI",
     "encoder": 2,
     "backup": 1,
     "timeout": 10
-  }
+  },
+  "relative_to_start": true,
+  "reference_to_zero": true
 }

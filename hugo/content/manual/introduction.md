@@ -11,6 +11,9 @@ start with [Quickstart]({{< relref "/manual/quickstart.md" >}}) and
 unclear, see [Terminology]({{< relref "/manual/terminology.md" >}}).
 
 ## Principle
+For a schematic of the EPICS, realtime-engine and EtherCAT layers, see
+[How the layers fit together]({{< relref "/manual/general_cfg/startup/_index.md#how-the-layers-fit-together" >}}).
+
 EtherCAT requires the field bus components (slaves) to be configured on the master.
 The master must know about the data exchanges with the slaves, this is referred to as **process image**.
 

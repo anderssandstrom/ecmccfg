@@ -949,7 +949,7 @@
             "encoder.filter"
           ],
           "requirement": "optional",
-          "description": "Encoder-side filtering.",
+          "description": "Encoder filtering uses nested velocity and position blocks, each with size and enable. See the encoder-filter example in the YAML configuration guide.",
           "entries": []
         },
         {
@@ -957,7 +957,7 @@
             "encoder.filter.velocity.size"
           ],
           "requirement": "optional",
-          "description": "Velocity filter window in EtherCAT cycles.",
+          "description": "Velocity filter window in EtherCAT samples/cycles; applies when encoder.filter.velocity is supplied.",
           "entries": [
             {
               "key": "encoder.filter.velocity.size",
@@ -971,11 +971,11 @@
             "encoder.filter.velocity.enable"
           ],
           "requirement": "optional",
-          "description": "Enable velocity filter.",
+          "description": "Enable the encoder velocity filter; defaults to true when encoder.filter.velocity is supplied.",
           "entries": [
             {
               "key": "encoder.filter.velocity.enable",
-              "summary": "enable velocity filter",
+              "summary": "",
               "default": "true"
             }
           ]
@@ -985,7 +985,7 @@
             "encoder.filter.position.size"
           ],
           "requirement": "optional",
-          "description": "Position filter window in EtherCAT cycles.",
+          "description": "Position filter window in EtherCAT samples/cycles; applies when encoder.filter.position is supplied.",
           "entries": [
             {
               "key": "encoder.filter.position.size",
@@ -999,11 +999,11 @@
             "encoder.filter.position.enable"
           ],
           "requirement": "optional",
-          "description": "Enable position filter.",
+          "description": "Enable the encoder position filter; defaults to true when encoder.filter.position is supplied.",
           "entries": [
             {
               "key": "encoder.filter.position.enable",
-              "summary": "enable encoder value filter",
+              "summary": "",
               "default": "true"
             }
           ]
@@ -1320,7 +1320,7 @@
             "encoder.homing.acceleration"
           ],
           "requirement": "optional",
-          "description": "Homing acceleration in engineering units/s\u00b2.",
+          "description": "Homing acceleration in engineering units/s².",
           "entries": [
             {
               "key": "encoder.homing.acceleration",
@@ -1333,7 +1333,7 @@
             "encoder.homing.deceleration"
           ],
           "requirement": "optional",
-          "description": "Homing deceleration in engineering units/s\u00b2.",
+          "description": "Homing deceleration in engineering units/s².",
           "entries": [
             {
               "key": "encoder.homing.deceleration",
@@ -1675,11 +1675,11 @@
             "encoder.power.backup.encoder"
           ],
           "requirement": "optional; see encoder power configuration",
-          "description": "Always-powered incremental backup index (checked at final startup validation), 1\u20268. See [encoder power control]({{< relref \"/manual/motion_cfg/encoder_power.md\" >}}).",
+          "description": "Always-powered incremental backup index (checked at final startup validation), 1…8. See [encoder power control]({{< relref \"/manual/motion_cfg/encoder_power.md\" >}}).",
           "entries": [
             {
               "key": "encoder.power.backup.encoder",
-              "summary": "Always-powered incremental backup index (checked at final startup validation), 1\u20268."
+              "summary": "Always-powered incremental backup index (checked at final startup validation), 1…8."
             }
           ]
         },
@@ -1943,7 +1943,7 @@
             "trajectory.axis.deceleration"
           ],
           "requirement": "optional",
-          "description": "Deceleration in engineering units/s\u00b2; defaults to axis acceleration.",
+          "description": "Deceleration in engineering units/s²; defaults to axis acceleration.",
           "entries": [
             {
               "key": "trajectory.axis.deceleration",
@@ -1957,12 +1957,12 @@
             "trajectory.axis.emergencyDeceleration"
           ],
           "requirement": "optional",
-          "description": "Emergency deceleration in engineering units/s\u00b2; defaults to ten times the greater of axis acceleration and deceleration.",
+          "description": "Emergency deceleration in engineering units/s²; defaults to ten times the greater of axis acceleration and deceleration.",
           "entries": [
             {
               "key": "trajectory.axis.emergencyDeceleration",
               "summary": "",
-              "default": "10 \u00d7 max(acceleration, deceleration)"
+              "default": "10 × max(acceleration, deceleration)"
             }
           ]
         },
@@ -1971,7 +1971,7 @@
             "trajectory.axis.jerk"
           ],
           "requirement": "optional",
-          "description": "S-curve jerk in engineering units/s\u00b3; the fallback is numerically equal to axis acceleration.",
+          "description": "S-curve jerk in engineering units/s³; the fallback is numerically equal to axis acceleration.",
           "entries": [
             {
               "key": "trajectory.axis.jerk",
@@ -2898,7 +2898,7 @@
             "homing.acceleration"
           ],
           "requirement": "optional",
-          "description": "Homing acceleration in engineering units/s\u00b2.",
+          "description": "Homing acceleration in engineering units/s².",
           "entries": [
             {
               "key": "homing.acceleration",
@@ -2911,7 +2911,7 @@
             "homing.deceleration"
           ],
           "requirement": "optional",
-          "description": "Homing deceleration in engineering units/s\u00b2.",
+          "description": "Homing deceleration in engineering units/s².",
           "entries": [
             {
               "key": "homing.deceleration",

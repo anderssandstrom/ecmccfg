@@ -261,10 +261,13 @@ class EncoderPowerTests(EncoderPowerCase):
 
     def test_late_ready_holds_motion_after_minimum_delay(self):
         self.rig.plant.configure_encoder_power(self.axis, active_high=True, startup_delay=.8)
+        # Preparation returns within its motion tolerance, not to an exact
+        # physical zero. Detect motion from the position before execute.
+        before = self.rig.plant.physical_position(self.axis)
         self.start(.2)
         self.rig.assert_stays(lambda: self.healthy() and self.state() == 2
                               and self.rig.get(self.axis, '-EnaAct') == 0
-                              and abs(self.rig.plant.physical_position(self.axis)) < .002,
+                              and abs(self.rig.plant.physical_position(self.axis) - before) < .002,
                               'ready input must qualify even after minimum delay expires', .45)
         self.arrive(.2)
 

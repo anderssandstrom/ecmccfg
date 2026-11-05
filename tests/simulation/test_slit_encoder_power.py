@@ -281,3 +281,56 @@ for initial, replay, accepted in ((-.00274, None, True), (.003, None, True),
         else:
             assert accepted, (initial, replay)
 print('STOP during encoder warmup: initial position offsets pass; displacement, Busy or Execute replay still fail.')
+
+# Late-ready gating must hold the pre-command position, including ordinary
+# setup offsets. Keep the original 2 um displacement bound and require the
+# drive to remain disabled throughout the post-minimum-delay observation.
+for initial, defect, accepted in ((-.002112001, None, True), (.003, None, True),
+                                  (0, None, True),
+                                  (-.002112001, 'position', False),
+                                  (-.002112001, 'start_motion', False),
+                                  (-.002112001, 'enabled', False),
+                                  (-.002112001, 'ready_early', False),
+                                  (-.002112001, 'fault', False)):
+    clock = Clock()
+    clock.now = 0.
+    class LateReadyRig:
+        def __init__(self):
+            self.requested = False
+            self.arrived = False
+            self.plant = SimpleNamespace(physical_position=self.position,
+                                         configure_encoder_power=self.configure)
+        def configure(self, axis, active_high, startup_delay):
+            assert active_high and startup_delay == .8
+        def position(self, axis):
+            premature = (self.requested and defect == 'start_motion' or
+                         defect == 'position' and clock.now >= .35)
+            return initial + (.003 if premature else 0)
+        def get(self, axis, suffix):
+            assert suffix == '-EnaAct'
+            return int(defect == 'enabled' and clock.now >= .35)
+        def check_native_error(self, axis):
+            if defect == 'fault' and clock.now >= .35:
+                raise AssertionError('unexpected native axis error')
+        def snapshot(self): return {'time': clock.now, 'position': self.position('TR_HI')}
+        def wait(self, predicate, description, timeout=15):
+            end = clock.now + timeout
+            while clock.now < end:
+                if predicate(): return
+                clock.advance(.025)
+            raise AssertionError('timeout: ' + description)
+        assert_stays = Rig.assert_stays
+    case = EncoderPowerTests('test_late_ready_holds_motion_after_minimum_delay')
+    case.rig = LateReadyRig()
+    case.start = lambda target: setattr(case.rig, 'requested', True)
+    case.arrive = lambda target: setattr(case.rig, 'arrived', True)
+    case.state = lambda: 3 if defect == 'ready_early' and clock.now >= .35 else 2
+    with patch.object(power_cases.time, 'monotonic', clock.monotonic):
+        try:
+            case.test_late_ready_holds_motion_after_minimum_delay()
+        except AssertionError:
+            assert not accepted, (initial, defect)
+            assert not case.rig.arrived
+        else:
+            assert accepted and case.rig.arrived and clock.now >= .45, (initial, defect)
+print('Late readiness: initial offsets pass; motion before/during the hold, early enable/readiness and faults fail.')

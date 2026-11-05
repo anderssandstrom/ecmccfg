@@ -362,3 +362,12 @@ for intentionally instantaneous tests. CA transport, polling and Python
 scheduling add variable latency beyond the model delay; these models provide
 functional sequence timing, not deterministic RT timing. Position integration
 uses only time after the enable acknowledgement.
+
+The slit acceptance runner additionally composes the DS402 model with
+`touch_probe.py`, a probe-1 single-shot latch. This model is currently specific
+to the dedicated slit fixture's EL7062 auxiliary axis; automatic IOC model
+workers do not supply probe input events. Its status uses separate enabled and
+positive/negative stored bits, retains latched U32 positions/timestamps until
+disarm/rearm, and does not emulate continuous capture or probe 2. The slit tests
+validate raw capture transport. Successful position-compare output needs a native
+SIM sample-clock provider and is not covered by the current fixture.

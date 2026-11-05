@@ -212,6 +212,9 @@ class HardwareBoundary:
             cfg = self.native_settings[axis]
             if cfg['MonEnableStallMon'] and self.clock.now-self.completed_at > cfg['MonStallMinTimeOut']/1000:
                 self.values['HW:'+axis+'-ErrId'] = 0x14c19
+                if self.values['HW:SM00-EnaCmd'] == 1:
+                    for master in ('CENTERY', 'GAPY'):
+                        self.values['HW:'+master+'-ErrId'] = 0x1432b
                 self.values['HW:'+axis+'-EnaAct'] = 0
                 self.values['HW:'+axis+'-EnaCmd-RB'] = 0
                 self.values['HW:'+axis+'.MSTA'] = 1 << 9
@@ -251,6 +254,17 @@ class HardwareBoundary:
         for event in self.pending: event.set()
         self.pending = []
         self.active = None
+
+    def request_stop(self, axis):
+        coordinated = (self.active is not None and self.active[0] in ('CENTERY', 'GAPY')
+                       and axis in ('TR_LO', 'TR_HI'))
+        self.stop()
+        if coordinated:
+            # Physical STOP removes external trajectory ownership. The global
+            # readback may publish before either master's axis error record.
+            self.values['HW:MCU-ErrId'] = 0x14331
+            for master in ('CENTERY', 'GAPY'):
+                self.values['HW:'+master+'-ErrId'] = 0x14331
 
     def get(self, name):
         self.update()
@@ -354,7 +368,7 @@ class HardwareBoundary:
                     if value:
                         for name in self.positions: self.values['HW:'+name+'-TrjSrcTyp-RB'] = 0
                 if suffix == '-StpCmd':
-                    self.stop()
+                    self.request_stop(axis)
                     return None
                 if suffix == '-ExeCmd': self.values['HW:'+axis+'-ExeCmd-RB'] = value
                 if ((suffix == '-ExeCmd' and value == 1) or
@@ -401,7 +415,7 @@ class HardwareBoundary:
             self.values[name] = 0
             return None
         if name.endswith('.STOP'):
-            self.stop()
+            self.request_stop(name[3:-5])
             return None
         if not name.endswith('.VAL'): return None
         axis = name[3:-4]
@@ -904,6 +918,8 @@ class HardwareRunnerTests(unittest.TestCase):
             self.assertEqual(data['-AtTarget'], 0)
             self.assertEqual(data['-ErrId'], 0x14c19)
             self.assertEqual(data['.DMOV'], 1)
+            for master in ('CENTERY', 'GAPY'):
+                self.assertEqual(alarm['snapshot'][master]['-ErrId'], 0x1432b)
         for axis in self.profile['physical']:
             self.assertEqual(self.client.native_settings[axis]['MonAtTargetTol'], .01)
             self.assertEqual(self.client.values['HW:'+axis+'.MSTA'], 0)
@@ -913,6 +929,12 @@ class HardwareRunnerTests(unittest.TestCase):
         self.assertEqual(code, 0, report)
         self.assertEqual(len(report['tests']), 8)
         self.assertEqual(len([t for t in report['trace'] if t.get('action') == 'physical STOP interrupts virtual motion and recovers']), 8)
+        stopped = [t for t in report['trace'] if t.get('action') == 'physical STOP terminated virtual group']
+        self.assertEqual(len(stopped), 8)
+        for trace in stopped:
+            for master in ('CENTERY', 'GAPY'):
+                self.assertEqual(trace['snapshot'][master]['-ErrId'], 0x14331)
+
 
     def test_limit_homing_and_post_move_use_el7031_and_complete_outside_limits(self):
         code, report, _ = self.run_live_boundary(('--case', 'homing'))
@@ -977,6 +999,18 @@ class HardwareRunnerTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'both limit switches active'):
             self.rig.guard()
 
+    def test_standalone_stall_does_not_accept_master_propagation(self):
+        original = self.client.get
+        def get(name):
+            value = original(name)
+            if name == 'HW:CENTERY-ErrId' and self.client.values['HW:TR_HI-ErrId'] == 0x14c19:
+                return 0x1432b
+            return value
+        with patch.object(self.client, 'get', get):
+            code, report, _ = self.run_live_boundary(('--case', 'no_sm', '--test', 'stall_hi_motor'))
+        self.assertEqual(code, 1)
+        self.assertIn('CENTERY: unexpected error 0x1432b', report['tests'][0]['detail'])
+
     def test_stall_alarm_must_clear_busy_processing_not_just_set_error(self):
         original = self.client.get
         def get(name):
@@ -988,6 +1022,28 @@ class HardwareRunnerTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn('stall alarm terminates motor processing', report['tests'][0]['detail'])
         self.assertFalse(any(t.get('action') == 'stall recovery completed' for t in report['trace']))
+
+    def test_coupled_stop_rejects_unrelated_controller_fault(self):
+        original = self.client.request_stop
+        def stop(axis):
+            coordinated = self.client.active is not None and self.client.active[0] == 'CENTERY'
+            original(axis)
+            if coordinated: self.client.values['HW:MCU-ErrId'] = 0xdead
+        with patch.object(self.client, 'request_stop', stop):
+            code, report, _ = self.run_live_boundary(('--case', 'coupled_stop', '--test', 'center_stop_hi_motor'))
+        self.assertEqual(code, 1)
+        self.assertIn('unexpected controller error 0xdead', report['tests'][0]['detail'])
+
+    def test_coupled_stop_rejects_source_error_on_physical_axis(self):
+        original = self.client.request_stop
+        def stop(axis):
+            coordinated = self.client.active is not None and self.client.active[0] == 'CENTERY'
+            original(axis)
+            if coordinated: self.client.values['HW:'+axis+'-ErrId'] = 0x14331
+        with patch.object(self.client, 'request_stop', stop):
+            code, report, _ = self.run_live_boundary(('--case', 'coupled_stop', '--test', 'center_stop_hi_motor'))
+        self.assertEqual(code, 1)
+        self.assertIn('TR_HI: unexpected error 0x14331', report['tests'][0]['detail'])
 
     def test_ignored_physical_stop_during_virtual_motion_fails(self):
         original = self.client.put

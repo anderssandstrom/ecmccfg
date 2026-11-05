@@ -92,6 +92,10 @@ class Rig:
             if self.get(axis, '.DIR') != 0 or self.get(axis, '.OFF') != 0:
                 raise RuntimeError(axis + ': tests require motor DIR=0 and OFF=0')
 
+        probe = self.profile.get('probe_axis')
+        if probe and self.get(probe['name'], '-Id') != probe['id']:
+            raise RuntimeError('DS402 probe axis identity mismatch')
+
     def wait(self, predicate, description, timeout=15):
         end = time.monotonic() + timeout
         while time.monotonic() < end:
@@ -147,6 +151,20 @@ class Rig:
 
     def stop_all(self):
         errors = []
+        probe = self.profile.get('probe_axis')
+        if probe:
+            axis = probe['name']
+            try:
+                self.put(axis, '-PC-CancelCmd', 1)
+                self.put(axis, '-Enc01-TP-ArmCmd', 0)
+                self.put(axis, '-StpCmd', 1)
+                self.wait(lambda: self.get(axis, '-Busy') == 0,
+                          'DS402 probe axis cleanup ramp-down', 5)
+            except Exception as error:
+                errors.append(str(error))
+            finally:
+                try: self.put(axis, '-EnaCmd', 0)
+                except Exception as error: errors.append(str(error))
         for axis in self.names:
             for suffix in ('.STOP', '-StpCmd'):
                 try: self.put(axis, suffix, 1)

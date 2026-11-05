@@ -16,7 +16,8 @@ IOC or changes the real EtherCAT driver.
 The separate setup retains axes 5/6 (TR_LO/TR_HI), axes 12/13 (CENTERY/GAPY),
 the production slit kinematic equations and master/slave state machine. It
 declares only EK1100, EL7031 slave 12, EL7041-0052 slave 14, EL5042 slave 9
-and brake-output EL2008 slave 5;
+brake-output EL2008 slave 5, and an independent DS402 EL7062_OPT at slave 20
+with EL2252 slave 21 for position-compare links;
 unrelated rack terminals are omitted. Both physical axes have internal counters
 and EL5042 feedback. LO hardware limits are linked to status bits 11/12 instead
 of the constant ONE entries in the original file, so both blades can be tested.
@@ -61,13 +62,49 @@ overrides the configuration-directory location. PyEpics is required only for
 live execution (`python3 -m pip install pyepics`). The usual Channel Access
 environment selects the IOC host. The runner checks both `MCU-Cfg-Sim-Mode=1`
 and the dedicated `SIM:SlitTest:Schema` marker matching `profile.json` (currently
-schema 3), plus axis IDs and motor coordinate
+schema 4), plus axis IDs (including auxiliary axis 7) and motor coordinate
 conventions **before any writes**. It refuses a normal/non-test IOC.
 
 Do not run `ioc.py`, its GUI or another plant on these same simulation fields
 while this runner owns them. The runner supplies its own coupled model. For
 manual panel experiments, `--plant-only --prefix SIMSLIT:` starts that model
 without running motion tests. Existing caQtDM IOC/axis panels can observe it.
+
+To select the new parameter and probe cases:
+
+```sh
+python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --loop closed \
+  --case filters --case controller --case monitoring
+python3 tests/integration/slit/run.py --prefix SIMSLIT: --run \
+  --case touch_probe --case position_compare
+```
+
+Restart the dedicated IOC with the updated schema-4 fixture before these runs.
+The auxiliary `PROBE` axis (7) uses DS402 (`drive.type: 1`), not the EL70xx
+stepper enable-bit protocol. It has no motor record and belongs to neither slit
+kinematic group. Its model follows the native DS402 control word and velocity
+setpoint, and publishes position/status plus probe PDOs. A configured physical
+position crossing generates the probe input. ECMC computes all `-Enc01-TP-*`
+result PVs; the plant never writes those results. Captures use the positive
+stored flag (status bit 1), so merely enabling the probe (status bit 0) cannot
+create a result. Raw U32 position/timestamp rollover is checked offline.
+
+The current native SIM backend has no sample-clock provider. Probe raw timestamp
+transport is tested; reconstructed absolute event time is not validated. The
+position-compare test deliberately verifies the native wait-for-timing path and
+cancellation. **Successful timed EL2252 pulses remain uncovered by this SIM IOC**
+until the native backend supplies sample/controller times in a shared clock.
+This fixture does not manufacture timing or write compare result PVs. Electrical
+DC timing and actual drive/probe hardware still require hardware tests.
+
+Filter/controller behavior uses closed-loop EL5042 feedback; those behavior
+cases skip in open-loop mode. Parameter roundtrips and max-velocity behavior
+run in both modes. Tuning cases disable the slit state machine after entering
+physical ownership, bound travel to 0.8 mm and restore native settings, encoder
+configuration selection and state-machine enable. Some experiments deliberately
+relax lag tolerance while constraining controller output, so integrator and
+feedforward behavior can be observed without a competing lag trip. Monitor
+trips require their specific error code and verify reset does not replay motion.
 
 ## Independent test modules
 
@@ -87,8 +124,14 @@ without running motion tests. Existing caQtDM IOC/axis panels can observe it.
 | `cases/softlimit_sync.py` | Motor-to-ECMC and ECMC-config-to-motor limit values; enable-flag propagation in both interfaces |
 | `cases/torque.py` | Reduced-torque bit 2 clears during physical/coordinated motion, returns after settling, and responds to closed-loop encoder disturbance |
 | `cases/brake.py` | Applied when disabled; release after enable; application before power-off; cancellation while opening; release during physical/coordinated motion; failed/lost enable |
+| `cases/filters.py` | Encoder-2 velocity/position window and enable settings; position-step smoothing and bypass; velocity-noise attenuation and bypass |
+| `cases/controller.py` | Outer/inner gains, gain-band selection, output and I limits in both polarities, limit release, I freeze/release/reset precedence during a busy trajectory, deadband dwell/reactivation, feedforward suppression/recovery |
+| `cases/monitoring.py` | Max-velocity, lag, velocity-difference and at-target settings; below-limit motion, exact fault/disable and fresh-command recovery, frozen-feedback detection, tolerance/dwell |
+| `cases/touch_probe.py` | Independent EL7062 DS402 CSV axis: electrical positive-edge capture in both travel directions, rearm, retained latched position/raw timestamp, disarmed input and enabled-without-edge negative controls |
+| `cases/position_compare.py` | Missing-clock negative control: compare remains armed without touching EL2252 output/activate/startTime, then cancels without claiming a fired event |
 
-There are 266 planned test executions with both loop modes selected. Primary
+
+There are 380 planned test executions with both loop modes selected. Primary
 EL5042 not-ready checks are explicitly skipped in open-loop mode. Every case
 uses `Rig.prepare()` to clear injected faults, stop/disable axes, reset errors,
 select encoder/gains and return the blades to zero. Teardown clears fault
@@ -431,7 +474,7 @@ are restored.
 21/22 skip in open-loop mode because that mode's primary incremental encoder
 has no absolute bits. Encoder-not-ready abort cases also skip there. Thus the
 homing module alone plans 88 cases across both modes with 6 expected skips;
-the complete suite plans 266 cases with 26 expected mode-specific skips.
+the complete suite now plans 380 cases, including mode-specific skips.
 Mode-specific skips are decided before setup writes or cleanup registration.
 Index-latch 11/12 and external-drive 26 require additional hardware handshakes
 and are not claimed as covered by the current slit plant.
@@ -512,7 +555,7 @@ python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case homing
 ```
 
 The interface cases use existing IOC records. The current full suite plans
-266 executions with 26 mode-specific skips and uses the schema-3 fixture
+380 executions, including mode-specific skips, and uses the schema-4 fixture
 described under encoder supply relay tests below.
 
 
@@ -607,7 +650,7 @@ and a fresh coordinated move are checked afterward; jog settings are restored.
 Rejection of blocked commands may report write errors at the requested record;
 that must not become a latched controller error on the virtual or physical axes.
 
-The complete default plan is 266 executions, with 26 mode-specific skips.
+The complete default plan is 380 executions, including mode-specific skips.
 The isolation cases themselves are Python-only; the current default fixture
 also includes the encoder relay links described below.
 
@@ -802,7 +845,7 @@ python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case pvt
 ```
 
 LO and HI Build/Execute/Readback cases, with and without triggers, run in each
-open/closed loop: 32 live cases, making 340 planned cases for the complete suite. The existing
+open/closed loop: 32 live cases within the current 380-execution complete plan. The existing
 controller finalization configures the shared PVT records automatically.
 
 The cases use the real asyn PVT controller and the external plant's measured
@@ -867,7 +910,7 @@ not independent measurements of electrical or mechanical safety performance.
 
 ### Stall, coordinated STOP, disturbances and mechanical backlash
 
-The complete plan now contains **340 executions** across open and closed loop;
+The complete plan now contains **380 executions** across open and closed loop;
 mode-specific skips remain visible in the report. The added groups are:
 
 | Group | Cases per loop | Checks |

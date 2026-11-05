@@ -71,7 +71,7 @@ assert feedback.position == 11200 and raw == 5656064
 assert DEFAULT_REPORT == ROOT / 'test-results/slit/slit-report.json'
 suite = make_suite(None, ('open', 'closed'), MODULES)
 tests = list(suite)
-assert len(tests) == 340
+assert len(tests) == 380
 assert {test.loop for test in tests} == {'open', 'closed'}
 assert all(test.rig is None for test in tests)
 assert len(list(make_suite(None, ('closed',), ('limits',)))) == 8
@@ -186,7 +186,7 @@ with tempfile.TemporaryDirectory() as directory:
 
 if DEFAULT_CONFIG.exists():
     profile = json.loads((DEFAULT_CONFIG / 'profile.json').read_text())
-    assert profile['schema'] == 3
+    assert profile['schema'] == 4
     assert {k: v for k, v in profile['physical']['TR_LO'].items() if k != 'encoder_power'} == CONFIG
     assert profile['physical']['TR_LO']['encoder_power'] == {'slave': 5, 'channel': '03'}
     assert profile['physical']['TR_HI']['encoder_channel'] == '01'

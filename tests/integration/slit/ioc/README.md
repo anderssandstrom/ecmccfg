@@ -29,7 +29,7 @@ python3 tests/integration/slit/run.py --prefix SIMSLIT: --run
 
 Pass --config if the two repositories are not siblings in the normal workspace.
 The runner owns the drive/EL5042 model and checks this configuration's schema
-marker before issuing writes. Do not run another simulator on slaves 9/12/14.
+marker before issuing writes. Do not run another simulator on slaves 9/12/14/20.
 Full test semantics, scaling, fault injection and JSON/JUnit report instructions
 are in ecmccfg `tests/integration/slit/README.md`.
 
@@ -151,3 +151,15 @@ Restart this IOC after deploying the YAML update, then run the `pvt` group from
 loads the shared profile controller. startup.cmd reserves EL2008 slave 5/channel
 05 for active-high 400 ms PVT pulses. Trigger tests check `SIMSLIT:PVT-SftTrg`,
 `SIMSLIT:m0s005-BO05-RB` and pulse-latched positions. The cases execute real profiles through the simulation backend.
+
+## DS402 probe and position compare (schema 4)
+
+The fixture also declares EL7062_OPT slave 20 (CSV, TP and U32 TP timestamps)
+with independent axis `PROBE` (7), and EL2252 slave 21. `PROBE` uses drive type 1
+(DS402), has no motor record and does not participate in the slit kinematics.
+The runner owns its DS402 state machine, position feedback and probe-input model.
+Use `--case touch_probe` for capture/rearm/negative controls and
+`--case position_compare` for the missing-clock wait/cancel control. The current
+native SIM backend has no sample-clock provider: successful timed output pulses
+and reconstruction of probe absolute event time are not covered. See the parent
+README for the parameter/filter/controller/monitoring modules and limits.

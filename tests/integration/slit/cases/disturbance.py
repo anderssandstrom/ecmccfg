@@ -1,7 +1,36 @@
 """Measured encoder disturbances while independent/coordinated motion is active."""
 import time
 from .base import SlitCase
-from slit_recovery import wait_checked, stationary_dwell, reset_known_errors, motor_idle
+from slit_recovery import wait_checked, stationary_dwell, reset_known_errors, motor_idle, slave_fault_errors
+
+
+def remove_bias_at_standstill(rig, axis, allowed):
+    """Publish unbiased feedback without mistaking its derivative for motion."""
+    physical = {a: rig.plant.physical_position(a) for a in rig.profile['physical']}
+    rig.plant.inject(axis, encoder_bias_mm=0)
+    stable_since = None
+    def settled():
+        nonlocal stable_since
+        for name, origin in physical.items():
+            if abs(rig.plant.physical_position(name)-origin) > .003:
+                raise AssertionError(name+': mechanics moved while removing encoder bias')
+        # Relax only the measured-velocity transient, never restarted commands
+        # or motor processing. Include diagnostics if a real restart is seen.
+        terminal = {'-Busy': 0, '.DMOV': 1, '.MOVN': 0, '.MIP': 0, '.PACT': 0}
+        for name in rig.profile['axes']:
+            for field, expected in terminal.items():
+                actual = rig.get(name, field)
+                if actual != expected:
+                    raise AssertionError(f'{name}{field}={actual}: processing restarted while removing encoder bias')
+        ready = (abs(rig.get(axis, '-PosAct')-rig.plant.physical_position(axis)) < .003
+                 and motor_idle(rig, rig.profile['axes']))
+        if not ready:
+            stable_since = None
+            return False
+        if stable_since is None: stable_since = time.monotonic()
+        return time.monotonic()-stable_since >= .2
+    wait_checked(rig, settled, 'unbiased feedback and measured velocity settle at physical standstill', 3, allowed)
+    return {a: rig.get(a, '-PosAct') for a in physical}
 
 
 class DisturbanceTests(SlitCase):
@@ -26,7 +55,7 @@ class DisturbanceTests(SlitCase):
         rig.wait(lambda: rig.get(peer, '-PosAct') > .03, 'peer moving before idle encoder disturbance', 5)
         before = rig.plant.physical_position(axis)
         rig.plant.inject(axis, encoder_bias_mm=bias)
-        allowed = {axis: (0x14c08,)} if fault else {}
+        allowed = slave_fault_errors(rig, axis, 0x14c08) if fault else {}
         end = time.monotonic()+.7
         def observed():
             if rig.get(peer, '-Busy') != 1: raise AssertionError('idle-axis disturbance stopped independent peer')
@@ -64,11 +93,7 @@ class DisturbanceTests(SlitCase):
                      'sustained slave disturbance stops the coordinated group', 10, allowed)
         if abs(rig.get('CENTERY', '-PosAct')-.6) < .015:
             raise AssertionError('slave fault failed to stop the coordinated move early')
-        rig.plant.inject('TR_HI', encoder_bias_mm=0)
-        # Removing a bias changes the measurement but must not move mechanics.
-        rig.wait(lambda: abs(rig.get('TR_HI', '-PosAct')-rig.plant.physical_position('TR_HI')) < .003,
-                 'unbiased feedback published before no-replay check', 3)
-        positions = {a: rig.get(a, '-PosAct') for a in rig.profile['physical']}
+        positions = remove_bias_at_standstill(rig, 'TR_HI', allowed)
         stationary_dwell(rig, positions, allowed)
         reset_known_errors(rig, allowed)
         stationary_dwell(rig, positions)

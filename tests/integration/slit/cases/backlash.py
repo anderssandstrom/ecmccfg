@@ -1,6 +1,6 @@
 """Mechanical lost motion on HI, with independent internal and EL5042 feedback."""
 from .base import SlitCase
-from slit_recovery import wait_checked, motor_idle, stationary_dwell, reset_known_errors
+from slit_recovery import wait_checked, motor_idle, stationary_dwell, reset_known_errors, slave_fault_errors
 
 
 class BacklashTests(SlitCase):
@@ -66,7 +66,7 @@ class BacklashTests(SlitCase):
         complete = self.rig.start_move(self.axis, .4)
         # The enabled state machine propagates a slave fault to its virtual
         # masters even when this request moved only the physical axis.
-        allowed = {self.axis: (0x14c08,), 'CENTERY': (0x1432b, 0x1432e), 'GAPY': (0x1432b, 0x1432e)}
+        allowed = slave_fault_errors(self.rig, self.axis, 0x14c08)
         wait_checked(self.rig, lambda: self.rig.get(self.axis, '-ErrId') == 0x14c08
                      and motor_idle(self.rig, self.rig.names) and complete.is_set()
                      and int(self.rig.get(self.axis, '.MSTA')) & (1 << 9)
@@ -94,7 +94,7 @@ class BacklashTests(SlitCase):
         if self.loop != 'closed': self.skipTest('requires external primary encoder to detect lost motion')
         self.enable_backlash(.1)
         complete = self.rig.start_move('CENTERY', .4)
-        allowed = {self.axis: (0x14c08,), 'CENTERY': (0x1432b, 0x1432e), 'GAPY': (0x1432b, 0x1432e)}
+        allowed = slave_fault_errors(self.rig, self.axis, 0x14c08)
         wait_checked(self.rig, lambda: self.rig.get(self.axis, '-ErrId') == 0x14c08
                      and motor_idle(self.rig, self.rig.names) and complete.is_set(),
                      'backlash in one slave stops virtual group without stuck records', 12, allowed)

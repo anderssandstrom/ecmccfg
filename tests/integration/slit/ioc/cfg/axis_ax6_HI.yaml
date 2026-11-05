@@ -99,6 +99,14 @@ monitoring:
     enable: true
     tolerance: 0.02
     time: 100
+  # Keep the longest native command (drive-delay setter) within MCU-Cmd's
+  # 39-byte ASCII field when temporary monitor settings are restored by tests.
+  velocityDifference:
+    enable: false
+    max: 0.03
+    time:
+      trajectory: 100
+      drive: 50
   target:
     enable: true
     tolerance: 0.01

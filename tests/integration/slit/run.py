@@ -17,7 +17,7 @@ sys.path.insert(0, str(ROOT / 'tests/integration'))
 from slit.plant import Plant, PlantThread
 from slit.rig import Client, Rig
 
-MODULES = ('motion', 'limits', 'enable', 'feedback', 'noise', 'sync', 'brake', 'torque', 'native', 'softlimit_sync', 'homing', 'interfaces', 'motor', 'isolation', 'target_write', 'encoder_power', 'encoder_handover', 'pvt', 'stall', 'coupled_stop', 'concurrent', 'disturbance', 'backlash')
+MODULES = ('motion', 'limits', 'enable', 'feedback', 'noise', 'sync', 'brake', 'torque', 'native', 'softlimit_sync', 'homing', 'interfaces', 'motor', 'isolation', 'target_write', 'encoder_power', 'encoder_handover', 'pvt', 'stall', 'coupled_stop', 'concurrent', 'disturbance', 'backlash', 'filters', 'controller', 'monitoring', 'touch_probe', 'position_compare')
 DEFAULT_REPORT = ROOT / 'test-results/slit/slit-report.json'
 DEFAULT_CONFIG = Path(__file__).resolve().parent / 'ioc'
 
@@ -135,7 +135,7 @@ def main(argv=None):
         plant.start()
         rig.wait(lambda: all(rig.get(axis, '-InStartup') == 0 for axis in rig.names), 'IOC axis startup completes', 15)
         if args.plant_only:
-            print('Coupled slit plant running. Ctrl+C stops it; do not run another model on slaves 9/12/14.')
+            print('Coupled slit plant running. Ctrl+C stops it; do not run another model on slaves 9/12/14/20.')
             while True:
                 plant.check()
                 time.sleep(.2)

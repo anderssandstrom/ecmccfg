@@ -1,0 +1,74 @@
+# Independent DS402 CSV axis, not a blade of the slit.
+axis:
+  id: 7
+  mode: CSV
+  autoEnable:
+    disableTimeout: 60.0
+    enableTimeout: 2.0
+epics:
+  name: PROBE
+  unit: mm
+  precision: 5
+  motorRecord:
+    enable: false
+drive:
+  type: 1
+  numerator: 1
+  denominator: 100000
+  control: ec0.s20.driveControl01
+  status: ec0.s20.driveStatus01
+  setpoint: ec0.s20.velocitySetpoint01
+encoder:
+  numerator: 1
+  denominator: 100000
+  type: 0
+  bits: 32
+  position: ec0.s20.positionActual01
+  touchProbe:
+    position: ec0.s20.touchProbePositionPos01_1
+    timestamp: ec0.s20.touchProbeTimestampPos01_1
+    control: ec0.s20.touchProbeControl01
+    status: ec0.s20.touchProbeStatus01
+    # DS402: bit 0 means enabled; bit 1 means positive position stored.
+    statusBit: 1
+    armCmd: 17
+    armBits: 5
+controller:
+  Kp: 2
+  Ki: 0
+  Kd: 0
+  Kff: 1
+trajectory:
+  axis:
+    velocity: 0.1
+    acceleration: 0.5
+    deceleration: 0.5
+input:
+  limit:
+    forward: ec0.s-1.ONE.0
+    backward: ec0.s-1.ONE.0
+  home: ec0.s-1.ZERO.0
+  interlock: ec0.s-1.ONE.0
+softlimits:
+  enable: true
+  forwardEnable: true
+  backwardEnable: true
+  forward: 0.7
+  backward: -0.7
+monitoring:
+  target:
+    enable: true
+    tolerance: 0.003
+    time: 50
+  lag:
+    enable: true
+    tolerance: 0.03
+    time: 100
+positionCompare:
+  output: ec0.s21.binaryOutput01
+  activate: ec0.s21.activate
+  startTime: ec0.s21.startTime
+  minLeadMs: 20.0
+  maxLeadMs: 100.0
+  pulseWidthMs: 200.0
+  resetValue: 0

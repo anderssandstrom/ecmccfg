@@ -1,8 +1,8 @@
 # Identifies this isolated acceptance-test setup. Not an operator command.
 record(longin,"$(P)SIM:SlitTest:Schema") {
   field(DESC,"Slit acceptance-test schema")
-  field(INP,"3")
-  field(VAL,"3")
+  field(INP,"4")
+  field(VAL,"4")
 }
 
 # Homing tests require the position-based home-cam link and encoder defaults.

@@ -84,3 +84,56 @@ for unexpected in ({'TR_HI': 0x14c08, 'CENTERY': 0xdead},
         assert 'unexpected error' in str(error), str(error)
     else: raise AssertionError('unrelated fault accepted by physical backlash case')
 print('Physical backlash fault accepts master propagation and rejects unrelated faults.')
+
+
+# Reset acknowledgements/readbacks may lag the write. Exercise the production
+# helper with a virtual clock, including uncleared and newly appearing faults.
+import slit_recovery
+
+
+def reset_scenario(kind, managed=True):
+    clock = SimpleNamespace(now=0.)
+    clock.monotonic = lambda: clock.now
+    def sleep(seconds): clock.now += seconds
+    clock.sleep = sleep
+    state = {'requested': False, 'writes': [], 'command': 0}
+    def error():
+        if not state['requested']: return 0xdead if kind == 'unknown_before' else 0x14c08
+        if kind == 'unknown_after': return 0xdead
+        return 0x14c08 if kind == 'stuck' or clock.now < .06 else 0
+    def get(axis, suffix):
+        if suffix == '-ErrId': return error()
+        if suffix == '.DMOV': return 1
+        if suffix == '-Busy' and state['requested'] and kind == 'restart': return 1
+        return 0
+    def client_get(name):
+        if name.endswith(('MCU-AppMode', 'm0-Stat-OK')): return 1
+        if name.endswith('MCU-ErrId'): return error()
+        if name.endswith('SM00-EnaCmd'): return int(managed)
+        if name.endswith('SM00-StateCmd'):
+            return state['command'] if clock.now < .06 else 0
+        raise AssertionError(name)
+    def put(name, value):
+        state['writes'].append((name, value))
+        if name.endswith('MCU-ErrRst'): state['requested'] = True
+        if name.endswith('SM00-StateCmd'): state['command'] = value
+    rig = SimpleNamespace(profile={'axes': {'TR_HI': 6}, 'physical': {'TR_HI': {}}},
+                          prefix='SIMSLIT:', get=get, motion_expectation=None,
+                          client=SimpleNamespace(get=client_get, put=put))
+    with patch.object(slit_recovery, 'time', clock):
+        try: slit_recovery.reset_known_errors(rig, {'TR_HI': (0x14c08,)})
+        except AssertionError as exc:
+            if kind == 'delayed': raise
+            if kind == 'stuck': assert 'timeout:' in str(exc)
+            elif kind == 'restart': assert 'restarted' in str(exc)
+            else: assert 'unexpected error' in str(exc)
+            if kind == 'unknown_before': assert state['writes'] == []
+        else:
+            assert kind == 'delayed', 'invalid reset accepted: '+kind
+            assert clock.now >= .06
+            assert len(state['writes']) == (2 if managed else 1)
+
+
+for managed in (False, True): reset_scenario('delayed', managed)
+for kind in ('stuck', 'unknown_before', 'unknown_after', 'restart'): reset_scenario(kind)
+print('Known-error reset tolerates delayed publication; uncleared/new faults and restart fail.')

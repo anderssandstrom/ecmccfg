@@ -1,5 +1,5 @@
 {
-  "schema": 3,
+  "schema": 4,
   "axes": {
     "TR_LO": 5,
     "TR_HI": 6,
@@ -45,5 +45,13 @@
         "channel": "04"
       }
     }
+  },
+  "probe_axis": {
+    "name": "PROBE",
+    "id": 7,
+    "slave": 20,
+    "counts_per_mm": 100000,
+    "output_slave": 21,
+    "sample_clock": false
   }
 }

@@ -74,10 +74,12 @@ class PVTChecks(unittest.TestCase):
         import yaml
         for fixture in ('ioc','ioc_hardware'):
             files = list((ROOT/'tests/integration/slit'/fixture/'cfg').glob('axis_*.yaml'))
-            self.assertEqual(len(files), 4)
-            for source in files:
-                document = yaml.safe_load(source.read_text())
-                self.assertEqual(document['epics']['motorRecord']['pvt'], {'npoints':64,'nreadback':256})
+            documents = [yaml.safe_load(source.read_text()) for source in files]
+            motors = [doc['epics']['motorRecord'] for doc in documents
+                      if doc['epics']['motorRecord'].get('enable', True)]
+            self.assertEqual(len(motors), 4)
+            for motor in motors:
+                self.assertEqual(motor['pvt'], {'npoints':64,'nreadback':256})
 
 
 if __name__ == '__main__': unittest.main()

@@ -4,6 +4,7 @@ from slit_motion_checks import MotionExpectation
 
 STALL_ERROR = 0x14c19
 SLAVE_INTERLOCK = 0x1432e
+SLAVE_TRAJECTORY_CHANGED = 0x14331
 
 
 def wait_checked(rig, predicate, description, timeout, allowed=None):
@@ -42,7 +43,10 @@ def stationary_dwell(rig, positions, allowed=None, seconds=.6):
     pulses_end = time.monotonic()+seconds
     tolerance = rig.profile.get('tolerance', .015)
     def held():
-        if not motor_idle(rig, rig.profile['axes']): raise AssertionError('motor record or native axis restarted after termination')
+        if not motor_idle(rig, rig.profile['axes']):
+            fields = ('-Busy', '-VelAct', '.DMOV', '.MOVN', '.MIP', '.PACT')
+            state = {a: {f: rig.get(a, f) for f in fields} for a in rig.profile['axes']}
+            raise AssertionError('motor record or native axis restarted after termination: '+str(state))
         for axis, value in positions.items():
             if abs(rig.get(axis, '-PosAct')-value) > tolerance: raise AssertionError(axis+': cancelled motion replayed')
         return time.monotonic() >= pulses_end
@@ -55,9 +59,25 @@ def reset_known_errors(rig, allowed):
     rig.client.put(rig.prefix+'MCU-ErrRst', 1)
     if rig.client.get(rig.prefix+'SM00-EnaCmd'):
         rig.client.put(rig.prefix+'SM00-StateCmd', 3)
-    wait_checked(rig, lambda: all(rig.get(a, '-ErrId') == 0 for a in rig.profile['axes'])
-                 and rig.client.get(rig.prefix+'SM00-StateCmd') == 0,
-                 'known test fault resets without motion', 5)
+    # CA writes complete before all RT changes/readbacks necessarily publish.
+    # Keep accepting only the already-validated faults during this bounded wait;
+    # success still requires every axis and the controller to report no error.
+    def reset_complete():
+        if not motor_idle(rig, rig.profile['axes']):
+            raise AssertionError('motion or motor processing restarted during known-error reset')
+        return (all(rig.get(a, '-ErrId') == 0 for a in rig.profile['axes'])
+                and rig.client.get(rig.prefix+'MCU-ErrId') == 0
+                and rig.client.get(rig.prefix+'SM00-StateCmd') == 0)
+    wait_checked(rig, reset_complete, 'known test fault resets without motion', 5, allowed)
+
+
+
+def slave_fault_errors(rig, axis, error):
+    """Expected local fault and its enabled state-machine master propagation."""
+    allowed = {axis: (error,)}
+    if rig.client.get(rig.prefix+'SM00-EnaCmd') == 1:
+        allowed.update({master: (0x1432b, 0x1432e) for master in ('CENTERY', 'GAPY')})
+    return allowed
 
 
 def stall_alarm(rig, axis, trigger, step, velocity, validate):
@@ -69,7 +89,7 @@ def stall_alarm(rig, axis, trigger, step, velocity, validate):
     keys = ('MonAtTargetTol', 'MonEnableStallMon', 'MonStallMinTimeOut', 'MonStallTimeFactor')
     saved = {}
     complete = None
-    allowed = {axis: (STALL_ERROR,)}
+    allowed = slave_fault_errors(rig, axis, STALL_ERROR)
     previous = rig.motion_expectation
     try:
         query = lambda name: rig.text_command(f'GetAxis{name}({number})', query=True)
@@ -133,7 +153,9 @@ def stop_blade_during_virtual(rig, master, blade, interface, step, validate):
     previous = rig.motion_expectation
     expectation = MotionExpectation(rig, master)
     rig.motion_expectation = expectation
-    allowed = {a: (SLAVE_INTERLOCK,) for a in ('CENTERY', 'GAPY')}
+    # A blade STOP takes it out of the external virtual trajectory. Depending
+    # on the RT observation order, masters report an interlock or source change.
+    allowed = {a: (SLAVE_INTERLOCK, SLAVE_TRAJECTORY_CHANGED) for a in ('CENTERY', 'GAPY')}
     try:
         complete = rig.start(master, target) if hasattr(rig, 'start') else rig.start_move(master, target)
         wait_checked(rig, lambda: rig.get(master, '-Busy') == 1
@@ -151,6 +173,8 @@ def stop_blade_during_virtual(rig, master, blade, interface, step, validate):
         for a, value in positions.items():
             bound = rig.profile.get('velocity', .4)**2/(2*rig.get(a, '.ACCS'))+rig.profile.get('velocity', .4)+.05
             if abs(value-before[a]) > bound: raise AssertionError(a+': excessive coordinated stopping travel')
+        rig.trace.append({'action': 'physical STOP terminated virtual group',
+                          'master': master, 'blade': blade, 'interface': interface, 'snapshot': rig.snapshot()})
         stationary_dwell(rig, positions, allowed)
         reset_known_errors(rig, allowed)
         stationary_dwell(rig, positions)

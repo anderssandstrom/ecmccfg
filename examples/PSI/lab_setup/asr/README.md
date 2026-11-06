@@ -14,6 +14,20 @@ startups and confirm the selected reference in the kernel log before treating
 this as a fix; this trial has not been tested on hardware here. Remove that
 line to return to automatic reference selection.
 
+To diagnose the remaining PLL startup failure, the example explicitly sets
+`START_EPICS_FIRST=1` so logging is initialized before runtime even when the
+SDO definitions are skipped for an isolation test. Scalar SDORT objects normally
+select this order automatically; the explicit flag is only for this diagnostic
+comparison. The example enables INFO and ERROR logging (`ECMC_ASYN_TRACE_MASK=0x41`, `MCU-RTLog-Ctrl=5`). With an ECMC
+build containing the startup cycle timing diagnostics, look for `Startup timing
+master 0`: the first message reports first-send delay from the startup timestamp,
+wake latency and execution time. While startup remains held, a summary every
+five seconds reports maximum wake latency/execution time and minimum/maximum
+cycle periods. These use the cyclic thread's existing timestamps and are logged
+after sending; they do not require the normal thread diagnostic PVs to update.
+At 1 kHz, the nominal cycle period is 1000 microseconds. These messages provide
+evidence for investigating the PLL error; adding them is not a PLL fix.
+
 ## IOC layout
 
 The layout follows `best_practice/motion/stepper_openloop_asr`:

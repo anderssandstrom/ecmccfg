@@ -1,5 +1,6 @@
 """Live terminal-state/alarm/recovery checks shared by the two slit suites."""
 import time
+import math
 from slit_motion_checks import MotionExpectation
 
 STALL_ERROR = 0x14c19
@@ -80,6 +81,34 @@ def slave_fault_errors(rig, axis, error):
     return allowed
 
 
+def unrepresentable_stall_target(desired, reference, quantum, max_adjustment, motor_resolution=None):
+    """Choose a nearby target between integer encoder counts, with valid tol."""
+    values = (desired, reference, quantum, max_adjustment)
+    if not all(math.isfinite(v) for v in values) or quantum <= 0 or max_adjustment <= 0:
+        raise AssertionError('stall test requires finite position and positive encoder resolution')
+    if motor_resolution is None:
+        candidates = [reference+(round((desired-reference)/quantum)+.5)*quantum]
+    else:
+        if not math.isfinite(motor_resolution) or motor_resolution <= 0:
+            raise AssertionError('stall test requires positive motor resolution')
+        count = round(desired/motor_resolution)
+        candidates = [(count+i)*motor_resolution for i in range(-8, 9)]
+    choices = []
+    for target in candidates:
+        counts = (target-reference)/quantum
+        distance = abs(counts-round(counts))*quantum
+        if abs(target-desired) <= max_adjustment and distance > quantum/100:
+            choices.append((distance, -abs(target-desired), target))
+    if not choices:
+        raise AssertionError('no nearby motor/native target between encoder counts; cannot force AtTarget=0 with valid tolerance')
+    distance, _, target = max(choices)
+    # A power of ten also fits the IOC string command's 39-byte payload.
+    tolerance = 10**math.floor(math.log10(min(quantum/1000, distance/10)))
+    if not math.isfinite(tolerance) or tolerance <= 0:
+        raise AssertionError('encoder resolution too small for a positive stall tolerance')
+    return target, tolerance
+
+
 def stall_alarm(rig, axis, trigger, step, velocity, validate):
     number = rig.profile['axes'][axis]
     origin = rig.get(axis, '-PosAct')
@@ -91,15 +120,48 @@ def stall_alarm(rig, axis, trigger, step, velocity, validate):
     complete = None
     allowed = slave_fault_errors(rig, axis, STALL_ERROR)
     previous = rig.motion_expectation
+    stage = 'before monitor configuration'
     try:
+        rig.trace.append({'action': 'stall test entry', 'axis': axis, 'trigger': trigger,
+                          'snapshot': rig.snapshot()})
+        wait_checked(rig, lambda: motor_idle(rig, rig.profile['axes']),
+                     'fault-free standstill before stall-monitor configuration', 5)
         query = lambda name: rig.text_command(f'GetAxis{name}({number})', query=True)
         config = lambda name, value: rig.text_command(f'Cfg.SetAxis{name}({number},{value:.12g})')
         saved = {key: query(key) for key in keys}
         if query('MonEnableAtTargetMon') != 1: raise AssertionError('stall test requires enabled AtTarget monitoring')
+        # Auto-power requires positive AtTarget tolerance even while disabled.
+        # Read the actual motion-feedback scale, preserving the config selector.
+        encoder = int(rig.get(axis, '-SetEncIdCmd-RB'))
+        source = int(query('EncPwrSource'))
+        auto_power = source > 0 and int(query('EncMode')) == 0
+        backup = int(query('EncPwrBackup')) if auto_power else 0
+        if auto_power: encoder = source
+        selected = int(query('EncConfigIndex'))
+        try:
+            rig.text_command(f'Cfg.SelectAxisEncConfig({number},{encoder})')
+            numerator, denominator = query('EncScaleNum'), query('EncScaleDenom')
+        finally:
+            rig.text_command(f'Cfg.SelectAxisEncConfig({number},{selected})')
+        if not denominator: raise AssertionError('encoder denominator is zero')
+        quantum = abs(numerator/denominator)
+        reference = rig.get(axis, f'-Enc{encoder:02d}-PosAct')
+        resolution = abs(rig.get(axis, '.MRES')) if trigger == 'motor' else None
+        target, test_tolerance = unrepresentable_stall_target(
+            target, reference, quantum, rig.profile.get('tolerance', .015)/10, resolution)
+        validate(axis, target)
+        rig.trace.append({'action': 'stall target between encoder counts', 'axis': axis,
+                          'trigger': trigger, 'encoder': encoder, 'encoder_quantum': quantum,
+                          'reference': reference, 'motor_resolution': resolution,
+                          'target': target, 'at_target_tolerance': test_tolerance})
+        stage = 'configuring stall monitor'
         config('MonEnableStallMon', 1)
         config('MonStallMinTimeOut', 1000)  # Dedicated fixtures both run at 1 kHz.
         config('MonStallTimeFactor', 0)
-        config('MonAtTargetTol', 0)  # Status cannot assert; monitor itself stays enabled.
+        config('MonAtTargetTol', test_tolerance)  # Positive, but below the unavoidable quantization error.
+        stage = 'requesting test move'
+        rig.trace.append({'action': 'stall monitor configured before move', 'axis': axis,
+                          'trigger': trigger, 'saved_monitor': dict(saved), 'snapshot': rig.snapshot()})
         rig.motion_expectation = MotionExpectation(rig, axis)
         if trigger == 'motor':
             if hasattr(rig, 'start'): complete = rig.start(axis, target)
@@ -110,6 +172,7 @@ def stall_alarm(rig, axis, trigger, step, velocity, validate):
                 rig.client.put(rig.prefix+axis+field, value)
             wait_checked(rig, lambda: rig.get(axis, '-EnaAct') == 1, 'enabled for native stall test', 10)
             rig.client.put(rig.prefix+axis+'-ExeCmd', 1)
+        stage = 'waiting for trajectory end'
         wait_checked(rig, lambda: rig.get(axis, '-BusyLocal') == 0
                      and abs(rig.get(axis, '-VelAct')) < .005
                      and abs(rig.get(axis, '-PosAct')-target) < rig.profile.get('tolerance', .015),
@@ -117,13 +180,28 @@ def stall_alarm(rig, axis, trigger, step, velocity, validate):
         if rig.get(axis, '-AtTarget') != 0: raise AssertionError('stall setup did not hold AtTarget low')
         if rig.get(axis, '.DMOV') != 0 or (complete is not None and complete.is_set()):
             raise AssertionError('unfulfilled AtTarget incorrectly completed the motor request before the alarm')
+        rig.trace.append({'action': 'AtTarget false before stall alarm', 'axis': axis,
+                          'trigger': trigger, 'snapshot': rig.snapshot()})
+        stage = 'waiting for stall alarm'
+        def at_target_after_fault():
+            if rig.get(axis, '-AtTarget') == 0: return True
+            # Fault shutdown can power off the absolute source and rebase the
+            # holding setpoint on its configured counter backup. AtTarget may
+            # then assert; it is not evidence that the failed move succeeded.
+            return (rig.get(axis, '-AtTarget') == 1 and auto_power and backup > 0
+                    and rig.get(axis, '-SetEncIdCmd-RB') == backup
+                    and rig.get(axis, f'-Enc{source:02d}-PwrState') == 1
+                    and rig.get(axis, f'-Enc{source:02d}-PwrOn') == 0
+                    and abs(rig.get(axis, '-PosSet')-rig.get(axis, '-PosAct'))
+                        < rig.profile.get('tolerance', .015))
         wait_checked(rig, lambda: rig.get(axis, '-ErrId') == STALL_ERROR
-                     and rig.get(axis, '-AtTarget') == 0 and rig.get(axis, '-EnaAct') == 0
+                     and at_target_after_fault() and rig.get(axis, '-EnaAct') == 0
                      and motor_idle(rig, (axis,)) and int(rig.get(axis, '.MSTA')) & (1 << 9)
                      and rig.get(axis, '.SEVR') > 0 and (complete is None or complete.is_set()),
                      'stall alarm terminates motor processing despite AtTarget=0', 8, allowed)
         rig.trace.append({'action': 'AtTarget stall alarm terminates motor record', 'axis': axis,
                           'trigger': trigger, 'snapshot': rig.snapshot()})
+        stage = 'checking faulted standstill and resetting'
         positions = {a: rig.get(a, '-PosAct') for a in rig.profile['physical']}
         rig.client.put(rig.prefix+axis+'.STOP', 1, wait=False, notify=False)
         stationary_dwell(rig, positions, allowed)
@@ -135,8 +213,19 @@ def stall_alarm(rig, axis, trigger, step, velocity, validate):
         wait_checked(rig, lambda: rig.get(axis, '.SEVR') == 0
                      and not int(rig.get(axis, '.MSTA')) & (1 << 9), 'motor alarm clears after reset', 5)
         rig.motion_expectation = None
+        stage = 'fresh recovery move'
         rig.move(axis, origin)
         rig.trace.append({'action': 'stall recovery completed', 'axis': axis, 'trigger': trigger})
+    except Exception as error:
+        # Preserve the original physical/master faults before monitor settings,
+        # STOP or the runner's failure cleanup can change their readbacks.
+        try:
+            rig.trace.append({'action': 'stall failure before cleanup', 'axis': axis,
+                              'trigger': trigger, 'stage': stage, 'error': str(error),
+                              'saved_monitor': dict(saved), 'snapshot': rig.snapshot()})
+        except Exception:
+            pass  # A failed diagnostic must never replace the original failure.
+        raise
     finally:
         rig.motion_expectation = previous
         for key, value in saved.items():

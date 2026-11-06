@@ -68,7 +68,7 @@ hardware to simulated open/closed-loop variants.
 | `brake` | LO/HI EL2008 brake outputs: amplifier/brake opening and closing order, release during motion and STOP deceleration, application after auto-disable |
 | `no_sm` | Physical motor moves/STOP, native, target-write, OFF/DIR, encoder sleep/wake and PVT repeated with the master/slave state machine disabled; virtual axes remain disabled, uncommanded physical axes stay stationary |
 | `pvt` | LO and HI profile Build/Execute/Readback, measured excursions both ways and return to start, controller success and fault checks |
-| `stall` | Four motor/native LO/HI cases: AtTarget remains false, stall alarm appears, motor processing terminates, reset and fresh move recover; also repeated in `no_sm` |
+| `stall` | Four motor/native LO/HI cases: a target between encoder counts keeps AtTarget false, stall alarm appears, motor processing terminates, reset and fresh move recover; also repeated in `no_sm` |
 | `coupled_stop` | Eight center/gap × LO/HI × motor/native STOP cases: stopping one physical slave stops coordinated motion and completes all records |
 | `concurrent` | Two independent physical moves with small commanded excursions on the other axis, whose peer must continue to its original target |
 | `homing` | Six opt-in TR_HI EL7031 limit-switch searches using native/motor interfaces, including backward-limit post moves |
@@ -258,7 +258,7 @@ python3 tests/integration/slit_hardware/run.py --prefix HWSLIT: --run --case sta
 ```
 
 Stall cases retain enabled AtTarget monitoring and temporarily set its tolerance
-to zero. After the trajectory ends, they require AtTarget=0 and an incomplete
+to a positive value below encoder quantization. After the trajectory ends, they require AtTarget=0 and an incomplete
 motor request, followed by `ERROR_MON_STALL` (0x14c19), motor problem/alarm and
 Busy=0, DMOV=1, MOVN=0, MIP=0 and PACT=0. Known test faults are reset only at
 standstill; fresh motion proves the record is usable again. Monitor settings are
@@ -308,3 +308,32 @@ finish near the end switch at −20 mm, outside the normal soft limits; no retur
 move is issued after failure. The complete six-case group ends with a backward
 post move to 0 mm. Do not combine these coordinate-changing searches with the
 normal motion groups in the same invocation.
+
+
+The stall cases named `at_target_zero` require **AtTarget status = 0**, not a
+zero configured tolerance. A zero tolerance violates encoder auto-power's
+configuration requirements (`ERROR_ENC_POWER_CONFIG`, 0x1441e). The test reads
+the selected motion encoder's scale and chooses a nearby target between its
+integer counts, using a small positive tolerance. For motor requests the target
+also lies on the motor record's resolution grid. The target adjustment is
+bounded to one tenth of the profile position tolerance and rechecked against
+travel limits. A rig whose encoder and motor grids cannot provide such a target
+fails setup explicitly instead of silently claiming to test a stall.
+
+After the stall alarm, auto-power may shut down the absolute encoder and switch
+to its configured counter backup, rebasing the holding setpoint. AtTarget can
+then return to 1 while the stall fault remains latched. The test requires
+AtTarget=0 before the alarm; afterwards it accepts 1 only with the configured
+backup selected, source power Off, and rebased PosSet/PosAct agreement. The stall
+error, amplifier-off state, motor alarm/completion and fresh recovery move are
+still required.
+
+
+Encoder fault snapshots include the configured encoder's status, error, ready,
+power state, logical power and Force ON readbacks, plus optional diagnostic PVs
+from `encoder_power.diagnostics`. This fixture reads EL5042 channel 1's raw
+status (`m0s009-Enc01-Stat`) and the EL2794 power output (`m0s025-BO01-RB`). Raw
+bits 0/1/2 are also decoded as warning/error/ready. These are asynchronous
+readbacks, not a measurement of supply voltage or an atomic history of the fault.
+A hardware encoder alarm during recovery remains an unexpected test failure;
+it is not automatically reset or added to the expected-stall allowlist.

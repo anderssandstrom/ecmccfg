@@ -950,7 +950,7 @@ mode-specific skips remain visible in the report. The added groups are:
 
 | Group | Cases per loop | Checks |
 | --- | --- | --- |
-| `stall` | 4 | Physical LO/HI, motor/native commands: zero AtTarget tolerance prevents completion, then the stall monitor must alarm, clear motor processing and permit a fresh move after reset |
+| `stall` | 4 | Physical LO/HI, motor/native commands: a positive tolerance below encoder quantization prevents completion, then the stall monitor must alarm, clear motor processing and permit a fresh move after reset |
 | `coupled_stop` | 8 | Stop either physical slave through motor STOP or native STOP during center/gap motion; require the group to stop, complete records and recover without replay |
 | `concurrent` | 2 | Command a small independent second-axis excursion while its peer continues to its original target |
 | `disturbance` | 3 | Closed-loop HI encoder bias while LO moves: a small disturbance must not stick the idle record, sustained lag trips only HI; a slave lag fault during virtual motion must stop the group |
@@ -983,3 +983,22 @@ measurement error from actual idle-axis motion. The large-backlash virtual
 fault case also requires closed loop. Fault tests accept only their named
 expected errors, check DMOV/MOVN/MIP/PACT and completion callbacks, reset at
 standstill, and issue fresh moves to prove recovery. Unexpected faults fail.
+
+
+The stall cases named `at_target_zero` require **AtTarget status = 0**, not a
+zero configured tolerance. A zero tolerance violates encoder auto-power's
+configuration requirements (`ERROR_ENC_POWER_CONFIG`, 0x1441e). The test reads
+the selected motion encoder's scale and chooses a nearby target between its
+integer counts, using a small positive tolerance. For motor requests the target
+also lies on the motor record's resolution grid. The target adjustment is
+bounded to one tenth of the profile position tolerance and rechecked against
+travel limits. A rig whose encoder and motor grids cannot provide such a target
+fails setup explicitly instead of silently claiming to test a stall.
+
+After the stall alarm, auto-power may shut down the absolute encoder and switch
+to its configured counter backup, rebasing the holding setpoint. AtTarget can
+then return to 1 while the stall fault remains latched. The test requires
+AtTarget=0 before the alarm; afterwards it accepts 1 only with the configured
+backup selected, source power Off, and rebased PosSet/PosAct agreement. The stall
+error, amplifier-off state, motor alarm/completion and fresh recovery move are
+still required.

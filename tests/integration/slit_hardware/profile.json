@@ -24,7 +24,11 @@
     "axis": "TR_HI",
     "encoder": 2,
     "backup": 1,
-    "timeout": 10
+    "timeout": 10,
+    "diagnostics": {
+      "terminal_status": "m0s009-Enc01-Stat",
+      "power_output": "m0s025-BO01-RB"
+    }
   },
   "relative_to_start": true,
   "reference_to_zero": true,

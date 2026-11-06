@@ -39,4 +39,4 @@ encoder:
     idleDelay: 2.0
     backup:
       encoder: 1
-      maxPositionDifference: 0.02
+      maxPositionDifference: 0.05

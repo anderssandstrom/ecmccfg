@@ -328,6 +328,24 @@ class Rig(Operations):
                 if axis != 'TR_HI' and field == '-Enc02-PwrState': continue
                 try: result[axis][field] = self.get(axis, field)
                 except Exception as error: result[axis][field] = str(error)
+        # Read-only evidence for power-cycle/encoder failures. Retain missing
+        # PV errors as diagnostics rather than replacing the original fault.
+        cfg = self.profile['encoder_power']
+        axis, encoder = cfg['axis'], cfg['encoder']
+        stem = f'-Enc{encoder:02d}'
+        diagnostic = {}
+        for suffix in ('-Stat', '-ErrId', '-Ready', '-PwrState', '-PwrOn', '-ForceOn-RB', '-PosAct'):
+            try: diagnostic[stem+suffix] = self.get(axis, stem+suffix)
+            except Exception as error: diagnostic[stem+suffix] = str(error)
+        for key, pv in cfg.get('diagnostics', {}).items():
+            try: diagnostic[key] = self.read(pv)
+            except Exception as error: diagnostic[key] = str(error)
+        if 'terminal_status' in diagnostic and isinstance(diagnostic['terminal_status'], (int, float)):
+            word = int(diagnostic['terminal_status'])
+            diagnostic['terminal_warning_bit0'] = bool(word & 1)
+            diagnostic['terminal_error_bit1'] = bool(word & 2)
+            diagnostic['terminal_ready_bit2'] = bool(word & 4)
+        result[axis]['encoder_diagnostics'] = diagnostic
         if self.brake_checks:
             for axis in self.profile['physical']:
                 for key, reader in (('brake_output', self.brake), ('drive_control', self.drive_control)):

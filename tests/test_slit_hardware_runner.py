@@ -40,7 +40,7 @@ class HardwareBoundary:
         self.brake_phases = {}
         self.closed, self.active, self.fault_on_move = False, None, False
         self.native_settings = {a: {'MonAtTargetTol': .01, 'MonEnableAtTargetMon': 1,
-            'MonEnableStallMon': 1, 'MonStallMinTimeOut': 15000, 'MonStallTimeFactor': 10, 'EncConfigIndex': 2, 'HomeSeqId': 1, 'HomePosition': 0,
+            'MonEnableStallMon': 1, 'MonStallMinTimeOut': 15000, 'MonStallTimeFactor': 10, 'EncConfigIndex': 2, 'EncPwrSource': 0 if a == 'TR_LO' else 2, 'EncPwrBackup': 0 if a == 'TR_LO' else 1, 'EncMode': 0, 'HomeSeqId': 1, 'HomePosition': 0,
             'HomeVelTowardsCam': .2, 'HomeVelOffCam': .1, 'HomeAcc': 1, 'HomeDec': 1,
             'HomePostMoveEnable': 0, 'HomePostMoveTargetPosition': 0}
             for a in ('TR_LO', 'TR_HI')}
@@ -141,7 +141,7 @@ class HardwareBoundary:
                 self.mechanical_positions[blade] += self.positions[blade]-previous[blade]
             self.update_coordinates()
             if fraction >= 1:
-                unsettled = axis in self.native_settings and self.native_settings[axis]['MonAtTargetTol'] == 0
+                unsettled = axis in self.native_settings and self.native_settings[axis]['MonAtTargetTol'] < 1e-6
                 pending = list(self.pending)
                 self.stop()
                 self.completed_at = self.clock.now
@@ -267,6 +267,9 @@ class HardwareBoundary:
                 self.values['HW:'+master+'-ErrId'] = 0x14331
 
     def get(self, name):
+        if name.endswith('.MRES'): return 10/32768
+        if re.fullmatch(r'HW:TR_(LO|HI)-Enc0[12]-PosAct', name):
+            return self.positions[name[3:8]]
         self.update()
         self.update_brakes()
         self.update_stall()
@@ -346,12 +349,17 @@ class HardwareBoundary:
                     if key.startswith('Home'): self.home_power_model = True
                     a = 'TR_LO' if int(number) == 5 else 'TR_HI'
                     self.native_settings[a][key] = float(v)
-                    if key == 'MonAtTargetTol': self.values['HW:'+a+'-AtTarget'] = int(float(v) > 0)
+                    if key == 'MonAtTargetTol': self.values['HW:'+a+'-AtTarget'] = int(float(v) >= 1e-6)
+                    if key == 'MonAtTargetTol' and float(v) <= 0 and a == 'TR_HI':
+                        self.values['HW:TR_HI-ErrId'] = 0x1441e
+                        for master in ('CENTERY', 'GAPY'): self.values['HW:'+master+'-ErrId'] = 0x1432b
                     reply = 'OK'
                 elif queried:
                     key, number = queried.groups()
                     a = 'TR_LO' if int(number) == 5 else 'TR_HI'
-                    reply = str(self.native_settings[a][key])
+                    if key == 'EncScaleNum': reply = '1'
+                    elif key == 'EncScaleDenom': reply = '12800' if a == 'TR_LO' else '4096'
+                    else: reply = str(self.native_settings[a][key])
                 else: raise AssertionError('unsupported text command: '+value)
             self.values['HW:MCU-Cmd.AINP'] = reply
             return None
@@ -907,12 +915,35 @@ class HardwareRunnerTests(unittest.TestCase):
         self.assertIn('unexpected controller error', report['tests'][0]['detail'])
         self.assertFalse(any(n == 'HW:MCU-ErrRst' for n, _ in self.client.writes))
 
+    def test_stall_target_is_between_encoder_counts_with_valid_tolerance(self):
+        from slit_recovery import unrepresentable_stall_target
+        for quantum in (1/12800, 1/4096):
+            for reference in (0., .00048828125, -.002578125):
+                for step in (.2, 5., -5.):
+                    for resolution in (None, 10/32768):
+                        target, tol = unrepresentable_stall_target(reference+step, reference, quantum, .0015, resolution)
+                        self.assertGreater(tol, 0)
+                        self.assertLess(tol, quantum/100)
+                        counts = (target-reference)/quantum
+                        self.assertGreater(abs(counts-round(counts))*quantum, 10*tol)
+                        self.assertLessEqual(abs(target-reference-step), .0015)
+                        self.assertLessEqual(len(f'Cfg.SetAxisMonAtTargetTol(6,{tol:.12g})'), 39)
+                        if resolution: self.assertAlmostEqual(target/resolution, round(target/resolution), places=7)
+        with self.assertRaisesRegex(AssertionError, 'no nearby'):
+            unrepresentable_stall_target(5., 0., .001, .0015, .001)
+
     def test_live_stall_monitor_reports_alarm_and_completes_motor_record(self):
         code, report, _ = self.run_live_boundary(('--case', 'stall'))
         self.assertEqual(code, 0, report)
         self.assertEqual(len(report['tests']), 4)
         alarms = [t for t in report['trace'] if t.get('action') == 'AtTarget stall alarm terminates motor record']
         self.assertEqual(len(alarms), 4)
+        configured = [t for t in report['trace'] if t.get('action') == 'stall target between encoder counts']
+        self.assertEqual(len(configured), 4)
+        self.assertTrue(all(t['at_target_tolerance'] > 0 for t in configured))
+        self.assertFalse(any(name == 'HW:MCU-Cmd.AOUT' and value.endswith(',0)') and
+                             'SetAxisMonAtTargetTol' in value for name, value in self.client.writes))
+
         for alarm in alarms:
             data = alarm['snapshot'][alarm['axis']]
             self.assertEqual(data['-AtTarget'], 0)
@@ -1010,6 +1041,101 @@ class HardwareRunnerTests(unittest.TestCase):
             code, report, _ = self.run_live_boundary(('--case', 'no_sm', '--test', 'stall_hi_motor'))
         self.assertEqual(code, 1)
         self.assertIn('CENTERY: unexpected error 0x1432b', report['tests'][0]['detail'])
+
+    def test_recovery_encoder_alarm_is_not_accepted_or_automatically_reset(self):
+        original_put, original_get = self.client.put, self.client.get
+        state = {'recovery': False, 'reset_count_at_fault': None}
+        def put(name, value, **kwargs):
+            result = original_put(name, value, **kwargs)
+            if name == 'HW:TR_HI.VAL' and value == 0:
+                state['recovery'] = True
+            return result
+        def get(name):
+            value = original_get(name)
+            if (state['recovery'] and self.client.active is not None
+                    and self.clock.now > self.client.active_started):
+                if state['reset_count_at_fault'] is None:
+                    state['reset_count_at_fault'] = sum(n == 'HW:MCU-ErrRst' for n,v in self.client.writes)
+                self.client.values['HW:TR_HI-ErrId'] = 0x14410
+                self.client.values['HW:TR_HI-Enc02-ErrId'] = 0x14410
+                self.client.values['HW:m0s009-Enc01-Stat'] = 6
+                self.client.values['HW:m0s025-BO01-RB'] = 1
+                if name == 'HW:TR_HI-ErrId': return 0x14410
+            return value
+        with patch.object(self.client, 'put', put), patch.object(self.client, 'get', get):
+            code, report, _ = self.run_live_boundary(('--case', 'stall', '--test', 'hi_motor'))
+        self.assertEqual(code, 1)
+        self.assertIsNotNone(state['reset_count_at_fault'])
+        failure = next(t for t in report['trace'] if t.get('action') == 'stall failure before cleanup')
+        self.assertEqual(failure['stage'], 'fresh recovery move')
+        self.assertEqual(failure['snapshot']['TR_HI']['-ErrId'], 0x14410)
+        diag = failure['snapshot']['TR_HI']['encoder_diagnostics']
+        self.assertEqual(diag['-Enc02-ErrId'], 0x14410)
+        self.assertEqual(diag['terminal_status'], 6)
+        self.assertTrue(diag['terminal_error_bit1'])
+        self.assertTrue(diag['terminal_ready_bit2'])
+        self.assertEqual(diag['power_output'], 1)
+        self.assertEqual(sum(n == 'HW:MCU-ErrRst' for n,v in self.client.writes), state['reset_count_at_fault'])
+        self.assertFalse(any(t.get('action') == 'stall recovery completed' for t in report['trace']))
+
+    def test_native_stall_accepts_at_target_only_after_verified_power_handover(self):
+        original = self.client.get
+        def get(name):
+            value = original(name)
+            if self.client.values['HW:TR_HI-ErrId'] == 0x14c19:
+                changes = {'HW:TR_HI-AtTarget': 1, 'HW:TR_HI-SetEncIdCmd-RB': 1,
+                           'HW:TR_HI-Enc02-PwrState': 1, 'HW:TR_HI-Enc02-PwrOn': 0,
+                           'HW:TR_HI-PosSet': self.client.positions['TR_HI']}
+                return changes.get(name, value)
+            return value
+        with patch.object(self.client, 'get', get):
+            code, report, _ = self.run_live_boundary(('--case', 'stall', '--test', 'hi_native'))
+        self.assertEqual(code, 0, report)
+        before = [t for t in report['trace'] if t.get('action') == 'AtTarget false before stall alarm']
+        after = [t for t in report['trace'] if t.get('action') == 'AtTarget stall alarm terminates motor record']
+        self.assertEqual(before[0]['snapshot']['TR_HI']['-AtTarget'], 0)
+        self.assertEqual(after[0]['snapshot']['TR_HI']['-AtTarget'], 1)
+        self.assertEqual(after[0]['snapshot']['TR_HI']['-ErrId'], 0x14c19)
+        self.assertTrue(any(t.get('action') == 'stall recovery completed' for t in report['trace']))
+
+    def test_stall_rejects_at_target_without_power_handover(self):
+        original = self.client.get
+        def get(name):
+            value = original(name)
+            if self.client.values['HW:TR_HI-ErrId'] == 0x14c19:
+                changes = {'HW:TR_HI-AtTarget': 1, 'HW:TR_HI-SetEncIdCmd-RB': 2,
+                           'HW:TR_HI-Enc02-PwrState': 3, 'HW:TR_HI-Enc02-PwrOn': 1}
+                return changes.get(name, value)
+            return value
+        with patch.object(self.client, 'get', get):
+            code, report, _ = self.run_live_boundary(('--case', 'stall', '--test', 'hi_native'))
+        self.assertEqual(code, 1)
+        self.assertIn('stall alarm terminates motor processing', report['tests'][0]['detail'])
+        self.assertFalse(any(t.get('action') == 'stall recovery completed' for t in report['trace']))
+
+    def test_stall_setup_fault_is_preserved_and_not_accepted_as_test_alarm(self):
+        original = self.client.put
+        injected = False
+        def put(name, value, **kwargs):
+            nonlocal injected
+            result = original(name, value, **kwargs)
+            if name == 'HW:MCU-Cmd.AOUT' and value.startswith('Cfg.SetAxisMonAtTargetTol(6,') and float(value.split(',')[1][:-1]) < 1e-6 and not injected:
+                injected = True
+                self.client.values['HW:TR_HI-ErrId'] = 0x14c19
+                self.client.values['HW:GAPY-ErrId'] = 0x1432b
+            return result
+        with patch.object(self.client, 'put', put):
+            code, report, _ = self.run_live_boundary(('--case', 'stall', '--test', 'hi_motor'))
+        self.assertEqual(code, 1)
+        self.assertTrue(injected)
+        failures = [t for t in report['trace'] if t.get('action') == 'stall failure before cleanup']
+        self.assertEqual(len(failures), 1)
+        failure = failures[0]
+        self.assertEqual(failure['stage'], 'requesting test move')
+        self.assertEqual(failure['snapshot']['TR_HI']['-ErrId'], 0x14c19)
+        self.assertEqual(failure['snapshot']['GAPY']['-ErrId'], 0x1432b)
+        self.assertEqual(failure['saved_monitor']['MonAtTargetTol'], .01)
+        self.assertFalse(any(t.get('action') == 'stall recovery completed' for t in report['trace']))
 
     def test_stall_alarm_must_clear_busy_processing_not_just_set_error(self):
         original = self.client.get

@@ -323,7 +323,7 @@ class Rig(Operations):
         for axis in self.profile['axes']:
             result[axis] = {}
             for field in ('.RBV', '.VAL', '.DMOV', '.MOVN', '.SEVR', '.LVIO', '-PosAct',
-                          '-PosSet', '-Busy', '-EnaAct', '-AtTarget', '-ErrId', '-WrnId',
+                          '-PosSet', '-VelAct', '-Busy', '-EnaAct', '-AtTarget', '-ErrId', '-WrnId',
                           '-SetEncIdCmd-RB', '-Enc02-PwrState', '.DIR', '.OFF', '.DVAL',
                           '-AutoExecuteOnTargetPos-RB', '-ExeCmd-RB', '-MtnCmd', '-TgtPosCmd',
                           '.MSTA', '.MIP', '.PACT', '.STAT', '-Homed', '-SeqState', '-LimBwd', '-LimFwd'):

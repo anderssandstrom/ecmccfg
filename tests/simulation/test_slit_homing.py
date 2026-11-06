@@ -219,7 +219,7 @@ class CleanupProbe(Probe):
     def stop_all(self): self.fields['-EnaAct'] = 0; return []
     def reset(self): pass
     def sync_motor_record(self, axis):
-        assert abs(self.positions[self.encoder]) < .002
+        assert abs(self.positions[self.encoder]) < .01
         self.reference_synced = True
     def encoder_status(self, axis): return 4
     def drive_status(self, axis): return 0
@@ -484,3 +484,48 @@ for ignored, drift in ((False, False), (True, False), (False, True)):
         assert not ignored and not drift
         assert c.rig.clock == 2, 'old Homed/idle flags cannot acknowledge a manual reference'
 print('Manual reference: pre-existing Homed/idle flags wait for position acknowledgement; ignored reference and physical movement fail.')
+
+# Waiting for an abort phase must report a real controller fault immediately,
+# rather than time out waiting for a sequence state that can no longer occur.
+c = case()
+c.rig.flags['-ErrId'] = 0x14c08
+try:
+    c.wait_home_phase(lambda: False, 'reverse search', 8)
+except AssertionError as error:
+    assert 'native motion fault 0x14c08' in str(error), error
+    assert c.rig.clock == 0
+else:
+    raise AssertionError('homing phase wait ignored a following-error trip')
+c = case()
+c.wait_home_phase(lambda: c.rig.clock >= 2, 'observed search phase', 8)
+assert c.rig.clock == 2
+
+# A normal return can stop anywhere inside the fixture's 10 um atTarget window.
+# Keep the tighter 2 um coordinate-reference checks; never alter the plant to
+# make a final return pass. Physical and encoder residuals are checked separately.
+class ResidualReturnCleanup(CleanupProbe):
+    def __init__(self, physical_residual, encoder_residual):
+        super().__init__()
+        self.physical_residual, self.encoder_residual = physical_residual, encoder_residual
+    def native_move(self, axis, target):
+        super().native_move(axis, target)
+        self.physical_mm += self.physical_residual
+        self.positions = {enc: pos+self.encoder_residual for enc, pos in self.positions.items()}
+
+for physical, encoder, accepted in ((.002611, .002588, True), (-.009, -.009, True),
+                                     (.0101, 0, False), (0, -.0101, False)):
+    c = case(); c.loop = 'closed'; c.rig = ResidualReturnCleanup(physical, encoder)
+    c.saved = {field: 0 for field in ('-HomProc', '-HomPos', '-VelToHom', '-VelFrmHom', '-AccHom',
+                                     '-HomUseHVEL', '-CfgSyncSftLim', '-HomProc.OMSL',
+                                     '-MtnCmd_.DISA', '-MtnCmd_.DISV', '.LLM', '.HLM', '.DLLM', '.DHLM')}
+    c.saved.update({'-CfgDLLM-RB': -1, '-CfgDHLM-RB': 1, '-CfgDLLM-En-RB': 1, '-CfgDHLM-En-RB': 1})
+    try: c.restore_reference()
+    except AssertionError:
+        assert not accepted
+        assert not c.rig.reference_synced
+    else:
+        assert accepted
+        assert c.rig.reference_synced
+        assert abs(c.rig.physical_mm-physical) < 1e-12
+        assert abs(c.rig.positions[c.rig.encoder]-encoder) < 1e-12
+print('Homing return cleanup: 10 um positioning tolerance; physical/encoder excesses fail without zeroing residuals.')

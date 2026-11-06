@@ -188,14 +188,54 @@ class Operations:
                                 and abs(self.get(axis, '.VAL')-self.get(axis, '.RBV')) <= self.profile['tolerance'],
                                 axis+' motor target synchronization')
 
-    def holds_position(self, axis, before, seconds=.25):
-        end = time.monotonic()+seconds
+    def settle_after_stop(self, axis, before):
+        """Allow published/filtered velocity to settle after terminal STOP flags.
+
+        Keep the original stop position as the reference: this is not a new
+        origin, a retry, or permission for a restarted trajectory to complete.
+        """
+        last = {}
+        def settled():
+            last.update({field: self.get(axis, field) for field in
+                         ('-Busy', '.DMOV', '.MOVN', '-PosAct', '-VelAct')})
+            drift = last['-PosAct']-before
+            if (last['-Busy'] or last['.DMOV'] != 1 or last['.MOVN'] != 0
+                    or abs(drift) > self.profile['tolerance']):
+                detail = {'action': 'post-STOP settling failed', 'axis': axis,
+                          'reference_position': before, 'position_change': drift,
+                          'readbacks': dict(last)}
+                self.trace.append(detail)
+                raise AssertionError(f'{axis}: post-STOP state restarted or position drifted: {detail}')
+            return abs(last['-VelAct']) <= .005
+        try:
+            self.wait(settled, axis+' velocity settles after STOP without restart or drift', 1)
+        except Exception:
+            self.trace.append({'action': 'post-STOP settling observations', 'axis': axis,
+                               'reference_position': before, 'readbacks': dict(last)})
+            raise
+
+    def holds_position(self, axis, before, seconds=.25, context='configuration/staging'):
+        started = time.monotonic()
+        end = started+seconds
         def held():
-            if (self.get(axis, '-Busy') or abs(self.get(axis, '-VelAct')) > .005
-                    or abs(self.get(axis, '-PosAct')-before) > self.profile['tolerance']):
-                raise AssertionError(axis+': configuration/staging unexpectedly caused motion')
+            values = {field: self.get(axis, field) for field in ('-Busy', '-VelAct', '-PosAct')}
+            drift = values['-PosAct']-before
+            reasons = []
+            if values['-Busy']: reasons.append('native Busy is set')
+            if abs(values['-VelAct']) > .005: reasons.append('measured velocity exceeds 0.005 mm/s')
+            if abs(drift) > self.profile['tolerance']: reasons.append('position drift exceeds tolerance')
+            if reasons:
+                detail = {'action': 'stationary hold failed', 'axis': axis, 'context': context,
+                          'reference_position': before, 'position_change': drift,
+                          'tolerance': self.profile['tolerance'],
+                          'elapsed_seconds': time.monotonic()-started,
+                          'readbacks': values, 'reasons': reasons}
+                self.trace.append(detail)
+                raise AssertionError(f'{axis}: {context} unexpectedly caused motion: '
+                                     f'{"; ".join(reasons)}; reference={before}, '
+                                     f'drift={drift}, readbacks={values}')
             return time.monotonic() >= end
-        self.wait(held, axis+' stays stationary during configuration', seconds+2)
+        self.wait(held, axis+' stays stationary during '+context, seconds+2)
 
     @contextmanager
     def motor_coordinates(self, axis):

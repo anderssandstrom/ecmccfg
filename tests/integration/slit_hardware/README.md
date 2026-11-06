@@ -341,3 +341,10 @@ it is not automatically reset or added to the expected-stall allowlist.
 The current profile assigns BiSS and auto-power to TR_LO for the encoder
 alignment comparison. Full-stroke TR_HI homing is blocked for this wiring;
 its raw EL5042 travel guard must follow the axis being homed.
+
+After the brake STOP cases observe terminal native/motor flags, they allow up to
+one second for filtered/published actual velocity to fall below 0.005 mm/s.
+Busy/motor motion restarting or position drifting beyond the existing tolerance
+fails immediately during this wait. The stopped position remains the reference;
+the subsequent 250 ms stationary hold still checks all original conditions.
+Persistent reported velocity fails rather than being ignored.

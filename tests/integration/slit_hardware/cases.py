@@ -209,7 +209,8 @@ class BrakeTests(unittest.TestCase):
             if stop:
                 position = rig.get(axis, '-PosAct')
                 self.assertGreater(abs(position-target), rig.profile['tolerance'])
-                rig.holds_position(axis, position)
+                rig.settle_after_stop(axis, position)
+                rig.holds_position(axis, position, context='post-STOP hold')
             else:
                 rig.finish(axis, target, complete)
             self.applied(axis)  # Normal drive auto-disable must apply the brake.

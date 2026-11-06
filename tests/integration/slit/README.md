@@ -1002,3 +1002,9 @@ AtTarget=0 before the alarm; afterwards it accepts 1 only with the configured
 backup selected, source power Off, and rebased PosSet/PosAct agreement. The stall
 error, amplifier-off state, motor alarm/completion and fresh recovery move are
 still required.
+
+Homing cleanup verifies each encoder's reference against physical position within
+2 um. Its subsequent ordinary return-to-zero move uses a separate 10 um final
+position tolerance, matching the SIM IOC atTarget setting. Physical and native
+positions must both satisfy that bound; neither the plant nor encoder references
+are reset to conceal a residual. Post-home move verdicts are unchanged.

@@ -499,6 +499,58 @@ class HardwareRunnerTests(unittest.TestCase):
             check_homing_support(self.rig)
         self.assertEqual(self.client.writes, [])
 
+    def test_stationary_hold_preserves_each_failure_condition_and_records_evidence(self):
+        for field, value, reason in (('-Busy', 1, 'Busy'), ('-VelAct', .006, 'velocity'),
+                                     ('-PosAct', .016, 'position drift')):
+            with self.subTest(field=field):
+                values = {'-Busy': 0, '-VelAct': 0, '-PosAct': 0}
+                values[field] = value
+                with patch.object(self.rig, 'get', side_effect=lambda axis, key: values[key]), \
+                     patch.object(self.rig, 'wait', side_effect=lambda predicate, *args: predicate()):
+                    with self.assertRaisesRegex(AssertionError, reason):
+                        self.rig.holds_position('TR_HI', 0, context='post-STOP hold')
+                entry = self.rig.trace[-1]
+                self.assertEqual(entry['action'], 'stationary hold failed')
+                self.assertEqual(entry['context'], 'post-STOP hold')
+                self.assertEqual(entry['readbacks'][field], value)
+        self.assertEqual(self.client.writes, [])
+
+    def test_post_stop_velocity_tail_settles_without_changing_reference(self):
+        values = {'-Busy': 0, '.DMOV': 1, '.MOVN': 0, '-PosAct': .04640625, '-VelAct': .015625}
+        def wait(predicate, description, timeout):
+            self.assertEqual(timeout, 1)
+            self.assertFalse(predicate())
+            values['-VelAct'] = 0
+            self.assertTrue(predicate())
+        with patch.object(self.rig, 'get', side_effect=lambda axis, key: values[key]), \
+             patch.object(self.rig, 'wait', side_effect=wait):
+            self.rig.settle_after_stop('TR_HI', .04640625)
+        self.assertEqual(self.client.writes, [])
+
+    def test_post_stop_settling_rejects_restart_flags_and_position_drift(self):
+        for field, value in (('-Busy', 1), ('.DMOV', 0), ('.MOVN', 1), ('-PosAct', .02)):
+            with self.subTest(field=field):
+                values = {'-Busy': 0, '.DMOV': 1, '.MOVN': 0, '-PosAct': 0, '-VelAct': .015625}
+                values[field] = value
+                with patch.object(self.rig, 'get', side_effect=lambda axis, key: values[key]), \
+                     patch.object(self.rig, 'wait', side_effect=lambda predicate, *args: predicate()):
+                    with self.assertRaisesRegex(AssertionError, 'restarted or position drifted'):
+                        self.rig.settle_after_stop('TR_HI', 0)
+        self.assertEqual(self.client.writes, [])
+
+    def test_post_stop_persistent_velocity_still_times_out(self):
+        values = {'-Busy': 0, '.DMOV': 1, '.MOVN': 0, '-PosAct': 0, '-VelAct': .015625}
+        def wait(predicate, description, timeout):
+            self.assertEqual(timeout, 1)
+            for _ in range(3): self.assertFalse(predicate())
+            raise AssertionError('timeout: '+description)
+        with patch.object(self.rig, 'get', side_effect=lambda axis, key: values[key]), \
+             patch.object(self.rig, 'wait', side_effect=wait):
+            with self.assertRaisesRegex(AssertionError, 'timeout:'):
+                self.rig.settle_after_stop('TR_HI', 0)
+        self.assertEqual(self.rig.trace[-1]['readbacks']['-VelAct'], .015625)
+        self.assertEqual(self.client.writes, [])
+
     def test_plan_never_imports_epics_or_connects(self):
         with patch.object(run, 'Client', side_effect=AssertionError('connection attempted')):
             with redirect_stdout(io.StringIO()):

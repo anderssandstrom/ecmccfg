@@ -187,17 +187,25 @@ class HomingTests(SlitCase):
                                    'expected_offset': EDGES[sequence], 'samples': samples})
         return samples[-1]['actual'], samples[-1]['physical']
 
+    def wait_home_phase(self, predicate, description, timeout):
+        def checked():
+            self.rig.check_native_error(self.axis)
+            self.assertLess(abs(self.physical()), .8,
+                            'physical homing travel must remain bounded')
+            return predicate()
+        self.rig.wait(checked, description, timeout)
+
     def abort(self, cause, trigger, sequence=7):
         if cause == 'encoder' and self.loop != 'closed':
             self.skipTest('not-ready abort requires the primary EL5042 encoder')
         self.configure_sensors(.25 if sequence in (7, 9) else 0, missing_cam=cause == 'missing_cam')
         self.start_home(sequence, trigger)
         if cause == 'reverse_stop':
-            self.rig.wait(lambda: self.rig.get(self.axis, '-SeqState') == 3
+            self.wait_home_phase(lambda: self.rig.get(self.axis, '-SeqState') == 3
                           and self.rig.get(self.axis, '-VelAct') > .02,
                           'homing has reversed away from end switch toward cam', 8)
         elif cause == 'cam_stop':
-            self.rig.wait(lambda: self.rig.get(self.axis, '-SeqState') == 2
+            self.wait_home_phase(lambda: self.rig.get(self.axis, '-SeqState') == 2
                           and -.04 < self.physical() < .04,
                           'homing is between the two cam edges', 5)
         if cause in ('stop', 'reverse_stop', 'cam_stop'):
@@ -334,9 +342,13 @@ class HomingTests(SlitCase):
         self.rig.stage_native(self.axis, 3, position=0)
         self.rig.put(self.axis, '-ExeCmd', 1)
         self.rig.wait_native_stopped(self.axis, target=0)
-        self.rig.wait(lambda: abs(self.physical()) < .002
-                      and abs(self.rig.get(self.axis, '-PosAct')) < .002,
-                      'homing cleanup verifies physical and encoder zero within 2 um', 5)
+        # The fixture's atTarget tolerance is 0.01 mm. A completed return may
+        # legitimately auto-disable before reaching the tighter 0.002 mm used
+        # above to verify coordinate references. Cleanup must use the normal
+        # positioning tolerance, without re-referencing away residual motion.
+        self.rig.wait(lambda: abs(self.physical()) < .01
+                      and abs(self.rig.get(self.axis, '-PosAct')) < .01,
+                      'homing cleanup verifies physical and encoder zero within 10 um', 5)
         self.rig.put(self.axis, '-ExeCmd', 0)
         errors = self.rig.stop_all()
         if errors: raise AssertionError('homing cleanup disable failed: ' + '; '.join(errors))

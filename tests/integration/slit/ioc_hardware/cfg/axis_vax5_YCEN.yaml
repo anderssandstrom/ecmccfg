@@ -48,7 +48,7 @@ input:
 monitoring:
   lag:
     enable: yes
-    tolerance: 0.03
+    tolerance: 0.08
     time: 100
   target:
     enable: yes

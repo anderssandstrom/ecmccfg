@@ -26,7 +26,11 @@ class SlitHardwareConfigTests(unittest.TestCase):
         self.assertIn('ENC_SID=9,ENC_CH=01', startup)
         self.assertNotIn('ENC_CH=02', startup)
         self.assertNotIn('CH_ID=2', startup)
-        self.assertLess(startup.index('FILE=./cfg/axis_ax6_HI.yaml'), startup.index('loadYamlEnc.cmd'))
+        self.assertLess(startup.index('FILE=./cfg/axis_ax5_LO.yaml'), startup.index('loadYamlEnc.cmd'))
+        self.assertLess(startup.index('loadYamlEnc.cmd'), startup.index('FILE=./cfg/axis_vax5_YCEN.yaml'))
+        import json
+        profile = json.loads((ROOT/'tests/integration/slit_hardware/profile.json').read_text())
+        self.assertEqual(profile['encoder_power']['axis'], 'TR_LO')
         for token in ('SIM=1','SimSetValue','test-marker.db','driveStatus01.13'):
             self.assertNotIn(token, startup)
         self.assertFalse((HW/'profile.json').exists())

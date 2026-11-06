@@ -12,6 +12,9 @@
 #-d     ECMC_PROC_HOOK : Same as PROC_HOOK
 #-d     T_SMP_MS       : Maximum sample time of other records loaded by this script [ms]
 #-d     ECMC_STARTUP_GATE : Hold axes/PLCs until IOC/bus readiness (0/1, default 0)
+#-d     ECMC_SDO_AUTO_START : Start after queued SDO restore (0/1, default 1).
+#-d                           With queued SDOs, 0 holds activation until an explicit
+#-d                           ecmcStartAppModeAsync(0), for initial commissioning.
 #-d 
 #-d   \file
 #-d */
@@ -51,11 +54,22 @@ ecmcEpicsEnvSetCalcTernary(ECMC_SIM_RECORDS_CMD, "${ECMC_SIM=0}=1", "", "#-")
 ${ECMC_SIM_RECORDS_CMD}ecmcConfigOrDie "Cfg.SimLoadRecords(${ECMC_SIM_PREFIX=${ECMC_PREFIX}SIM:})"
 epicsEnvUnset(ECMC_SIM_RECORDS_CMD)
 
+# Queued SDOs need post-restore collection before activation even when the
+# requested default was ECMC-first. Keep legacy startup unchanged otherwise.
+ecmcEpicsEnvSetCalcTernary(ECMC_SDO_BAD_AUTO_START,"'${ECMC_SDO_AUTO_START=1}'!='0' and '${ECMC_SDO_AUTO_START=1}'!='1'","","#-")
+${ECMC_SDO_BAD_AUTO_START}ecmcExit Error: ECMC_SDO_AUTO_START must be 0 or 1
+epicsEnvUnset(ECMC_SDO_BAD_AUTO_START)
+ecmcEpicsEnvSetCalcTernary(ECMC_START_EPICS_FIRST_EFFECTIVE,"${ECMC_START_EPICS_FIRST=0}=1 or ${ECMC_SDO_QUEUE_IN_USE=0}=1",1,0)
+ecmcEpicsEnvSetCalcTernary(ECMC_START_EPICS_FIRST_CMD,"${ECMC_START_EPICS_FIRST_EFFECTIVE}=1","","#-")
+ecmcEpicsEnvSetCalcTernary(ECMC_START_ECMC_FIRST_CMD,"${ECMC_START_EPICS_FIRST_EFFECTIVE}=0","","#-")
+
 #- Start RT thread
 ecmcConfigOrDie "Cfg.SetStartupGate(${ECMC_STARTUP_GATE=1})"
 ${ECMC_START_ECMC_FIRST_CMD}ecmcConfigOrDie "Cfg.SetAppMode(1)"
 #- Postpone ecmc start if EPICS should start first
-${ECMC_START_EPICS_FIRST_CMD}afterIocRunning "ecmcStartAppModeAsync(${ECMC_EC_STABILIZATION_TIME=2})"
+ecmcEpicsEnvSetCalcTernary(ECMC_START_SDO_WORKER_CMD,"${ECMC_START_EPICS_FIRST_EFFECTIVE}=1 and (${ECMC_SDO_QUEUE_IN_USE=0}=0 or ${ECMC_SDO_AUTO_START=1}=1)","","#-")
+${ECMC_START_SDO_WORKER_CMD}afterIocRunning "ecmcStartAppModeAsync(${ECMC_EC_STABILIZATION_TIME=2})"
+epicsEnvUnset(ECMC_START_SDO_WORKER_CMD)
 
 # Stabilize EtherCAT bus.....
 ${ECMC_START_ECMC_FIRST_CMD}epicsThreadSleep ${ECMC_EC_STABILIZATION_TIME=2}

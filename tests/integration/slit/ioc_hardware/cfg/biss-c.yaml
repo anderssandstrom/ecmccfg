@@ -29,7 +29,7 @@ encoder:
 #    time: 0                                           # Delay time between set and act [cycles]
 #    enable: true                                        # enable (defaults to 1 if not set)
 
-  # Only TR_HI loads this encoder file. Counter encoder 1 already exists.
+  # Only TR_LO loads this encoder file. Counter encoder 1 already exists.
   power:
     enable: true
     output: ec0.s25.binaryOutput01.0

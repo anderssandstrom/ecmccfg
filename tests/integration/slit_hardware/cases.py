@@ -314,7 +314,7 @@ def make_suite(rig, groups, patterns=()):
                 'test_motor_stop_during_move': ('TR_LO',),
                 'test_center_both_directions': ('CENTERY',),
                 'test_gap_both_directions': ('GAPY',),
-                'test_real_encoder_sleep_wake_and_backup': ('TR_HI',),
+                'test_real_encoder_sleep_wake_and_backup': ((rig.profile['encoder_power']['axis'],) if rig else ('TR_LO', 'TR_HI')),
             }.get(original, ('TR_LO',) if '_lo_' in name else ('TR_HI',) if '_hi_' in name else ())
             if group == 'concurrent': test.motion_axes = ('TR_LO', 'TR_HI')
             if group == 'homing': test.motion_axes = ('TR_HI',)

@@ -26,10 +26,10 @@ colocated simulation fixture, with the hardware arrangement supplied by the user
 | --- | --- | --- |
 | 0 | EK1100 | Coupler |
 | 5 | EL2008 | Brake release: output 01 = TR_LO, output 02 = TR_HI |
-| 9 | EL5042 | Channel 1: TR_HI BiSS; channel 2 unused |
+| 9 | EL5042 | Channel 1: TR_LO BiSS; channel 2 unused |
 | 12 | EL7031 | TR_HI stepper; internal counter encoder 1 |
-| 14 | EL7041-0052 | TR_LO stepper; internal counter encoder 1 only |
-| 25 | EL2794 | Channel 1: TR_HI encoder supply, active high; channels 2–4 unused |
+| 14 | EL7041-0052 | TR_LO stepper; counter encoder 1 plus BiSS encoder 2 |
+| 25 | EL2794 | Channel 1: TR_LO encoder supply, active high; channels 2–4 unused |
 
 Axis names and indices remain `TR_LO`=5, `TR_HI`=6, `CENTERY`=12 and `GAPY`=13.
 The virtual slit kinematics, dynamic soft limits and master/slave state machine
@@ -42,13 +42,13 @@ declared in `drive.brake` in those same YAML files.
 
 ## Encoder feedback and auto-power
 
-TR_LO runs purely on its incremental internal counter; it does not configure an
-EL5042 channel or encoder power output. TR_HI creates its counter first and then
+TR_HI runs purely on its incremental internal counter; it does not configure an
+EL5042 channel or encoder power output. TR_LO creates its counter first and then
 loads `cfg/biss-c.yaml` as encoder 2. That YAML enables auto-power using
 `ec0.s25.binaryOutput01.0`, with encoder 1 as its always-powered backup.
 
 The configured warm-up delay is 0.1 s, timeout 5 s, settled idle delay 2 s and
-permitted wake discrepancy 0.02 mm. EL5042 ready bit 2, warning bit 0 and error
+permitted wake discrepancy 0.05 mm. EL5042 ready bit 2, warning bit 0 and error
 bit 1 are linked normally. Auto-power is independent of drive auto-disable.
 Edit `cfg/biss-c.yaml` to change these values or disable power control.
 
@@ -65,7 +65,7 @@ scaling and absolute offset must match the installed rack and mechanics. This
 configuration has been checked offline, not commissioned against physical hardware.
 
 - Internal counter scale: 12800 counts/mm; CSV command scale: 32768 counts per 10 mm/s.
-- TR_HI BiSS: 4096 counts/mm, 26 absolute bits, engineering offset -1380 mm.
+- TR_LO BiSS: 4096 counts/mm, 26 absolute bits, engineering offset -1380 mm.
 - Physical soft limits: -10 to +10 mm; physical motion velocity: 1 mm/s.
 - HI motor: 1000 mA maximum, 500 mA standby, 24 V, coil resistance 1230 mOhm.
 - LO motor: 1000 mA maximum, 500 mA standby, 48 V, coil resistance 1230 mOhm.
@@ -94,3 +94,13 @@ PVT test PVs. PVT pulses use spare EL2008 slave 5/channel 05, active high with
 `HWSLIT:m0s005-BO05-RB`, as well as pulse-latched encoder positions. This
 readback is the commanded output process image, not independent electrical
 feedback. Deploy startup.cmd and restart to apply the trigger link.
+
+## Encoder alignment comparison
+
+The BiSS feedback is currently assigned to TR_LO (axis 5, EL7041 slave 14).
+Move the encoder connection to the LO stage encoder while keeping EL5042
+channel 1 and the EL2794 slave 25 channel 1 supply wiring. Restart this IOC
+after changing the connection. TR_HI remains on its internal counter.
+The hardware runner profile follows this assignment, including zero referencing,
+encoder-power tests and diagnostics. Full-stroke TR_HI homing is blocked while
+its independent raw travel-feedback channel is attached to LO.

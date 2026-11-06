@@ -1,7 +1,7 @@
 # Real-hardware slit commissioning IOC. Run from this directory.
 # Terminal positions and drive settings follow the existing slit lab setup.
-# One BiSS encoder: TR_HI on EL5042 channel 1; TR_LO uses its internal counter.
-# EL2794 slave 25, channel 1 switches TR_HI encoder power (active high).
+# One BiSS encoder: TR_LO on EL5042 channel 1; TR_HI uses its internal counter.
+# EL2794 slave 25, channel 1 switches TR_LO encoder power (active high).
 epicsEnvSet("IOC", "${HARDWARE_IOC=HWSLIT}")
 require ecmccfg ${ECMCCFG_HW_VER=sandst_a} "MASTER_ID=0,ENG_MODE=1,EC_RATE=1000,ECMC_VER=${ECMC_HW_VER=sandst_a},SIM=0"
 on error halt
@@ -20,10 +20,10 @@ ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Encoder-RLS-LA11-26bit-BISS
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "SLAVE_ID=12,HW_DESC=EL7031"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Motor-Generic-2Phase-Stepper,MACROS='I_MAX_MA=1000,I_STDBY_MA=500,U_NOM_MV=24000,R_COIL_MOHM=1230'"
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd "FILE=./cfg/axis_ax6_HI.yaml,DRV_SLAVE=12,ENC_SLAVE=12,ENC_CHANNEL=01,M_ID=0"
-${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlEnc.cmd "FILE=./cfg/biss-c.yaml,DEV=${IOC},ENC_SID=9,ENC_CH=01"
 ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "SLAVE_ID=14,HW_DESC=EL7041-0052"
 ${SCRIPTEXEC} ${ecmccfg_DIR}applyComponent.cmd "COMP=Motor-Generic-2Phase-Stepper,MACROS='I_MAX_MA=1000,I_STDBY_MA=500,U_NOM_MV=48000,R_COIL_MOHM=1230'"
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd "FILE=./cfg/axis_ax5_LO.yaml,DRV_SLAVE=14,ENC_SLAVE=14,ENC_CHANNEL=01,M_ID=0"
+${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlEnc.cmd "FILE=./cfg/biss-c.yaml,DEV=${IOC},ENC_SID=9,ENC_CH=01"
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd "FILE=./cfg/axis_vax5_YCEN.yaml,AX_ID=12,M_ID=0,DRV_SLAVE=14"
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd "FILE=./cfg/axis_vax6_YGAP.yaml,AX_ID=13,M_ID=0,DRV_SLAVE=14"
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadPLCFile.cmd "FILE=./cfg/axis_main.plc,INC=./cfg,PLC_MACROS='AX_CEN=12,AX_GAP=13,AX_LO=5,AX_HI=6'"

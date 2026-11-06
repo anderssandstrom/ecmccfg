@@ -21,7 +21,7 @@
   "tolerance": 0.015,
   "timeout": 30,
   "encoder_power": {
-    "axis": "TR_HI",
+    "axis": "TR_LO",
     "encoder": 2,
     "backup": 1,
     "timeout": 10,

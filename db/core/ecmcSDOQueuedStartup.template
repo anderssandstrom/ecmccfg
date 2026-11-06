@@ -1,0 +1,13 @@
+# Internal autosave data: only accepted write requests create a valid snapshot.
+# Save/restore the entire waveform in pass 1; never autosave command triggers.
+record(waveform,"$(ECMC_P)SDO-$(NAME)-StartupData_") {
+  info(autosaveFields,"VAL")
+  field(DESC,"Saved SDO write request")
+  field(DTYP,"asynInt8ArrayIn")
+  field(INP,"@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt8ArrayIn/ec$(MASTER_ID).s$(SLAVE_POS).sdo.$(NAME).startup?")
+  field(FTVL,"UCHAR")
+  field(NELM,"32")
+  field(PINI,"YES")
+  field(SCAN,"I/O Intr")
+  field(TSE,"$(TSE=-2)")
+}

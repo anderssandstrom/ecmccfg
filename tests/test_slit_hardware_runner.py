@@ -475,9 +475,29 @@ class HardwareBoundary:
 class HardwareRunnerTests(unittest.TestCase):
     def setUp(self):
         self.profile = json.loads(run.DEFAULT_PROFILE.read_text())
+        self.profile['encoder_power']['axis'] = 'TR_HI'
         self.clock = Clock()
         self.client = HardwareBoundary(self.clock)
         self.rig = Rig(self.profile, 'HW:', self.client)
+
+    def test_lo_encoder_assignment_checks_counts_and_routes_power_tests(self):
+        self.profile['encoder_power']['axis'] = 'TR_LO'
+        self.client.values['HW:TR_LO-EncCnt'] = 2
+        self.client.values['HW:TR_HI-EncCnt'] = 1
+        self.rig.guard()
+        snapshot = self.rig.snapshot()
+        self.assertIn('encoder_diagnostics', snapshot['TR_LO'])
+        self.assertIn('-Enc02-PwrState', snapshot['TR_LO'])
+        self.assertNotIn('-Enc02-PwrState', snapshot['TR_HI'])
+        for test in make_suite(self.rig, ['encoder_power']):
+            self.assertEqual(test.motion_axes, ('TR_LO',))
+
+    def test_lo_encoder_assignment_blocks_hi_homing_before_writes(self):
+        from slit_hardware.homing import check_homing_support
+        self.profile['encoder_power']['axis'] = 'TR_LO'
+        with self.assertRaisesRegex(ValueError, 'currently assigned to TR_LO'):
+            check_homing_support(self.rig)
+        self.assertEqual(self.client.writes, [])
 
     def test_plan_never_imports_epics_or_connects(self):
         with patch.object(run, 'Client', side_effect=AssertionError('connection attempted')):

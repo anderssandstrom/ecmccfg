@@ -1,0 +1,8 @@
+record(int64in,"$(ECMC_P)SDO-$(NAME)-Val-RB") {
+  field(DESC,"SDO actual uploaded value")
+  field(DTYP,"asynInt64")
+  field(INP,"@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt64/ec$(MASTER_ID).s$(SLAVE_POS).sdo.$(NAME).readvalue?")
+  field(PINI,"YES")
+  field(SCAN,"I/O Intr")
+  field(TSE,"$(TSE=-2)")
+}

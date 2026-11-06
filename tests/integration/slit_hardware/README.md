@@ -1,7 +1,7 @@
 # Real slit hardware acceptance tests
 
 This suite uses the [hardware IOC](../slit/ioc_hardware/README.md), with TR_LO
-using its drive counter and TR_HI using BiSS plus counter auto-power handover.
+using BiSS plus counter auto-power handover and TR_HI using its drive counter.
 It does not run a simulated plant or write EtherCAT input images. Python 3 and
 `pyepics` are required on the client for live runs.
 
@@ -61,7 +61,7 @@ hardware to simulated open/closed-loop variants.
 | `status` | Real backend, fixture identity, bus/application state, axis IDs, stopped motor/native status, no faults/warnings, coordinate agreement, virtual feedback kinematics |
 | `motion` | Each physical axis moves both directions and returns; repeated motor targets; STOP while busy and no subsequent movement; motor/native completion, atTarget and faults |
 | `virtual` | Center and gap move both directions and return; predicted blade targets stay in the test envelope; physical/virtual feedback agrees |
-| `encoder_power` | A normal HI move settles, BiSS powers off and counter becomes primary; the next move restores power/readiness/BiSS primary and completes |
+| `encoder_power` | A normal move of the configured encoder-power axis settles, BiSS powers off and counter becomes primary; the next move restores power/readiness/BiSS primary and completes |
 | `native` | LO and HI native absolute and relative moves using the execute PV, with native parameters restored |
 | `target_write` | LO and HI absolute and repeated identical relative target writes; staging and mode selection do not move; direct writes auto-enable a disabled drive without an execute pulse |
 | `motor` | LO and HI positive/negative OFF and both DIR values; user/dial/native positions and unchanged native limits; original fields and limit-sync policy restored |
@@ -337,3 +337,7 @@ bits 0/1/2 are also decoded as warning/error/ready. These are asynchronous
 readbacks, not a measurement of supply voltage or an atomic history of the fault.
 A hardware encoder alarm during recovery remains an unexpected test failure;
 it is not automatically reset or added to the expected-stall allowlist.
+
+The current profile assigns BiSS and auto-power to TR_LO for the encoder
+alignment comparison. Full-stroke TR_HI homing is blocked for this wiring;
+its raw EL5042 travel guard must follow the axis being homed.

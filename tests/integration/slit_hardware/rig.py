@@ -27,7 +27,7 @@ def validate_profile(profile):
     if profile['step'] <= 2 * profile['tolerance']:
         raise ValueError('step must exceed twice the position tolerance')
     power = profile['encoder_power']
-    if (power['axis'] != 'TR_HI' or power['encoder'] != 2 or power['backup'] != 1
+    if (power['axis'] not in profile['physical'] or power['encoder'] != 2 or power['backup'] != 1
             or not math.isfinite(power['timeout']) or power['timeout'] <= 0):
         raise ValueError('encoder-power mapping must match the hardware IOC')
 
@@ -103,8 +103,10 @@ class Rig(Operations):
             self.origins[axis] = self.get(axis, '.RBV')
             if abs(self.origins[axis] - self.get(axis, '-PosAct')) > self.profile['tolerance']:
                 raise RuntimeError(axis + ': motor/native coordinate mismatch')
-        if self.get('TR_LO', '-EncCnt') != 1 or self.get('TR_HI', '-EncCnt') != 2:
-            raise RuntimeError('encoder count does not match the commissioned hardware setup')
+        for axis in self.profile['physical']:
+            expected = 2 if axis == self.profile['encoder_power']['axis'] else 1
+            if self.get(axis, '-EncCnt') != expected:
+                raise RuntimeError(axis + ': encoder count does not match the configured hardware setup')
         if self.read('SM00-EnaCmd') != 1:
             raise RuntimeError('hardware suite requires the configured slit state machine enabled')
         self.healthy()
@@ -325,7 +327,7 @@ class Rig(Operations):
                           '-SetEncIdCmd-RB', '-Enc02-PwrState', '.DIR', '.OFF', '.DVAL',
                           '-AutoExecuteOnTargetPos-RB', '-ExeCmd-RB', '-MtnCmd', '-TgtPosCmd',
                           '.MSTA', '.MIP', '.PACT', '.STAT', '-Homed', '-SeqState', '-LimBwd', '-LimFwd'):
-                if axis != 'TR_HI' and field == '-Enc02-PwrState': continue
+                if axis != self.profile['encoder_power']['axis'] and field == '-Enc02-PwrState': continue
                 try: result[axis][field] = self.get(axis, field)
                 except Exception as error: result[axis][field] = str(error)
         # Read-only evidence for power-cycle/encoder failures. Retain missing

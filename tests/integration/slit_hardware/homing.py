@@ -7,6 +7,8 @@ from slit_recovery import wait_checked, motor_idle
 
 def check_homing_support(rig):
     cfg = rig.profile['homing']
+    if rig.profile['encoder_power']['axis'] != cfg['axis']:
+        raise ValueError('full-stroke homing requires the BiSS travel-feedback channel on TR_HI; it is currently assigned to TR_LO')
     if cfg['axis'] != 'TR_HI': raise ValueError('real limit homing is commissioned only for EL7031 TR_HI')
     positive = ('search_velocity', 'edge_velocity', 'acceleration', 'deceleration', 'timeout',
                 'max_search_travel', 'max_total_travel', 'raw_counts_per_mm')

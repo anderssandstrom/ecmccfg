@@ -1,0 +1,8 @@
+# Queued 64-bit scalar setpoint. U64 uses the signed 64-bit record's raw bit pattern.
+record(int64out,"$(ECMC_P)SDO-$(NAME)-Val") {
+  info(asyn:READBACK,"1")
+  field(DESC,"SDO desired scalar value")
+  field(DTYP,"asynInt64")
+  field(OUT,"@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt64/ec$(MASTER_ID).s$(SLAVE_POS).sdo.$(NAME).value?")
+  field(SCAN,"Passive")
+}

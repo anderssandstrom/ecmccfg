@@ -6,6 +6,14 @@ ECMC and ecmccfg builds with queued-SDO support. No motion axes are loaded.
 The real EtherCAT terminal is required; the simulation backend cannot run these
 mailbox transfers.
 
+The startup script currently includes a diagnostic trial for intermittent
+`0x0032` PLL errors: `Cfg.EcSelectReferenceDC(0,26)` explicitly selects the
+ELM3504 as the DC reference instead of EtherLab's automatic selection (slave 0
+in the captured log). Cycle and shift settings are unchanged. Compare repeated
+startups and confirm the selected reference in the kernel log before treating
+this as a fix; this trial has not been tested on hardware here. Remove that
+line to return to automatic reference selection.
+
 ## IOC layout
 
 The layout follows `best_practice/motion/stepper_openloop_asr`:
@@ -63,7 +71,8 @@ checks saved SDO settings, not analog threshold-crossing behavior.
 ## First commissioning and save
 
 Start the IOC normally. An absent save file on the first run is expected. With
-no saved requests, the master starts without writing default SDO values. Use
+no saved requests, EtherLab applies the explicit `EcAddSdoDT` defaults
+(-8388608 / 8388607). No additional SDORT write is appended. Use
 suitable thresholds for the configured measurement mode and sensor. For example,
 in a client shell, submit both thresholds for all channels:
 
@@ -95,9 +104,11 @@ before stopping. Keep this file for the next run.
 ## Restart and verify the actual SDOs
 
 1. Restart normally with the saved file. Do not write `Val` or `WrtCmd` again.
-   The startup worker automatically downloads, uploads and verifies the restored
-   requests in PREOP, then permits cyclic operation / OP. This also works when
-   the normal startup order would be ECMC first. There is no manual start command
+   The startup worker appends restored writes after the `EcAddSdoDT` defaults.
+   EtherLab downloads the list in PREOP, so the saved values win. After the bus
+   reaches OP, SDORT uploads and compares the final values before motion/PLCs
+   are released. This also works when the normal startup order would be ECMC
+   first. There is no manual start command
    or `SDO_AUTO_START` setting in this example.
 2. Check all eight endpoints for `Bsy=0`, `ErrId=0`, and the expected `Val-RB`.
 3. Request fresh hardware uploads, then wait for completion and check the same
@@ -110,19 +121,33 @@ before stopping. Keep this file for the next run.
    done
    ```
 
-A failed startup write/verification holds activation and reports an error. Fix
-the cause, submit a corrected request if needed, then retry the startup worker
-from the IOC shell with `ecmcStartAppModeAsync(0)`.
+A failed startup download prevents successful slave configuration. A failed
+readback verification leaves motion/PLCs held and sets the endpoint error.
+Check the IOC log and `ErrId`, correct the cause, and restart the IOC. The bus
+may already be in OP during verification; OP alone does not mean motion is ready.
+The SDO verification hold also applies when `STARTUP_GATE=0`.
+
+Only the configured target slave must reach OP before its SDO readbacks start.
+Other physical slaves that this IOC does not configure may remain PREOP; the
+master’s combined AL-state mask is not used as an SDO readiness condition.
+On a timeout, the log reports bus/timing/SDO readiness and lists pending or
+failed SDOs with their target slave’s OP state, busy flag and error code.
 
 The terminal descriptor normally resets its configuration at startup, so this
 restart exercises reapplying the saved settings. To test the no-value case, use
 a separate empty autosave directory/file, write only one endpoint, save and
-restart: only that endpoint should have a restore request. Keep the established
-save file when doing this separate trial.
+restart: only that endpoint should have a restore request, and all other
+thresholds should retain the script defaults. Keep the established save file
+when doing this separate trial.
 
-Do not configure these addresses through static startup SDO downloads as well;
-the queued startup path rejects a conflict that could overwrite restored
-settings. The optional `PREOP_ONLY=1` can restrict a particular endpoint to
+Static startup SDOs from ecmccomp or `EcAddSdo*` remain the baseline. Restored
+writes are appended after all component/plugin startup configuration, immediately
+before master activation. The example deliberately includes both for each
+threshold, so the restart check exercises precedence. If several accepted startup
+writes target the same address, readback is compared to the final requested
+value. PDO mapping/assignment overrides remain rejected.
+
+The optional `PREOP_ONLY=1` can restrict a particular endpoint to
 startup writes; it is not required for autosave restoration and is not used here.
 
 The files have been checked locally. No installer, live IOC, or hardware test

@@ -1,4 +1,0 @@
-# Save accepted write requests, including exact payload and endpoint identity.
-# Keep command triggers, staged Val and readback out of autosave.
-$(IOC):m0s001-SDO-MaxCurrent-StartupData_
-$(IOC):m0s001-SDO-StandbyCurrent-StartupData_

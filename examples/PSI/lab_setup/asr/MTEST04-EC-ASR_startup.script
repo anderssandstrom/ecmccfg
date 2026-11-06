@@ -1,0 +1,33 @@
+# ELM3504 at master 0, slave 26: autosaved range-error thresholds, all channels.
+require ecmccfg sandst_a "ENG_MODE=1,MASTER_ID=0,ECMC_VER=sandst_a,NAMING=mXsXXX"
+
+# Scalar SDOs automatically restore accepted saved writes before activation.
+epicsEnvSet(ECMC_STARTUP_GATE,1)
+
+# PSI ioc install generates autoSRarray setup from cfg/*_set.req (pass 1).
+# Do not also register a restore file / monitor set here.
+${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd "SLAVE_ID=26,HW_DESC=ELM3504,NELM=1"
+
+# Low/High Range Error are INT32 CoE settings, in the terminal's integer units.
+# These settings have no separate enable SDO. Status/error is available in PDOs.
+# Documentation: https://infosys.beckhoff.com/content/1033/elm3xxx/8800001547.html
+# Do not add static Cfg.EcAddSdo downloads for these same addresses.
+
+# Channel 1: 0x8000
+${SCRIPTEXEC} ${ecmccfg_DIR}addEcSdoRT.cmd "SLAVE_ID=26,INDEX=0x8000,SUBINDEX=0x32,DT=S32,NAME=Ch01LowRangeError,WRITE_ON_VAL=1"
+${SCRIPTEXEC} ${ecmccfg_DIR}addEcSdoRT.cmd "SLAVE_ID=26,INDEX=0x8000,SUBINDEX=0x33,DT=S32,NAME=Ch01HighRangeError,WRITE_ON_VAL=1"
+
+# Channel 2: 0x8010
+${SCRIPTEXEC} ${ecmccfg_DIR}addEcSdoRT.cmd "SLAVE_ID=26,INDEX=0x8010,SUBINDEX=0x32,DT=S32,NAME=Ch02LowRangeError,WRITE_ON_VAL=1"
+${SCRIPTEXEC} ${ecmccfg_DIR}addEcSdoRT.cmd "SLAVE_ID=26,INDEX=0x8010,SUBINDEX=0x33,DT=S32,NAME=Ch02HighRangeError,WRITE_ON_VAL=1"
+
+# Channel 3: 0x8020
+${SCRIPTEXEC} ${ecmccfg_DIR}addEcSdoRT.cmd "SLAVE_ID=26,INDEX=0x8020,SUBINDEX=0x32,DT=S32,NAME=Ch03LowRangeError,WRITE_ON_VAL=1"
+${SCRIPTEXEC} ${ecmccfg_DIR}addEcSdoRT.cmd "SLAVE_ID=26,INDEX=0x8020,SUBINDEX=0x33,DT=S32,NAME=Ch03HighRangeError,WRITE_ON_VAL=1"
+
+# Channel 4: 0x8030
+${SCRIPTEXEC} ${ecmccfg_DIR}addEcSdoRT.cmd "SLAVE_ID=26,INDEX=0x8030,SUBINDEX=0x32,DT=S32,NAME=Ch04LowRangeError,WRITE_ON_VAL=1"
+${SCRIPTEXEC} ${ecmccfg_DIR}addEcSdoRT.cmd "SLAVE_ID=26,INDEX=0x8030,SUBINDEX=0x33,DT=S32,NAME=Ch04HighRangeError,WRITE_ON_VAL=1"
+
+# The ecmccfg finalize hook applies configuration and sets application mode.
+# The PSI launcher completes IOC initialization.

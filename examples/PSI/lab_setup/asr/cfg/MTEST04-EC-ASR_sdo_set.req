@@ -1,0 +1,11 @@
+#UPDATE-FREQ=5
+#ENABLE-PASS=1
+# Restore request waveforms in pass 1 only; never restore command triggers.
+MTEST04-EC-ASR:m0s026-SDO-Ch01LowRangeError-StartupData_
+MTEST04-EC-ASR:m0s026-SDO-Ch01HighRangeError-StartupData_
+MTEST04-EC-ASR:m0s026-SDO-Ch02LowRangeError-StartupData_
+MTEST04-EC-ASR:m0s026-SDO-Ch02HighRangeError-StartupData_
+MTEST04-EC-ASR:m0s026-SDO-Ch03LowRangeError-StartupData_
+MTEST04-EC-ASR:m0s026-SDO-Ch03HighRangeError-StartupData_
+MTEST04-EC-ASR:m0s026-SDO-Ch04LowRangeError-StartupData_
+MTEST04-EC-ASR:m0s026-SDO-Ch04HighRangeError-StartupData_

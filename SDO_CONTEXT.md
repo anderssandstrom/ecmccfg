@@ -1,7 +1,11 @@
 # Async SDO queue / autosave handoff
 
-Discussion date: 2026-11-06. This is a design handoff; no SDO queue or startup
-barrier has been implemented in this discussion.
+Updated 2026-11-06: the implementation now queues scalar requests automatically
+and registers startup snapshots through addEcSdoRT.cmd. QUEUE and RESTORE flags
+are no longer needed. WRITE_ON_VAL remains optional; manual Val/WrtCmd and
+RdCmd remain available, including runtime writes by default. Empty snapshots
+produce no restore writes. The example uses automatic startup without a
+SDO_AUTO_START setting. The design notes below describe the earlier discussion.
 
 ## User requirements
 

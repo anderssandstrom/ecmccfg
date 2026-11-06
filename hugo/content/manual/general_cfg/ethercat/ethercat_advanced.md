@@ -205,7 +205,7 @@ By default, the wrapper also loads a matching EPICS record for the item.
 
 ## Runtime SDO Objects
 
-Use `addEcSdoRT.cmd` during startup to configure on-demand access to one EtherCAT SDO. Trigger uploads and downloads through its PVs after the IOC enters realtime operation.
+Use `addEcSdoRT.cmd` during startup to configure on-demand access to one EtherCAT SDO. Scalar requests are serialized automatically. Requests made before master activation are applied before the bus starts; runtime requests use the same PVs.
 
 This is useful for:
 
@@ -213,7 +213,7 @@ This is useful for:
 - writing one non-cyclic setting without rebuilding the full slave setup
 - exposing one SDO as a small EPICS control object with read/write commands
 
-`addEcSdoRT.cmd` wraps `Cfg.EcAddSdoAsync(...)` for scalar values and `Cfg.EcAddSdoAsyncArray(...)` for byte arrays. Omit `BYTE_SIZE` or set it to `0` to retain the existing scalar command, PV names and record types.
+`addEcSdoRT.cmd` wraps `Cfg.EcAddSdoAsync(...)` for scalar values and `Cfg.EcAddSdoAsyncArray(...)` for byte arrays. Omit `BYTE_SIZE` or set it to `0` to retain the existing scalar command, PV names. Scalar 64-bit values use native `int64out`/`int64in` records.
 
 ### What It Creates
 
@@ -228,6 +228,8 @@ ec<master>.s<slave>.sdo.HW_ENABLE
 In scalar mode, the script creates these PVs:
 
 - `...SDO-HW_ENABLE-Val`
+- `...SDO-HW_ENABLE-Val-RB`
+- `...SDO-HW_ENABLE-StartupData_` (internal autosave snapshot)
 - `...SDO-HW_ENABLE-RdCmd`
 - `...SDO-HW_ENABLE-WrtCmd`
 - `...SDO-HW_ENABLE-Bsy`
@@ -235,11 +237,38 @@ In scalar mode, the script creates these PVs:
 
 In practice:
 
-- `Val` holds the current value to write and the most recent readback value
+- `Val` stages the desired value; `WRITE_ON_VAL=1` also submits a write
+- `Val-RB` holds the last uploaded hardware value
+- `StartupData_` contains the last accepted write request; untouched objects have no valid snapshot
 - `RdCmd` triggers an SDO read
-- `WrtCmd` triggers an SDO write
+- `WrtCmd` queues a write of the staged value, followed by upload and comparison
 - `Bsy` indicates that the SDO object is currently busy
 - `ErrId` exposes the most recent SDO error code
+
+### Scalar startup restore
+
+Scalar objects automatically support request queuing and startup restoration;
+there are no `QUEUE` or `RESTORE` flags. By default, writing `Val` only stages a
+value and `WrtCmd` submits it. Use `WRITE_ON_VAL=1` when writing `Val` should also
+submit a request. `RdCmd` remains available in both cases.
+
+Autosave the internal `StartupData_` waveform in **pass 1**, rather than `Val` or
+command triggers. Only an accepted write request creates a valid snapshot:
+staging a manual-mode value does not. An untouched snapshot produces no restore
+write; an explicit zero write is valid. Startup collects restored snapshots,
+serializes PREOP downloads, uploads and compares the actual values, and only
+then allows master activation. A failure holds activation and reports an error.
+Runtime writes and reads remain available by default. `PREOP_ONLY=1` optionally
+restricts writes to before activation; restoration does not require it.
+
+This defers master activation until after EPICS restore, including configurations
+that would otherwise start ECMC first. `STARTUP_GATE` separately controls release
+of motion/PLCs. Array objects retain their existing command behavior and do not
+support this scalar startup-snapshot mechanism. Do not also configure static
+startup downloads for a restored SDO address: those conflicts are rejected.
+
+The [ELM3504 example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/lab_setup/asr)
+shows an IOC-local request file and a save/restart/readback procedure.
 
 ### Startup Syntax
 

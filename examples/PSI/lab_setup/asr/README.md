@@ -1,82 +1,129 @@
-# Queued SDO autosave / restore
+# ELM3504 queued SDO autosave / restore
 
-IOC-local example for an EK1100 at slave 0 and an EL7041 at slave 1, master 0.
-It requires the queued-SDO changes in both ECMC and ecmccfg, plus `autoSRarray`.
-It uses real EtherCAT mailbox transfers; the simulation backend cannot run it.
-No axis or motor component is loaded. Adjust the hardware layout before use.
+This PSI IOC example tests PREOP restoration of the low/high range-error
+thresholds on all four channels of an ELM3504 at master 0, slave 26. It requires
+ECMC and ecmccfg builds with queued-SDO support. No motion axes are loaded.
+The real EtherCAT terminal is required; the simulation backend cannot run these
+mailbox transfers.
 
-`startup.cmd` demonstrates two interfaces to EL7041 current settings:
+## IOC layout
 
-| Name | Address | Interface |
-| --- | --- | --- |
-| MaxCurrent | `0x8010:01`, U16, mA | Writing `Val` queues a write |
-| StandbyCurrent | `0x8010:02`, U16, mA | Writing `Val` stages; `WrtCmd=1` queues a write |
+The layout follows `best_practice/motion/stepper_openloop_asr`:
 
-Both use `QUEUE=1,RESTORE=1`, which also selects `PREOP_ONLY=1`. Omitting these
-options keeps the legacy interface. `RdCmd=1` still requests an upload in either
-interface, including after startup. PREOP-only writes are rejected after master
-activation.
+- `Makefile`: `ioc install --clean -V --ioc MTEST04-EC-ASR`.
+- `MTEST04-EC-ASR_parameters.yaml`: IOC name, host, port and EPICS/platform.
+- `MTEST04-EC-ASR_startup.script`: terminal and eight queued SDO endpoints.
+- `cfg/MTEST04-EC-ASR_sdo_set.req`: IOC-local autosave requests.
 
-## First commissioning
+Adjust the IOC host/port and module versions to your installation. When renaming
+this IOC, update the Makefile, parameter/startup filenames, and request filename
+and PV prefixes together. The startup script relies on the normal ecmccfg
+finalize hook. There is no separate `startup.cmd`.
 
-Run the PSI IOC launcher from this directory, with your usual IOC name. First
-create a writable save directory:
-
-```sh
-mkdir -p save
-```
-
-The default `SDO_AUTO_START=0` lets EPICS finish starting while holding master
-activation. A missing save file on the first run is expected. Use values suitable
-for your motor; these commands illustrate 400 mA maximum and 100 mA standby.
-Replace `MYIOC` with the IOC name:
-
-```sh
-caput MYIOC:m0s001-SDO-MaxCurrent-Val 400
-caput MYIOC:m0s001-SDO-StandbyCurrent-Val 100
-caput MYIOC:m0s001-SDO-StandbyCurrent-WrtCmd 1
-```
-
-At this point the requests are pending; the value write itself does not confirm a
-hardware transfer. In the IOC shell, start the queue worker:
+The request file has `#ENABLE-PASS=1` and `#UPDATE-FREQ=5`. The PSI installer uses
+these to generate pass-1 restore and a five-second autosave monitor set. There
+are no duplicate autosave registrations in the startup script. Inspect the
+resulting `saveRestore.script_restore` before testing; it should contain:
 
 ```iocsh
-ecmcStartAppModeAsync(0)
+set_pass1_restoreFile "MTEST04-EC-ASR_sdo_set.sav"
 ```
 
-It downloads each request in PREOP, uploads and compares the actual value, then
-permits master activation. Wait for both `Bsy` PVs to become zero, check that both
-`ErrId` PVs are zero, and check `Val-RB` against the requested values. The worker
-also reports activation failures in the IOC log. A failed startup write keeps
-activation held; fix the cause before submitting another request and retrying.
+There must be no pass-0 restore of this file, since the saved records are
+waveforms. The generated save script should contain:
 
-The monitored autosave set writes `save/sdo_settings.sav` after changes (five
-second period). Check that the file contains both request waveforms before
-stopping the IOC. Save files are local runtime data and are ignored by Git.
-Give each IOC its own save directory; `ASR_SAVE_DIR` overrides `./save`.
+```iocsh
+create_monitor_set("MTEST04-EC-ASR_sdo_set.req",5)
+```
 
-## Automatic restart
+## Terminal settings and PDO status
 
-Set the startup macro `SDO_AUTO_START=1` for subsequent runs. Autosave restores
-`sdo_settings.sav` in pass 1, before ECMC collects the saved requests. The worker
-then writes and verifies them before allowing cyclic operation / OP. Queued SDOs
-defer activation even when the normal configuration would start ECMC first.
-`STARTUP_GATE` separately holds motion/PLCs until startup readiness.
+The ELM350x [CoE settings](https://infosys.beckhoff.com/content/1033/elm3xxx/8800001547.html)
+provide these signed INT32 range-error thresholds, expressed in the terminal's
+integer measurement units:
 
-An untouched SDO has no valid request and causes no restore write. For the manual
-interface, staging `Val` without `WrtCmd` does not create a saved request. An
-explicit write of zero is a valid request and is restored as zero.
+| Channel | Low Range Error | High Range Error | SDO aliases |
+| --- | --- | --- | --- |
+| 1 | `0x8000:32` | `0x8000:33` | `Ch01LowRangeError`, `Ch01HighRangeError` |
+| 2 | `0x8010:32` | `0x8010:33` | `Ch02LowRangeError`, `Ch02HighRangeError` |
+| 3 | `0x8020:32` | `0x8020:33` | `Ch03LowRangeError`, `Ch03HighRangeError` |
+| 4 | `0x8030:32` | `0x8030:33` | `Ch04LowRangeError`, `Ch04HighRangeError` |
 
-The local request file is `db/sdo_settings.req`. It saves the internal
-`StartupData_` waveform, which contains the accepted request and its identity;
-leave this data to the driver. Do not autosave `WrtCmd`, `RdCmd`, `Val`, or
-`Val-RB`. Restore these waveforms in pass 1 only. This example registers its
-request/save set explicitly; avoid also registering it through generated PSI
-save/restore scripts.
+These thresholds determine when the channel error bit and error LED are set.
+They have no separate limit-enable SDO. The familiar “Limit 1/2 + Enable Limit
+1/2” interface belongs to other EL analog terminals. ELM3504 output clamps
+(`:35/:36`) are a separate function and are not configured by this example.
 
-Do not configure the same SDO addresses through static startup downloads, such
-as a motor component's `Cfg.EcAddSdo` calls. A conflicting static download could
-overwrite the restored value during activation; the queued startup path rejects
-that conflict.
+The thresholds are configured through SDOs, rather than output PDOs. The loaded
+input PDOs expose each channel's status through `AI01-Stat` ... `AI04-Stat` and
+the corresponding `-ErrAlrm`, `-UndrLimAlrm` and `-OvrLimAlrm` PVs. Range-status
+indications and the configurable error thresholds are distinct; this example
+checks saved SDO settings, not analog threshold-crossing behavior.
 
-This example has not been exercised against a live IOC or EL7041.
+## First commissioning and save
+
+Start the IOC normally. An absent save file on the first run is expected. With
+no saved requests, the master starts without writing default SDO values. Use
+suitable thresholds for the configured measurement mode and sensor. For example,
+in a client shell, submit both thresholds for all channels:
+
+```sh
+for ch in 01 02 03 04; do
+    caput "MTEST04-EC-ASR:m0s026-SDO-Ch${ch}LowRangeError-Val" -100000
+    caput "MTEST04-EC-ASR:m0s026-SDO-Ch${ch}HighRangeError-Val" 100000
+done
+```
+
+`WRITE_ON_VAL=1` means each value write queues a transfer. It is the only behavior
+option in this example. Without it, `Val` only stages a value and `WrtCmd=1`
+submits the write, preserving the existing interface. `RdCmd=1` requests an
+upload in either case. All scalar SDOs automatically queue requests, verify
+writes and expose a snapshot for autosave; no `QUEUE` or `RESTORE` option is needed.
+
+For every endpoint, wait for `-Bsy` to become zero, check `-ErrId` is zero, and
+check `-Val-RB` equals the requested threshold. A successful `caput` alone does
+not confirm a successful hardware write. Runtime writes remain available; a
+terminal may itself reject settings that cannot be changed in its current state.
+
+The request file saves `-StartupData_`, an internal waveform containing the
+accepted write request and endpoint identity. It does not save command triggers,
+staged `Val` or readback. An untouched endpoint causes no restore write; an
+explicit write of zero is a valid saved request. Wait for autosave to finish and
+inspect `MTEST04-EC-ASR_sdo_set.sav` in the IOC's configured autosave directory
+before stopping. Keep this file for the next run.
+
+## Restart and verify the actual SDOs
+
+1. Restart normally with the saved file. Do not write `Val` or `WrtCmd` again.
+   The startup worker automatically downloads, uploads and verifies the restored
+   requests in PREOP, then permits cyclic operation / OP. This also works when
+   the normal startup order would be ECMC first. There is no manual start command
+   or `SDO_AUTO_START` setting in this example.
+2. Check all eight endpoints for `Bsy=0`, `ErrId=0`, and the expected `Val-RB`.
+3. Request fresh hardware uploads, then wait for completion and check the same
+   readbacks again:
+
+   ```sh
+   for ch in 01 02 03 04; do
+       caput "MTEST04-EC-ASR:m0s026-SDO-Ch${ch}LowRangeError-RdCmd" 1
+       caput "MTEST04-EC-ASR:m0s026-SDO-Ch${ch}HighRangeError-RdCmd" 1
+   done
+   ```
+
+A failed startup write/verification holds activation and reports an error. Fix
+the cause, submit a corrected request if needed, then retry the startup worker
+from the IOC shell with `ecmcStartAppModeAsync(0)`.
+
+The terminal descriptor normally resets its configuration at startup, so this
+restart exercises reapplying the saved settings. To test the no-value case, use
+a separate empty autosave directory/file, write only one endpoint, save and
+restart: only that endpoint should have a restore request. Keep the established
+save file when doing this separate trial.
+
+Do not configure these addresses through static startup SDO downloads as well;
+the queued startup path rejects a conflict that could overwrite restored
+settings. The optional `PREOP_ONLY=1` can restrict a particular endpoint to
+startup writes; it is not required for autosave restoration and is not used here.
+
+The files have been checked locally. No installer, live IOC, or hardware test
+has been run for this example.

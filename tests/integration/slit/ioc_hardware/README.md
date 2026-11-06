@@ -65,7 +65,9 @@ scaling and absolute offset must match the installed rack and mechanics. This
 configuration has been checked offline, not commissioned against physical hardware.
 
 - Internal counter scale: 12800 counts/mm; CSV command scale: 32768 counts per 10 mm/s.
-- TR_LO BiSS: 4096 counts/mm, 26 absolute bits, engineering offset -1380 mm.
+- TR_LO BiSS: 4096 counts/mm, 26 absolute bits, engineering offset -15647.9468 mm.
+  This uses the LO powered readback: previous offset -1380 minus 14267.9468 mm.
+  It establishes a local reference at that measured position, not a limit-switch home.
 - Physical soft limits: -10 to +10 mm; physical motion velocity: 1 mm/s.
 - HI motor: 1000 mA maximum, 500 mA standby, 24 V, coil resistance 1230 mOhm.
 - LO motor: 1000 mA maximum, 500 mA standby, 48 V, coil resistance 1230 mOhm.
@@ -104,3 +106,10 @@ after changing the connection. TR_HI remains on its internal counter.
 The hardware runner profile follows this assignment, including zero referencing,
 encoder-power tests and diagnostics. Full-stroke TR_HI homing is blocked while
 its independent raw travel-feedback channel is attached to LO.
+
+With updated ECMC, relay-controlled encoders are powered and read once during
+initial axis startup, before motion is accepted. The existing warm-up delay,
+ready input and timeout apply. Drives remain disabled unless explicitly
+configured for startup enable. This check retains the absolute coordinate; it
+does not zero the encoder or correct an inherited `absOffset`. An incorrect
+offset must be corrected or referenced with the drive disabled before motion.

@@ -39,6 +39,29 @@ hardware alarms during idle/startup. Once ready, loss of readiness or an encoder
 alarm is a fault. Transport and relay-output errors are not treated as normal
 idle conditions.
 
+## Initial startup read
+
+On initial runtime startup, ECMC powers every encoder configured for relay power
+control once, even when the tracking counter is selected. Power-up starts when
+EtherCAT process data is valid. Axis startup waits for the configured minimum
+warm-up delay, optional ready input and a valid position sample. The existing
+`startupDelay` and `startupTimeout` settings apply; no additional setting or
+asyn parameter is required. A missing ready signal times out and faults the
+axis without enabling the drive. A successful read does not command a move or
+change `autoEnable.atStartup`.
+
+Normal automatic power management resumes after startup. With a configured
+backup, the settled source is referenced into the counter before power-off,
+using the configured idle delay. The initial absolute coordinate remains
+available as the retained readback while the source is off.
+
+This read does not zero or calibrate the absolute encoder. Configure the correct
+absolute offset or explicitly reference the encoder with the drive disabled.
+An absolute coordinate outside the machine's configured travel window may
+therefore expose invalid derived virtual-axis limits during startup instead of
+on the first move. Correct that coordinate reference before accepting motion;
+do not suppress these errors as part of the power check.
+
 ## Configure an encoder
 
 This first implementation supports absolute encoders. Incremental encoders are
@@ -174,8 +197,8 @@ the rejected move; a new request is required. Within the limit, ECMC switches
 feedback and rebases the trajectory/controller before releasing the move. REL
 commands use the fresh absolute coordinate.
 
-The first wake after startup establishes the absolute coordinate; the counter
-has not yet been referenced to it, so a wake mismatch comparison is not available
+The initial startup read establishes the absolute coordinate; the counter
+has not yet been referenced to it, so a mismatch comparison is not available
 until the first completed handover. Motion remains blocked until absolute
 feedback is valid. This is not an absolute-position plausibility check at boot.
 

@@ -1,0 +1,33 @@
+#-  ecmc database for: CD02 EtherCAT Drive (CoE)
+#- Implicit default mapping
+#- source ESI file: /psi.ch/.nfs-server/nfs32.psi.ch/8210_8214/sandst_a/projects/servotronix/Servotronix_CDHD2_PC0_RV0_12C18003_2_38_6C1_20230605.xml
+#- selected slave: type=CD02, product=0x2ec, revision=0x12c18003
+#- selected mapping id: M01 of 1
+#-      ECMC_EC_HWTYPE:     CD02
+#-      ECMC_EC_VENDOR_ID:  0x2
+#-      ECMC_EC_PRODUCT_ID: 0x2ec
+#-      ECMC_EC_REVISION:   0x12c18003
+#-      templates:          db/generic/ecmc_ESI_*.template
+
+file "ecmc_ESI_ai.template" {
+    pattern { REC_NAME, DESC , SRC_NAME, DTYP}
+        {"Drv01-Stat", "Statusword", "driveStatus01", "asynInt32"}
+        {"Drv01-ModesOpDisplay", "Modes of operation display", "modesOpDisplay01", "asynInt32"}
+        {"Drv01-PosAct", "Position actual value", "positionActual01", "asynInt32"}
+        {"Drv01-TrqAct", "Torque actual value", "torqueActual01", "asynInt32"}
+        {"Drv01-ErrCode", "Error code", "errorCode01", "asynInt32"}
+        {"Drv01-BIs", "Digital Inputs", "binaryInputArray01", "asynInt32"}
+        {"Tp01-Stat", "Touch Probe Status", "touchProbeStatus01", "asynInt32"}
+        {"Tp01-Pos", "Touch Probe 1 Position Positive Value", "touchProbePosition01", "asynInt32"}
+        {"Drv01-VelAct", "Velocity Actual Value", "velocityActual01", "asynInt32"}
+}
+
+file "ecmc_ESI_ao.template" {
+    pattern { REC_NAME, DESC , SRC_NAME, DTYP}
+        {"Drv01-Cmd", "Controlword", "driveControl01", "asynInt32"}
+        {"Drv01-ModesOp", "Modes of operation", "modesOp01", "asynInt32"}
+        {"Drv01-PosCmd", "Target position", "positionSetpoint01", "asynInt32"}
+        {"Tp01-Ctrl", "Touch Probe Function", "touchProbeControl01", "asynInt32"}
+        {"Drv01-Spd", "Target velocity", "velocitySetpoint01", "asynInt32"}
+        {"Drv01-Trq", "Target Torque", "torqueSetpoint01", "asynInt32"}
+}

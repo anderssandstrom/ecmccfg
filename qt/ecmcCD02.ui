@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>100</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>CD02</string>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>100</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>100</width>
+    <height>400</height>
+   </size>
+  </property>
+  <widget class="caInclude" name="cainclude">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>100</width>
+     <height>400</height>
+    </rect>
+   </property>
+   <property name="macro">
+    <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string>
+   </property>
+   <property name="filename" stdset="0">
+    <string notr="true">ecmcE_slave_frame_S.ui</string>
+   </property>
+  </widget>
+  <!-- auto-generated for CD02, mapping M01/1, hwtype=CD02 -->
+  <!-- source ESI file: /psi.ch/.nfs-server/nfs32.psi.ch/8210_8214/sandst_a/projects/servotronix/Servotronix_CDHD2_PC0_RV0_12C18003_2_38_6C1_20230605.xml -->
+  <widget class="QTabWidget" name="tabwidget_auto">
+   <property name="geometry">
+    <rect>
+     <x>1</x>
+     <y>118</y>
+     <width>98</width>
+     <height>281</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="tabPage_auto_01">
+    <attribute name="title">
+     <string>DEV</string>
+    </attribute>
+    <widget class="caLabel" name="calabel_auto_01_01">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>6</y>
+       <width>54</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>RXPDO Controlwor</string>
+     </property>
+     <property name="toolTip">
+      <string>Controlword</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="calineedit_auto_01_01">
+     <property name="geometry">
+      <rect>
+       <x>58</x>
+       <y>6</y>
+       <width>36</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Controlword</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-RxPDO-Ctrl</string>
+     </property>
+    </widget>
+    <widget class="caLabel" name="calabel_auto_01_02">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>34</y>
+       <width>54</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>RXPDO Modes of o</string>
+     </property>
+     <property name="toolTip">
+      <string>Modes of operation</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="calineedit_auto_01_02">
+     <property name="geometry">
+      <rect>
+       <x>58</x>
+       <y>34</y>
+       <width>36</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Modes of operation</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-RxPDO-ModesOp</string>
+     </property>
+    </widget>
+    <widget class="caLabel" name="calabel_auto_01_03">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>62</y>
+       <width>54</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>RXPDO Target pos</string>
+     </property>
+     <property name="toolTip">
+      <string>Target position</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="calineedit_auto_01_03">
+     <property name="geometry">
+      <rect>
+       <x>58</x>
+       <y>62</y>
+       <width>36</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Target position</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-RxPDO-TrgPos</string>
+     </property>
+    </widget>
+    <widget class="caLabel" name="calabel_auto_01_04">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>90</y>
+       <width>54</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>RXPDO Touch Prob</string>
+     </property>
+     <property name="toolTip">
+      <string>Touch Probe Function</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="calineedit_auto_01_04">
+     <property name="geometry">
+      <rect>
+       <x>58</x>
+       <y>90</y>
+       <width>36</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Touch Probe Function</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-RxPDO-TouchProbeFunction</string>
+     </property>
+    </widget>
+    <widget class="caLabel" name="calabel_auto_01_05">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>118</y>
+       <width>54</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>RXPDO Target vel</string>
+     </property>
+     <property name="toolTip">
+      <string>Target velocity</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="calineedit_auto_01_05">
+     <property name="geometry">
+      <rect>
+       <x>58</x>
+       <y>118</y>
+       <width>36</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Target velocity</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-RxPDO-TrgVel</string>
+     </property>
+    </widget>
+    <widget class="caLabel" name="calabel_auto_01_06">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>146</y>
+       <width>54</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>RXPDO Target Tor</string>
+     </property>
+     <property name="toolTip">
+      <string>Target Torque</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="calineedit_auto_01_06">
+     <property name="geometry">
+      <rect>
+       <x>58</x>
+       <y>146</y>
+       <width>36</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Target Torque</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-RxPDO-TrgTrq</string>
+     </property>
+    </widget>
+    <widget class="caLabel" name="calabel_auto_01_07">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>174</y>
+       <width>54</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>TXPDO Statusword</string>
+     </property>
+     <property name="toolTip">
+      <string>Statusword</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="calineedit_auto_01_07">
+     <property name="geometry">
+      <rect>
+       <x>58</x>
+       <y>174</y>
+       <width>36</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Statusword</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-TxPDO-Stat</string>
+     </property>
+    </widget>
+    <widget class="caLabel" name="calabel_auto_01_08">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>202</y>
+       <width>54</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>TXPDO Modes of o</string>
+     </property>
+     <property name="toolTip">
+      <string>Modes of operation display</string>
+     </property>
+    </widget>
+    <widget class="caLineEdit" name="calineedit_auto_01_08">
+     <property name="geometry">
+      <rect>
+       <x>58</x>
+       <y>202</y>
+       <width>36</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Modes of operation display</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="channel" stdset="0">
+      <string notr="true">$(IOC):m$(MasterID)s$(SlaveID)-TxPDO-ModesOpDisplay</string>
+     </property>
+    </widget>
+    <widget class="caLabel" name="calabel_auto_more_01">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>230</y>
+       <width>92</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>+7 more PVs</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>caLabel</class>
+   <extends>QLabel</extends>
+   <header>caLabel</header>
+  </customwidget>
+  <customwidget>
+   <class>caInclude</class>
+   <extends>QWidget</extends>
+   <header>caInclude</header>
+  </customwidget>
+  <customwidget>
+   <class>caLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>caLineEdit</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

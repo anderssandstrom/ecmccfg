@@ -1008,3 +1008,69 @@ Homing cleanup verifies each encoder's reference against physical position withi
 position tolerance, matching the SIM IOC atTarget setting. Physical and native
 positions must both satisfy that bound; neither the plant nor encoder references
 are reset to conceal a residual. Post-home move verdicts are unchanged.
+
+
+## Independent soft-limit modes and motor offsets
+
+The `softlimit_modes` simulator module and explicit `softlimits` hardware group
+share six live configuration cases: motor-only limits, ECMC-only limits, nested
+independent limits, synchronization in both directions, OFF/DIR changes, and
+user-limit edits under nonzero OFF with sync enabled. Both physical axes are
+checked. DIR=Pos/Neg and OFF=0/+10/-10 are exercised; these are motor coordinate
+offsets, not physical travel or encoder-reference changes. Live cases require
+positive MRES. The standalone ECMC fixture additionally covers negative MRES
+writes/restoration using real ESS motor source.
+
+From the ecmccfg repository root:
+
+```sh
+python3 tests/integration/slit/run.py --case softlimit_modes
+python3 tests/integration/slit/run.py --case softlimit_modes --prefix SIMSLIT: --run
+python3 tests/integration/slit_hardware/run.py --case softlimits
+python3 tests/integration/slit_hardware/run.py --case softlimits --prefix HWSLIT: --run
+python3 tests/run_simulation_checks.py --pattern test_slit_limit_modes.py
+```
+
+Commands without `--run` only list tests. Hardware `softlimits` is excluded from
+the default motion run because it temporarily disables individual limit layers.
+All new live cases keep drives disabled, hold the state machine, bound temporary
+native ranges inside the saved range, and reject any native-position change.
+They issue no VAL, SET, homing or native execute commands. Original independent
+motor/native pairs, enable flags, DIR/OFF/FOFF and state-machine enable are
+restored and acknowledged. Native values and flags are checked over multiple
+polls while sync is off. Hardware motion guards remain unchanged.
+
+DOC: `user = direction * dial + OFF`, so changing OFF shifts LLM/HLM while
+DLLM/DHLM and ECMC limits stay fixed. USER/INFERRED: no-sync permits independent
+pairs; sync propagates edits. COMPAT: independence does not automatically clamp
+motor fields to a changing ECMC range; nested ranges are explicitly configured.
+The effective motion constraints belong to both layers. Existing simulator
+`limits` cases and standalone ECMC monitor tests exercise motion rejection;
+these new hardware cases establish configuration propagation, not travel into
+or beyond a limit.
+
+An IOC may fail the independent zero-motor-pair case if cached driver read-only
+limits prevent disabling the motor pair. ECMC also currently seeds motor limits
+once during ordinary startup even with sync off; sync-flag-only transitions may
+not publish unchanged numeric limits. These are visible acceptance failures or
+startup caveats, not grounds to substitute observed values or enable sync as a
+cleanup shortcut. Reports distinguish the requested configuration from actual
+readbacks. No live IOC or physical execution is implied by offline test success.
+
+`tests/simulation/test_slit_limit_modes.py` executes the actual simulator and
+hardware case methods at controlled parameter boundaries. Delayed delivery must
+pass; missing propagation, accidental no-sync writes, ignored DIR, incorrect OFF
+application, unavailable zero pairs, dropped enable flags and unintended motion
+must fail. It checks full restoration and forbids movement commands. This is
+harness validation, not a replacement motor/ECMC implementation.
+
+
+Limit-mode waits distinguish the driver setting from motor-record receipt:
+`-CfgSyncSftLim` must agree with the `MF_RW_SOFT_LIMITS` bit in `.MFLG` before
+subsequent edits. No-sync stability is observed for 3.1 seconds to cover nominal
+1 Hz motor polls; convergence retains the existing bounded 15-second simulator
+wait (hardware uses its configured timeout). Failure details include the
+requested pair, actual user/dial/native values, OFF/DIR and `.MFLG`. The general
+simulator snapshot includes `.MFLG` too. Boundary checks now delay flag/limit
+callbacks to 1 Hz and reject a missing record flag separately from missing
+numeric propagation. This changes test observations only; motorECMC is untouched.

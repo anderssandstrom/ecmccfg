@@ -17,7 +17,7 @@ sys.path.insert(0, str(ROOT / 'tests/integration'))
 from slit.plant import Plant, PlantThread
 from slit.rig import Client, Rig
 
-MODULES = ('motion', 'limits', 'enable', 'feedback', 'noise', 'sync', 'brake', 'torque', 'native', 'softlimit_sync', 'homing', 'interfaces', 'motor', 'isolation', 'target_write', 'encoder_power', 'encoder_handover', 'pvt', 'stall', 'coupled_stop', 'concurrent', 'disturbance', 'backlash', 'filters', 'controller', 'monitoring', 'touch_probe', 'position_compare')
+MODULES = ('motion', 'limits', 'enable', 'feedback', 'noise', 'sync', 'brake', 'torque', 'native', 'softlimit_sync', 'softlimit_modes', 'homing', 'interfaces', 'motor', 'isolation', 'target_write', 'encoder_power', 'encoder_handover', 'pvt', 'stall', 'coupled_stop', 'concurrent', 'disturbance', 'backlash', 'filters', 'controller', 'monitoring', 'touch_probe', 'position_compare')
 DEFAULT_REPORT = ROOT / 'test-results/slit/slit-report.json'
 DEFAULT_CONFIG = Path(__file__).resolve().parent / 'ioc'
 

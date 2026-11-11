@@ -205,7 +205,7 @@ By default, the wrapper also loads a matching EPICS record for the item.
 
 ## Runtime SDO Objects
 
-Use `addEcSdoRT.cmd` during startup to configure on-demand access to one EtherCAT SDO. Scalar requests are serialized automatically. Requests made before master activation are applied before the bus starts; runtime requests use the same PVs.
+Use `addEcSdoRT.cmd` during startup to configure on-demand access to one EtherCAT SDO. Scalar requests are serialized automatically. Requests made before master activation are appended to the startup SDO list; runtime requests use the same PVs.
 
 This is useful for:
 
@@ -255,17 +255,33 @@ submit a request. `RdCmd` remains available in both cases.
 Autosave the internal `StartupData_` waveform in **pass 1**, rather than `Val` or
 command triggers. Only an accepted write request creates a valid snapshot:
 staging a manual-mode value does not. An untouched snapshot produces no restore
-write; an explicit zero write is valid. Startup collects restored snapshots,
-serializes PREOP downloads, uploads and compares the actual values, and only
-then allows master activation. A failure holds activation and reports an error.
+write; an explicit zero write is valid. Startup collects restored snapshots and
+appends their writes to EtherLab’s startup SDO list immediately before activation, after component/plugin settings.
+EtherLab applies the list in PREOP: the last successful write to an ordinary SDO
+address wins. Without a saved request, the configured component value applies.
+After the bus reaches OP, SDORT uploads and compares the final hardware values.
+Motion and ordinary PLC execution remain held until verification and normal
+startup readiness checks pass; OP alone does not mean motion is ready. This SDO
+hold also applies with `ECMC_STARTUP_GATE=0`. A failed verification keeps the hold and
+reports an error; correct the cause and restart the IOC.
 Runtime writes and reads remain available by default. `PREOP_ONLY=1` optionally
 restricts writes to before activation; restoration does not require it.
 
-This defers master activation until after EPICS restore, including configurations
-that would otherwise start ECMC first. `STARTUP_GATE` separately controls release
-of motion/PLCs. Array objects retain their existing command behavior and do not
-support this scalar startup-snapshot mechanism. Do not also configure static
-startup downloads for a restored SDO address: those conflicts are rejected.
+Configuring scalar SDORT objects automatically selects EPICS-first startup,
+even with `START_EPICS_FIRST=0`, no saved requests, or `WRITE_ON_VAL=0`. Without
+scalar SDORT objects, the existing startup order remains in effect. See
+[automatic EPICS-first startup]({{< relref "/manual/general_cfg/startup/_index.md#automatic-epics-first-startup-with-scalar-sdort" >}}).
+`ECMC_STARTUP_GATE` separately controls motion readiness; pending startup SDOs
+enforce the verification hold regardless of that setting.
+Array objects retain their existing command behavior and do not
+support this scalar startup-snapshot mechanism. Static `EcAddSdo*` settings from
+ecmccomp can target the same ordinary SDOs: restored writes are appended last.
+Multiple startup requests for one address are verified against its final value.
+PDO mapping/assignment overrides remain rejected.
+Verification waits for the SDO’s own configured slave to reach OP. Unconfigured
+slaves on the same bus may remain PREOP. An in-flight transfer continues to be
+polled if its target leaves OP, so completed errors are processed; new transfers
+wait for that target to become operational again.
 
 The [ELM3504 example](https://github.com/paulscherrerinstitute/ecmccfg/tree/master/examples/PSI/lab_setup/asr)
 shows an IOC-local request file and a save/restart/readback procedure.

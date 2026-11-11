@@ -1,11 +1,14 @@
 # Async SDO queue / autosave handoff
 
-Updated 2026-11-06: the implementation now queues scalar requests automatically
-and registers startup snapshots through addEcSdoRT.cmd. QUEUE and RESTORE flags
-are no longer needed. WRITE_ON_VAL remains optional; manual Val/WrtCmd and
-RdCmd remain available, including runtime writes by default. Empty snapshots
-produce no restore writes. The example uses automatic startup without a
-SDO_AUTO_START setting. The design notes below describe the earlier discussion.
+Updated 2026-11-06: scalar requests queue automatically. After autosave restore,
+accepted writes append to EtherLab's startup list immediately before activation,
+after component/plugin settings. EtherLab applies the list in PREOP: saved values
+win over EcAddSdo defaults. Final readback occurs once the bus reaches OP, with
+motion/PLCs held until verification passes (also with STARTUP_GATE=0). Failures
+keep that hold; fix the cause and restart the IOC. Untouched snapshots append no
+write. Runtime reads/writes retain the existing PV interface; WRITE_ON_VAL is
+optional. No QUEUE, RESTORE or SDO_AUTO_START flags are needed. Mapping/assignment
+overrides remain rejected. The earlier design notes below are historical.
 
 ## User requirements
 

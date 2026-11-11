@@ -2,6 +2,7 @@
 import time
 import unittest
 from .homing import HomingTests, HOMING_NAMES
+from .softlimits import SoftLimitModeTests, SOFT_LIMIT_NAMES
 from slit_recovery import concurrent_physical_moves
 from slit_recovery import StallCases, CoupledStopCases, STALL_NAMES, COUPLED_STOP_NAMES, stall_alarm, stop_blade_during_virtual
 from slit_pvt import PVTInterruptions, PVT_INTERRUPTION_NAMES, run_interrupted_profile
@@ -253,6 +254,7 @@ class ConcurrentTests(unittest.TestCase):
 
 
 GROUPS = {
+    'softlimits': (SoftLimitModeTests, SOFT_LIMIT_NAMES),
     'homing': (HomingTests, HOMING_NAMES),
     'status': (StatusTests, ('test_idle_status_and_kinematics',)),
     'motion': (MotionTests, ('test_physical_lo_both_directions', 'test_physical_hi_both_directions',

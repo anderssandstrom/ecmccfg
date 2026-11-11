@@ -66,8 +66,10 @@ is useful for virtual axes and logic without bus hardware.
    and link them to I/O entries.
 4. `finalize.cmd` / `setAppMode.cmd` validate the configuration and start ECMC
    runtime. `iocInit` initializes EPICS records and completes IOC startup.
-   Their relative order is controlled by
-   [START_EPICS_FIRST](#start-epics-before-ethercat), with motion readiness
+   Their relative order follows
+   [START_EPICS_FIRST](#start-epics-before-ethercat); scalar SDORT objects
+   automatically select EPICS first so autosave can restore before activation.
+   Motion readiness is
    controlled by the [startup gate](#complete-startup-gate).
 
 ## startup.cmd
@@ -98,7 +100,8 @@ startup.cmd takes the following arguments:
  ECMC_STARTUP_GATE = 1/0, default 0. Set explicitly to 1 to hold motion until complete
                      native-axis and loaded motor-record startup.
  START_EPICS_FIRST = 1/0, default 0. Start EPICS records before ECMC runtime
-                     and EtherCAT when set to 1.
+                     and EtherCAT when set to 1. Scalar SDORT objects also
+                     select this order automatically, even when this is 0.
 
  [set by module]
  ECMC_CONFIG_ROOT       = root directory of ${MODULE}
@@ -149,8 +152,16 @@ require ecmccfg "ECMC_ASYN_TRACE_MASK=0x41"
 
 ## Start EPICS before EtherCAT
 
-The default, `START_EPICS_FIRST=0`, preserves the traditional startup order:
-ECMC enters runtime and starts EtherCAT before `iocInit` completes.
+Without scalar SDORT objects, the default, `START_EPICS_FIRST=0`, preserves the
+traditional startup order: ECMC enters runtime and starts EtherCAT before
+`iocInit` completes. Configuring scalar SDORT objects automatically selects
+EPICS first, as described below.
+
+| Scalar SDORT objects configured | `START_EPICS_FIRST` | Effective order |
+| --- | --- | --- |
+| No | `0` (default) | ECMC/EtherCAT first |
+| No | `1` | EPICS first |
+| Yes | `0` or `1` | EPICS first, automatically |
 
 Set `START_EPICS_FIRST=1` when EPICS records must be initialized before ECMC
 runtime and EtherCAT start:
@@ -183,6 +194,37 @@ PLCs can use `epics_get_started()`, `ec_get_started()`, and
 `system_get_started()` to inspect startup readiness. See
 [PLC functions]({{< relref "/manual/plc_cfg/functions.md" >}}).
 
+### Automatic EPICS-first startup with scalar SDORT
+
+Loading a scalar SDO through `addEcSdoRT.cmd` (`BYTE_SIZE` omitted or `0`)
+automatically defers ECMC runtime and master activation until after EPICS
+initialization. This applies even when no saved value exists or
+`WRITE_ON_VAL=0`. There is no separate startup mode or additional flag to select.
+Static `EcAddSdo*` settings alone and byte-array SDORT objects do not trigger
+this automatic ordering.
+
+The sequence is:
+
+1. Configure hardware, component defaults and SDORT objects; load EPICS records.
+2. Initialize EPICS and restore saved `StartupData_` waveforms in autosave pass 1.
+   The driver collects valid saved requests through its initialization hook.
+3. After the IOC is running, the startup worker starts ECMC. Restored writes are
+   appended last to EtherLab's startup SDO list, overriding component defaults.
+   An untouched SDO appends no write, so its configured default applies.
+4. EtherLab applies the startup list in PREOP. Once each SDO's own slave reaches
+   OP, SDORT uploads and verifies its final value. Other, unconfigured slaves
+   may remain PREOP.
+5. Release motion and ordinary PLC execution after verification and startup
+   readiness checks pass. A verification failure keeps them held.
+
+`ECMC_STARTUP_GATE` controls motion readiness; it does not select which starts
+first. Pending startup SDOs enforce the verification/readiness hold even with
+`ECMC_STARTUP_GATE=0`. With no pending SDOs, setting it to `1` still enables the
+general axis/motor-record startup gate described below.
+
+See [scalar SDO startup restore]({{< relref "/manual/general_cfg/ethercat/ethercat_advanced.md#scalar-startup-restore" >}})
+for the request file, manual `Val`/`WrtCmd` interface and `WRITE_ON_VAL` option.
+
 ## Complete startup gate
 
 Set `ECMC_STARTUP_GATE=1` before `setAppMode.cmd`/`finalize.cmd` runs. With
@@ -196,7 +238,8 @@ drives stay disabled, and early execute/enable commands are rejected. STOP,
 disable, coordinate loading and status polling remain available. The dedicated
 safety plugin and bus I/O continue; configuration/enter-RT initialization hooks
 still prepare runtime, with their supported motion requests held as well.
-Gate `0` explicitly selects legacy startup.
+Gate `0` selects legacy startup when there are no pending startup SDOs; pending
+SDO verification still enforces the startup hold.
 
 See [motor position and soft-limit autosave]({{< relref "/manual/motion_cfg/autosave.md" >}})
 for the restore configuration and the narrow startup COMM-alarm workaround.

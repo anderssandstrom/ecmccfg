@@ -130,6 +130,8 @@ class SdoStartupTests(unittest.TestCase):
         expected = []
         calls = re.findall(r'addEcSdoRT.cmd "([^"]+)"', startup)
         self.assertEqual(len(calls), 8)
+        defaults = re.findall(r'Cfg\.EcAddSdoDT\((26,0x[0-9A-F]+,0x3[23],-?\d+,S32)\)', startup)
+        self.assertEqual(len(defaults), 8)
         for params in calls:
             args = dict(item.split('=', 1) for item in params.split(','))
             channel = int(args['NAME'][2:4])
@@ -137,6 +139,8 @@ class SdoStartupTests(unittest.TestCase):
             self.assertEqual(int(args['SUBINDEX'], 16), 0x32 if 'Low' in args['NAME'] else 0x33)
             self.assertEqual(args['SLAVE_ID'], '26')
             self.assertEqual(args['DT'], 'S32')
+            baseline = '-8388608' if 'Low' in args['NAME'] else '8388607'
+            self.assertIn(f"26,{args['INDEX']},{args['SUBINDEX']},{baseline},S32", defaults)
             Loader(**args)
             expected.append(f"MTEST04-EC-ASR:m0s026-SDO-{args['NAME']}-StartupData_")
         self.assertCountEqual(saved, expected)

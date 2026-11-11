@@ -118,7 +118,7 @@ class Rig:
                            '-CfgSyncSftLim', '.DLLM', '.DHLM', '.LLM', '.HLM', '.VAL', '.RBV', '.DVAL',
                            '.SPDB', '.MRES', '.RDBD', '.BDST',
                            '-Blocked', '-InStartup', '-StartupHeld', '-StartupMotorReady', '-StartupLimitsReady',
-                           '.DMOV', '.MOVN', '.MSTA', '.LVIO', '.STAT', '.SEVR', '.PACT', '.MIP', '.SYNC'):
+                           '.DMOV', '.MOVN', '.MSTA', '.MFLG', '.LVIO', '.STAT', '.SEVR', '.PACT', '.MIP', '.SYNC'):
                 try: result[axis][suffix] = float(self.get(axis, suffix))
                 except Exception as error: result[axis][suffix] = str(error)
             if 'brake' in self.profile['physical'].get(axis, {}):

@@ -11,9 +11,9 @@
 
 file "ecmc_ESI_ai.template" {
     pattern { REC_NAME, DESC , SRC_NAME, DTYP}
-        {"Drv01-Stat", "Statusword", "driveStatus01", "asynInt32"}
+#        {"Drv01-Stat", "Statusword", "driveStatus01", "asynInt32"}
         {"Drv01-ModesOpDisplay", "Modes of operation display", "modesOpDisplay01", "asynInt32"}
-        {"Drv01-PosAct", "Position actual value", "positionActual01", "asynInt32"}
+#        {"Drv01-PosAct", "Position actual value", "positionActual01", "asynInt32"}
         {"Drv01-TrqAct", "Torque actual value", "torqueActual01", "asynInt32"}
         {"Drv01-ErrCode", "Error code", "errorCode01", "asynInt32"}
         {"Drv01-BIs", "Digital Inputs", "binaryInputArray01", "asynInt32"}
@@ -24,10 +24,16 @@ file "ecmc_ESI_ai.template" {
 
 file "ecmc_ESI_ao.template" {
     pattern { REC_NAME, DESC , SRC_NAME, DTYP}
-        {"Drv01-Cmd", "Controlword", "driveControl01", "asynInt32"}
+#        {"Drv01-Cmd", "Controlword", "driveControl01", "asynInt32"}
         {"Drv01-ModesOp", "Modes of operation", "modesOp01", "asynInt32"}
         {"Drv01-PosCmd", "Target position", "positionSetpoint01", "asynInt32"}
         {"Tp01-Ctrl", "Touch Probe Function", "touchProbeControl01", "asynInt32"}
-        {"Drv01-Spd", "Target velocity", "velocitySetpoint01", "asynInt32"}
+#        {"Drv01-Spd", "Target velocity", "velocitySetpoint01", "asynInt32"}
         {"Drv01-Trq", "Target Torque", "torqueSetpoint01", "asynInt32"}
+}
+
+file "ecmcEL72XX_DRV.template"
+{
+  pattern {CH_ID}
+          {01   }
 }

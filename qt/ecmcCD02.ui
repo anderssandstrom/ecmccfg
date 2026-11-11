@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>Form</class>
  <widget class="QWidget" name="Form">
@@ -25,17 +25,11 @@
    <property name="macro">
     <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID)</string>
    </property>
-   <property name="filename">
+   <property name="filename" stdset="0">
     <string>ecmcE_slave_frame.ui</string>
    </property>
   </widget>
   <widget class="caInclude" name="channel1">
-   <property name="macro">
-    <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=01,CfgSuffix=,ChannelTitle=</string>
-   </property>
-   <property name="filename">
-    <string>ecmcCD02_channel.ui</string>
-   </property>
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -44,30 +38,11 @@
      <height>365</height>
     </rect>
    </property>
-  </widget>
-  <widget class="caShellCommand" name="hardwareDiagnostics">
-   <property name="geometry">
-    <rect>
-     <x>5</x>
-     <y>5</y>
-     <width>26</width>
-     <height>18</height>
-    </rect>
+   <property name="macro">
+    <string>IOC=$(IOC),MasterID=$(MasterID),SlaveID=$(SlaveID),ChID=01,CfgSuffix=,ChannelTitle=</string>
    </property>
-   <property name="label">
-    <string notr="true">HW</string>
-   </property>
-   <property name="labels">
-    <string>Read hardware diagnostic buffer</string>
-   </property>
-   <property name="files">
-    <string>bash /ioc/modules/qt/ecmcOpenObject.sh</string>
-   </property>
-   <property name="args">
-    <string>OPEN_EC_TOOL_HW_DIAG_MAIN $(IOC) $(MasterID) $(SlaveID)</string>
-   </property>
-   <property name="toolTip">
-    <string>Open EtherCAT tool and read this drive's hardware diagnostic buffer.</string>
+   <property name="filename" stdset="0">
+    <string>ecmcCD02_channel.ui</string>
    </property>
   </widget>
  </widget>
@@ -77,12 +52,7 @@
    <extends>QWidget</extends>
    <header>caInclude</header>
   </customwidget>
-  <customwidget>
-   <class>caShellCommand</class>
-   <extends>QWidget</extends>
-   <header>caShellCommand</header>
-  </customwidget>
  </customwidgets>
- <resources />
- <connections />
+ <resources/>
+ <connections/>
 </ui>

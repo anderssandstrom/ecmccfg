@@ -40,16 +40,7 @@ record(motor,"$(PREFIX)$(MOTOR_NAME)"){
 }
 
 # The message text
-record(stringin, "$(PREFIX)$(MOTOR_NAME)-MsgTxt") {
-    field(DTYP, "asynOctetRead")
-    field(INP, "@asyn($(MOTOR_PORT),$(AXIS_NO))MOTOR_MESSAGE_TEXT")
-    field(SCAN, "I/O Intr")
-		info(Q:group, {
-			"${PREFIX}axis${AXIS_NO}": {
-				"MsgTxt": {+channel:"VAL"}
-			}
-		})
-}
+
 
 # Debug message in IOC log
 record(stringout, "$(PREFIX)$(MOTOR_NAME)-DbgStrToLOG") {

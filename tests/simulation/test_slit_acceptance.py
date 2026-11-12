@@ -71,7 +71,11 @@ assert feedback.position == 11200 and raw == 5656064
 assert DEFAULT_REPORT == ROOT / 'test-results/slit/slit-report.json'
 suite = make_suite(None, ('open', 'closed'), MODULES)
 tests = list(suite)
-assert len(tests) == 398
+assert len(tests) == 400
+ignored_cases = [test for test in tests
+                 if test.id().endswith('test_ignore_disabled_motion_commands')]
+assert len(ignored_cases) == 2
+assert {test.loop for test in ignored_cases} == {'open', 'closed'}
 assert {test.loop for test in tests} == {'open', 'closed'}
 assert all(test.rig is None for test in tests)
 assert len(list(make_suite(None, ('closed',), ('limits',)))) == 10
@@ -82,7 +86,7 @@ assert len(list(make_suite(None, ('closed',), ('noise',)))) == 2
 assert len(list(make_suite(None, ('closed',), ('torque',)))) == 3
 assert len(list(make_suite(None, ('closed',), ('native',)))) == 5
 assert len(list(make_suite(None, ('closed',), ('softlimit_sync',)))) == 3
-assert len(list(make_suite(None, ('closed',), ('homing',)))) == 44
+assert len(list(make_suite(None, ('closed',), ('homing',)))) == 45
 
 assert len(list(make_suite(None, ('closed',), ('interfaces',)))) == 5
 assert len(list(make_suite(None, ('closed',), ('motor',)))) == 4

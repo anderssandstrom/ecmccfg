@@ -94,7 +94,7 @@ softlimits:
 monitoring:
   lag:
     enable: true
-    tolerance: 0.05
+    tolerance: 0.04
     time: 100
   target:
     enable: true

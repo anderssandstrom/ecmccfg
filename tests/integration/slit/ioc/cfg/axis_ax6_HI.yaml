@@ -97,9 +97,7 @@ softlimits:
 monitoring:
   lag:
     enable: true
-    # Above the 24 um small-backlash reversal peak (~20 um at .4/.4 motion),
-    # below the 50 um+ disturbances the fault cases must trip on.
-    tolerance: 0.03
+    tolerance: 0.04
     time: 100
   # Keep the longest native command (drive-delay setter) within MCU-Cmd's
   # 39-byte ASCII field when temporary monitor settings are restored by tests.

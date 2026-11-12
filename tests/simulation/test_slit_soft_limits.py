@@ -138,3 +138,108 @@ assert rig.recoveries == 2
 assert [target for target in rig.requests if abs(target) > 1] == [1.2, -1.2]
 assert rig.requests[-1] == 0 and rig.position == 0
 print('Controller soft-limit recovery: replace rejected target and clear execute before re-enabling; both directions tested.')
+
+
+class SingleSidedRig:
+    """ecmc enforces each enabled soft limit independently of the other flag.
+
+    A zero limit value is a real boundary while its flag is set; the motor
+    record's 0,0-disable convention does not apply to the ecmc enable flags.
+    """
+    profile = {'physical': {'TR_LO': {}, 'TR_HI': {}}}
+    STAGING = ('-MtnCmd', '-MtnCmdData', '-TgtVelCmd')
+
+    def __init__(self, defect=None):
+        self.defect = defect
+        self.trace, self.moved, self.target = [], [], {}
+        self.values = {axis: {'-CfgDLLM-RB': -1., '-CfgDHLM-RB': 1.,
+                              '-SftLimBwdEna-RB': 1, '-SftLimFwdEna-RB': 1,
+                              '-PosAct': 0., '-PosSet': 0., '-Busy': 0, '-ErrId': 0,
+                              '-WrnId': 0, '-SftLimFwdIlock': 0, '-SftLimBwdIlock': 0,
+                              '-EnaAct': 0, '.LVIO': 0}
+                       for axis in self.profile['physical']}
+
+    def get(self, axis, suffix): return self.values[axis][suffix]
+
+    def put(self, axis, suffix, value):
+        values = self.values[axis]
+        if suffix == '-CfgDLLM': values['-CfgDLLM-RB'] = float(value)
+        elif suffix == '-CfgDHLM': values['-CfgDHLM-RB'] = float(value)
+        elif suffix == '-SftLimBwdEna': values['-SftLimBwdEna-RB'] = int(value)
+        elif suffix == '-SftLimFwdEna': values['-SftLimFwdEna-RB'] = int(value)
+        elif suffix == '-EnaCmd': values['-EnaAct'] = int(value)
+        elif suffix == '-TgtPosCmd': self.target[axis] = float(value)
+        elif suffix == '-ExeCmd':
+            if value: self.execute(axis)
+        elif suffix not in self.STAGING:
+            raise AssertionError('unexpected write ' + suffix)
+
+    def execute(self, axis):
+        values = self.values[axis]
+        target = self.target[axis]
+        low, high = values['-CfgDLLM-RB'], values['-CfgDHLM-RB']
+        bwd, fwd = values['-SftLimBwdEna-RB'], values['-SftLimFwdEna-RB']
+        if self.defect == 'zero_means_disabled':
+            bwd, fwd = (bwd and low != 0), (fwd and high != 0)
+        elif self.defect == 'disabled_still_limits':
+            bwd = fwd = 1
+        blocked_low = bool(bwd) and target < low
+        blocked_high = bool(fwd) and target > high
+        if blocked_low or blocked_high:
+            values['-SftLimBwdIlock'] = int(blocked_low)
+            values['-SftLimFwdIlock'] = int(blocked_high)
+            values['-WrnId'] = 0x114D01 if blocked_low else 0x114D00
+            return
+        values['-SftLimBwdIlock'] = values['-SftLimFwdIlock'] = 0
+        values['-WrnId'] = 0
+        values['-PosAct'] = values['-PosSet'] = target
+        self.moved.append((axis, target))
+
+    def wait(self, predicate, description, timeout=15):
+        assert predicate(), description
+
+    def stop_all(self): return []
+
+    def reset(self):
+        for values in self.values.values():
+            values['-WrnId'] = values['-SftLimFwdIlock'] = values['-SftLimBwdIlock'] = 0
+
+    def _drive_stationary(self, axis): return True
+
+    def snapshot(self): return {axis: dict(values) for axis, values in self.values.items()}
+
+
+def run_single_sided(method, defect=None):
+    rig = SingleSidedRig(defect)
+    case = LimitTests(method)
+    case.rig = rig
+    getattr(case, method)()
+    assert case.doCleanups()
+    for axis in rig.profile['physical']:
+        values = rig.values[axis]
+        assert values['-CfgDLLM-RB'] == -1. and values['-CfgDHLM-RB'] == 1.
+        assert values['-SftLimBwdEna-RB'] == values['-SftLimFwdEna-RB'] == 1
+        assert values['-PosAct'] == values['-PosSet'] == 0.
+    return rig
+
+
+method = 'test_single_sided_softlimit_low_enabled_at_zero'
+rig = run_single_sided(method)
+# Each axis: setup move, rejected zero-boundary crossing, unbounded move, return.
+assert rig.moved == [('TR_LO', .1), ('TR_LO', .5), ('TR_LO', 0.),
+                     ('TR_HI', .1), ('TR_HI', .5), ('TR_HI', 0.)]
+method = 'test_single_sided_softlimit_high_enabled_at_zero'
+rig = run_single_sided(method)
+assert rig.moved == [('TR_LO', -.1), ('TR_LO', -.5), ('TR_LO', 0.),
+                     ('TR_HI', -.1), ('TR_HI', -.5), ('TR_HI', 0.)]
+print('Single-sided soft limits: enabled zero boundary rejects the crossing target, disabled side travels past its value.')
+
+# An enabled zero limit that ecmc treated as "off" would move into the rejected target.
+for method, defect in (('test_single_sided_softlimit_low_enabled_at_zero', 'zero_means_disabled'),
+                       ('test_single_sided_softlimit_high_enabled_at_zero', 'zero_means_disabled'),
+                       ('test_single_sided_softlimit_low_enabled_at_zero', 'disabled_still_limits'),
+                       ('test_single_sided_softlimit_high_enabled_at_zero', 'disabled_still_limits')):
+    try: run_single_sided(method, defect)
+    except AssertionError: pass
+    else: raise AssertionError('case must reject single-sided defect ' + defect)
+print('Single-sided defect controls: zero-treated-as-off and disabled-still-limiting both fail.')

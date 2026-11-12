@@ -201,3 +201,99 @@ class LimitTests(SlitCase):
             self.assertEqual(self.rig.stop_all(), [], 'stop after controller soft-limit request')
             self.rig.reset()
             valid_move(0)
+
+    # -- Single-sided enabled soft limits (ecmc enables each direction
+    #    independently; the motor record can only disable both with a 0,0 pair) --
+
+    def _native_request(self, axis, target):
+        # ABS request through the axis PVs, bypassing the motor record's target
+        # validation so the ecmc enable flags are the only limit authority.
+        self.rig.put(axis, '-MtnCmd', 3)
+        self.rig.put(axis, '-MtnCmdData', 0)
+        self.rig.put(axis, '-TgtPosCmd', target)
+        self.rig.put(axis, '-TgtVelCmd', .4)
+        self.rig.put(axis, '-ExeCmd', 0)
+        self.rig.put(axis, '-EnaCmd', 1)
+        self.rig.wait(lambda: self.rig.get(axis, '-EnaAct') == 1, 'enable before axis-PV request', 5)
+        self.rig.put(axis, '-ExeCmd', 1)
+
+    def _native_reaches(self, axis, target, timeout=8):
+        def arrived():
+            self.assertEqual(self.rig.get(axis, '-ErrId'), 0, 'in-range axis-PV command faulted')
+            return abs(self.rig.get(axis, '-PosAct') - target) < .015 and self.rig.get(axis, '-Busy') == 0
+        self.rig.wait(arrived, f'in-range axis-PV command reaches {target}', timeout)
+
+    def _softlimit_original(self, axis):
+        return (self.rig.get(axis, '-CfgDLLM-RB'), self.rig.get(axis, '-CfgDHLM-RB'),
+                int(self.rig.get(axis, '-SftLimBwdEna-RB')), int(self.rig.get(axis, '-SftLimFwdEna-RB')))
+
+    def _restore_softlimit(self, axis, original):
+        low, high, bwd, fwd = original
+        self.rig.put(axis, '-CfgDLLM', low)
+        self.rig.put(axis, '-CfgDHLM', high)
+        self.rig.put(axis, '-SftLimBwdEna', bwd)
+        self.rig.put(axis, '-SftLimFwdEna', fwd)
+        self.rig.wait(lambda: abs(self.rig.get(axis, '-CfgDLLM-RB') - low) < 1e-6
+                      and abs(self.rig.get(axis, '-CfgDHLM-RB') - high) < 1e-6
+                      and self.rig.get(axis, '-SftLimBwdEna-RB') == bwd
+                      and self.rig.get(axis, '-SftLimFwdEna-RB') == fwd,
+                      'original soft-limit values and enable flags restored', 5)
+
+    def _single_sided_softlimit(self, axis, enable_low, low_value, high_value,
+                                setup_target, blocked_target, unbounded_target):
+        self.addCleanup(self._restore_softlimit, axis, self._softlimit_original(axis))
+        # Start on the allowed side so the enabled zero boundary is not reached
+        # while the limits are (re)configured; the original enabled pair allows it.
+        self._native_request(axis, setup_target)
+        self._native_reaches(axis, setup_target)
+        # Stage the ecmc pair with the enabled side exactly at zero.
+        self.rig.put(axis, '-CfgDLLM', low_value)
+        self.rig.put(axis, '-CfgDHLM', high_value)
+        self.rig.wait(lambda: abs(self.rig.get(axis, '-CfgDLLM-RB') - low_value) < 1e-6
+                      and abs(self.rig.get(axis, '-CfgDHLM-RB') - high_value) < 1e-6,
+                      'single-sided soft-limit values staged', 5)
+        # Enable exactly one direction: ecmc switches each side independently.
+        self.rig.put(axis, '-SftLimBwdEna', 1 if enable_low else 0)
+        self.rig.put(axis, '-SftLimFwdEna', 0 if enable_low else 1)
+        self.rig.wait(lambda: self.rig.get(axis, '-SftLimBwdEna-RB') == (1 if enable_low else 0)
+                      and self.rig.get(axis, '-SftLimFwdEna-RB') == (0 if enable_low else 1),
+                      'exactly one soft-limit direction enabled', 5)
+        self.rig.wait(lambda: self.rig.get(axis, '-WrnId') not in (0x114D00, 0x114D01)
+                      and not self.rig.get(axis, '-SftLimFwdIlock')
+                      and not self.rig.get(axis, '-SftLimBwdIlock'), 'previous soft-limit diagnostics clear', 3)
+        # A target across the enabled zero boundary must be rejected without travel.
+        self._native_request(axis, blocked_target)
+        interlock = '-SftLimBwdIlock' if enable_low else '-SftLimFwdIlock'
+        def stopped_at_limit():
+            sample = {'position': self.rig.get(axis, '-PosAct'), 'setpoint': self.rig.get(axis, '-PosSet'),
+                      'error': self.rig.get(axis, '-ErrId'), 'warning': self.rig.get(axis, '-WrnId'),
+                      'interlock': self.rig.get(axis, interlock), 'busy': self.rig.get(axis, '-Busy'),
+                      'stationary': self.rig._drive_stationary(axis)}
+            return controller_soft_limit_stopped(sample, not enable_low, low_value, high_value)
+        try:
+            self.rig.wait(stopped_at_limit, 'enabled zero soft-limit rejects the crossing target', 8)
+            self.assertEqual(self.rig.get(axis, '.LVIO'), 0,
+                             'single-sided test must not rely on motor-record rejection')
+        finally:
+            self.rig.trace.append({'action': 'single-sided zero soft-limit rejection', 'axis': axis,
+                                   'target': blocked_target, 'snapshot': self.rig.snapshot()})
+        self.assertEqual(self.rig.stop_all(), [], 'stop after single-sided soft-limit request')
+        self.rig.reset()
+        # The disabled direction is unbounded: a target beyond its (stale) value travels.
+        self._native_request(axis, unbounded_target)
+        self._native_reaches(axis, unbounded_target, timeout=10)
+        self._native_request(axis, 0)
+        self._native_reaches(axis, 0, timeout=10)
+
+    def test_single_sided_softlimit_low_enabled_at_zero(self):
+        # Low limit enabled at exactly 0, high limit disabled: a zero boundary is
+        # still enforced, and the disabled high side travels past its value.
+        for axis in self.rig.profile['physical']:
+            self._single_sided_softlimit(axis, enable_low=True, low_value=0, high_value=.2,
+                                         setup_target=.1, blocked_target=-.15, unbounded_target=.5)
+
+    def test_single_sided_softlimit_high_enabled_at_zero(self):
+        # High limit enabled at exactly 0, low limit disabled: symmetric coverage.
+        for axis in self.rig.profile['physical']:
+            self._single_sided_softlimit(axis, enable_low=False, low_value=-.2, high_value=0,
+                                         setup_target=-.1, blocked_target=.15, unbounded_target=-.5)

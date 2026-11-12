@@ -118,7 +118,7 @@ trips require their specific error code and verify reset does not replay motion.
 | Module | Coverage |
 | --- | --- |
 | `cases/motion.py` | Both physical axes, positive/negative moves, forward kinematics, stop during motion, native 16-bit encoder wrap in both directions |
-| `cases/limits.py` | Forward/backward hardware switches during motion, escape with switch held, bouncing inputs without automatic restart, motor-record soft-limit rejection, controller soft-limit boundary through axis PVs |
+| `cases/limits.py` | Forward/backward hardware switches during motion, escape with switch held, bouncing inputs without automatic restart, motor-record soft-limit rejection, controller soft-limit boundary through axis PVs, single-sided enabled soft limits with the enabled boundary exactly at zero (disabled direction travels past its value) |
 | `cases/enable.py` | Missing enable acknowledgement, lost enabled feedback during motion, drive fault |
 | `cases/feedback.py` | Primary encoder not-ready at idle/during motion, readiness recovery without automatic restart, unready secondary isolation, frozen EL5042 following error, independent LO move while HI feedback is invalid |
 | `cases/encoder_handover.py` | Two-encoder handover with live counter feedback while absolute power is off, repeated wake-up, positive/negative mismatch rejection without replay, and ready timeout; closed-loop fixture only |
@@ -166,7 +166,7 @@ can reject an ignored enable flag, live repeated-event auto-rearm, behavioral
 inner-I/D and outer-D tests, and successful position-compare pulses once a native
 SIM sample-clock provider is available.
 
-There are 382 planned test executions with both loop modes selected. Primary
+There are 386 planned test executions with both loop modes selected. Primary
 EL5042 not-ready checks are explicitly skipped in open-loop mode. Every case
 uses `Rig.prepare()` to clear injected faults, stop/disable axes, reset errors,
 select encoder/gains and return the blades to zero. Teardown clears fault
@@ -241,6 +241,16 @@ value may leave LVIO unchanged (see the
 [motor-record target/limit logic](https://github.com/epics-modules/motor/blob/master/motorApp/MotorSrc/motorRecord.cc)).
 The test never writes LVIO directly. It verifies that each invalid request sets
 LVIO without moving, and restores the original limits afterward.
+
+The single-sided soft-limit cases stage an ecmc limit pair with the enabled
+boundary exactly at zero and enable only that direction: the motor record can
+only disable both limits with a `0,0` pair, while ecmc switches each direction
+independently through `-SftLimBwdEna`/`-SftLimFwdEna`. Each case first moves to
+the allowed side, then requires a target crossing the enabled zero boundary to
+be rejected with the direction-specific warning/interlock and no motor-record
+LVIO, and a target beyond the *disabled* direction's value to travel anyway.
+Both physical axes and both directions are covered; original values and flags
+are restored in cleanup.
 
 ## Brake outputs
 
@@ -509,7 +519,7 @@ are restored.
 21/22 skip in open-loop mode because that mode's primary incremental encoder
 has no absolute bits. Encoder-not-ready abort cases also skip there. Thus the
 homing module alone plans 88 cases across both modes with 6 expected skips;
-the complete suite now plans 382 cases, including mode-specific skips.
+the complete suite now plans 386 cases, including mode-specific skips.
 Mode-specific skips are decided before setup writes or cleanup registration.
 Index-latch 11/12 and external-drive 26 require additional hardware handshakes
 and are not claimed as covered by the current slit plant.
@@ -590,7 +600,7 @@ python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case homing
 ```
 
 The interface cases use existing IOC records. The current full suite plans
-382 executions, including mode-specific skips, and uses the schema-4 fixture
+386 executions, including mode-specific skips, and uses the schema-4 fixture
 described under encoder supply relay tests below.
 
 
@@ -685,7 +695,7 @@ and a fresh coordinated move are checked afterward; jog settings are restored.
 Rejection of blocked commands may report write errors at the requested record;
 that must not become a latched controller error on the virtual or physical axes.
 
-The complete default plan is 382 executions, including mode-specific skips.
+The complete default plan is 386 executions, including mode-specific skips.
 The isolation cases themselves are Python-only; the current default fixture
 also includes the encoder relay links described below.
 
@@ -880,7 +890,7 @@ python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case pvt
 ```
 
 LO and HI Build/Execute/Readback cases, with and without triggers, run in each
-open/closed loop: 32 live cases within the current 382-execution complete plan. The existing
+open/closed loop: 32 live cases within the current 386-execution complete plan. The existing
 controller finalization configures the shared PVT records automatically.
 
 The cases use the real asyn PVT controller and the external plant's measured
@@ -945,7 +955,7 @@ not independent measurements of electrical or mechanical safety performance.
 
 ### Stall, coordinated STOP, disturbances and mechanical backlash
 
-The complete plan now contains **382 executions** across open and closed loop;
+The complete plan now contains **386 executions** across open and closed loop;
 mode-specific skips remain visible in the report. The added groups are:
 
 | Group | Cases per loop | Checks |

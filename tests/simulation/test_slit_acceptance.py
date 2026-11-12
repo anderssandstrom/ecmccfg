@@ -71,10 +71,10 @@ assert feedback.position == 11200 and raw == 5656064
 assert DEFAULT_REPORT == ROOT / 'test-results/slit/slit-report.json'
 suite = make_suite(None, ('open', 'closed'), MODULES)
 tests = list(suite)
-assert len(tests) == 394
+assert len(tests) == 398
 assert {test.loop for test in tests} == {'open', 'closed'}
 assert all(test.rig is None for test in tests)
-assert len(list(make_suite(None, ('closed',), ('limits',)))) == 8
+assert len(list(make_suite(None, ('closed',), ('limits',)))) == 10
 assert len(list(make_suite(None, ('closed',), ('enable',)))) == 3
 assert len(list(make_suite(None, ('closed',), ('brake',)))) == 8
 assert len(list(make_suite(None, ('closed',), ('feedback',)))) == 6

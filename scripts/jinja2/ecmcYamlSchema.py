@@ -139,13 +139,13 @@ class Schema:
             'type': {'type': 'integer', 'allowed': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 21, 22, 25, 26]},
             'position': {'oneof': [
                 {'type': 'float'},
-                {'type': 'string', 'regex': '^\$(\{|\()\w*(=\d*(\.\d*)?)?(\}|\))$'}
+                {'type': 'string', 'regex': r'^\$(\{|\()\w*(=\d*(\.\d*)?)?(\}|\))$'}
             ]
             },
             'postMoveEnable': {'type': 'boolean'},
             'postMovePosition': {'oneof': [
                 {'type': 'float'},
-                {'type': 'string', 'regex': '^\$(\{|\()\w*(=\d*(\.\d*)?)?(\}|\))$'}
+                {'type': 'string', 'regex': r'^\$(\{|\()\w*(=\d*(\.\d*)?)?(\}|\))$'}
             ]
             },
             'latchCount': {'type': 'integer', 'min': 0},
@@ -173,7 +173,7 @@ class Schema:
         'schema': {
             'id': {'oneof': [
                 {'type': 'integer'},
-                {'type': 'string', 'regex': '^\$(\{|\()\w*(=\d*)?(\}|\))$'}
+                {'type': 'string', 'regex': r'^\$(\{|\()\w*(=\d*)?(\}|\))$'}
             ]
             },
             'type': {'type': 'integer', 'default': 'joint',
@@ -313,7 +313,7 @@ class Schema:
             'source': {'type': 'integer', 'allowed': [0, 1], 'default': 0},
             'numerator': {'oneof': [
                 {'type': 'float'},
-                {'type': 'string', 'regex': '^\$(\{|\()\w*(=\d*(\.\d*)?)?(\}|\))$'}
+                {'type': 'string', 'regex': r'^\$(\{|\()\w*(=\d*(\.\d*)?)?(\}|\))$'}
                 ], 'default': 0.0
             },
             'denominator': {'type': 'integer', 'default': 1, 'min': 1},
@@ -323,7 +323,7 @@ class Schema:
             'absBits': {'type': 'integer', 'min': 0, 'max': 64, 'default': 25},
             'absOffset': {'oneof': [
                 {'type': 'float'},
-                {'type': 'string', 'regex': '^\$(\{|\()\w*(=\d*(\.\d*)?)?(\}|\))$'}
+                {'type': 'string', 'regex': r'^\$(\{|\()\w*(=\d*(\.\d*)?)?(\}|\))$'}
                 ], 'default': 0.0
             },
             'lookuptable': {

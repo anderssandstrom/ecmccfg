@@ -48,6 +48,13 @@ from slit.cases.backlash import BacklashTests
 
 
 def physical_fault_case(errors):
+    lag = {'tolerance': .04}
+    def text_command(command, query=False):
+        if query:
+            assert command == 'GetAxisMonPosLagTol(6)'
+            return lag['tolerance']
+        assert command.startswith('Cfg.SetAxisMonPosLagTol(6,')
+        lag['tolerance'] = float(command.split(',')[1].rstrip(')'))
     complete = Event()
     complete.set()
     names = ('TR_LO', 'TR_HI', 'CENTERY', 'GAPY')
@@ -59,6 +66,8 @@ def physical_fault_case(errors):
         if suffix == '-PosAct': return .1 if axis == 'TR_HI' else 0
         return 0
     rig = SimpleNamespace(
+        open_text_commands=Mock(return_value={}), close_text_commands=Mock(),
+        text_command=text_command,
         names=names, prefix='SIMSLIT:',
         profile={'axes': dict(zip(names, (5, 6, 12, 13))),
                  'physical': {'TR_LO': {}, 'TR_HI': {}}},
@@ -68,11 +77,17 @@ def physical_fault_case(errors):
         trace=[], snapshot=lambda: {})
     case = BacklashTests('test_large_physical_backlash_alarms_or_exposes_open_loop_error')
     case.rig, case.loop = rig, 'closed'
-    with patch.object(case, 'enable_backlash'), patch.object(case, 'recover_after_fault') as recover:
-        case.test_large_physical_backlash_alarms_or_exposes_open_loop_error()
-        allowed = recover.call_args.args[0]
-        assert allowed['TR_HI'] == (0x14c08,)
-        assert 0x1432b in allowed['CENTERY'] and 0x1432b in allowed['GAPY']
+    try:
+        with patch.object(case, 'enable_backlash'), patch.object(case, 'recover_after_fault') as recover:
+            case.test_large_physical_backlash_alarms_or_exposes_open_loop_error()
+            assert lag['tolerance'] == .02
+            allowed = recover.call_args.args[0]
+            assert allowed['TR_HI'] == (0x14c08,)
+            assert 0x1432b in allowed['CENTERY'] and 0x1432b in allowed['GAPY']
+    finally:
+        assert case.doCleanups()
+        assert lag['tolerance'] == .04
+        rig.close_text_commands.assert_called_once_with({})
 
 
 physical_fault_case({'TR_HI': 0x14c08})

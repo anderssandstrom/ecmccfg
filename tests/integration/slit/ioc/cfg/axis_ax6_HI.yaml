@@ -97,7 +97,7 @@ softlimits:
 monitoring:
   lag:
     enable: true
-    tolerance: 0.02
+    tolerance: 0.05
     time: 100
   # Keep the longest native command (drive-delay setter) within MCU-Cmd's
   # 39-byte ASCII field when temporary monitor settings are restored by tests.

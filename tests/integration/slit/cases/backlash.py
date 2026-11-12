@@ -6,6 +6,18 @@ from slit_recovery import wait_checked, motor_idle, stationary_dwell, reset_know
 class BacklashTests(SlitCase):
     axis = 'TR_HI'
 
+    def configure_lag_monitor(self, tolerance):
+        """Temporarily select the lag threshold required by a fault case."""
+        transport = self.rig.open_text_commands()
+        self.addCleanup(self.rig.close_text_commands, transport)
+        number = self.rig.profile['axes'][self.axis]
+        command = self.rig.text_command
+        saved = command(f'GetAxisMonPosLagTol({number})', query=True)
+        self.addCleanup(command, f'Cfg.SetAxisMonPosLagTol({number},{saved:.12g})')
+        command(f'Cfg.SetAxisMonPosLagTol({number},{tolerance:.12g})')
+        actual = command(f'GetAxisMonPosLagTol({number})', query=True)
+        self.assertAlmostEqual(actual, tolerance, delta=1e-7)
+
     def enable_backlash(self, width):
         def restore():
             errors = self.rig.stop_all()
@@ -54,6 +66,7 @@ class BacklashTests(SlitCase):
                               'backlash': self.rig.plant.backlash_state(self.axis)})
 
     def test_large_physical_backlash_alarms_or_exposes_open_loop_error(self):
+        if self.loop == 'closed': self.configure_lag_monitor(.02)
         self.enable_backlash(.1)
         if self.loop == 'open':
             self.rig.move(self.axis, .25)
@@ -86,12 +99,16 @@ class BacklashTests(SlitCase):
                       'restored backlash-free feedback published', 3)
         reset_known_errors(self.rig, allowed)
         self.rig.move('CENTERY', 0)
+        # A coordinated fault can leave GAPY.VAL at zero while feedback is
+        # outside its deadband. Use an unambiguously new request before zero.
+        self.rig.move('GAPY', .1)
         self.rig.move('GAPY', 0)
         self.rig.move(self.axis, .1)
         self.rig.move(self.axis, 0)
 
     def test_large_slave_backlash_stops_virtual_group(self):
         if self.loop != 'closed': self.skipTest('requires external primary encoder to detect lost motion')
+        self.configure_lag_monitor(.02)
         self.enable_backlash(.1)
         complete = self.rig.start_move('CENTERY', .4)
         allowed = slave_fault_errors(self.rig, self.axis, 0x14c08)

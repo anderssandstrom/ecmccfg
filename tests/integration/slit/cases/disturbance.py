@@ -44,8 +44,18 @@ class DisturbanceTests(SlitCase):
         self.rig.put('TR_HI', '-Ctrl-Kp', 0)
         self.addCleanup(self.rig.plant.clear_faults)
 
+    def strict_lag_monitor(self, tolerance=.02):
+        number = self.rig.profile['axes']['TR_HI']
+        command = self.rig.text_command
+        saved = command(f'GetAxisMonPosLagTol({number})', query=True)
+        self.addCleanup(command, f'Cfg.SetAxisMonPosLagTol({number},{saved:.12g})')
+        command(f'Cfg.SetAxisMonPosLagTol({number},{tolerance:.12g})')
+        actual = command(f'GetAxisMonPosLagTol({number})', query=True)
+        self.assertAlmostEqual(actual, tolerance, delta=1e-7)
+
     def independent(self, bias, fault):
         rig, axis, peer = self.rig, 'TR_HI', 'TR_LO'
+        if fault: self.strict_lag_monitor()
         rig.put(axis, '-EnaCmd', 1)
         rig.wait(lambda: rig.get(axis, '-EnaAct') == 1, 'idle disturbed axis enabled', 10)
         rig.put(peer, '.VELO', .1)
@@ -84,6 +94,7 @@ class DisturbanceTests(SlitCase):
 
     def test_sustained_slave_lag_stops_virtual_group_and_recovers(self):
         rig = self.rig
+        self.strict_lag_monitor()
         complete = rig.start_move('CENTERY', .6)
         rig.wait(lambda: rig.get('TR_HI', '-PosAct') > .03, 'virtual movement before slave disturbance', 5)
         rig.plant.inject('TR_HI', encoder_bias_mm=.05)

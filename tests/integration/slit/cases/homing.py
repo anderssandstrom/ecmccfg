@@ -399,7 +399,8 @@ class HomingTests(SlitCase):
         self.configure_sensors(0)
         rig = self.rig
         axis_id = rig.profile['axes'][self.axis]
-        for suffix, parameter in (('-IlockShrtTxt', 'RTLOG_AXIS_ILOCK_SHORT_TEXT'),
+        for suffix, parameter in (('-IlockTxt', 'RTLOG_AXIS_ILOCK_TEXT'),
+                                  ('-IlockShrtTxt', 'RTLOG_AXIS_ILOCK_SHORT_TEXT'),
                                   ('-MsgTxt', 'RTLOG_AXIS_MESSAGE_TEXT')):
             link = rig.client.pv(rig.name(self.axis, suffix) + '.INP').get(
                 as_string=True, use_monitor=False, timeout=rig.client.timeout)

@@ -45,11 +45,7 @@ record(motor,"$(PREFIX)$(MOTOR_NAME)")
 # The message text
 
 
-record(stringin,"$(PREFIX)$(MOTOR_NAME)-IlockTxt") {
-    field(DTYP, "asynOctetRead")
-    field(INP,  "@asyn($(MOTOR_PORT),$(AXIS_NO))MOTOR_ILOCK_TEXT")
-    field(SCAN, "I/O Intr")
-}
+
 
 
 

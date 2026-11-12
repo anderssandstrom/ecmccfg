@@ -485,14 +485,18 @@ chapter = false
 
 ### Axis diagnostic text
 
-`<prefix><axis>-IlockShrtTxt` and `<prefix><axis>-MsgTxt` are loaded with
+`<prefix><axis>-IlockShrtTxt`, `<prefix><axis>-IlockTxt`, and `<prefix><axis>-MsgTxt` are loaded with
 `ecmcRtLogAxis.db`, independently of motor records. Their names are unchanged;
-they now use `RTLOG_AXIS_ILOCK_SHORT_TEXT` and `RTLOG_AXIS_MESSAGE_TEXT` on
+they use `RTLOG_AXIS_ILOCK_SHORT_TEXT`, `RTLOG_AXIS_ILOCK_TEXT`, and
+`RTLOG_AXIS_MESSAGE_TEXT` on
 `${ECMC_RTLOG_PORT=ecmcRTLog}`, addressed by the ECMC axis number.
 
 `IlockShrtTxt` preserves the existing last-interlock abbreviations. When no
 interlock is reported, it can show an ignored motion request, for example
-`Ignored ABS: positioning disabled`. This is display information only and
+`IgnAbs`. The short labels are `IgnAbs`, `IgnRel`, `IgnVel`, `IgnHome`, and
+`IgnPVT`. `IlockTxt` gives the corresponding explanation, for example
+`Ignored ABS: positioning disabled`. Both fields prioritize interlocks.
+This is display information only and
 sets no interlock or error. The ignored indication clears when that permission
 is restored, silent-ignore mode is switched off, or a new motion starts.
 The diagnostic report and JSON dump retain the ignored-request count and last
@@ -502,9 +506,10 @@ ignored command until IOC restart.
 motor-driver messages when motor support is present. Native messages and
 interlocks continue to update with the amplifier disabled or without motor
 support. These remain EPICS string records (39 visible characters).
-`IlockTxt` remains on the motor port.
+All three text PVs use the diagnostic port; the full explanations fit within
+the EPICS string length.
 
 Upgrade the ECMC module and configuration databases together and restart the
-IOC. Custom motor templates must remove their old definitions of these two
+IOC. Custom motor templates must remove their old definitions of these three
 PVs to avoid duplicate records. Standalone custom configurations must load
 `ecmcRtLogAxis.db` for each axis.

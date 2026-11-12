@@ -47,7 +47,8 @@ input:
 monitoring:
   lag:
     enable: yes
-    tolerance: 0.03
+    # Gap feedback combines both blades, each with a 0.04 mm lag tolerance.
+    tolerance: 0.08
     time: 100
   target:
     enable: yes

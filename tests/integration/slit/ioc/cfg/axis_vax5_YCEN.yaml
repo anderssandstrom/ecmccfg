@@ -47,7 +47,8 @@ input:
 monitoring:
   lag:
     enable: yes
-    tolerance: 0.03
+    # Physical blade monitors use 0.04 mm; leave margin for group propagation.
+    tolerance: 0.08
     time: 100
   target:
     enable: yes

@@ -401,6 +401,25 @@ A shared memory buffer of 120 doubles can be accessed for read and write operati
 
     Enables/disables motion functionalities. Returns error code.
 
+ 14a. retvalue = mc_set_ignore_disabled_motion_cmds(<axIndex>, <enable>);
+
+    Selects silent rejection of disabled motion commands for one axis.
+    Default is 0 (existing error behavior). Set 1 to discard motion requests
+    disabled by mc_set_enable_motion_funcs() and return success without
+    replacing or stopping the active motion. Ignored requests are not queued.
+    Position permission covers absolute, relative and PVT moves; velocity
+    permission covers constant-velocity moves. Homing has its own permission.
+    Stop/kill and amplifier disable remain available. blockCom and actual
+    motion faults retain their existing behavior.
+
+    Example: allow homing while ignoring positioning and velocity requests:
+      mc_set_enable_motion_funcs(1, 0, 0, 1);
+      mc_set_ignore_disabled_motion_cmds(1, 1);
+
+    Configuration equivalent: Cfg.SetAxisIgnoreDisabledMotionCommands(1,1).
+    Use the complete motion-request interfaces; separately staged low-level
+    command/target/execute writes are not an atomic move request.
+
  15. retvalue = mc_get_act_pos(
                          <axIndex>,         : Axis index
                          <encIndex>         : Encoder index (starts from 1)

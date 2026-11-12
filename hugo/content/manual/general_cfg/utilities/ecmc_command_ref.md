@@ -149,6 +149,7 @@ chapter = false
 | `Cfg.SetAxisEnableAlarmAtSoftLimit(<int>,<int>)` | Enable alarm when at softlimit |
 | `Cfg.SetAxisEnableAtStartup(<int>,<int>)` | Set axis amplifier enable at ioc startup. |
 | `Cfg.SetAxisEnableMotionFunctions(<int>,<int>,<int>,<int>)` | Set enable of motion functions. |
+| `Cfg.SetAxisIgnoreDisabledMotionCommands(<axisIndex>,<enable>)` | Default 0. Set 1 to silently discard disabled motion requests without interrupting active motion; 0 restores existing error behavior. Uses the permissions from `Cfg.SetAxisEnableMotionFunctions`. Stop/kill and disable remain available. PLC equivalent: `mc_set_ignore_disabled_motion_cmds(axisIndex, enable)`. Does not change `blockCom` or fault handling. |
 | `Cfg.SetAxisEnableSoftLimitBwd(<int>,<int>)` | Set enable backward soft-limit of an axis. |
 | `Cfg.SetAxisEnableSoftLimitFwd(<int>,<int>)` | Set enable forward soft-limit of an axis. |
 | `Cfg.SetAxisEncAbsBits(<int>,<int>)` | Set encoder register bit count for absolute data. |

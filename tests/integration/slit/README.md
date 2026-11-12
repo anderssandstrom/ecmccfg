@@ -986,9 +986,10 @@ Closed-loop control must settle within tolerance for small backlash. Large
 backlash must produce the expected lag alarm and terminal motor state; a fault
 in a coordinated slave must stop the virtual group. All injected mechanical
 backlash is removed only after stopping/disabling the axes.
-The fixture's normal 0.04 mm position-lag tolerance gives ordinary and small-
-backlash motion scheduling margin. Large-backlash fault cases temporarily set
-only HI to 0.02 mm and restore the IOC value during cleanup.
+The fixture's normal 0.04 mm position-lag tolerance gives ordinary motion
+scheduling margin. Small-backlash cases explicitly select 0.04 mm, while
+large-backlash fault cases select 0.02 mm. Each case restores the prior live
+HI value during cleanup, so behavior does not depend on test order.
 
 The disturbance cases require external primary feedback and skip open loop.
 They temporarily set HI proportional gain to zero to isolate the injected

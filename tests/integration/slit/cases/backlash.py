@@ -32,6 +32,7 @@ class BacklashTests(SlitCase):
         self.assertEqual(self.rig.get(axis, '.SEVR'), 0)
 
     def test_physical_reversals_with_small_backlash(self):
+        self.configure_lag_monitor(.04)
         self.enable_backlash(.024)
         for target in (.2, -.2, .2, 0):
             self.rig.move(self.axis, target)
@@ -48,6 +49,7 @@ class BacklashTests(SlitCase):
         self.rig.trace.append({'action': 'physical backlash reversals completed', 'loop': self.loop, 'backlash': state})
 
     def test_virtual_center_and_gap_with_small_backlash(self):
+        self.configure_lag_monitor(.04)
         self.enable_backlash(.024)
         for axis, target in (('CENTERY', .15), ('GAPY', .2), ('CENTERY', -.15), ('GAPY', 0), ('CENTERY', 0)):
             self.rig.move(axis, target)

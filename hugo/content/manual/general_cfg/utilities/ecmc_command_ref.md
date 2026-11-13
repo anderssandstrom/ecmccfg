@@ -106,6 +106,7 @@ chapter = false
 | `Cfg.LinkEcEntryToAxisMonitor(<int>,<str>,<int>,<int>,<int>)` | Links an EtherCAT entry to the monitor object of the axis at axisIndex |
 | `Cfg.LinkEcEntryToAxisStatusOutput(<int>,<str>,<int>)` | Links an EtherCAT entry to the an axis object for status output * The output will be high when the axis object is without error code and otherwise zero. |
 | `Cfg.LoadAxisEncLookupTable(<int>,<str>)` | Load encoder correction lookup table file. |
+| `Cfg.LoadAxisDrvLookupTable(<int>,<str>)` | Load CSV drive-output compensation lookup table file. |
 | `MoveAbsolutePosition(<int>,<float>,<float>,<float>,<float>)` | Move axis to an absolute position. |
 | `MoveRelativePosition(<int>,<float>,<float>,<float>,<float>)` | Move axis to a relative position. |
 | `MoveVelocity(<int>,<float>,<float>,<float>)` | Move axis in a constant velocity. |

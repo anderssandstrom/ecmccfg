@@ -26,6 +26,10 @@ class Result(unittest.TextTestResult):
 
     def startTest(self, test):
         self.started = time.monotonic()
+        if hasattr(self, 'total_tests'):
+            self.stream.write(f'[{getattr(self, "start_index", 1) + self.testsRun}/{self.total_tests}; '
+                              f'{self.testsRun} done, {self.total_tests - getattr(self, "start_index", 1) - self.testsRun} left] ')
+            self.stream.flush()
         super().startTest(test)
 
     def record(self, test, status, detail=''):
@@ -74,7 +78,9 @@ def main(argv=None):
     parser.add_argument('--test', action='append', default=[], help='test-name substring, repeatable')
     parser.add_argument('--run', action='store_true', help='connect and execute selected hardware tests')
     parser.add_argument('--report', type=Path, default=DEFAULT_REPORT)
+    parser.add_argument('--startat', type=int, default=1, help='start at this 1-based index after case/test filtering')
     args = parser.parse_args(argv)
+    if args.startat < 1: parser.error('--startat must be at least 1')
     profile = json.loads(args.profile.read_text())
     validate_profile(profile)
     groups = list(dict.fromkeys(args.case or [g for g in GROUPS if g not in ('homing', 'softlimits')]))
@@ -82,6 +88,9 @@ def main(argv=None):
         parser.error('full-stroke homing must run alone with --case homing')
     suite = make_suite(None, groups, args.test)
     if not suite.countTestCases(): parser.error('no matching hardware tests')
+    total_tests = suite.countTestCases()
+    if args.startat > total_tests: parser.error('--startat exceeds selected test count')
+    suite = unittest.TestSuite(list(suite)[args.startat - 1:])
     if not args.run:
         for test in suite: print('[hardware] ' + test.id())
         print(json.dumps(profile, indent=2))
@@ -105,7 +114,7 @@ def main(argv=None):
             from slit_hardware.homing import check_homing_support
             check_homing_support(rig)
             rig.homing_session = True
-        suite = make_suite(rig, groups, args.test)
+        suite = unittest.TestSuite(list(make_suite(rig, groups, args.test))[args.startat - 1:])
         if any('pvt_' in test.id() for test in suite):
             from slit_pvt import check_profile_support
             check_profile_support(client, args.prefix, profile['axes'])
@@ -122,6 +131,8 @@ def main(argv=None):
         def factory(*arguments):
             nonlocal result
             result = Result(*arguments)
+            result.total_tests = total_tests
+            result.start_index = args.startat
             return result
         result = unittest.TextTestRunner(verbosity=2, resultclass=factory, failfast=True).run(suite)
         code = 0 if result.wasSuccessful() else 1

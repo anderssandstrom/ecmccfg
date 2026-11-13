@@ -18,6 +18,7 @@ from slit.plant import Plant, PlantThread
 from slit.rig import Client, Rig
 
 MODULES = ('motion', 'limits', 'enable', 'feedback', 'noise', 'sync', 'brake', 'torque', 'native', 'softlimit_sync', 'softlimit_modes', 'homing', 'interfaces', 'motor', 'isolation', 'target_write', 'encoder_power', 'encoder_handover', 'pvt', 'stall', 'coupled_stop', 'concurrent', 'disturbance', 'backlash', 'filters', 'controller', 'monitoring', 'touch_probe', 'position_compare')
+MODULES += ('no_sm',)
 DEFAULT_REPORT = ROOT / 'test-results/slit/slit-report.json'
 DEFAULT_CONFIG = Path(__file__).resolve().parent / 'ioc'
 
@@ -42,10 +43,15 @@ class Result(unittest.TextTestResult):
         self.records = []
 
     def getDescription(self, test):
-        return f'[{test.loop}] {test.id()}'
+        owner = getattr(test, 'test_case', test)
+        return f'[{owner.loop}] {test.id()}'
 
     def startTest(self, test):
         self.started = time.monotonic()
+        if hasattr(self, 'total_tests'):
+            self.stream.write(f'[{getattr(self, "start_index", 1) + self.testsRun}/{self.total_tests}; '
+                              f'{self.testsRun} done, {self.total_tests - getattr(self, "start_index", 1) - self.testsRun} left] ')
+            self.stream.flush()
         super().startTest(test)
 
     def record(self, test, status, detail=''):
@@ -96,7 +102,10 @@ def main(argv=None):
     parser.add_argument('--keep-going', action='store_true', help='continue after a failed test (default: fail fast)')
     parser.add_argument('--report', type=Path, default=DEFAULT_REPORT,
                         help='JSON report (default: repo test-results/slit/slit-report.json); matching JUnit XML is also written')
+    parser.add_argument('--startat', type=int, default=1, help='start at this 1-based index after case/test/loop filtering')
     args = parser.parse_args(argv)
+    if args.startat < 1: parser.error('--startat must be at least 1')
+    if args.plant_only and args.startat != 1: parser.error('--startat cannot be used with --plant-only')
     if args.run and args.plant_only:
         parser.error('choose --run or --plant-only')
     profile = json.loads((args.config / 'profile.json').read_text())
@@ -105,6 +114,10 @@ def main(argv=None):
     if args.plant_only and args.test:
         parser.error('--test cannot be used with --plant-only')
     selected = make_suite(None, loops, modules, args.test)
+    total_tests = selected.countTestCases()
+    if not args.plant_only and total_tests and args.startat > total_tests:
+        parser.error('--startat exceeds selected test count')
+    selected = unittest.TestSuite(list(selected)[args.startat - 1:])
     if not args.plant_only and selected.countTestCases() == 0:
         parser.error('no tests match the requested module/name filters')
     if not (args.run or args.plant_only):
@@ -139,10 +152,12 @@ def main(argv=None):
             while True:
                 plant.check()
                 time.sleep(.2)
-        suite = make_suite(rig, loops, modules, args.test)
-        def make_result(*args):
+        suite = unittest.TestSuite(list(make_suite(rig, loops, modules, args.test))[args.startat - 1:])
+        def make_result(*arguments):
             nonlocal result
-            result = Result(*args)
+            result = Result(*arguments)
+            result.total_tests = total_tests
+            result.start_index = args.startat
             return result
         result = unittest.TextTestRunner(verbosity=2, resultclass=make_result, failfast=not args.keep_going).run(suite)
         document['tests'] = result.records

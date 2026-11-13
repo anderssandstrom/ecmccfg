@@ -89,6 +89,10 @@ Notes:
 | `drive.brake.closeAhead` | Brake timing parameter in cycles (default 1kHz) | optional | 0 |
 | `drive.reset` | Reset (if no drive reset bit then leave empty) | optional | — |
 | `drive.warning` | Warning (if no drive warning bit then leave empty) | optional | — |
+| `drive.lookuptable.filename` | Load position-dependent CSV drive-output compensation table. | required when drive.lookuptable is present | — |
+| `drive.lookuptable.enable` | Enable or disable drive lookup-table compensation. | optional | true after a valid table is loaded (ecmc) |
+| `drive.lookuptable.scale` | Scale or invert the compensation value. | optional | 1.0 |
+| `drive.lookuptable.range` | Optional modulo range in axis position engineering units. | optional | 0 |
 | `encoder.numerator` | Encoder scale numerator in engineering units. The schema default 0 is not a usable hardware scale. | optional; configure scaling explicitly | 0.0 |
 | `encoder.denominator` | Scaling denominator example 4096 ticks per 360 degree | optional | 1 |
 | `encoder.type` | Type: 0=Incremental, 1=Absolute | optional | 0 |

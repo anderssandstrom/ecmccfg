@@ -72,6 +72,19 @@ ${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}addEcSlaveAxisName.cmd" "EC_PATH={{ drive.setp
 {#- scaling #}
 ecmcConfigOrDie "Cfg.SetAxisDrvScaleNum(${ECMC_AXIS_NO},{{ drive.numerator }})"
 ecmcConfigOrDie "Cfg.SetAxisDrvScaleDenom(${ECMC_AXIS_NO},{{ drive.denominator }})"
+{#- position-dependent CSV output compensation #}
+{%- if drive.lookuptable is defined %}
+    ecmcConfigOrDie "Cfg.LoadAxisDrvLookupTable(${ECMC_AXIS_NO},{{ drive.lookuptable.filename }})"
+    {%- if drive.lookuptable.range is defined %}
+        ecmcConfigOrDie "Cfg.SetAxisDrvLookupTableRange(${ECMC_AXIS_NO},{{ drive.lookuptable.range }})"
+    {%- endif %}
+    {%- if drive.lookuptable.scale is defined %}
+        ecmcConfigOrDie "Cfg.SetAxisDrvLookupTableScale(${ECMC_AXIS_NO},{{ drive.lookuptable.scale }})"
+    {%- endif %}
+    {%- if drive.lookuptable.enable is defined %}
+        ecmcConfigOrDie "Cfg.SetAxisDrvLookupTableEnable(${ECMC_AXIS_NO},{{ drive.lookuptable.enable|int }})"
+    {%- endif %}
+{%- endif %}
 {#- brake #}
 {%- if drive.brake is defined %}
     ecmcConfigOrDie "Cfg.LinkEcEntryToObject("{{ drive.brake.output }}","ax${ECMC_AXIS_NO}.drv.brake")"

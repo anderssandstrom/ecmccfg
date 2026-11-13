@@ -1,9 +1,53 @@
 """Motor coordinate transforms, SPMG and an unreachable AtTarget condition."""
 from .base import SlitCase
+from slit_recovery import motor_idle
 
 
 class MotorTests(SlitCase):
     axis = 'TR_HI'
+
+    def interrupted_motor_move(self, cause):
+        for axis in self.rig.profile['physical']:
+            with self.subTest(axis=axis, cause=cause):
+                self.rig.put(axis, '.VELO', .1)
+                complete = self.rig.start_move(axis, .6)
+                self.rig.wait(lambda: self.rig.get(axis, '.DMOV') == 0
+                              and self.rig.get(axis, '-PosAct') > .03,
+                              'motor request active before ' + cause, 5)
+                self.assertFalse(complete.is_set(), 'active move completed prematurely')
+                if cause == 'fault':
+                    self.rig.plant.inject(axis, drive_fault=True)
+                    self.rig.fault_stopped(axis, 0x1460e)
+                elif cause == 'disable':
+                    self.rig.put(axis, '-EnaCmd', 0)
+                else:
+                    self.rig.put(axis, '.STOP', 1)
+                self.rig.wait(lambda: complete.is_set() and motor_idle(self.rig, (axis,))
+                              and self.rig._drive_stationary(axis),
+                              cause + ' completes motor DMOV/MOVN/MIP/PACT and callback', 8)
+                stopped = self.rig.plant.physical_position(axis)
+                self.assertLess(stopped, .55, 'interruption must precede the original target')
+                self.rig.assert_stays(
+                    lambda: complete.is_set() and motor_idle(self.rig, (axis,))
+                    and abs(self.rig.plant.physical_position(axis)-stopped) < .003,
+                    cause + ' stays complete without replay', .3)
+                if cause == 'fault':
+                    self.rig.plant.clear_faults()
+                    self.rig.reset()
+                else:
+                    self.assertEqual(self.rig.get(axis, '-ErrId'), 0)
+                if cause == 'disable': self.rig.wait_drive_disabled(axis)
+                self.rig.move(axis, -.1)
+                self.rig.move(axis, 0)
+
+    def test_motor_stop_completes_callback_and_recovers(self):
+        self.interrupted_motor_move('stop')
+
+    def test_motor_disable_completes_callback_and_recovers(self):
+        self.interrupted_motor_move('disable')
+
+    def test_motor_fault_completes_callback_and_recovers(self):
+        self.interrupted_motor_move('fault')
 
     def test_offset_and_direction_coordinate_mapping(self):
         axis = self.axis

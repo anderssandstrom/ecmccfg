@@ -71,7 +71,12 @@ assert feedback.position == 11200 and raw == 5656064
 assert DEFAULT_REPORT == ROOT / 'test-results/slit/slit-report.json'
 suite = make_suite(None, ('open', 'closed'), MODULES)
 tests = list(suite)
-assert len(tests) == 398
+assert len(tests) == 478
+independent = list(make_suite(None, ('closed',), ('no_sm',)))
+assert len(independent) == 37
+assert all('.no_sm.Independent' in test.id() for test in independent)
+assert not any('coordinated_motion' in test.id() or 'center_and_gap' in test.id()
+               for test in independent)
 assert {test.loop for test in tests} == {'open', 'closed'}
 assert all(test.rig is None for test in tests)
 assert len(list(make_suite(None, ('closed',), ('limits',)))) == 10
@@ -85,7 +90,7 @@ assert len(list(make_suite(None, ('closed',), ('softlimit_sync',)))) == 3
 assert len(list(make_suite(None, ('closed',), ('homing',)))) == 44
 
 assert len(list(make_suite(None, ('closed',), ('interfaces',)))) == 5
-assert len(list(make_suite(None, ('closed',), ('motor',)))) == 4
+assert len(list(make_suite(None, ('closed',), ('motor',)))) == 7
 assert len(list(make_suite(None, ('closed',), ('isolation',)))) == 4
 assert len(list(make_suite(None, ('closed',), ('target_write',)))) == 6
 assert len(list(make_suite(None, ('closed',), ('encoder_power',)))) == 16

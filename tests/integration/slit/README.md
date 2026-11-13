@@ -24,6 +24,22 @@ of the constant ONE entries in the original file, so both blades can be tested.
 
 ## Start and select tests
 
+The simulation `no_sm` group repeats 37 physical-axis cases per loop mode with
+the slit state machine disabled and internal trajectory sources selected. It
+covers enable failures, encoder feedback faults, motor OFF/DIR coordinates,
+SPMG/STOP and AtTarget behavior, native commands, brakes, target writes and
+stall timeouts. Motor-commanded STOP, explicit disable and drive faults on
+both blades must complete DMOV/MOVN/MIP/PACT and the put-notify callback,
+remain stationary without replay, and permit fresh moves afterward.
+Preparation still uses the slit fixture; the original cases' assertions are
+reused and state-machine enable is restored after case cleanup. Coordinated
+motion, homing, PVT and encoder-power lifecycle cases are not repeated here.
+The group is included in the default suite, or can be selected explicitly:
+
+```sh
+python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case no_sm
+```
+
 Start the IOC from the **new configuration directory**, using your normal IOC
 launcher:
 

@@ -97,6 +97,11 @@ unchanged. Both reference views are generated from the same audited source.
 - `drive.reset` (optional) — Reset bit.
 - `drive.warning` (optional) — Warning bit.
 - `drive.error` (optional, up to 3 entries) — Up to three error bit indices or full EtherCAT paths. Omit unused entries; do not use empty/null list items. The schema requires status when error is supplied.
+- `drive.lookuptable` (optional; CSV only) — Position-dependent CSV output compensation; see the drive output lookup-table guide.
+- `drive.lookuptable.filename` (required when drive.lookuptable is present) — Two-column LUT file: actual position and drive-command offset, both in engineering units.
+- `drive.lookuptable.enable` (optional) — Enable compensation; a valid loaded table is enabled by default. Defaults: `drive.lookuptable.enable`: true after a valid table is loaded (ecmc).
+- `drive.lookuptable.scale` (optional) — Multiplier applied to the engineering-unit LUT output before normal drive scaling. Defaults: `drive.lookuptable.scale`: 1.0.
+- `drive.lookuptable.range` (optional) — Positive modulo range applied to actual position before lookup; zero disables wrapping. Defaults: `drive.lookuptable.range`: 0.
 
 ## encoder
 

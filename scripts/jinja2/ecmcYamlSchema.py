@@ -269,6 +269,15 @@ class Schema:
             'warning': {'type': 'integer', 'min': 0, 'dependencies': ['status']},
             'reset': {'type': 'integer', 'min': 0, 'dependencies': ['control']},
             'error': {'type': 'list', 'maxlength': 3, 'schema': {'anyof_type': ['integer', 'string']}, 'dependencies': ['status']},
+            'lookuptable': {
+                'type': 'dict',
+                'schema': {
+                    'filename': {'required': True, 'type': 'string'},
+                    'range': {'type': 'float', 'min': 0},
+                    'scale': {'type': 'float'},
+                    'enable': {'type': 'boolean'},
+                }
+            },
         }
     }
 

@@ -344,6 +344,28 @@
       }
     }
   },
+  "driveLutSchema": {
+    "identifier": "drive.lookuptable",
+    "schema": {
+      "drive.lookuptable.filename": {
+        "type": "string",
+        "required": true
+      },
+      "drive.lookuptable.range": {
+        "type": "integer float",
+        "min": 0,
+        "required": false
+      },
+      "drive.lookuptable.scale": {
+        "type": "integer float",
+        "required": false
+      },
+      "drive.lookuptable.enable": {
+        "type": "boolean",
+        "required": false
+      }
+    }
+  },
   "encoderSchema": {
     "identifier": "encoder",
     "schema": {

@@ -741,6 +741,69 @@
           "requirement": "optional, up to 3 entries",
           "description": "Up to three error bit indices or full EtherCAT paths. Omit unused entries; do not use empty/null list items. The schema requires status when error is supplied.",
           "entries": []
+        },
+        {
+          "keys": [
+            "drive.lookuptable"
+          ],
+          "requirement": "optional; CSV only",
+          "description": "Position-dependent CSV output compensation; see the drive output lookup-table guide.",
+          "entries": []
+        },
+        {
+          "keys": [
+            "drive.lookuptable.filename"
+          ],
+          "requirement": "required when drive.lookuptable is present",
+          "description": "Two-column LUT file: actual position and drive-command offset, both in engineering units.",
+          "entries": [
+            {
+              "key": "drive.lookuptable.filename",
+              "summary": "Load position-dependent CSV drive-output compensation table."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.lookuptable.enable"
+          ],
+          "requirement": "optional",
+          "description": "Enable compensation; a valid loaded table is enabled by default.",
+          "entries": [
+            {
+              "key": "drive.lookuptable.enable",
+              "summary": "Enable or disable drive lookup-table compensation.",
+              "default": "true after a valid table is loaded (ecmc)"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.lookuptable.scale"
+          ],
+          "requirement": "optional",
+          "description": "Multiplier applied to the engineering-unit LUT output before normal drive scaling.",
+          "entries": [
+            {
+              "key": "drive.lookuptable.scale",
+              "summary": "Scale or invert the compensation value.",
+              "default": "1.0"
+            }
+          ]
+        },
+        {
+          "keys": [
+            "drive.lookuptable.range"
+          ],
+          "requirement": "optional",
+          "description": "Positive modulo range applied to actual position before lookup; zero disables wrapping.",
+          "entries": [
+            {
+              "key": "drive.lookuptable.range",
+              "summary": "Optional modulo range in axis position engineering units.",
+              "default": "0"
+            }
+          ]
         }
       ]
     },

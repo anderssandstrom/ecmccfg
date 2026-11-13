@@ -50,6 +50,7 @@ go directly to [legacy motion]({{< relref "/manual/motion_cfg/legacy.md" >}}).
 | See all settings in a configuration | [Complete axis YAML example]({{< relref "/manual/motion_cfg/axisYamlExample.md" >}}) |
 | Start native ABS/REL motion on target writes | [Native target-write mode: motion without EXECUTE]({{< relref "/manual/motion_cfg/native_target_write.md" >}}) |
 | Reduce absolute encoder heating with relay power control | [Encoder relay power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}) |
+| Compensate a spring, gravity, or static load in CSV | [Drive output lookup-table compensation]({{< relref "/manual/motion_cfg/drive_lookup_table.md" >}}) |
 | Configure motor-record examples and retry tests | [Motor record examples]({{< relref "/manual/motion_cfg/best_practice/motor.md" >}}) |
 | Create named collections of axes | [Axis groups]({{< relref "/manual/motion_cfg/axis_groups.md" >}}) |
 | Coordinate virtual master and physical slave axes | [Master/slave state machine]({{< relref "/manual/motion_cfg/master_slave_state_machine.md" >}}) |

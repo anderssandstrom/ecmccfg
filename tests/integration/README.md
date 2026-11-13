@@ -18,3 +18,18 @@ For manual real-hardware commissioning, see [the hardware slit IOC](slit/ioc_har
 The separate [real-hardware slit suite](slit_hardware/README.md) supports bounded
 normal moves and status checks against that hardware IOC. It is plan-only unless
 `--run` is supplied and is never executed by the offline regression runners.
+
+The slit homing module includes `test_ignore_disabled_motion_commands`: it
+starts a home, injects disabled absolute/relative/velocity requests, checks
+that homing finishes without an axis error, and verifies stop and kill.
+It requires an ECMC build with `SetAxisIgnoreDisabledMotionCommands` and
+runtime configuration commands permitted. Run only against the dedicated
+simulation IOC (plan-only without `--run`):
+
+```sh
+python3 tests/integration/slit/run.py --help
+```
+
+The test restores all motion permissions and switches silent rejection off
+before the homing fixture restores its reference. Live execution is separate
+from offline test discovery.

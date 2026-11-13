@@ -43,23 +43,11 @@ record(motor,"$(PREFIX)$(MOTOR_NAME)")
 }
 
 # The message text
-record(stringin,"$(PREFIX)$(MOTOR_NAME)-MsgTxt") {
-    field(DTYP, "asynOctetRead")
-    field(INP,  "@asyn($(MOTOR_PORT),$(AXIS_NO))MOTOR_MESSAGE_TEXT")
-    field(SCAN, "I/O Intr")
-}
 
-record(stringin,"$(PREFIX)$(MOTOR_NAME)-IlockTxt") {
-    field(DTYP, "asynOctetRead")
-    field(INP,  "@asyn($(MOTOR_PORT),$(AXIS_NO))MOTOR_ILOCK_TEXT")
-    field(SCAN, "I/O Intr")
-}
 
-record(stringin,"$(PREFIX)$(MOTOR_NAME)-IlockShrtTxt") {
-    field(DTYP, "asynOctetRead")
-    field(INP,  "@asyn($(MOTOR_PORT),$(AXIS_NO))MOTOR_ILOCK_SHORT_TEXT")
-    field(SCAN, "I/O Intr")
-}
+
+
+
 
 # Debug message in IOC log
 record(stringout,"$(PREFIX)$(MOTOR_NAME)-DbgStrToLOG") {

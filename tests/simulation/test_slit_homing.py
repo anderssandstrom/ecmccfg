@@ -131,7 +131,10 @@ for bad in (None, '-Busy', '.DMOV', '.MOVN', '-Homed'):
     assert c.moving_flags() == (bad is None)
 
 suite = list(make_suite(None, ('closed',), ('homing',)))
-assert len(suite) == 44
+# 22 motor cases, 22 native cases, and the shared permission regression.
+assert len(suite) == 45
+assert sum(test.id().endswith('test_ignore_disabled_motion_commands')
+           for test in suite) == 1
 assert sum('test_motor_' in test.id() for test in suite) == 22
 assert sum('test_native_' in test.id() for test in suite) == 22
 for sequence in (1,2,3,4,5,6,7,8,9,10,14,21,22):

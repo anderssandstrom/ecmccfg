@@ -177,3 +177,25 @@ record(waveform,"${P}${AXIS_NAME}-MtnCmdMrLastTxt") {
   field(NELM, "160")
   field(SCAN, "I/O Intr")
 }
+
+# Axis-addressed diagnostic text; available without motor support.
+record(stringin,"${P}${AXIS_NAME}-IlockShrtTxt") {
+  field(DTYP, "asynOctetRead")
+  field(INP, "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_ILOCK_SHORT_TEXT")
+  field(SCAN, "I/O Intr")
+}
+
+# Axis-addressed diagnostic text; available without motor support.
+record(stringin,"${P}${AXIS_NAME}-MsgTxt") {
+  field(DTYP, "asynOctetRead")
+  field(INP, "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_MESSAGE_TEXT")
+  field(SCAN, "I/O Intr")
+  info(Q:group, { "${P}axis${AXIS_NO}": { "MsgTxt": {+channel:"VAL"} } })
+}
+
+# Full interlock or ignored-command explanation; independent of motor support.
+record(stringin,"${P}${AXIS_NAME}-IlockTxt") {
+  field(DTYP, "asynOctetRead")
+  field(INP, "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_ILOCK_TEXT")
+  field(SCAN, "I/O Intr")
+}

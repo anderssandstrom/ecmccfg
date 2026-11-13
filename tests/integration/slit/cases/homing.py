@@ -394,6 +394,71 @@ class HomingTests(SlitCase):
                                                    '-CfgDLLM-En-RB', '-CfgDHLM-En-RB')),
                           'restoring independent motor limits leaves controller limits unchanged', 5)
 
+    def test_ignore_disabled_motion_commands(self):
+        """Rejected move requests must neither fault nor cancel a running home."""
+        self.configure_sensors(0)
+        rig = self.rig
+        axis_id = rig.profile['axes'][self.axis]
+        for suffix, parameter in (('-IlockTxt', 'RTLOG_AXIS_ILOCK_TEXT'),
+                                  ('-IlockShrtTxt', 'RTLOG_AXIS_ILOCK_SHORT_TEXT'),
+                                  ('-MsgTxt', 'RTLOG_AXIS_MESSAGE_TEXT')):
+            link = rig.client.pv(rig.name(self.axis, suffix) + '.INP').get(
+                as_string=True, use_monitor=False, timeout=rig.client.timeout)
+            self.assertIn(parameter, link, 'restart IOC with migrated diagnostic PVs')
+            self.assertIn(',' + str(axis_id), link, 'diagnostic PV must address its own axis')
+        saved = rig.open_text_commands()
+        self.addCleanup(rig.close_text_commands, saved)
+
+        def command(text):
+            # AOUT is only 40 bytes. BOUT/NOWT carries the full ASCII parser
+            # command with Binary output; the reply still uses ASCII input.
+            name = rig.prefix + 'MCU-Cmd'
+            old_format = rig.client.get(name + '.OFMT')
+            old_count = rig.client.get(name + '.NOWT')
+            try:
+                rig.client.put(name + '.OFMT', 'Binary')
+                rig.client.put(name + '.NOWT', len(text.encode('ascii')))
+                rig.client.put(name + '.BOUT', list(text.encode('ascii')))
+                reply = rig.client.pv(name + '.AINP').get(
+                    as_string=True, use_monitor=False, timeout=rig.client.timeout)
+                self.assertEqual(rig.client.get(name + '.SEVR'), 0)
+                self.assertIsNotNone(reply)
+                self.assertEqual(reply.strip(' ;\r\n\x00'), 'OK', text)
+            finally:
+                rig.client.put(name + '.NOWT', old_count)
+                rig.client.put(name + '.OFMT', old_format)
+
+        def restore_permissions():
+            try:
+                command(f'StopMotion({axis_id},1)')
+            finally:
+                try:
+                    command(f'Cfg.SetAxisEnableMotionFunctions({axis_id},1,1,1)')
+                finally:
+                    command(f'Cfg.SetAxisIgnoreDisabledMotionCommands({axis_id},0)')
+
+        self.addCleanup(restore_permissions)
+        command(f'Cfg.SetAxisIgnoreDisabledMotionCommands({axis_id},1)')
+        command(f'Cfg.SetAxisEnableMotionFunctions({axis_id},0,0,1)')
+        self.start_home(1, 'native')
+        for request in (f'MoveAbsolutePosition({axis_id},.1,.2,1,1)',
+                        f'MoveRelativePosition({axis_id},.1,.2,1,1)',
+                        f'MoveVelocity({axis_id},.2,1,1)'):
+            self.assertTrue(self.moving_flags(), 'home must still be active before injection')
+            command(request)
+            rig.check_native_error(self.axis)
+            self.assertEqual(rig.get(self.axis, '-MtnCmd'), 10)
+            self.assertEqual(rig.get(self.axis, '-Busy'), 1)
+        self.finish_home()
+        for kill in (0, 1):
+            self.start_home(1, 'native')
+            command(f'StopMotion({axis_id},{kill})')
+            rig.wait_native_stopped(self.axis)
+            rig.check_native_error(self.axis)
+            if kill:
+                rig.wait(lambda: rig.get(self.axis, '-EnaAct') == 0,
+                         'kill remains effective with disabled moves ignored', 6)
+
     def test_motor_sequence_01(self):
         self.success(1, "motor")
 

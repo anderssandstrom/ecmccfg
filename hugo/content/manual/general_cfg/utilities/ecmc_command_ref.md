@@ -150,6 +150,7 @@ chapter = false
 | `Cfg.SetAxisEnableAlarmAtSoftLimit(<int>,<int>)` | Enable alarm when at softlimit |
 | `Cfg.SetAxisEnableAtStartup(<int>,<int>)` | Set axis amplifier enable at ioc startup. |
 | `Cfg.SetAxisEnableMotionFunctions(<int>,<int>,<int>,<int>)` | Set enable of motion functions. |
+| `Cfg.SetAxisIgnoreDisabledMotionCommands(<axisIndex>,<enable>)` | Default 0. Set 1 to silently discard disabled motion requests without interrupting active motion; 0 restores existing error behavior. Uses the permissions from `Cfg.SetAxisEnableMotionFunctions`. Stop/kill and disable remain available. PLC equivalent: `mc_set_ignore_disabled_motion_cmds(axisIndex, enable)`. Does not change `blockCom` or fault handling. |
 | `Cfg.SetAxisEnableSoftLimitBwd(<int>,<int>)` | Set enable backward soft-limit of an axis. |
 | `Cfg.SetAxisEnableSoftLimitFwd(<int>,<int>)` | Set enable forward soft-limit of an axis. |
 | `Cfg.SetAxisEncAbsBits(<int>,<int>)` | Set encoder register bit count for absolute data. |
@@ -482,3 +483,34 @@ chapter = false
 | `Cfg.SetSampleRate(<float>)` | No public header brief found (parser-specific or undocumented). |
 | `Cfg.SetTraceMask(<int>)` | No public header brief found (parser-specific or undocumented). |
 | `Cfg.SetTraceMaskBit(<int>,<int>)` | No public header brief found (parser-specific or undocumented). |
+
+### Axis diagnostic text
+
+`<prefix><axis>-IlockShrtTxt`, `<prefix><axis>-IlockTxt`, and `<prefix><axis>-MsgTxt` are loaded with
+`ecmcRtLogAxis.db`, independently of motor records. Their names are unchanged;
+they use `RTLOG_AXIS_ILOCK_SHORT_TEXT`, `RTLOG_AXIS_ILOCK_TEXT`, and
+`RTLOG_AXIS_MESSAGE_TEXT` on
+`${ECMC_RTLOG_PORT=ecmcRTLog}`, addressed by the ECMC axis number.
+
+`IlockShrtTxt` preserves the existing last-interlock abbreviations. When no
+interlock is reported, it can show an ignored motion request, for example
+`IgnAbs`. The short labels are `IgnAbs`, `IgnRel`, `IgnVel`, `IgnHome`, and
+`IgnPVT`. `IlockTxt` gives the corresponding explanation, for example
+`Ignored ABS: positioning disabled`. Both fields prioritize interlocks.
+This is display information only and
+sets no interlock or error. The ignored indication clears when that permission
+is restored, silent-ignore mode is switched off, or a new motion starts.
+The diagnostic report and JSON dump retain the ignored-request count and last
+ignored command until IOC restart.
+
+`MsgTxt` shows native ECMC errors first, then native warnings, and otherwise
+motor-driver messages when motor support is present. Native messages and
+interlocks continue to update with the amplifier disabled or without motor
+support. These remain EPICS string records (39 visible characters).
+All three text PVs use the diagnostic port; the full explanations fit within
+the EPICS string length.
+
+Upgrade the ECMC module and configuration databases together and restart the
+IOC. Custom motor templates must remove their old definitions of these three
+PVs to avoid duplicate records. Standalone custom configurations must load
+`ecmcRtLogAxis.db` for each axis.

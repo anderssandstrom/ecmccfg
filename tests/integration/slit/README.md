@@ -513,7 +513,7 @@ python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case homing
 python3 tests/integration/slit/run.py --prefix SIMSLIT: --run --case homing --loop closed
 ```
 
-The homing module contains 44 cases per loop mode. Both motor `.HOMF/.HOMR`
+The homing module contains 45 cases per loop mode, including the ignored-motion-command regression. Both motor `.HOMF/.HOMR`
 and native `MtnCmd=10`, command data and momentary execute are covered. Motor
 HomProc is put in supervisory mode during each case so its normal DOL link
 cannot override the selected procedure. The UI cmdData calcout is also disabled

@@ -73,7 +73,10 @@ Cfg.SetAxisDrvLookupTableEnable(1,1)
 
 The corresponding query commands are
 `GetAxisDrvLookupTableEnable`, `GetAxisDrvLookupTableScale`, and
-`GetAxisDrvLookupTableRange`.
+`GetAxisDrvLookupTableRange`. `GetAxisDrvLookupTableValue(axis)` returns the
+compensation applied in the last drive cycle, after LUT scaling but before
+normal drive scaling, in CSV drive-command engineering units. It returns zero
+when compensation is disabled, interlocked, or not applicable.
 
 Commission the LUT initially with conservative drive limits and verify its sign
 over the full travel before relying on it for holding force.

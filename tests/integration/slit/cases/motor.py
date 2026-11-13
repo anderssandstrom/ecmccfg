@@ -169,7 +169,7 @@ class MotorTests(SlitCase):
         def incomplete():
             self.rig.check_native_error(axis)
             return (self.rig.get(axis, '-AtTarget') == 0
-                    and self.rig.get(axis, '.DMOV') == 0
+                    and (trigger != 'motor' or self.rig.get(axis, '.DMOV') == 0)
                     and (complete is None or not complete.is_set()))
         self.rig.assert_stays(incomplete, 'unfulfilled AtTarget must not complete motor request')
         self.rig.put(axis, '-StpCmd', 1)

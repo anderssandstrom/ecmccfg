@@ -178,7 +178,10 @@ def stall_alarm(rig, axis, trigger, step, velocity, validate):
                      and abs(rig.get(axis, '-PosAct')-target) < rig.profile.get('tolerance', .015),
                      'trajectory ends before AtTarget stall timeout', rig.profile.get('timeout', 15))
         if rig.get(axis, '-AtTarget') != 0: raise AssertionError('stall setup did not hold AtTarget low')
-        if rig.get(axis, '.DMOV') != 0 or (complete is not None and complete.is_set()):
+        # Only motor-triggered requests own a motor completion contract.
+        # Native requests are checked through AtTarget and the stall alarm;
+        # both interfaces must still leave motor records idle after termination.
+        if trigger == 'motor' and (rig.get(axis, '.DMOV') != 0 or complete.is_set()):
             raise AssertionError('unfulfilled AtTarget incorrectly completed the motor request before the alarm')
         rig.trace.append({'action': 'AtTarget false before stall alarm', 'axis': axis,
                           'trigger': trigger, 'snapshot': rig.snapshot()})

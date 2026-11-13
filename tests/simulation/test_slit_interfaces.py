@@ -164,11 +164,14 @@ for trigger in ('motor', 'native'):
     for bad in (None, 'early_done', 'ignored_stop'):
         c = MotorTests('test_zero_at_target_tolerance_motor'); c.rig = ToleranceProbe(bad)
         try: c.zero_target_tolerance(trigger)
-        except AssertionError: assert bad is not None
-        else: assert bad is None and c.rig.moves == [-.15, 0]
+        except AssertionError:
+            assert bad == 'ignored_stop' or (bad == 'early_done' and trigger == 'motor')
+        else:
+            assert (bad is None or (bad == 'early_done' and trigger == 'native'))
+            assert c.rig.moves == [-.15, 0]
         finally: c.doCleanups()
         assert c.rig.tolerance == .01
-print('Zero AtTarget tolerance: incomplete requests and STOP recovery pass; early DMOV and ignored STOP fail; tolerance restored.')
+print('Zero AtTarget tolerance: motor early DMOV rejected; native early DMOV allowed; STOP recovery required for both; tolerance restored.')
 
 
 # Real Stop acknowledgement predicate: native stopped precedes motor callbacks.

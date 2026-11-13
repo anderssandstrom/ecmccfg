@@ -22,36 +22,47 @@ epics:
 # * 6 pole: Max scale is 8000revs/s (in this case 8000mm/s)
 # * 8 pole: Max scale is 6000revs/s
 drive:
-  numerator: 8000  # mm/s, Max speed is 8000 rev/sec for drive with 6 pole motor
-  denominator: 2147483648
-  type: 1                            # Stepper: 0, DS402: 1 (servos)
-  control: ec0.s$(DRV_ID).driveControl01
-  status: ec0.s$(DRV_ID).driveStatus01
-  setpoint: ec0.s$(DRV_ID).velocitySetpoint01
-  reset: 7
+  # just a guess
+  numerator: 1000  # mm/s, Max speed is 8000 rev/sec for drive with 6 pole motor
+  denominator: 32768
+  type: 0                            # Stepper: 0, DS402: 1 (servos)
+  control: ec0.s$(DRV_ID).driveControl${DRV_CH=01}
+  status: ec0.s$(DRV_ID).driveStatus${DRV_CH=01}
+  setpoint: ec0.s$(DRV_ID).velocitySetpoint${DRV_CH=01}
+  lookuptable:
+    filename: ./cfg/drive_output_offset_el7342.lut
+    scale: 1.0
+    enable: true
 
 # The encoder on most motors is 20-bit single-turn and 12-bit multi-turn (4096 turns)
 encoder:
-  type: 1
-  position: ec0.s$(DRV_ID).positionActual01
+  type: 0
+  position: ec0.s$(ENC_ID).positionActual${ENC_CH=01}
   numerator: 1
-  denominator: 1048576  # 20bits
+  denominator: 10000 # 20bits
   bits: 32
-  absBits: 32
-  absOffset: $(OFFSET=0)
 
 controller:
-  Kp: 10.0
-  Ki: 0.01
+  Kp: 15.0
+  Ki: 0.02
   Kd: 0.0
+  inner:
+    Ki: 0.04
+    Kp: 20
+    tol: 0.04
+  deadband:
+    tol: 0.0
+  resetIAtRmp: true
+
 
 trajectory:
   source: 0
   type: 1
   axis:
-    velocity: 10
-    acceleration: 10
-    deceleration: 10
+    velocity: 400
+    acceleration: 1000000
+    deceleration: 1000000
+    jerk: 100000000
 
 input:
   limit:
@@ -61,16 +72,16 @@ input:
   interlock: ec0.s$(DRV_ID).ONE.0
 
 softlimits:
-  enable: no
+  enable: yes
   backwardEnable: yes
   forwardEnable: yes
-  forward: 10
-  backward: -10
+  forward: 7.5
+  backward: 0.0
 
 monitoring:
   lag:
     enable: yes
-    tolerance: 0.1
+    tolerance: 0.5
     time: 100
   target:
     enable: yes
@@ -82,3 +93,4 @@ monitoring:
     time:
       trajectory: 100
       drive: 200
+ 

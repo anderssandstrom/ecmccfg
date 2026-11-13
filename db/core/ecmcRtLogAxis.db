@@ -199,3 +199,36 @@ record(stringin,"${P}${AXIS_NAME}-IlockTxt") {
   field(INP, "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_ILOCK_TEXT")
   field(SCAN, "I/O Intr")
 }
+
+# Axis soft-limit configuration; available without motor support.
+record(ai,"${P}${AXIS_NAME}-CfgDLLM-RB") {
+  field(DESC, "EC Low Soft Limit RB")
+  field(DTYP, "asynFloat64")
+  field(PREC, "$(PREC=3)")
+  field(INP, "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_CFG_DLLM")
+  field(SCAN, "I/O Intr")
+}
+
+record(ai,"${P}${AXIS_NAME}-CfgDHLM-RB") {
+  field(DESC, "EC High Soft Limit RB")
+  field(DTYP, "asynFloat64")
+  field(PREC, "$(PREC=3)")
+  field(INP, "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_CFG_DHLM")
+  field(SCAN, "I/O Intr")
+}
+
+record(ao,"${P}${AXIS_NAME}-CfgDLLM") {
+  info(asyn:READBACK,"1")
+  field(DESC, "EC Low Soft Limit")
+  field(DTYP, "asynFloat64")
+  field(PREC, "$(PREC=3)")
+  field(OUT, "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_CFG_DLLM")
+}
+
+record(ao,"${P}${AXIS_NAME}-CfgDHLM") {
+  info(asyn:READBACK,"1")
+  field(DESC, "EC High Soft Limit")
+  field(DTYP, "asynFloat64")
+  field(PREC, "$(PREC=3)")
+  field(OUT, "@asyn($(PORT=ecmcRTLog),$(ADDR=$(AXIS_NO)),$(TIMEOUT=1))RTLOG_AXIS_CFG_DHLM")
+}

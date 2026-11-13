@@ -33,6 +33,10 @@ class MotorTests(SlitCase):
                     cause + ' stays complete without replay', .3)
                 if cause == 'fault':
                     self.rig.plant.clear_faults()
+                    # Fault injection and CA feedback publication are separate.
+                    # Reset only after ECMC can observe the cleared drive bit.
+                    self.rig.wait(lambda: not self.rig.drive_status(axis) & 8,
+                                  'cleared drive alarm feedback before reset', 3)
                     self.rig.reset()
                 else:
                     self.assertEqual(self.rig.get(axis, '-ErrId'), 0)

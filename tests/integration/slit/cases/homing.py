@@ -1,6 +1,11 @@
 """Homing through motor fields and native commands, using physical sensor geometry."""
 from .base import SlitCase
 from ..plant import HomingInputs
+from collections import deque
+import json
+import threading
+import time
+import unittest
 
 
 # Native 15 and motor 25 perform manual reference setting. Motor 15 is blocked
@@ -133,11 +138,17 @@ class HomingTests(SlitCase):
             # Absolute phase is near 1380 mm in this fixture; sequence 21
             # references the next turn, sequence 22 the preceding turn.
             # Widen coordinates, while the independent physical bound stays .8.
-            self.rig.put(self.axis, '-CfgSyncSftLim', 1)
+            # Homing disables native limit directions. Set both coordinate
+            # interfaces explicitly rather than depending on limit-sync policy.
+            self.rig.put(self.axis, '-CfgSyncSftLim', 0)
             self.rig.put(self.axis, '-CfgDLLM', -20000)
             self.rig.put(self.axis, '-CfgDHLM', 20000)
+            self.rig.put(self.axis, '.DLLM', -20000)
+            self.rig.put(self.axis, '.DHLM', 20000)
             self.rig.wait(lambda: self.rig.get(self.axis, '.LLM') == -20000
-                          and self.rig.get(self.axis, '.HLM') == 20000,
+                          and self.rig.get(self.axis, '.HLM') == 20000
+                          and self.rig.get(self.axis, '-CfgDLLM-RB') == -20000
+                          and self.rig.get(self.axis, '-CfgDHLM-RB') == 20000,
                           'motor and native coordinate limits widened for absolute phase homing', 5)
         before = self.physical()
         field = '.HOMR' if sequence in (1, 3, 5, 7, 9, 21) else '.HOMF'
@@ -196,10 +207,75 @@ class HomingTests(SlitCase):
         self.rig.wait(checked, description, timeout)
 
     def abort(self, cause, trigger, sequence=7):
+        # Subscribe instead of polling additional PVs: synchronous diagnostic
+        # reads compete with the CA plant and can themselves change timing.
+        if not hasattr(self.rig.client, 'factory'):
+            return self._abort(cause, trigger, sequence)
+        events = deque(maxlen=512)
+        lock = threading.Lock()
+        started = time.monotonic()
+        subscriptions = []
+
+        def event(field, value, timestamp=None):
+            if hasattr(value, 'item'): value = value.item()
+            with lock:
+                events.append({'seconds': time.monotonic()-started, 'field': field,
+                               'value': value, 'ioc_timestamp': timestamp})
+
+        def callback(field):
+            def changed(value=None, timestamp=None, **kwargs):
+                event(field, value, timestamp)
+            return changed
+
+        self._abort_event = event
+        log_control = self.rig.prefix + 'MCU-RTLog-Ctrl'
+        previous_log_control = None
+        try:
+            previous_log_control = int(self.rig.client.get(
+                self.rig.prefix + 'MCU-RTLog-Ctrl-RB'))
+            self.rig.client.put(log_control, previous_log_control | 1)
+            self.rig.wait(lambda: int(self.rig.client.get(
+                self.rig.prefix + 'MCU-RTLog-Ctrl-RB')) & 1,
+                'INFO logging enabled for homing abort diagnostics', 3)
+            for field in ('.DMOV', '.MOVN', '.MIP', '.MSTA', '-Busy', '-ExeCmd-RB',
+                          '-SeqState', '-Homed', '-ErrId', '-EnaAct'):
+                pv = self.rig.client.factory(self.rig.name(self.axis, field), auto_monitor=True)
+                token = pv.add_callback(callback(field))
+                subscriptions.append((pv, token))
+            event('stage', 'before home')
+            return self._abort(cause, trigger, sequence)
+        except unittest.SkipTest:
+            raise
+        except Exception as error:
+            event('stage', 'failed: ' + str(error).split('\n')[0])
+            with lock:
+                captured = list(events)
+            raise AssertionError(str(error) + '\nHoming abort/reset transitions '
+                                 '(CA events; fields are not an atomic snapshot):\n'
+                                 + json.dumps(captured, indent=2)) from error
+        finally:
+            for pv, token in subscriptions:
+                pv.remove_callback(token)
+            self._abort_event = None
+            with lock:
+                captured = list(events)
+            self.rig.trace.append({'action': 'homing abort/reset transitions', 'axis': self.axis,
+                                   'cause': cause, 'trigger': trigger, 'events': captured})
+            if previous_log_control is not None:
+                self.rig.client.put(log_control, previous_log_control)
+
+    def abort_event(self, stage):
+        event = getattr(self, '_abort_event', None)
+        if event:
+            event('stage', stage)
+            event('motor_callback_complete', self.complete is None or self.complete.is_set())
+
+    def _abort(self, cause, trigger, sequence=7):
         if cause == 'encoder' and self.loop != 'closed':
             self.skipTest('not-ready abort requires the primary EL5042 encoder')
         self.configure_sensors(.25 if sequence in (7, 9) else 0, missing_cam=cause == 'missing_cam')
         self.start_home(sequence, trigger)
+        self.abort_event('home active')
         if cause == 'reverse_stop':
             self.wait_home_phase(lambda: self.rig.get(self.axis, '-SeqState') == 3
                           and self.rig.get(self.axis, '-VelAct') > .02,
@@ -208,6 +284,7 @@ class HomingTests(SlitCase):
             self.wait_home_phase(lambda: self.rig.get(self.axis, '-SeqState') == 2
                           and -.04 < self.physical() < .04,
                           'homing is between the two cam edges', 5)
+        self.abort_event('request abort: ' + cause)
         if cause in ('stop', 'reverse_stop', 'cam_stop'):
             self.rig.put(self.axis, '-StpCmd', 1)
         elif cause == 'disable':
@@ -223,6 +300,7 @@ class HomingTests(SlitCase):
             self.assertLess(abs(self.physical()), .8)
             return error == expected_error and self.finished_flags()
         self.rig.wait(aborted, f'{cause}: sequence aborts and clears Busy/DMOV/MOVN', 10)
+        self.abort_event('abort completion observed')
         self.assertEqual(self.rig.get(self.axis, '-Homed'), 0, 'aborted search must not report homed')
         self.rig.trace.append({'action': 'homing aborted', 'cause': cause, 'trigger': trigger,
                                'sequence': sequence, 'snapshot': self.rig.snapshot()})
@@ -232,7 +310,10 @@ class HomingTests(SlitCase):
         self.rig.plant.inject(self.axis, ready=True, drive_fault=False)
         self.rig.wait(lambda: self.rig.encoder_status(self.axis) & 4 and not self.rig.drive_status(self.axis) & 8,
                       'fault input restored before reset', 3)
-        if expected_error: self.rig.reset()
+        if expected_error:
+            self.abort_event('reset requested')
+            self.rig.reset()
+            self.abort_event('reset acknowledged')
         stopped = self.physical()
         self.verify_abort_recovery(stopped)
         # A new explicit request must work, without restarting the old search.
@@ -251,6 +332,7 @@ class HomingTests(SlitCase):
             self.assertLess(abs(self.physical() - stopped), .015, 'plant must stay at aborted position')
 
         def idle():
+            self.abort_event('recovery check')
             native_idle()
             return self.finished_flags()
 
@@ -402,10 +484,21 @@ class HomingTests(SlitCase):
         for suffix, parameter in (('-IlockTxt', 'RTLOG_AXIS_ILOCK_TEXT'),
                                   ('-IlockShrtTxt', 'RTLOG_AXIS_ILOCK_SHORT_TEXT'),
                                   ('-MsgTxt', 'RTLOG_AXIS_MESSAGE_TEXT')):
-            link = rig.client.pv(rig.name(self.axis, suffix) + '.INP').get(
+            # CA DBR_STRING truncates links at 39 characters. The long-string
+            # field modifier returns the complete link as a character array.
+            link = rig.client.pv(rig.name(self.axis, suffix) + '.INP$').get(
                 as_string=True, use_monitor=False, timeout=rig.client.timeout)
             self.assertIn(parameter, link, 'restart IOC with migrated diagnostic PVs')
             self.assertIn(',' + str(axis_id), link, 'diagnostic PV must address its own axis')
+        for suffix, field, parameter in (
+                ('-CfgDLLM', '.OUT$', 'RTLOG_AXIS_CFG_DLLM'),
+                ('-CfgDHLM', '.OUT$', 'RTLOG_AXIS_CFG_DHLM'),
+                ('-CfgDLLM-RB', '.INP$', 'RTLOG_AXIS_CFG_DLLM'),
+                ('-CfgDHLM-RB', '.INP$', 'RTLOG_AXIS_CFG_DHLM')):
+            link = rig.client.pv(rig.name(self.axis, suffix) + field).get(
+                as_string=True, use_monitor=False, timeout=rig.client.timeout)
+            self.assertIn(parameter, link, 'restart IOC with migrated soft-limit PVs')
+            self.assertIn(',' + str(axis_id), link, 'soft-limit PV must address its own axis')
         saved = rig.open_text_commands()
         self.addCleanup(rig.close_text_commands, saved)
 
@@ -451,6 +544,13 @@ class HomingTests(SlitCase):
             self.assertEqual(rig.get(self.axis, '-Busy'), 1)
         self.finish_home()
         for kill in (0, 1):
+            # Sequence 1 finishes at the backward switch. A repeat from there
+            # may complete before moving flags can be sampled. Reposition with
+            # moves allowed, then restore the policy being tested before home.
+            command(f'Cfg.SetAxisEnableMotionFunctions({axis_id},1,1,1)')
+            rig.move(self.axis, .2)
+            rig.move(self.axis, .15)
+            command(f'Cfg.SetAxisEnableMotionFunctions({axis_id},0,0,1)')
             self.start_home(1, 'native')
             command(f'StopMotion({axis_id},{kill})')
             rig.wait_native_stopped(self.axis)

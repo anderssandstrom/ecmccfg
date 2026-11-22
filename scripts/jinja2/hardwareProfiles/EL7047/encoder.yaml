@@ -1,0 +1,6 @@
+# EL7047 internal open-loop step counter, 16-bit standard EX70XX PDO.
+encoder:
+  type: 0
+  source: 0
+  bits: 16
+  position: ec$(MASTER).s$(SLAVE).positionActual01

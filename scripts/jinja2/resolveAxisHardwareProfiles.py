@@ -103,15 +103,20 @@ def _substitute(value, master, slave, channel):
     return value
 
 
-def resolve(document, profiles_dir, environ=None):
+def select_profiles(document, profiles_dir, environ=None):
+    """Select and validate hardware, returning metadata without merging axis YAML.
+
+    The Jinja renderer uses this to emit hardware-specific command snippets;
+    the legacy ECB adapter still uses resolve() below.
+    """
     if not isinstance(document, dict):
         raise ValueError("Axis YAML root must be a mapping")
     if "hardwareProfiles" in document:
         raise ValueError("hardwareProfiles is not supported; use drive.slave/encoder.slave/input.slave")
     env = os.environ if environ is None else environ
-    result = copy.deepcopy(document)
+    selected = {}
     for section in _SECTIONS:
-        raw = result.get(section)
+        raw = document.get(section)
         if not isinstance(raw, dict) or "slave" not in raw:
             continue
         slave = _slave_id(raw["slave"], section + ".slave", env)
@@ -131,18 +136,18 @@ def resolve(document, profiles_dir, environ=None):
             raise FileNotFoundError("Missing %s profile for %s (master %d, slave %d)" %
                                     (section, hardware, master, slave))
         with profile.open(encoding="utf-8") as stream:
-            defaults = yaml.safe_load(stream)
-        if not isinstance(defaults, dict) or not set(defaults).issubset({section, "channels", "feedbacks"} if section == "encoder" else {section, "channels"}) or section not in defaults or not isinstance(defaults[section], dict):
+            config = yaml.safe_load(stream)
+        allowed = {section, "channels", "feedbacks"} if section == "encoder" else {section, "channels"}
+        if not isinstance(config, dict) or not set(config).issubset(allowed) or section not in config or not isinstance(config[section], dict):
             raise ValueError("Invalid profile structure: %s" % profile)
-        channel_count = defaults.get("channels", 1)
-        if type(channel_count) is not int or channel_count < 1:
+        count = config.get("channels", 1)
+        if type(count) is not int or count < 1:
             raise ValueError("Invalid channels count in %s" % profile)
-        if channel > channel_count:
+        if channel > count:
             raise ValueError("%s.channel=%d exceeds %s supported channels (%d)" %
-                             (section, channel, hardware, channel_count))
-        # Select encoder feedback independently from the motor channel.
-        # Profiles without feedback choices retain their legacy behavior.
-        feedbacks = defaults.get("feedbacks")
+                             (section, channel, hardware, count))
+        values = config[section]
+        feedbacks = config.get("feedbacks")
         if section == "encoder" and feedbacks is not None:
             if not isinstance(feedbacks, dict) or "openloop" not in feedbacks:
                 raise ValueError("Invalid encoder feedback mapping in %s" % profile)
@@ -150,19 +155,33 @@ def resolve(document, profiles_dir, environ=None):
             if not isinstance(feedback, str) or feedback not in feedbacks:
                 raise ValueError("Unknown encoder feedback %r for %s; choices: %s" %
                                  (feedback, hardware, ", ".join(sorted(feedbacks))))
-            selected = feedbacks[feedback]
-            if not isinstance(selected, dict):
+            variant = feedbacks[feedback]
+            if not isinstance(variant, dict):
                 raise ValueError("Invalid encoder feedback %r in %s" % (feedback, profile))
-            selected_defaults = deep_merge(defaults[section], selected)
-        else:
-            if section == "encoder" and "feedback" in raw:
-                raise ValueError("Encoder profile for %s does not support feedback selection" % hardware)
-            selected_defaults = defaults[section]
-        defaults = _substitute(selected_defaults, master, slave, channel)
-        # Selector keys are not supported by the existing axis schema.
-        overrides = {k: v for k, v in raw.items() if k not in ("slave", "master", "channel", "feedback")}
-        result[section] = deep_merge(defaults, overrides)
-    return result
+            values = deep_merge(values, variant)
+        elif section == "encoder" and "feedback" in raw:
+            raise ValueError("Encoder profile for %s does not support feedback selection" % hardware)
+        selected[section] = {
+            "model": profile.parent.name,
+            "data": _substitute(values, master, slave, channel),
+            "provided": list(raw),
+            "slave": slave,
+            "master": master,
+            "channel": channel,
+        }
+    return selected
+
+
+def resolve(document, profiles_dir, environ=None):
+    """Compatibility adapter: merge defaults for ECB's existing schema pipeline."""
+    selections = select_profiles(document, profiles_dir, environ)
+    out = copy.deepcopy(document)
+    for section, profile in selections.items():
+        raw = out[section]
+        overrides = {k: v for k, v in raw.items() if k not in
+                     ("slave", "master", "channel", "feedback")}
+        out[section] = deep_merge(profile["data"], overrides)
+    return out
 
 
 def preprocess(src, dst, profiles_dir, environ=None):

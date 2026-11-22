@@ -1,9 +1,14 @@
-# EL7062 two-channel internal position feedback (open-loop step counter).
+# EL7062: encoder feedback is independent of the motor channel.
+# openloop uses the internal step counter; incremental uses the PDO with _2 suffix.
 channels: 2
 encoder:
   type: 0
   source: 0
   bits: 32
-  # Example microstep-count scaling; adjust for the configured motor.
+  # Illustrative count scaling; verify against motor and encoder configuration.
   denominator: 12800
-  position: ec$(MASTER).s$(SLAVE).positionActual$(CHANNEL)
+feedbacks:
+  openloop:
+    position: ec$(MASTER).s$(SLAVE).positionActual$(CHANNEL)
+  incremental:
+    position: ec$(MASTER).s$(SLAVE).positionActual$(CHANNEL)_2

@@ -45,12 +45,8 @@
       {% if not cfg.error %}
         {% if family == 'EL70xx' %}
           {% include 'hwProfileEL70xx.jinja2' %}
-          {% if component.startswith('EL7041') %}
-            {% if part == 'drive' %}
-              {% set _ = cfg.defaults.update({'denominator': 32768}) %}
-            {% elif part == 'encoder' %}
-              {% set _ = cfg.defaults.update({'denominator': 12800}) %}
-            {% endif %}
+          {% if component.startswith('EL7041') and part == 'drive' %}
+            {% set _ = cfg.defaults.update({'denominator': 32768}) %}
           {% endif %}
         {% elif family == 'EL7062' %}
           {% include 'hwProfileEL7062.jinja2' %}

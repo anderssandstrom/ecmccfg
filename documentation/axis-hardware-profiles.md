@@ -61,12 +61,21 @@ or missing profiles produce configuration errors.
 - `ECMC_HW_SCRIPT_M<master>_S<slave>`: exact `HW_DESC` script variant
 
 The existing Python axis runner uses **Jinja2 only** to choose and merge
-hardware defaults: `hardwareProfiles/renderDefaults.jinja2` includes
+hardware defaults: `hwProfileResolve.jinja2` includes
 `EL70xx`, `EL7062`, `EL72xx`, `EL5021`, `EL5042`, `EL5101`, or `EL5102` family templates.
 These templates merge base PDO mappings with CSV/CSP variants and explicit
 axis YAML overrides, producing the data for ordinary schema validation.
 No hardware-specific Python resolver, additional Python invocation, or
 hardware-resolved temporary YAML file remains.
+
+**IOC installation:** `GNUmakefile` installs Jinja scripts into the flat
+`/ioc/modules/ecmccfg/<version>/R<base>/` directory. For that reason the
+runtime uses uniquely named top-level `hwProfileResolve.jinja2` and
+`hwProfileEL*.jinja2` templates, not nested `hardwareProfiles/` paths.
+Rebuild the local ECMCCFG module/image after changes. If `TemplateNotFound`
+occurs, verify `hwProfileResolve.jinja2` is present beside
+`axisYamlJinja2.py` in the installed module directory.
+
 
 The rendering order is family base, selected PDO variant, then explicit axis
 YAML values. Existing YAML without hardware slave selectors takes the

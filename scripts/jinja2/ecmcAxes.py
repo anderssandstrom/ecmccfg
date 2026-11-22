@@ -1,7 +1,6 @@
 import pathlib
 import os
-
-from resolveAxisHardwareProfiles import select_profiles, deep_merge
+import yaml
 
 import ecmcYamlHandler
 import ecmcJinja2
@@ -25,7 +24,6 @@ class EcmcAxis:
         self.config_file = config_file
         self.axisType = 1
         self.hasSyncPLC = False
-        self.hardwareProfiles = {}
         self.yamlHandler = ecmcYamlHandler.YamlHandler()
         self.axisTemplate = ecmcJinja2.JinjaTemplate(jinja_template_dir)
         # Hardware command snippets live alongside the renderer module, not
@@ -49,27 +47,23 @@ class EcmcAxis:
         """
         wrapper around all steps needed to render an axis-script from a yaml-config
         """
-        # Hardware selection happens inside the normal Jinja rendering process.
-        # Apply defaults in memory, then validate/render once (no temporary YAML).
+        # Render family/variant defaults with Jinja BEFORE schema validation.
+        # Python is only the existing Jinja runner and YAML parser; it does
+        # not select hardware families, PDO variants or merge overrides.
         raw = self.yamlHandler.yamlData
-        self.hardwareProfiles = select_profiles(
-            raw, pathlib.Path(__file__).resolve().parent / "hardwareProfiles",
-            os.environ)
-        if self.hardwareProfiles:
-            resolved = dict(raw)
-            for section, profile in self.hardwareProfiles.items():
-                user_section = raw.get(section, {})
-                overrides = {k: v for k, v in user_section.items()
-                             if k not in ("slave", "master", "channel", "feedback")}
-                if section == "input" and isinstance(overrides.get("limit"), dict):
-                    overrides["limit"] = dict(overrides["limit"])
-                    overrides["limit"].pop("swap", None)
-                resolved[section] = deep_merge(profile["data"], overrides)
+        has_selectors = any(
+            isinstance(raw.get(section), dict) and "slave" in raw[section]
+            for section in ("drive", "encoder", "input")
+        )
+        if has_selectors:
+            template = self.axisTemplate.env.get_template(
+                "hardwareProfiles/renderDefaults.jinja2")
+            rendered = template.render(axis_config=raw, hardware_env=os.environ)
+            resolved = yaml.safe_load(rendered)
+            if "__hardware_profile_error__" in resolved:
+                raise ValueError(resolved["__hardware_profile_error__"])
             self.v.document = resolved
-        self.yamlHandler.yamlData = self.v.validate_axis()  # normal axis validation
-        if self.hardwareProfiles:
-            # Rendering metadata, deliberately added after schema validation.
-            self.yamlHandler.yamlData["hardware"] = self.hardwareProfiles
+        self.yamlHandler.yamlData = self.v.validate_axis()
         self.yamlHandler.checkForVariables()
         self.setAxisTemplate()
         if self.yamlHandler.hasVariables:

@@ -44,7 +44,7 @@
       {% endif %}
       {% if not cfg.error %}
         {% if family == 'EL70xx' %}
-          {% include 'hwProfileEL70xxbase.jinja2' %}
+          {% include 'hwProfileEL70xx.jinja2' %}
           {% if component.startswith('EL7041') %}
             {% if part == 'drive' %}
               {% set _ = cfg.defaults.update({'denominator': 32768}) %}
@@ -52,27 +52,18 @@
               {% set _ = cfg.defaults.update({'denominator': 12800}) %}
             {% endif %}
           {% endif %}
-          {% if part == 'drive' %}
-            {% include 'hwProfileEL70xx' ~ variant ~ '.jinja2' %}
-          {% endif %}
         {% elif family == 'EL7062' %}
-          {% include 'hwProfileEL7062base.jinja2' %}
-          {% if part == 'drive' %}
-            {% include 'hwProfileEL7062' ~ variant ~ '.jinja2' %}
-          {% endif %}
+          {% include 'hwProfileEL7062.jinja2' %}
         {% elif family == 'EL72xx' %}
-          {% include 'hwProfileEL72xxbase.jinja2' %}
-          {% if part == 'drive' %}
-            {% include 'hwProfileEL72xx' ~ variant ~ '.jinja2' %}
-          {% endif %}
-        {% elif family == 'EL5042' %}
-          {% include 'hwProfileEL5042base.jinja2' %}
-        {% elif family == 'EL5102' %}
-          {% include 'hwProfileEL5102base.jinja2' %}
-        {% elif family == 'EL5101' %}
-          {% include 'hwProfileEL5101base.jinja2' %}
+          {% include 'hwProfileEL72xx.jinja2' %}
         {% elif family == 'EL5021' %}
-          {% include 'hwProfileEL5021base.jinja2' %}
+          {% include 'hwProfileEL5021.jinja2' %}
+        {% elif family == 'EL5042' %}
+          {% include 'hwProfileEL5042.jinja2' %}
+        {% elif family == 'EL5101' %}
+          {% include 'hwProfileEL5101.jinja2' %}
+        {% elif family == 'EL5102' %}
+          {% include 'hwProfileEL5102.jinja2' %}
         {% endif %}
         {% if part == 'encoder' and family == 'EL7062' %}
           {% set raw_fb = user.get('feedback', 'openloop') | string %}

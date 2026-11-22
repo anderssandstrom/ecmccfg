@@ -11,7 +11,7 @@ The 10 simulated axes combine 13 terminal configurations. The matrix in
 
 | Axis | Drive | Encoder | Expected selection |
 | --- | --- | --- | --- |
-| S7031 | EL7031 | EL7031 | CSV open-loop |
+| S7031 | EL7031 | EL7031 | CSV open-loop, inherited 12800 denominator |
 | S7037 | EL7037 | EL5021 | CSV + Sin/Cos 1 Vpp |
 | S7041 | EL7041-0052 | EL5042 ch 1 | CSV + BiSS-C |
 | S7047 | EL7047 | EL5102 ch 2 | CSV + incremental |
@@ -21,6 +21,11 @@ The 10 simulated axes combine 13 terminal configurations. The matrix in
 | S7062A | EL7062 ch 1 | Internal open-loop | CSV, normal limits |
 | S7062B | EL7062 ch 2 | Secondary incremental | CSV, swapped limits |
 | S7211C | EL7211-9014 CSP STD | Same terminal | CSP |
+
+The `axis_el70xx_openloop.yaml` fixture intentionally omits the encoder
+`denominator` so that S7031 checks the family default of 12800; the
+generic `axis_csv.yaml` retains explicit scaling for the other encoder
+families. The simulator model uses 12800 counts/revolution for EL70xx.
 
 The test uses **the real `EcmcAxis` Jinja renderer and schema validator**,
 not a replacement profile resolver. Offline assertions check the generated

@@ -1,7 +1,8 @@
 # EL7062 in CSV mode, channel 1. Channel 2 needs a channel-specific profile.
-# Velocity/position scaling belongs to the axis application.
+# Default scale denominator below is illustrative; verify on real hardware.
 drive:
   type: 1
+  denominator: 32768
   control: ec$(MASTER).s$(SLAVE).driveControl01
   status: ec$(MASTER).s$(SLAVE).driveStatus01
   setpoint: ec$(MASTER).s$(SLAVE).velocitySetpoint01

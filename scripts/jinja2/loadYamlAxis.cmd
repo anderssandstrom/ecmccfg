@@ -51,15 +51,9 @@ ecmcEndIf()
 
 ecmcFileExist("${FILE_TEMP_2}",1)
 
-#- The Jinja backend resolves profiles inside its renderer, with no extra preprocessing.
-#- ECB uses the compatibility resolver only for new slave-selected profiles.
-epicsEnvSet(FILE_TEMP_4,${ECMC_TMP_DIR}${FILE}_4)
-system "rm -f ${FILE_TEMP_4}"
-ecmcIf("'$(ECMC_CFG_TOOL=jinja)'=='ecb'")
-  ${IF_TRUE}system "if grep -Eq '^[[:space:]]+slave:[[:space:]]*' ${FILE_TEMP_2}; then . ${ECMC_CONFIG_ROOT}pythonVenv.sh -d ${ECMC_TMP_DIR}; python ${ECMC_CONFIG_ROOT}resolveAxisHardwareProfiles.py ${FILE_TEMP_2} ${FILE_TEMP_4} --profiles ${ECMC_CONFIG_ROOT}hardwareProfiles; else cp ${FILE_TEMP_2} ${FILE_TEMP_4}; fi"
-  ${IF_FALSE}system "cp ${FILE_TEMP_2} ${FILE_TEMP_4}"
-ecmcEndIf()
-ecmcFileExist("${FILE_TEMP_4}",1)
+#- Hardware family selection is handled by Jinja templates in the existing
+#- axis renderer. ECB remains supported for legacy, fully specified YAML.
+#- No extra Python hardware resolution or intermediate YAML file is needed.
 
 #- cleanup
 epicsEnvUnset(ECMC_PLC_FILENAME)
@@ -67,17 +61,15 @@ epicsEnvUnset(ECMC_PLC_FILENAME)
 
 #- step 3: parse yaml file
 ecmcIf("'$(ECMC_CFG_TOOL=jinja)'=='ecb'")
-  ${IF_TRUE}ecb --yaml ${FILE_TEMP_4} --schemafile ${ECMC_CONFIG_ROOT}ecbSchema.json --schema axis --template ${ECMC_CONFIG_ROOT}axis_main.jinja2 --templatedir ${ECMC_CONFIG_ROOT} --output ${FILE_TEMP_3}
+  ${IF_TRUE}ecb --yaml ${FILE_TEMP_2} --schemafile ${ECMC_CONFIG_ROOT}ecbSchema.json --schema axis --template ${ECMC_CONFIG_ROOT}axis_main.jinja2 --templatedir ${ECMC_CONFIG_ROOT} --output ${FILE_TEMP_3}
 #- else
   #- setup python venv and run `plcYamlJinja2.py` must be in the same 'system'-context
-  ${IF_FALSE}system ". ${ECMC_CONFIG_ROOT}pythonVenv.sh -d ${ECMC_TMP_DIR}; python ${ECMC_CONFIG_ROOT}axisYamlJinja2.py -d ${ECMC_TMP_DIR} -T ${ECMC_CONFIG_ROOT} -D ${FILE_TEMP_4} -o ${FILE_TEMP_3}"
+  ${IF_FALSE}system ". ${ECMC_CONFIG_ROOT}pythonVenv.sh -d ${ECMC_TMP_DIR}; python ${ECMC_CONFIG_ROOT}axisYamlJinja2.py -d ${ECMC_TMP_DIR} -T ${ECMC_CONFIG_ROOT} -D ${FILE_TEMP_2} -o ${FILE_TEMP_3}"
 ecmcEndIf()
 
 #- cleanup
 system "rm -rf ${FILE_TEMP_2}"
 epicsEnvUnset(FILE_TEMP_2)
-system "rm -rf ${FILE_TEMP_4}"
-epicsEnvUnset(FILE_TEMP_4)
 
 #- set device name, default to ${IOC}
 epicsEnvSet("ECMC_PREFIX"      "${PREFIX=${DEV=${IOC}}:}")

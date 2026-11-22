@@ -1,4 +1,7 @@
 import pathlib
+import os
+
+from resolveAxisHardwareProfiles import select_profiles, deep_merge
 
 import ecmcYamlHandler
 import ecmcJinja2
@@ -22,6 +25,7 @@ class EcmcAxis:
         self.config_file = config_file
         self.axisType = 1
         self.hasSyncPLC = False
+        self.hardwareProfiles = {}
         self.yamlHandler = ecmcYamlHandler.YamlHandler()
         self.axisTemplate = ecmcJinja2.JinjaTemplate(jinja_template_dir)
         self.v = ecmcConfigValidator.ConfigValidator()
@@ -40,7 +44,20 @@ class EcmcAxis:
         """
         wrapper around all steps needed to render an axis-script from a yaml-config
         """
-        self.yamlHandler.yamlData = self.v.validate_axis()  # validate the full axis schema
+        # Hardware selection happens inside the normal Jinja rendering process.
+        # Apply defaults in memory, then validate/render once (no temporary YAML).
+        raw = self.yamlHandler.yamlData
+        self.hardwareProfiles = select_profiles(
+            raw, pathlib.Path(__file__).resolve().parent / "hardwareProfiles",
+            os.environ)
+        if self.hardwareProfiles:
+            resolved = dict(raw)
+            for section, profile in self.hardwareProfiles.items():
+                overrides = {k: v for k, v in raw[section].items()
+                             if k not in ("slave", "master", "channel", "feedback")}
+                resolved[section] = deep_merge(profile["data"], overrides)
+            self.v.document = resolved
+        self.yamlHandler.yamlData = self.v.validate_axis()  # normal axis validation
         self.yamlHandler.checkForVariables()
         self.setAxisTemplate()
         if self.yamlHandler.hasVariables:

@@ -1,8 +1,0 @@
-# EL5042 channel-aware encoder PDOs; engineering scale remains axis-specific.
-channels: 2
-encoder:
-  type: 1
-  source: 0
-  bits: 64
-  # Set absBits and scaling in axis YAML for the actual BiSS-C encoder.
-  position: ec$(MASTER).s$(SLAVE).positionActual$(CHANNEL)

@@ -22,6 +22,26 @@ encoder:
   numerator: 1.0
 ```
 
+For EL7062 the `input` section can inherit the drive slave and channel.
+The hardware profile supplies `binaryInputs01.1` (forward) and
+`binaryInputs01.0` (backward), or the corresponding `02` entries.
+To exchange these two default links without repeating their paths:
+
+```yaml
+input:
+  limit:
+    swap: true
+```
+
+Use `swap: $(SWAP_LIMITS=false)` to select this at startup. Explicit
+`input.limit.forward` and `input.limit.backward` paths take precedence
+over the swapped defaults, independently. `input.slave` and `input.channel`
+may be specified to use a different input terminal with a suitable profile.
+The swap changes signal assignment, **not electrical polarity**. Verify
+the wiring, active levels, and limit handling before enabling motion.
+EL7041 has no verified default limit mapping here, so continue to supply
+explicit limit input paths for that terminal.
+
 The EL7041 example needs only `slave`, with channel 1 implicit. EL7062
 supports channels 1 and 2, and encoder feedback `openloop` (default) or
 `incremental`. Incremental feedback selects `positionActual01_2` for

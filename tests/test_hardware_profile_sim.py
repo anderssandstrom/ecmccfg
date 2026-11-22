@@ -76,6 +76,7 @@ def render_case(case, override=None):
         mapping.update(override)
     filename = IOC / ("axis_el7062.yaml" if case["template"] == "el7062"
                       else "axis_csp.yaml" if case["template"] == "csp"
+                      else "axis_el70xx_openloop.yaml" if case["template"] == "openloop"
                       else "axis_csv.yaml")
     document = expand_macros(yaml.safe_load(filename.read_text()), mapping)
     with tempfile.TemporaryDirectory() as tmp:
@@ -124,6 +125,13 @@ class HardwareProfileSimulation(unittest.TestCase):
                     bit = 0 if case["swap"] else 1
                     self.assertIn(
                         f"ec0.s9.binaryInputs{case['chan']:02d}.{bit}", rendered)
+
+    def test_el7031_internal_openloop_uses_family_denominator(self):
+        case = next(c for c in MATRIX["cases"] if c["name"] == "S7031")
+        result = render_case(case)
+        self.assertIn("Cfg.SetAxisEncScaleDenom(", result)
+        self.assertIn(",12800", result)
+        self.assertIn(",10.0", result)
 
     def test_csv_csp_mismatch_rejected(self):
         case = next(c for c in MATRIX["cases"] if c["template"] == "csp")

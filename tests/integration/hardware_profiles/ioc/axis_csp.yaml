@@ -18,7 +18,8 @@ encoder:
   denominator: 1048576
   useAsCSPDrvEnc: true
 controller:
-  Kp: 0.0
+  # Nonzero for the generic ECMC startup check; not production CSP tuning.
+  Kp: 1.0
 trajectory:
   axis:
     velocity: 0.1
@@ -29,3 +30,15 @@ input:
     # SIM-only placeholders. NO physical end-stop protection.
     forward: ec0.s-1.ONE.0
     backward: ec0.s-1.ONE.0
+
+# Explicit monitor parameters avoid invalid zero-tolerance startup defaults.
+# SIM fixture only: values are illustrative, not tuned for motor operation.
+monitoring:
+  target:
+    enable: true
+    tolerance: 0.01
+    time: 100
+  lag:
+    enable: true
+    tolerance: 0.1
+    time: 100

@@ -37,6 +37,9 @@ inductance, and controller parameters) before enabling the drive.
 
 The `ONE.0` limit links are **demonstration placeholders only**; they do
 not provide end-stop protection. Replace them with tested hardware limit
-inputs and validate polarity before any real movement. For EL7062, `drive.channel` and `encoder.channel` select channel 1 or 2.\nThe hardware profile expands `$(CHANNEL)` into PDO suffix `01` or `02`.\nSelect the same channel for drive and encoder when both belong to the same motor.\nBoth channels require real hardware verification.
+inputs and validate polarity before any real movement. For EL7062, `drive.channel` and `encoder.channel` select channel 1 or 2.
+The hardware profile expands `$(CHANNEL)` into PDO suffix `01` or `02`.
+Select the same channel for drive and encoder when both belong to the same motor.
+Both channels require real hardware verification.
 
-These examples have not been validated by an IOC build or hardware test.
+For Jinja, the normal axis renderer loads hardware defaults and optional hardware\ncommand snippets directly. ECB retains the compatibility preprocessing path.\n\nThese examples have not been validated by an IOC build or hardware test.

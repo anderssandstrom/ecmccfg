@@ -99,7 +99,7 @@ def _substitute(value, master, slave, channel):
     if isinstance(value, list):
         return [_substitute(v, master, slave, channel) for v in value]
     if isinstance(value, dict):
-        return {k: _substitute(v, master, slave) for k, v in value.items()}
+        return {k: _substitute(v, master, slave, channel) for k, v in value.items()}
     return value
 
 
@@ -132,7 +132,7 @@ def resolve(document, profiles_dir, environ=None):
                                     (section, hardware, master, slave))
         with profile.open(encoding="utf-8") as stream:
             defaults = yaml.safe_load(stream)
-        if not isinstance(defaults, dict) or not set(defaults).issubset({section, "channels"}) or section not in defaults or not isinstance(defaults[section], dict):
+        if not isinstance(defaults, dict) or not set(defaults).issubset({section, "channels", "feedbacks"} if section == "encoder" else {section, "channels"}) or section not in defaults or not isinstance(defaults[section], dict):
             raise ValueError("Invalid profile structure: %s" % profile)
         channel_count = defaults.get("channels", 1)
         if type(channel_count) is not int or channel_count < 1:
@@ -140,9 +140,27 @@ def resolve(document, profiles_dir, environ=None):
         if channel > channel_count:
             raise ValueError("%s.channel=%d exceeds %s supported channels (%d)" %
                              (section, channel, hardware, channel_count))
-        defaults = _substitute(defaults[section], master, slave, channel)
+        # Select encoder feedback independently from the motor channel.
+        # Profiles without feedback choices retain their legacy behavior.
+        feedbacks = defaults.get("feedbacks")
+        if section == "encoder" and feedbacks is not None:
+            if not isinstance(feedbacks, dict) or "openloop" not in feedbacks:
+                raise ValueError("Invalid encoder feedback mapping in %s" % profile)
+            feedback = _expand_selector(raw.get("feedback", "openloop"), env, "encoder.feedback")
+            if not isinstance(feedback, str) or feedback not in feedbacks:
+                raise ValueError("Unknown encoder feedback %r for %s; choices: %s" %
+                                 (feedback, hardware, ", ".join(sorted(feedbacks))))
+            selected = feedbacks[feedback]
+            if not isinstance(selected, dict):
+                raise ValueError("Invalid encoder feedback %r in %s" % (feedback, profile))
+            selected_defaults = deep_merge(defaults[section], selected)
+        else:
+            if section == "encoder" and "feedback" in raw:
+                raise ValueError("Encoder profile for %s does not support feedback selection" % hardware)
+            selected_defaults = defaults[section]
+        defaults = _substitute(selected_defaults, master, slave, channel)
         # Selector keys are not supported by the existing axis schema.
-        overrides = {k: v for k, v in raw.items() if k not in ("slave", "master", "channel")}
+        overrides = {k: v for k, v in raw.items() if k not in ("slave", "master", "channel", "feedback")}
         result[section] = deep_merge(defaults, overrides)
     return result
 

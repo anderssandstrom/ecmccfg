@@ -121,6 +121,13 @@ epicsEnvSet(DRV_CH,1)
 epicsEnvSet(ENC_FEEDBACK,openloop)
 epicsEnvSet(SWAP_LIMITS,false)
 ${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd "FILE=./axis_csp.yaml"
+# EL7062 channel 1/2 limits default to binaryInputsXX bits 1/0.
+# ECMC uses normally-closed limit polarity, so both bits must be HIGH
+# when no end-stop is active. Simulated PDO inputs otherwise start at 0
+# and ECMC raises ERROR_MON_BOTH_LIMIT_INTERLOCK once startup finishes.
+# Keep hardware-profile links active (including axis 9's swapped links).
+ecmcConfigOrDie "Cfg.SimSetValue(ec0.s9.binaryInputs01,3)"
+ecmcConfigOrDie "Cfg.SimSetValue(ec0.s9.binaryInputs02,3)"
 # Set representative simulated readback/status values without starting motion.
 # Do not enable motors or issue move commands in this fixture.
 ecmcConfigOrDie "Cfg.SimSetValue(ec0.s9.driveStatus01,64)"

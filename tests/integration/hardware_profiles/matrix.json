@@ -62,7 +62,7 @@
       "drive": 2,
       "enc": 2,
       "hw": "EL7031",
-      "template": "csv",
+      "template": "openloop",
       "chan": 1,
       "fb": "openloop",
       "swap": false

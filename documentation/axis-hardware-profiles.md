@@ -13,12 +13,12 @@ addSlave.cmd HW_DESC=EL5101,SLAVE_ID=8
 Example axis YAML:
 ```yaml
 drive:
-  slave: 7
+  slave: $(DRV_SLAVE)
   numerator: 20
   control: ec0.s7.driveControl01
 
 encoder:
-  slave: 8
+  slave: $(ENC_SLAVE)
   position: ec0.s8.positionActual01
 
 input:
@@ -63,8 +63,12 @@ would be needed to remove that dependency completely.
   PDO links must still be supplied and validated for each installation.
 - Slave registration assumes `addSlave.cmd` runs before axis YAML loading
   in the same IOC environment.
-- Slave selectors must be numeric after IOC preprocessing; symbolic
-  `$(SLAVE)` inside a YAML selector is not yet supported.
+- Slave selectors may be numeric or reference IOC environment macros such as
+  `$(DRV_SLAVE)` and `$(ENC_SLAVE)`. The resolver expands these selectors
+  before looking up the registered slave hardware. Nested macros and
+  `$(NAME=default)` are supported. Missing or nonnumeric macro values fail
+  configuration rather than silently selecting another terminal.
+- The IOC must define the slave macros before `loadYamlAxis.cmd` executes.
 - Support for input profiles exists in the resolver, but default wiring for
   actual terminal variants must be reviewed before shipping profiles.
 - ECMC bit aliases require the separate hardware-abstraction ECMC branch.
@@ -73,7 +77,7 @@ would be needed to remove that dependency completely.
 ## Standalone test
 
 ```sh
-ECMC_HW_M0_S7=EL7041 ECMC_HW_M0_S8=EL5101 \
+ECMC_HW_M0_S7=EL7041 ECMC_HW_M0_S8=EL5101 DRV_SLAVE=7 ENC_SLAVE=8 \
 python scripts/jinja2/resolveAxisHardwareProfiles.py axis.yaml resolved.yaml \
   --profiles scripts/jinja2/hardwareProfiles
 

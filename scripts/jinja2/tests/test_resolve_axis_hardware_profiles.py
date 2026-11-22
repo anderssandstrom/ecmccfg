@@ -69,7 +69,7 @@ class TestProfiles(unittest.TestCase):
 
     def test_cli_preprocessing_expands_macros(self):
         source, target = self.root / "macro-axis.yaml", self.root / "resolved.yaml"
-        source.write_text("drive:\\n  slave: $(DRV_SLAVE)\\n  numerator: 20\\n")
+        source.write_text("drive:\n  slave: $(DRV_SLAVE)\n  numerator: 20\n")
         preprocess(source, target, self.root, dict(self.env, DRV_SLAVE="7"))
         self.assertEqual(__import__("yaml").safe_load(target.read_text())["drive"]["numerator"], 20)
         self.assertNotIn("slave", __import__("yaml").safe_load(target.read_text())["drive"])

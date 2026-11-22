@@ -30,7 +30,7 @@ epicsEnvSet(ENC_CH,1)
 epicsEnvSet(DRV_CH,1)
 epicsEnvSet(ENC_FEEDBACK,openloop)
 epicsEnvSet(SWAP_LIMITS,false)
-${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd "FILE=./axis_csv.yaml"
+${SCRIPTEXEC} ${ecmccfg_DIR}loadYamlAxis.cmd "FILE=./axis_el70xx_openloop.yaml"
 # 2: S7037 EL7037 + encoder slave 12; CSV
 epicsEnvSet(AX_ID,2)
 epicsEnvSet(AX_NAME,S7037)

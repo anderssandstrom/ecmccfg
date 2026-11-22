@@ -78,12 +78,12 @@ class TestProfiles(unittest.TestCase):
         model = self.root / "EL7062"
         model.mkdir()
         (model / "drive.yaml").write_text(
-            "channels: 2\\ndrive:\\n  type: 1\\n"
-            "  setpoint: ec$(MASTER).s$(SLAVE).velocitySetpoint$(CHANNEL)\\n"
-            "  status: ec$(MASTER).s$(SLAVE).driveStatus$(CHANNEL)\\n")
+            "channels: 2\ndrive:\n  type: 1\n"
+            "  setpoint: ec$(MASTER).s$(SLAVE).velocitySetpoint$(CHANNEL)\n"
+            "  status: ec$(MASTER).s$(SLAVE).driveStatus$(CHANNEL)\n")
         (model / "encoder.yaml").write_text(
-            "channels: 2\\nencoder:\\n"
-            "  position: ec$(MASTER).s$(SLAVE).positionActual$(CHANNEL)\\n")
+            "channels: 2\nencoder:\n"
+            "  position: ec$(MASTER).s$(SLAVE).positionActual$(CHANNEL)\n")
         env = dict(self.env, ECMC_HW_M0_S9="EL7062", DRV_CHANNEL="2")
         axis = {
             "drive": {"slave": 9, "channel": "$(DRV_CHANNEL)"},

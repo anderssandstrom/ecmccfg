@@ -53,35 +53,33 @@ Master, slave and channel selectors accept IOC environment macros such as
 process environment. Unregistered hardware, unsupported channels/feedback,
 or missing profiles produce configuration errors.
 
-## Implementation
+## Implementation — Jinja family profiles
 
-The **normal Jinja axis renderer** identifies hardware using the registered
-slave, loads `hardwareProfiles/<model>/<section>.yaml` and applies defaults
-in memory before the usual schema validation. No extra Python process or
-intermediate hardware-resolved YAML is needed on this path. For variants
-such as EL7041-0052, the base EL7041 profile is used if an exact profile is
-not available.
+`addSlave.cmd` registers two values per master/slave:
 
-Hardware profile strings expand `$(MASTER)`, `$(SLAVE)` and `$(CHANNEL)`;
-the channel placeholder becomes a two-digit suffix `01` or `02`.
+- `ECMC_HW_M<master>_S<slave>`: hardware component type
+- `ECMC_HW_SCRIPT_M<master>_S<slave>`: exact `HW_DESC` script variant
 
-Optional `hardwareProfiles/<model>/drive.jinja2` and `encoder.jinja2`
-files generate additional `ecmcConfigOrDie` commands. The renderer
-includes these **after `Cfg.CreateAxis()` and before the normal encoder
-and drive configuration**. The EL7041 and EL7062 snippets emit default scale denominators and PDO links.
-Normal axis templates then apply the resolved YAML configuration, including
-explicit overrides. ECMC permits configuration-time relinking: later commands
-replace earlier links to the same axis slot.
+The existing Python axis runner uses **Jinja2 only** to choose and merge
+hardware defaults: `hardwareProfiles/renderDefaults.jinja2` includes
+`EL70xx`, `EL7062`, `EL72xx`, `EL5042`, or `EL5102` family templates.
+These templates merge base PDO mappings with CSV/CSP variants and explicit
+axis YAML overrides, producing the data for ordinary schema validation.
+No hardware-specific Python resolver, additional Python invocation, or
+hardware-resolved temporary YAML file remains.
 
-Values explicitly specified in the axis YAML always override hardware
-defaults. Hardware snippets set defaults first; the regular templates run
-afterwards, so PDO links may be configured twice (last successful link wins).
-The hardware-defined drive type is available before `Cfg.CreateAxis()`.
+The rendering order is family base, selected PDO variant, then explicit axis
+YAML values. Existing YAML without hardware slave selectors takes the
+unmodified legacy path. The normal axis templates emit the final links once.
+For EL7062, optional `input.limit.swap` exchanges the mapped limit inputs.
 
-The ECB backend still uses the compatibility adapter
-`resolveAxisHardwareProfiles.py` for slave-selected profiles. Unchanged
-legacy ECB YAML continues through its original path. The ECB compatibility
-adapter is **not** part of the Jinja rendering path.
+For drive profiles, `HW_DESC` must identify a standard CSV/CSP mapping
+consistent with `axis.mode`. OPT, PosIF and CST mappings are not inferred:
+configure those with explicit PDO paths. Servo scaling remains explicitly
+motor-specific, and terminal-specific input PDO capabilities must be checked.
+The legacy `ecb` backend still accepts fully specified axis YAML but does
+**not** support the new compact hardware selectors; select the Jinja backend
+to use this abstraction.
 
 ## Notes
 
@@ -91,8 +89,6 @@ adapter is **not** part of the Jinja rendering path.
   motor, encoder, microstepping and engineering units.
 - The EL7062 incremental encoder PDO suffix `_2` indicates the encoder
   feedback source, not the second motor channel.
-- Hardware profiles with no command snippet work normally via the
-  regular configuration templates.
 - This feature requires IOC integration and hardware testing before release.
 
 
@@ -114,12 +110,12 @@ BiSS-C encoder resolution (`absBits`) must also be specified explicitly.
 No default limit wiring is assumed for EL70xx or EL72xx, so include explicit
 `input.limit.forward` and `input.limit.backward` paths.
 
-The profile resolver chooses the component type registered from
+The Jinja family templates use the component type registered from
 `ECMC_EC_COMP_TYPE` (falling back to `HW_DESC`). `addSlave.cmd` also
 registers `ECMC_HW_SCRIPT_M<master>_S<slave>` to preserve the selected
 hardware-script variant. This matters because several EL70xx/EL72xx
 CSP and OPT scripts share the same component type as CSV versions.
-The standard drive profiles support **CSV process images only**. A CSP,
+The standard drive profiles support **CSV and matching CSP process images**. An incompatible mode,
 PosIF or OPT hardware script is rejected for automatic drive mapping
 rather than risking an invalid setpoint link. Such configurations can
 still use the established explicit axis-YAML PDO mapping.

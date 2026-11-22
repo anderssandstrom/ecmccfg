@@ -5,7 +5,7 @@ import tempfile
 import unittest
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
-from resolveAxisHardwareProfiles import deep_merge, preprocess, resolve
+from resolveAxisHardwareProfiles import deep_merge, preprocess, resolve, select_profiles
 
 
 class TestProfiles(unittest.TestCase):
@@ -138,6 +138,46 @@ class TestProfiles(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "does not support feedback"):
             resolve({"encoder": {"slave": 8, "feedback": "incremental"}},
                     self.root, self.env)
+
+    def test_real_el7062_profile_and_jinja_command_snippets(self):
+        try:
+            import jinja2
+        except ImportError:
+            self.skipTest("jinja2 is not installed")
+        root = pathlib.Path(__file__).resolve().parents[1]
+        profiles = root / "hardwareProfiles"
+        templates = root / "templates"
+        env = {"ECMC_HW_M0_S7": "EL7062"}
+        axis = {"drive": {"slave": 7, "channel": 2, "numerator": 10.0},
+                "encoder": {"slave": 7, "channel": 2,
+                            "feedback": "incremental", "numerator": 1.0}}
+        selected = select_profiles(axis, profiles, env)
+        self.assertEqual(selected["drive"]["data"]["type"], 1)
+        self.assertEqual(selected["drive"]["data"]["setpoint"],
+                         "ec0.s7.velocitySetpoint02")
+        self.assertEqual(selected["encoder"]["data"]["position"],
+                         "ec0.s7.positionActual02_2")
+        self.assertTrue(selected["drive"]["snippet"])
+        self.assertTrue(selected["encoder"]["snippet"])
+        renderer = jinja2.Environment(loader=jinja2.FileSystemLoader(str(root)))
+        # The command hook is in templates; its included snippets are in
+        # hardwareProfiles. Include using that directory as a second loader.
+        renderer.loader = jinja2.FileSystemLoader([str(templates), str(root)])
+        output = renderer.get_template("hardwareDefaults.jinja2").render(
+            hardware=selected)
+        self.assertIn("Cfg.SetAxisDrvScaleDenom(", output)
+        self.assertIn("Cfg.SetAxisEncScaleDenom(", output)
+
+        axis["drive"]["denominator"] = 200
+        axis["encoder"]["denominator"] = 400
+        selected = select_profiles(axis, profiles, env)
+        output = renderer.get_template("hardwareDefaults.jinja2").render(
+            hardware=selected)
+        self.assertNotIn("Cfg.SetAxisDrvScaleDenom(", output)
+        self.assertNotIn("Cfg.SetAxisEncScaleDenom(", output)
+        resolved = resolve(axis, profiles, env)
+        self.assertEqual(resolved["drive"]["denominator"], 200)
+        self.assertEqual(resolved["encoder"]["denominator"], 400)
 
     def test_invalid_channel_rejected(self):
         for channel in (0, 2, -1, True, "$(MISSING)", "abc"):

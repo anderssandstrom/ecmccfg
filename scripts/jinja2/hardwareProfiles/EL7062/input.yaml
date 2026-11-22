@@ -1,9 +1,0 @@
-# EL7062 limit-switch PDO defaults, from existing CSV axis examples.
-# Bit 1 = forward, bit 0 = backward in the corresponding channel.
-# Verify actual wiring, polarity, switch sense, and safe stopping behavior.
-# Do not automatically define home or interlock inputs.
-channels: 2
-input:
-  limit:
-    forward: ec$(MASTER).s$(SLAVE).binaryInputs$(CHANNEL).1
-    backward: ec$(MASTER).s$(SLAVE).binaryInputs$(CHANNEL).0

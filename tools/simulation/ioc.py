@@ -21,7 +21,7 @@ import manual
 
 # Stepper descriptors; DS402 families are matched below. Native PV types are checked.
 MODEL_MODULES = {'EL7041': el7041, 'EL7041-0052': el7041,
-                 'EL7031': el7041, 'EL7047': el7041}
+                 'EL7031': el7041, 'EL7037': el7041, 'EL7047': el7041}
 
 
 def model_module(hardware):

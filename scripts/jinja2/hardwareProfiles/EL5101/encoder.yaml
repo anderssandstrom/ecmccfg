@@ -1,3 +1,0 @@
-# Example incremental encoder profile; resolution/scaling remains application-specific.
-encoder:
-  type: 0

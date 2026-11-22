@@ -1,8 +1,9 @@
-# EL7062 in CSV mode, channel 1. Channel 2 needs a channel-specific profile.
+# EL7062 in CSV mode, channels 1 and 2. The channel chooses the PDO suffix.
 # Default scale denominator below is illustrative; verify on real hardware.
+channels: 2
 drive:
   type: 1
   denominator: 32768
-  control: ec$(MASTER).s$(SLAVE).driveControl01
-  status: ec$(MASTER).s$(SLAVE).driveStatus01
-  setpoint: ec$(MASTER).s$(SLAVE).velocitySetpoint01
+  control: ec$(MASTER).s$(SLAVE).driveControl$(CHANNEL)
+  status: ec$(MASTER).s$(SLAVE).driveStatus$(CHANNEL)
+  setpoint: ec$(MASTER).s$(SLAVE).velocitySetpoint$(CHANNEL)

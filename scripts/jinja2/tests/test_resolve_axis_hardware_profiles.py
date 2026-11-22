@@ -199,6 +199,56 @@ class TestProfiles(unittest.TestCase):
         self.assertEqual(resolved["drive"]["denominator"], 200)
         self.assertEqual(resolved["encoder"]["denominator"], 400)
 
+    def test_el7062_limit_swapping_and_explicit_override(self):
+        profiles = pathlib.Path(__file__).resolve().parents[1] / "hardwareProfiles"
+        env = {"ECMC_HW_M0_S7": "EL7062"}
+
+        base = {"drive": {"slave": 7, "channel": 2},
+                "input": {"limit": {"swap": True}}}
+        resolved = resolve(base, profiles, env)
+        self.assertEqual(resolved["input"]["limit"]["forward"],
+                         "ec0.s7.binaryInputs02.0")
+        self.assertEqual(resolved["input"]["limit"]["backward"],
+                         "ec0.s7.binaryInputs02.1")
+        self.assertNotIn("swap", resolved["input"]["limit"])
+
+        # YAML links override the swapped defaults individually.
+        base["input"]["limit"]["forward"] = "ec0.s10.myExternalLimit.3"
+        resolved = resolve(base, profiles, env)
+        self.assertEqual(resolved["input"]["limit"]["forward"],
+                         "ec0.s10.myExternalLimit.3")
+        self.assertEqual(resolved["input"]["limit"]["backward"],
+                         "ec0.s7.binaryInputs02.1")
+
+        base["input"]["limit"]["swap"] = False
+        resolved = resolve(base, profiles, env)
+        self.assertEqual(resolved["input"]["limit"]["backward"],
+                         "ec0.s7.binaryInputs02.0")
+
+    def test_el7062_limit_swap_macro_and_validation(self):
+        profiles = pathlib.Path(__file__).resolve().parents[1] / "hardwareProfiles"
+        env = {"ECMC_HW_M0_S7": "EL7062", "SWAP_LIMITS": "true"}
+        selected = select_profiles(
+            {"drive": {"slave": 7},
+             "input": {"limit": {"swap": "$(SWAP_LIMITS)"}}},
+            profiles, env)
+        self.assertEqual(selected["input"]["data"]["limit"]["forward"],
+                         "ec0.s7.binaryInputs01.0")
+        for value in ("invalid", 2, None):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                select_profiles({"drive": {"slave": 7},
+                                 "input": {"limit": {"swap": value}}},
+                                profiles, env)
+
+    def test_el7041_no_guessed_limit_profile(self):
+        profiles = pathlib.Path(__file__).resolve().parents[1] / "hardwareProfiles"
+        selected = select_profiles(
+            {"drive": {"slave": 7},
+             "input": {"limit": {"forward": "ec0.s8.fwd.0",
+                                 "backward": "ec0.s8.bwd.0"}}},
+            profiles, {"ECMC_HW_M0_S7": "EL7041"})
+        self.assertNotIn("input", selected)
+
     def test_invalid_channel_rejected(self):
         for channel in (0, 2, -1, True, "$(MISSING)", "abc"):
             with self.subTest(channel=channel), self.assertRaises(ValueError):

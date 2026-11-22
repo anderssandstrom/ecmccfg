@@ -249,6 +249,64 @@ class TestProfiles(unittest.TestCase):
             profiles, {"ECMC_HW_M0_S7": "EL7041"})
         self.assertNotIn("input", selected)
 
+    def test_new_encoder_channel_profiles(self):
+        profiles = pathlib.Path(__file__).resolve().parents[1] / "hardwareProfiles"
+        for model, enc_type, bits in (("EL5042", 1, 64), ("EL5102", 0, 32)):
+            env = {"ECMC_HW_M0_S14": model}
+            for channel in (1, 2):
+                with self.subTest(model=model, channel=channel):
+                    resolved = resolve(
+                        {"encoder": {"slave": 14, "channel": channel,
+                                     "numerator": 360.0}},
+                        profiles, env)["encoder"]
+                    self.assertEqual(resolved["position"],
+                                     "ec0.s14.positionActual%02d" % channel)
+                    self.assertEqual(resolved["type"], enc_type)
+                    self.assertEqual(resolved["bits"], bits)
+                    self.assertEqual(resolved["numerator"], 360.0)
+                    self.assertNotIn("absBits", resolved)
+            with self.assertRaisesRegex(ValueError, "exceeds"):
+                resolve({"encoder": {"slave": 14, "channel": 3}},
+                        profiles, env)
+
+    def test_new_stepper_family_profiles(self):
+        profiles = pathlib.Path(__file__).resolve().parents[1] / "hardwareProfiles"
+        for model in ("EL7031", "EL7037", "EL7047"):
+            with self.subTest(model=model):
+                env = {"ECMC_HW_M1_S8": model}
+                axis = {"drive": {"slave": 8, "master": 1, "denominator": 65432},
+                        "encoder": {"slave": 8, "master": 1}}
+                result = resolve(axis, profiles, env)
+                self.assertEqual(result["drive"]["type"], 0)
+                self.assertEqual(result["drive"]["setpoint"],
+                                 "ec1.s8.velocitySetpoint01")
+                self.assertEqual(result["drive"]["denominator"], 65432)
+                self.assertEqual(result["encoder"]["position"],
+                                 "ec1.s8.positionActual01")
+                self.assertEqual(result["encoder"]["bits"], 16)
+
+    def test_el72xx_component_profiles_and_csv_only(self):
+        profiles = pathlib.Path(__file__).resolve().parents[1] / "hardwareProfiles"
+        for model in ("EL7201_RES", "EL7201_OCT", "EL7211_RES",
+                      "EL7211_OCT", "EL7221_OCT"):
+            with self.subTest(model=model):
+                env = {"ECMC_HW_M0_S5": model}
+                axis = {"axis": {"mode": "CSV"},
+                        "drive": {"slave": 5, "numerator": 250.0,
+                                  "denominator": 2147483648},
+                        "encoder": {"slave": 5, "numerator": 360.0}}
+                result = resolve(axis, profiles, env)
+                self.assertEqual(result["drive"]["type"], 1)
+                self.assertEqual(result["drive"]["setpoint"],
+                                 "ec0.s5.velocitySetpoint01")
+                self.assertEqual(result["drive"]["denominator"], 2147483648)
+                self.assertEqual(result["encoder"]["position"],
+                                 "ec0.s5.positionActual01")
+                self.assertNotIn("denominator", result["encoder"])
+                axis["axis"]["mode"] = "CSP"
+                with self.assertRaisesRegex(ValueError, "CSV only"):
+                    resolve(axis, profiles, env)
+
     def test_invalid_channel_rejected(self):
         for channel in (0, 2, -1, True, "$(MISSING)", "abc"):
             with self.subTest(channel=channel), self.assertRaises(ValueError):

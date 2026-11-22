@@ -117,6 +117,16 @@ def select_profiles(document, profiles_dir, environ=None):
     selected = {}
     for section in _SECTIONS:
         raw = document.get(section)
+        # Limit inputs can use the drive's own terminal. Explicit input.slave
+        # and input.channel always win, including external limit modules.
+        if section == "input" and (not isinstance(raw, dict) or "slave" not in raw):
+            drive = document.get("drive")
+            if isinstance(drive, dict) and "slave" in drive:
+                candidate = dict(raw) if isinstance(raw, dict) else {}
+                candidate["slave"] = drive["slave"]
+                candidate.setdefault("master", drive.get("master", env.get("ECMC_EC_MASTER_ID", "0")))
+                candidate.setdefault("channel", drive.get("channel", 1))
+                raw = candidate
         if not isinstance(raw, dict) or "slave" not in raw:
             continue
         slave = _slave_id(raw["slave"], section + ".slave", env)
@@ -132,6 +142,13 @@ def select_profiles(document, profiles_dir, environ=None):
         if not _SAFE_TYPE.fullmatch(hardware):
             raise ValueError("Invalid registered hardware type: %r" % hardware)
         profile = _profile_path(profiles_dir, hardware, section)
+        if profile is None and section == "input" and (
+            not isinstance(document.get("input"), dict) or
+            "slave" not in document["input"]
+        ):
+            # Some terminals (e.g. EL7041) expose no suitable limit input
+            # through the standard process image. Require explicit input YAML.
+            continue
         if profile is None:
             raise FileNotFoundError("Missing %s profile for %s (master %d, slave %d)" %
                                     (section, hardware, master, slave))
@@ -164,7 +181,7 @@ def select_profiles(document, profiles_dir, environ=None):
         selected[section] = {
             "model": profile.parent.name,
             "data": _substitute(values, master, slave, channel),
-            "provided": list(raw),
+            "provided": list(document.get(section, {})) if isinstance(document.get(section), dict) else [],
             "slave": slave,
             "master": master,
             "channel": channel,
@@ -178,7 +195,7 @@ def resolve(document, profiles_dir, environ=None):
     selections = select_profiles(document, profiles_dir, environ)
     out = copy.deepcopy(document)
     for section, profile in selections.items():
-        raw = out[section]
+        raw = out.get(section, {})
         overrides = {k: v for k, v in raw.items() if k not in
                      ("slave", "master", "channel", "feedback")}
         out[section] = deep_merge(profile["data"], overrides)

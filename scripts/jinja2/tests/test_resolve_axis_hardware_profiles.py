@@ -23,6 +23,18 @@ class TestProfiles(unittest.TestCase):
         self.env = {"ECMC_HW_M0_S7": "EL7041-0052",
                     "ECMC_HW_M0_S8": "EL5101", "ECMC_EC_MASTER_ID": "0"}
 
+    def test_add_slave_registers_component_type_with_hw_desc_fallback(self):
+        # Component identification belongs in addSlave.cmd; the renderer
+        # consumes its registered per-master/per-slave environment variable.
+        script = (pathlib.Path(__file__).resolve().parents[2] /
+                  "addSlave.cmd").read_text()
+        clear = script.index("epicsEnvUnset(ECMC_EC_COMP_TYPE)")
+        load = script.index("ecmc${HW_DESC}.cmd")
+        register = script.index('epicsEnvSet("ECMC_HW_M')
+        self.assertLess(clear, load)
+        self.assertLess(load, register)
+        self.assertIn('"${ECMC_EC_COMP_TYPE=${HW_DESC}}"', script)
+
     def test_slave_lookup_variant_fallback_and_override(self):
         axis = {"drive": {"slave": 7, "numerator": 20},
                 "encoder": {"slave": 8, "filter": {"velocity": {"enable": False}}}}

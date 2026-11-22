@@ -1,0 +1,5 @@
+{# EL5021 single-channel Sin/Cos 1 Vpp encoder interface, 32-bit counter.
+   Interpolation and engineering-unit scaling depend on the installed encoder. #}
+{% if part == 'encoder' %}
+{% set _ = cfg.defaults.update({'type': 0, 'source': 0, 'bits': 32, 'position': 'ec' ~ master ~ '.s' ~ slave ~ '.positionActual01'}) %}
+{% endif %}

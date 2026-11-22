@@ -4,5 +4,5 @@ encoder:
   type: 1
   source: 0
   bits: 64
-  absBits: 64
+  # Set absBits and scaling in axis YAML for the actual BiSS-C encoder.
   position: ec$(MASTER).s$(SLAVE).positionActual$(CHANNEL)

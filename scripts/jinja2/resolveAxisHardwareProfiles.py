@@ -92,12 +92,12 @@ def _profile_path(profiles_dir, hardware, section):
     return None
 
 
-def _substitute(value, master, slave):
+def _substitute(value, master, slave, channel):
     """Substitute placeholders in profile-owned strings only."""
     if isinstance(value, str):
-        return value.replace("$(MASTER)", str(master)).replace("$(SLAVE)", str(slave))
+        return value.replace("$(MASTER)", str(master)).replace("$(SLAVE)", str(slave)).replace("$(CHANNEL)", "%02d" % channel)
     if isinstance(value, list):
-        return [_substitute(v, master, slave) for v in value]
+        return [_substitute(v, master, slave, channel) for v in value]
     if isinstance(value, dict):
         return {k: _substitute(v, master, slave) for k, v in value.items()}
     return value
@@ -115,6 +115,9 @@ def resolve(document, profiles_dir, environ=None):
         if not isinstance(raw, dict) or "slave" not in raw:
             continue
         slave = _slave_id(raw["slave"], section + ".slave", env)
+        channel = _slave_id(raw.get("channel", 1), section + ".channel", env)
+        if channel < 1:
+            raise ValueError("%s.channel must be at least 1" % section)
         master = _master_id(raw, env)
         key = "ECMC_HW_M%d_S%d" % (master, slave)
         hardware = env.get(key)
@@ -129,11 +132,17 @@ def resolve(document, profiles_dir, environ=None):
                                     (section, hardware, master, slave))
         with profile.open(encoding="utf-8") as stream:
             defaults = yaml.safe_load(stream)
-        if not isinstance(defaults, dict) or set(defaults) != {section} or not isinstance(defaults[section], dict):
+        if not isinstance(defaults, dict) or not set(defaults).issubset({section, "channels"}) or section not in defaults or not isinstance(defaults[section], dict):
             raise ValueError("Invalid profile structure: %s" % profile)
-        defaults = _substitute(defaults[section], master, slave)
+        channel_count = defaults.get("channels", 1)
+        if type(channel_count) is not int or channel_count < 1:
+            raise ValueError("Invalid channels count in %s" % profile)
+        if channel > channel_count:
+            raise ValueError("%s.channel=%d exceeds %s supported channels (%d)" %
+                             (section, channel, hardware, channel_count))
+        defaults = _substitute(defaults[section], master, slave, channel)
         # Selector keys are not supported by the existing axis schema.
-        overrides = {k: v for k, v in raw.items() if k not in ("slave", "master")}
+        overrides = {k: v for k, v in raw.items() if k not in ("slave", "master", "channel")}
         result[section] = deep_merge(defaults, overrides)
     return result
 

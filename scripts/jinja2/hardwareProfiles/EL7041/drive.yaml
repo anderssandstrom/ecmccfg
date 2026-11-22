@@ -2,6 +2,8 @@
 # Check mapping and sign against the installed terminal and motor component.
 drive:
   type: 0
+  # Example default; verify drive scaling for the installed setup.
+  denominator: 32768
   control: ec$(MASTER).s$(SLAVE).driveControl01
   status: ec$(MASTER).s$(SLAVE).driveStatus01
   setpoint: ec$(MASTER).s$(SLAVE).velocitySetpoint01

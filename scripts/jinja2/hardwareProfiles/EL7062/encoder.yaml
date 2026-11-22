@@ -5,8 +5,8 @@ encoder:
   type: 0
   source: 0
   bits: 32
-  # Illustrative count scaling; verify against motor and encoder configuration.
-  denominator: 12800
+  # Open-loop counter scaling from existing EL7062 example; incremental encoder scaling may differ.
+  denominator: 1048576
 feedbacks:
   openloop:
     position: ec$(MASTER).s$(SLAVE).positionActual$(CHANNEL)

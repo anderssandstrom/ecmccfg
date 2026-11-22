@@ -22,8 +22,8 @@ trajectory:
   axis:
     velocity: 1.0
     acceleration: 2.0
+# Default limit PDOs: binaryInputs<channel>.1 (fwd) and .0 (bwd).
+# Set swap: true to exchange those two inputs; set explicit paths to override.
 input:
   limit:
-    # Simulation ONE is a placeholder, NOT a real hardware safety limit.
-    forward: ec0.s$(DRV_SLAVE).ONE.0
-    backward: ec0.s$(DRV_SLAVE).ONE.0
+    swap: $(SWAP_LIMITS=false)

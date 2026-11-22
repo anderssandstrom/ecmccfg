@@ -1,0 +1,4 @@
+{# EL5101 standard and 32-bit PDO variants. #}
+{% if part == 'encoder' %}
+{% set _ = cfg.defaults.update({'type': 0, 'source': 0, 'bits': 32 if '32bit' in script else 16, 'position': 'ec' ~ master ~ '.s' ~ slave ~ '.positionActual01'}) %}
+{% endif %}

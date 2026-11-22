@@ -113,8 +113,12 @@ The following hardware profiles are now available:
 | EL7062 | drive + encoder + input | CSV, open-loop/incremental and channel-specific limit PDOs |
 | EL7201_RES, EL7201_OCT, EL7211_RES, EL7211_OCT, EL7221_OCT | drive + encoder | EX72XX standard CSV and `positionActual01` |
 
-Drive numerator/denominator and encoder engineering scaling remain the
-responsibility of the axis YAML for new profiles. For EL5042 the physical
+For the EL7031, EL7037, EL7041 and EL7047 open-loop encoder, the
+hardware-family default is `encoder.denominator: 12800` (16-bit counter),
+unless explicitly overridden by axis YAML. This is a counter scale used by
+the current test model, not a universal motor/mechanics calibration.
+Drive scaling and other encoder engineering scaling remain the responsibility
+of the axis YAML. For EL5042 the physical
 BiSS-C encoder resolution (`absBits`) must also be specified explicitly.
 No default limit wiring is assumed for EL70xx or EL72xx, so include explicit
 `input.limit.forward` and `input.limit.backward` paths.

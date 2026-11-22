@@ -307,6 +307,20 @@ class TestProfiles(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "CSV only"):
                     resolve(axis, profiles, env)
 
+    def test_csv_profile_rejects_incompatible_hardware_script(self):
+        profiles = pathlib.Path(__file__).resolve().parents[1] / "hardwareProfiles"
+        for model, script in (("EL7037", "EL7037_CSP"),
+                              ("EL7047", "EL7047_PosIF"),
+                              ("EL7062", "EL7062_CSP"),
+                              ("EL7211_OCT", "EL7211-9014_CSP_STD"),
+                              ("EL7211_OCT", "EL7211-9014_OPT")):
+            with self.subTest(script=script):
+                env = {"ECMC_HW_M0_S7": model,
+                       "ECMC_HW_SCRIPT_M0_S7": script}
+                with self.assertRaisesRegex(ValueError, "cannot be used"):
+                    resolve({"axis": {"mode": "CSV"},
+                             "drive": {"slave": 7}}, profiles, env)
+
     def test_invalid_channel_rejected(self):
         for channel in (0, 2, -1, True, "$(MISSING)", "abc"):
             with self.subTest(channel=channel), self.assertRaises(ValueError):

@@ -1,5 +1,10 @@
-#- EL7062 drive default scaling (override in axis YAML).
-#- Only run when denominator was not explicitly provided by the axis.
-{%- if 'denominator' not in hardware.drive.provided %}
-ecmcConfigOrDie "Cfg.SetAxisDrvScaleDenom(${ECMC_AXIS_NO},{{ hardware.drive.data.denominator }})"
-{%- endif %}
+#- EL7062 default drive links and scaling; axis YAML settings run later.
+{% set hw = hardware.drive.data %}
+ecmcConfigOrDie "Cfg.SetAxisDrvScaleDenom(${ECMC_AXIS_NO},{{ hw.denominator }})"
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject({{ hw.control }},ax${ECMC_AXIS_NO}.drv.control)"
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject({{ hw.status }},ax${ECMC_AXIS_NO}.drv.status)"
+{% if axis.mode == "CSV" %}
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject({{ hw.setpoint }},ax${ECMC_AXIS_NO}.drv.velocity)"
+{% else %}
+ecmcConfigOrDie "Cfg.LinkEcEntryToObject({{ hw.setpoint }},ax${ECMC_AXIS_NO}.drv.position)"
+{% endif %}

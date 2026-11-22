@@ -46,7 +46,7 @@ drive:
   control: ec$(MASTER).s$(SLAVE).driveControl01
 ```
 
-Deep merging means axis-specific fields always take precedence. Only
+For EL7062, encoder.feedback may be openloop (default) or incremental.\nThe open-loop PDO is positionActual$(CHANNEL); incremental feedback uses\npositionActual$(CHANNEL)_2. A separate `feedbacks` map in the EL7062 encoder\nprofile supplies the selected position link. Selecting feedback does not\nconfigure the terminal's internal drive control loop. Unsupported feedback\nselections fail with a configuration error.\n\nDeep merging means axis-specific fields always take precedence. Only
 sections with a numeric `slave` selector are enriched with defaults. Legacy
 configurations without these selectors are passed through unchanged.
 An unknown slave or missing explicitly selected hardware profile is an error.

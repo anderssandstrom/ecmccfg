@@ -62,7 +62,7 @@ or missing profiles produce configuration errors.
 
 The existing Python axis runner uses **Jinja2 only** to choose and merge
 hardware defaults: `hardwareProfiles/renderDefaults.jinja2` includes
-`EL70xx`, `EL7062`, `EL72xx`, `EL5042`, or `EL5102` family templates.
+`EL70xx`, `EL7062`, `EL72xx`, `EL5021`, `EL5042`, `EL5101`, or `EL5102` family templates.
 These templates merge base PDO mappings with CSV/CSP variants and explicit
 axis YAML overrides, producing the data for ordinary schema validation.
 No hardware-specific Python resolver, additional Python invocation, or
@@ -92,13 +92,13 @@ to use this abstraction.
 - This feature requires IOC integration and hardware testing before release.
 
 
-## Additional profiles: EL5042, EL5102, EL70xx and EL72xx
+## Additional profiles: EL5021, EL5042, EL5102, EL70xx and EL72xx
 
 The following hardware profiles are now available:
 
 | Model / component type | Sections | Default PDO mapping |
 | --- | --- | --- |
-| EL5042 | encoder (channels 1/2) | `positionActual01/02` (64-bit BiSS-C) |
+| EL5021 | encoder (channel 1) | `positionActual01` (32-bit Sin/Cos 1 Vpp) |\n| EL5042 | encoder (channels 1/2) | `positionActual01/02` (64-bit BiSS-C) |
 | EL5102 | encoder (channels 1/2) | `positionActual01/02` (32-bit incremental) |
 | EL7031, EL7037, EL7041, EL7047 | drive + encoder | EX70XX standard CSV and open-loop `positionActual01` |
 | EL7062 | drive + encoder + input | CSV, open-loop/incremental and channel-specific limit PDOs |
@@ -120,7 +120,18 @@ PosIF or OPT hardware script is rejected for automatic drive mapping
 rather than risking an invalid setpoint link. Such configurations can
 still use the established explicit axis-YAML PDO mapping.
 
+For EL5021, the terminal provides a 32-bit position PDO. The actual
+Sin/Cos interpolation resolution, numerator and denominator remain
+encoder-specific and must be set in the axis YAML.
+
 Examples:
+
+```yaml
+encoder:
+  slave: 11
+  numerator: 360.0
+  denominator: 65536  # example only: use actual interpolation scaling
+```
 
 ```yaml
 # Additional encoder on EL5042 channel 2

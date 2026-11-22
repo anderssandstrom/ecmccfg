@@ -14,17 +14,17 @@ Both illustrate the intended hardware abstraction:
 drive:
   slave: $(DRV_SLAVE)
   numerator: 10.0
-  denominator: 32768
 
 encoder:
   slave: $(DRV_SLAVE)
   numerator: 1.0
-  denominator: 12800
 ```
 
 The drive's `velocitySetpoint01`, `driveControl01`, `driveStatus01`,
 and the encoder's `positionActual01` come from hardware profiles, rather
-than being repeated in the axis YAML.
+than being repeated in the axis YAML. The example hardware profiles also
+supply `drive.denominator: 32768` and `encoder.denominator: 12800`.
+Axis-specific `denominator` values can still override those defaults.
 
 **Safety and verification:** The sample numerical scaling assumes a particular
 200-step motor, microstepping setup, and mechanics. Replace it with the

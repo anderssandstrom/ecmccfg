@@ -42,4 +42,9 @@ The hardware profile expands `$(CHANNEL)` into PDO suffix `01` or `02`.
 Select the same channel for drive and encoder when both belong to the same motor.
 Both channels require real hardware verification.
 
-For Jinja, the normal axis renderer loads hardware defaults and optional hardware\ncommand snippets directly. ECB retains the compatibility preprocessing path.\n\nThese examples have not been validated by an IOC build or hardware test.
+The Jinja renderer selects the shared hardware-family and PDO-variant
+templates before axis schema validation. There is no separate Python
+hardware resolver. ECB continues to support legacy, fully specified YAML,
+but not the new compact slave-selected profile syntax.
+
+These examples have not been validated by an IOC build or hardware test.

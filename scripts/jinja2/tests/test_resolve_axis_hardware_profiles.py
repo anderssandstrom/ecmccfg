@@ -69,6 +69,20 @@ class HardwareProfileTests(unittest.TestCase):
                 self.assertEqual(got["encoder"]["bits"], bits)
                 self.assertEqual(got["encoder"]["numerator"], 360.0)
 
+    def test_el5021_sincos_encoder(self):
+        got = render({"encoder": {"slave": 11, "numerator": 360.0,
+                                  "denominator": 65536}},
+                     {"ECMC_HW_M0_S11": "EL5021",
+                      "ECMC_HW_SCRIPT_M0_S11": "EL5021"})
+        self.assertEqual(got["encoder"]["position"], "ec0.s11.positionActual01")
+        self.assertEqual(got["encoder"]["bits"], 32)
+        self.assertEqual(got["encoder"]["type"], 0)
+        self.assertEqual(got["encoder"]["denominator"], 65536)
+        self.assertEqual(got["encoder"]["numerator"], 360.0)
+        with self.assertRaisesRegex(ValueError, "Unsupported channel"):
+            render({"encoder": {"slave": 11, "channel": 2}},
+                   {"ECMC_HW_M0_S11": "EL5021"})
+
     def test_servo_variants(self):
         for model in ("EL7201_RES", "EL7211_OCT", "EL7221_OCT"):
             with self.subTest(model=model):

@@ -1,0 +1,170 @@
+{
+  "schema": 1,
+  "description": "Simulation-only hardware profile / mixed terminal axis matrix",
+  "slaves": [
+    {
+      "id": 2,
+      "desc": "EL7031"
+    },
+    {
+      "id": 3,
+      "desc": "EL7037"
+    },
+    {
+      "id": 4,
+      "desc": "EL7041-0052"
+    },
+    {
+      "id": 5,
+      "desc": "EL7047"
+    },
+    {
+      "id": 6,
+      "desc": "EL7201"
+    },
+    {
+      "id": 7,
+      "desc": "EL7211-9014_STD"
+    },
+    {
+      "id": 8,
+      "desc": "EL7221-9014_STD"
+    },
+    {
+      "id": 9,
+      "desc": "EL7062"
+    },
+    {
+      "id": 10,
+      "desc": "EL5042"
+    },
+    {
+      "id": 11,
+      "desc": "EL5102"
+    },
+    {
+      "id": 12,
+      "desc": "EL5021"
+    },
+    {
+      "id": 13,
+      "desc": "EL5101"
+    },
+    {
+      "id": 14,
+      "desc": "EL7211-9014_CSP_STD"
+    }
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "name": "S7031",
+      "drive": 2,
+      "enc": 2,
+      "hw": "EL7031",
+      "template": "csv",
+      "chan": 1,
+      "fb": "openloop",
+      "swap": false
+    },
+    {
+      "id": 2,
+      "name": "S7037",
+      "drive": 3,
+      "enc": 12,
+      "hw": "EL7037",
+      "template": "csv",
+      "chan": 1,
+      "fb": "openloop",
+      "swap": false
+    },
+    {
+      "id": 3,
+      "name": "S7041",
+      "drive": 4,
+      "enc": 10,
+      "hw": "EL7041-0052",
+      "template": "csv",
+      "chan": 1,
+      "fb": "openloop",
+      "swap": false
+    },
+    {
+      "id": 4,
+      "name": "S7047",
+      "drive": 5,
+      "enc": 11,
+      "hw": "EL7047",
+      "template": "csv",
+      "chan": 2,
+      "fb": "openloop",
+      "swap": false
+    },
+    {
+      "id": 5,
+      "name": "S7201",
+      "drive": 6,
+      "enc": 6,
+      "hw": "EL7201",
+      "template": "csv",
+      "chan": 1,
+      "fb": "openloop",
+      "swap": false
+    },
+    {
+      "id": 6,
+      "name": "S7211",
+      "drive": 7,
+      "enc": 7,
+      "hw": "EL7211-9014_STD",
+      "template": "csv",
+      "chan": 1,
+      "fb": "openloop",
+      "swap": false
+    },
+    {
+      "id": 7,
+      "name": "S7221",
+      "drive": 8,
+      "enc": 13,
+      "hw": "EL7221-9014_STD",
+      "template": "csv",
+      "chan": 1,
+      "fb": "openloop",
+      "swap": false
+    },
+    {
+      "id": 8,
+      "name": "S7062A",
+      "drive": 9,
+      "enc": 9,
+      "hw": "EL7062",
+      "template": "el7062",
+      "chan": 1,
+      "fb": "openloop",
+      "swap": false
+    },
+    {
+      "id": 9,
+      "name": "S7062B",
+      "drive": 9,
+      "enc": 9,
+      "hw": "EL7062",
+      "template": "el7062",
+      "chan": 2,
+      "fb": "incremental",
+      "swap": true
+    },
+    {
+      "id": 10,
+      "name": "S7211C",
+      "drive": 14,
+      "enc": 14,
+      "hw": "EL7211-9014_CSP_STD",
+      "template": "csp",
+      "chan": 1,
+      "fb": "openloop",
+      "swap": false
+    }
+  ]
+}

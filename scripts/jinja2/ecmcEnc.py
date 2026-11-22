@@ -1,4 +1,6 @@
 import pathlib
+import os
+import yaml
 
 import ecmcYamlHandler
 import ecmcJinja2
@@ -16,6 +18,9 @@ class EcmcEnc:
         self.config_file = config_file
         self.yamlHandler = ecmcYamlHandler.YamlHandler()
         self.encTemplate = ecmcJinja2.JinjaTemplate(jinja_template_dir)
+        profile_root = str(pathlib.Path(__file__).resolve().parent)
+        if profile_root not in self.encTemplate.env.loader.searchpath:
+            self.encTemplate.env.loader.searchpath.append(profile_root)
         self.v = ecmcConfigValidator.ConfigValidator()        
         self.data = ecmcConfigValidator.DictContainer()
 
@@ -30,6 +35,14 @@ class EcmcEnc:
         """
         wrapper around all steps needed to render an enc-script from a yaml-config
         """
+        raw = self.yamlHandler.yamlData
+        # Use the shared Jinja selector only for opted-in hardware profiles.
+        if isinstance(raw.get("encoder"), dict) and "slave" in raw["encoder"]:
+            template = self.encTemplate.env.get_template("hwProfileResolve.jinja2")
+            resolved = yaml.safe_load(template.render(axis_config=raw, hardware_env=os.environ))
+            if "__hardware_profile_error__" in resolved:
+                raise ValueError(resolved["__hardware_profile_error__"])
+            self.v.document = resolved
         self.yamlHandler.yamlData = self.v.validate_enc()  # validate the full axis schema        
         self.encTemplate.read(self.encTemplates)
         self.encTemplate.render(self.yamlHandler.yamlData)

@@ -45,6 +45,48 @@ class HardwareProfileTests(unittest.TestCase):
                                                "denominator": 12345}}, env)
                 self.assertEqual(override["encoder"]["denominator"], 12345)
 
+
+    def test_index_homing_latch_profiles(self):
+        for model, channel in (("EL5101", 1), ("EL5102", 1), ("EL5102", 2), ("EL7062", 1), ("EL7062", 2)):
+            for home_type in (11, 12):
+                with self.subTest(model=model, channel=channel, home_type=home_type):
+                    enc = {"slave": 7, "channel": channel, "numerator": 1,
+                           "denominator": 4096, "homing": {"type": home_type, "position": 0}}
+                    if model == "EL7062":
+                        enc["feedback"] = "incremental"
+                    result = render({"encoder": enc},
+                                    {"ECMC_HW_M0_S7": model, "ECMC_HW_SCRIPT_M0_S7": model})["encoder"]
+                    suffix = f"{channel:02d}"
+                    latch = result["latch"]
+                    if model == "EL7062":
+                        self.assertEqual(result["position"], f"ec0.s7.positionActual{suffix}_2")
+                        self.assertEqual(result["control"], f"ec0.s7.touchProbeControl{suffix}")
+                        self.assertEqual(result["status"], f"ec0.s7.touchProbeStatus{suffix}")
+                        self.assertEqual(latch["position"], f"ec0.s7.touchProbePositionPos{suffix}_1")
+                        self.assertEqual((latch["control"], latch["status"], latch["armCmd"], latch["armBits"]), (0, 1, 17, 5))
+                    else:
+                        self.assertEqual(result["control"], f"ec0.s7.encoderControl{suffix}")
+                        self.assertEqual(result["status"], f"ec0.s7.encoderStatus{suffix}")
+                        self.assertEqual(latch["position"], f"ec0.s7.encoderLatchPosition{suffix}")
+                        self.assertEqual((latch["control"], latch["status"], latch["armCmd"], latch["armBits"]), (0, 0, 1, 1))
+
+    def test_index_homing_override_and_validation(self):
+        env = {"ECMC_HW_M0_S7": "EL5102"}
+        enc = {"slave": 7, "numerator": 1, "denominator": 4096,
+               "homing": {"type": 11}, "latch": {"armCmd": 3}}
+        got = render({"encoder": enc}, env)["encoder"]
+        self.assertEqual(got["latch"]["armCmd"], 3)
+        self.assertEqual(got["latch"]["armBits"], 1)
+        got = render({"encoder": {"slave": 7, "numerator": 1,
+                                    "denominator": 4096}}, env)["encoder"]
+        self.assertNotIn("latch", got)
+        with self.assertRaisesRegex(ValueError, "oversampling"):
+            render({"encoder": {"slave": 7, "homing": {"type": 11}}},
+                   {"ECMC_HW_M0_S7": "EL5101", "ECMC_HW_SCRIPT_M0_S7": "EL5101-0011"})
+        with self.assertRaisesRegex(ValueError, "requires encoder.feedback"):
+            render({"encoder": {"slave": 7, "homing": {"type": 12}}},
+                   {"ECMC_HW_M0_S7": "EL7062"})
+
     def test_el7047_csp(self):
         got = render({"axis": {"mode": "CSP"},
                       "drive": {"slave": 7, "numerator": 1.0}},

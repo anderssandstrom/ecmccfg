@@ -58,6 +58,9 @@ class EcmcAxis:
                 resolved[section] = deep_merge(profile["data"], overrides)
             self.v.document = resolved
         self.yamlHandler.yamlData = self.v.validate_axis()  # normal axis validation
+        if self.hardwareProfiles:
+            # Rendering metadata, deliberately added after schema validation.
+            self.yamlHandler.yamlData["hardware"] = self.hardwareProfiles
         self.yamlHandler.checkForVariables()
         self.setAxisTemplate()
         if self.yamlHandler.hasVariables:

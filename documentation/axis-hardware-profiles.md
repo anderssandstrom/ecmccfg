@@ -95,6 +95,69 @@ adapter is **not** part of the Jinja rendering path.
   regular configuration templates.
 - This feature requires IOC integration and hardware testing before release.
 
+
+## Additional profiles: EL5042, EL5102, EL70xx and EL72xx
+
+The following hardware profiles are now available:
+
+| Model / component type | Sections | Default PDO mapping |
+| --- | --- | --- |
+| EL5042 | encoder (channels 1/2) | `positionActual01/02` (64-bit BiSS-C) |
+| EL5102 | encoder (channels 1/2) | `positionActual01/02` (32-bit incremental) |
+| EL7031, EL7037, EL7041, EL7047 | drive + encoder | EX70XX standard CSV and open-loop `positionActual01` |
+| EL7062 | drive + encoder + input | CSV, open-loop/incremental and channel-specific limit PDOs |
+| EL7201_RES, EL7201_OCT, EL7211_RES, EL7211_OCT, EL7221_OCT | drive + encoder | EX72XX standard CSV and `positionActual01` |
+
+Drive numerator/denominator and encoder engineering scaling remain the
+responsibility of the axis YAML for new profiles. For EL5042 the physical
+BiSS-C encoder resolution (`absBits`) must also be specified explicitly.
+No default limit wiring is assumed for EL70xx or EL72xx, so include explicit
+`input.limit.forward` and `input.limit.backward` paths.
+
+The profile resolver chooses the component type registered from
+`ECMC_EC_COMP_TYPE` (falling back to `HW_DESC`). `addSlave.cmd` also
+registers `ECMC_HW_SCRIPT_M<master>_S<slave>` to preserve the selected
+hardware-script variant. This matters because several EL70xx/EL72xx
+CSP and OPT scripts share the same component type as CSV versions.
+The standard drive profiles support **CSV process images only**. A CSP,
+PosIF or OPT hardware script is rejected for automatic drive mapping
+rather than risking an invalid setpoint link. Such configurations can
+still use the established explicit axis-YAML PDO mapping.
+
+Examples:
+
+```yaml
+# Additional encoder on EL5042 channel 2
+encoder:
+  slave: 10
+  channel: 2
+  numerator: 360.0
+  denominator: 16777216
+  absBits: 24  # example only: use actual BiSS-C encoder resolution
+```
+
+```yaml
+# EL7211 OCT standard CSV: motor-specific scaling intentionally explicit
+axis:
+  mode: CSV
+drive:
+  slave: 7
+  numerator: 360.0
+  denominator: 2147483648
+encoder:
+  slave: 7
+  numerator: 360.0
+  denominator: 1048576
+input:
+  limit:
+    forward: ec0.s8.binaryInput01.0
+    backward: ec0.s8.binaryInput01.1
+```
+
+The PDO names under `input.limit` in the latter example are **illustrative
+external digital input paths** and must be replaced with the actual registered
+EtherCAT entries. No generic EL72xx limit mapping is guaranteed.
+
 ## Regression tests
 
 ```bash

@@ -1,0 +1,8 @@
+# EL7047 standard EX70XX CSV process image; motor scaling is application-specific.
+drive:
+  type: 0
+  control: ec$(MASTER).s$(SLAVE).driveControl01
+  status: ec$(MASTER).s$(SLAVE).driveStatus01
+  setpoint: ec$(MASTER).s$(SLAVE).velocitySetpoint01
+  enable: 0
+  enabled: 1

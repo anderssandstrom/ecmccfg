@@ -10,11 +10,9 @@ epics:
 drive:
   slave: $(DRV_SLAVE)
   numerator: 10.0
-  denominator: 32768
 encoder:
   slave: $(DRV_SLAVE)
   numerator: 1.0
-  denominator: 12800
 trajectory:
   type: 0
   source: 0

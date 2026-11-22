@@ -164,6 +164,13 @@ def select_profiles(document, profiles_dir, environ=None):
             raise ValueError("%s.channel=%d exceeds %s supported channels (%d)" %
                              (section, channel, hardware, count))
         values = config[section]
+        # Standard EL72xx profiles describe the CSV process image. Do not
+        # silently link a CSV velocity demand as a CSP position setpoint.
+        if section == "drive" and hardware.startswith(("EL7201_", "EL7211_", "EL7221_")):
+            mode = document.get("axis", {}).get("mode", "CSV")
+            if not isinstance(mode, str) or mode.upper() != "CSV":
+                raise ValueError("%s drive profile supports CSV only; use explicit PDO paths for %s" %
+                                 (hardware, mode))
         feedbacks = config.get("feedbacks")
         if section == "encoder" and feedbacks is not None:
             if not isinstance(feedbacks, dict) or "openloop" not in feedbacks:

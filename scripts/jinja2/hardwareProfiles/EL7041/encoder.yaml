@@ -1,8 +1,0 @@
-# EL7041 internal microstep counter (open-loop feedback).
-encoder:
-  type: 0
-  source: 0
-  bits: 16
-  # Example microstep-count scaling; adjust for the configured motor.
-  denominator: 12800
-  position: ec$(MASTER).s$(SLAVE).positionActual01

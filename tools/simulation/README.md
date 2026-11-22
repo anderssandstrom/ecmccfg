@@ -59,6 +59,7 @@ Supported stepper velocity-mode hardware descriptors:
 - `EL7041`
 - `EL7041-0052`
 - `EL7031` and `EL7031-…` variants
+- `EL7037`
 - `EL7047`
 
 `E*72xx` descriptors (for example EL7211, EP7211 and ELM7222 variants) select
@@ -73,7 +74,7 @@ a similar hardware name alone is not sufficient. The models default to channel 0
 selected: they need a different command model. EL7031 variants must expose the
 same native velocity-mode PVs; record types are checked before feedback writes.
 These types share the supplied default scaling; use per-slave overrides when a
-configuration has different scaling. EL7047 motor-load feedback is not modeled.
+configuration has different scaling. EL7037 and EL7047 use the same basic open-loop Q15 stepper model; neither motor-load feedback is modeled.
 Each supported slave connects to its own module/worker. A connection failure or
 runtime error stops that model and is reported; other model workers continue.
 These are external [CA-aware Python threads](https://pyepics.github.io/pyepics/advanced.html#using-python-threads),

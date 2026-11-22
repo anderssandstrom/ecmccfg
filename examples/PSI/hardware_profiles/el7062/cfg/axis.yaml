@@ -1,0 +1,28 @@
+# Example: EL7062 channel 1, CSV mode, internal open-loop feedback.
+# Validate the actual channel's PDO mapping and scaling before motion.
+axis:
+  id: 1
+  type: 1
+  mode: CSV
+epics:
+  name: M1
+  unit: mm
+drive:
+  slave: $(DRV_SLAVE)
+  numerator: 10.0
+  denominator: 32768
+encoder:
+  slave: $(DRV_SLAVE)
+  numerator: 1.0
+  denominator: 12800
+trajectory:
+  type: 0
+  source: 0
+  axis:
+    velocity: 1.0
+    acceleration: 2.0
+input:
+  limit:
+    # Simulation ONE is a placeholder, NOT a real hardware safety limit.
+    forward: ec0.s$(DRV_SLAVE).ONE.0
+    backward: ec0.s$(DRV_SLAVE).ONE.0

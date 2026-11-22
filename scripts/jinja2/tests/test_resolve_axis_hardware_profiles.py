@@ -35,6 +35,16 @@ class HardwareProfileTests(unittest.TestCase):
         self.assertEqual(got["encoder"]["denominator"], 12800)
         self.assertEqual(got["encoder"]["position"], "ec0.s7.positionActual01")
 
+    def test_el70xx_openloop_default_denominator(self):
+        for model in ("EL7031", "EL7037", "EL7041", "EL7047"):
+            with self.subTest(model=model):
+                env = {"ECMC_HW_M0_S7": model, "ECMC_HW_SCRIPT_M0_S7": model}
+                got = render({"encoder": {"slave": 7, "numerator": 1.0}}, env)
+                self.assertEqual(got["encoder"]["denominator"], 12800)
+                override = render({"encoder": {"slave": 7, "numerator": 1.0,
+                                               "denominator": 12345}}, env)
+                self.assertEqual(override["encoder"]["denominator"], 12345)
+
     def test_el7047_csp(self):
         got = render({"axis": {"mode": "CSP"},
                       "drive": {"slave": 7, "numerator": 1.0}},

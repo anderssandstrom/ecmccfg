@@ -4,6 +4,7 @@ ${SCRIPTEXEC} "${ecmccfg_DIR}addMaster.cmd" "MASTER_ID=0"
 ${SCRIPTEXEC} "${ecmccfg_DIR}addSlave.cmd" "HW_DESC=EK1100,SLAVE_ID=0"
 ${SCRIPTEXEC} "${ecmccfg_DIR}addSlave.cmd" "HW_DESC=EL7062,SLAVE_ID=1"
 epicsEnvSet(DRV_SLAVE,1)
+epicsEnvSet(DRV_CHANNEL,1)
 # Motor-specific parameters are intentionally not guessed here.
 # Use the existing Motor-Generic-2Phase-Stepper component for channel 1.
 ${SCRIPTEXEC} "${ecmccfg_DIR}loadYamlAxis.cmd" "FILE=./cfg/axis.yaml,DEV=${IOC}"

@@ -164,13 +164,21 @@ def select_profiles(document, profiles_dir, environ=None):
             raise ValueError("%s.channel=%d exceeds %s supported channels (%d)" %
                              (section, channel, hardware, count))
         values = config[section]
-        # Standard EL72xx profiles describe the CSV process image. Do not
-        # silently link a CSV velocity demand as a CSP position setpoint.
-        if section == "drive" and hardware.startswith(("EL7201_", "EL7211_", "EL7221_")):
+        # Stepper and servo profiles below describe the standard CSV
+        # process image. Some component types are shared by CSP/OPT scripts,
+        # so also validate the actual HW_DESC used to configure this slave.
+        if section == "drive" and (
+            hardware.startswith(("EL7031", "EL7037", "EL7041", "EL7047",
+                                 "EL7062", "EL7201_", "EL7211_", "EL7221_"))
+        ):
             mode = document.get("axis", {}).get("mode", "CSV")
+            script = env.get("ECMC_HW_SCRIPT_M%d_S%d" % (master, slave), hardware)
             if not isinstance(mode, str) or mode.upper() != "CSV":
-                raise ValueError("%s drive profile supports CSV only; use explicit PDO paths for %s" %
+                raise ValueError("%s drive profile supports standard CSV only; use explicit PDO paths for %s" %
                                  (hardware, mode))
+            if any(token in script.upper() for token in ("CSP", "POSIF", "_OPT")):
+                raise ValueError("Standard CSV profile %s cannot be used with HW_DESC=%s; use explicit PDO paths" %
+                                 (hardware, script))
         feedbacks = config.get("feedbacks")
         if section == "encoder" and feedbacks is not None:
             if not isinstance(feedbacks, dict) or "openloop" not in feedbacks:

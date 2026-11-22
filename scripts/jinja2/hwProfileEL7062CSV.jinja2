@@ -1,0 +1,1 @@
+{% set _ = cfg.defaults.update({'setpoint': 'ec' ~ master ~ '.s' ~ slave ~ '.velocitySetpoint' ~ '%02d'|format(channel|int)}) %}

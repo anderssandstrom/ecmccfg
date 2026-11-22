@@ -167,14 +167,22 @@ class TestProfiles(unittest.TestCase):
             hardware=selected)
         self.assertIn("Cfg.SetAxisDrvScaleDenom(", output)
         self.assertIn("Cfg.SetAxisEncScaleDenom(", output)
+        self.assertIn("positionActual02_2", output)
+        self.assertIn("velocitySetpoint02", output)
+        self.assertLess(output.index("Cfg.SetAxisEncScaleDenom("),
+                        output.index("Cfg.LinkEcEntryToObject(ec0.s7.positionActual02_2"))
 
         axis["drive"]["denominator"] = 200
         axis["encoder"]["denominator"] = 400
         selected = select_profiles(axis, profiles, env)
         output = renderer.get_template("hardwareDefaults.jinja2").render(
             hardware=selected)
-        self.assertNotIn("Cfg.SetAxisDrvScaleDenom(", output)
-        self.assertNotIn("Cfg.SetAxisEncScaleDenom(", output)
+        # Hardware defaults are emitted even when the axis overrides them.
+        # The normal axis templates apply explicit values afterwards.
+        self.assertIn("Cfg.SetAxisDrvScaleDenom(${ECMC_AXIS_NO},2147483648)", output)
+        self.assertIn("Cfg.SetAxisEncScaleDenom(${ECMC_AXIS_NO},1048576)", output)
+        self.assertIn("positionActual02_2", output)
+        self.assertIn("velocitySetpoint02", output)
         resolved = resolve(axis, profiles, env)
         self.assertEqual(resolved["drive"]["denominator"], 200)
         self.assertEqual(resolved["encoder"]["denominator"], 400)

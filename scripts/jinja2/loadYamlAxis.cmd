@@ -8,7 +8,6 @@
 #-d   \param FILE the yaml-file containing the PLC definition
 #-d   \param DEV  the device name (optional, defaults to ${IOC}), automatically appended with a `:`
 #-d   \param PREFIX  the device PREFIX, will _NOT_ be appended with a `:`
-#-d   \param HW_PROFILES opt-in hardware defaults resolver (1 to enable, default 0)
 #-d   \note Example calls:
 #-d   \note - call
 #-d   \code
@@ -52,15 +51,11 @@ ecmcEndIf()
 
 ecmcFileExist("${FILE_TEMP_2}",1)
 
-#- Optional hardware profile resolution. The existing YAML is copied unchanged
-#- unless HW_PROFILES=1 is explicitly set. Both renderers consume FILE_TEMP_4.
+#- Resolve profiles automatically if slave selectors are present. Legacy axis YAML
+#- is copied unchanged; the ECB backend needs Python only when profiles are used.
 epicsEnvSet(FILE_TEMP_4,${ECMC_TMP_DIR}${FILE}_4)
-#- Remove any stale intermediate result so a failed resolver cannot reuse it.
 system "rm -f ${FILE_TEMP_4}"
-ecmcIf("'${HW_PROFILES=0}'=='1'")
-  ${IF_TRUE}system ". ${ECMC_CONFIG_ROOT}pythonVenv.sh -d ${ECMC_TMP_DIR}; python ${ECMC_CONFIG_ROOT}resolveAxisHardwareProfiles.py ${FILE_TEMP_2} ${FILE_TEMP_4} --profiles ${ECMC_CONFIG_ROOT}hardwareProfiles"
-  ${IF_FALSE}system "cp ${FILE_TEMP_2} ${FILE_TEMP_4}"
-ecmcEndIf()
+system "if grep -Eq '^[[:space:]]+slave:[[:space:]]*' ${FILE_TEMP_2}; then . ${ECMC_CONFIG_ROOT}pythonVenv.sh -d ${ECMC_TMP_DIR}; python ${ECMC_CONFIG_ROOT}resolveAxisHardwareProfiles.py ${FILE_TEMP_2} ${FILE_TEMP_4} --profiles ${ECMC_CONFIG_ROOT}hardwareProfiles; else cp ${FILE_TEMP_2} ${FILE_TEMP_4}; fi"
 ecmcFileExist("${FILE_TEMP_4}",1)
 
 #- cleanup

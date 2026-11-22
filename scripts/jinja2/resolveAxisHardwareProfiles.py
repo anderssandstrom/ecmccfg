@@ -168,6 +168,7 @@ def select_profiles(document, profiles_dir, environ=None):
             "slave": slave,
             "master": master,
             "channel": channel,
+            "snippet": (profile.parent / (section + ".jinja2")).is_file(),
         }
     return selected
 

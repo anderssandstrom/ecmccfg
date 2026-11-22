@@ -15,6 +15,7 @@ import yaml
 
 _SAFE_TYPE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]*$")
 _SLAVE_ID = re.compile(r"^[0-9]+$")
+_MACRO = re.compile(r"\$\(([A-Za-z_][A-Za-z0-9_]*)(?:=([^()]*))?\)")
 _SECTIONS = ("drive", "encoder", "input")
 
 
@@ -28,19 +29,54 @@ def deep_merge(defaults, overrides):
     return out
 
 
-def _slave_id(value, section):
-    # Reject booleans, negative numbers and macro expressions until expanded.
+def _expand_selector(value, environ, section):
+    """Expand IOC environment macros in a slave/master selector.
+
+    Only selector values are expanded here. Other axis YAML strings retain
+    their existing IOC/EPICS macro handling. Support $(VAR) and $(VAR=default).
+    """
+    if not isinstance(value, str):
+        return value
+    resolved = value
+    for _ in range(20):
+        matches = list(_MACRO.finditer(resolved))
+        if not matches:
+            break
+        def replacement(match):
+            key, default = match.group(1), match.group(2)
+            replacement_value = environ.get(key, default)
+            if replacement_value is None:
+                raise ValueError("Undefined IOC macro %s in %s selector" %
+                                 (key, section))
+            return str(replacement_value)
+        expanded = _MACRO.sub(replacement, resolved)
+        if expanded == resolved:
+            raise ValueError("Recursive IOC macro in %s selector: %r" %
+                             (section, value))
+        resolved = expanded
+    else:
+        raise ValueError("Too many nested IOC macros in %s selector: %r" %
+                         (section, value))
+    if "$(" in resolved or ")" in resolved:
+        raise ValueError("Invalid or unresolved IOC macro in %s selector: %r" %
+                         (section, value))
+    return resolved
+
+
+def _slave_id(value, section, environ):
+    value = _expand_selector(value, environ, section)
     if isinstance(value, bool) or not (
         isinstance(value, int) and value >= 0 or
         isinstance(value, str) and _SLAVE_ID.fullmatch(value)
     ):
-        raise ValueError("%s.slave must be a nonnegative integer: %r" % (section, value))
+        raise ValueError("%s must resolve to a nonnegative integer: %r" %
+                         (section, value))
     return int(value)
 
 
 def _master_id(section_data, environ):
     value = section_data.get("master", environ.get("ECMC_EC_MASTER_ID", "0"))
-    return _slave_id(value, "master")
+    return _slave_id(value, "master", environ)
 
 
 def _profile_path(profiles_dir, hardware, section):
@@ -78,7 +114,7 @@ def resolve(document, profiles_dir, environ=None):
         raw = result.get(section)
         if not isinstance(raw, dict) or "slave" not in raw:
             continue
-        slave = _slave_id(raw["slave"], section)
+        slave = _slave_id(raw["slave"], section + ".slave", env)
         master = _master_id(raw, env)
         key = "ECMC_HW_M%d_S%d" % (master, slave)
         hardware = env.get(key)

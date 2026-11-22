@@ -1,4 +1,4 @@
-# Example: EL7062 channel 1, CSV mode, internal open-loop feedback.
+# Example: EL7062 with selectable channel and openloop/incremental feedback.
 # Validate the actual channel's PDO mapping and scaling before motion.
 axis:
   id: 1
@@ -14,6 +14,7 @@ drive:
 encoder:
   slave: $(DRV_SLAVE)
   channel: $(DRV_CHANNEL=1)
+  feedback: $(ENC_FEEDBACK=openloop)
   numerator: 1.0
 trajectory:
   type: 0

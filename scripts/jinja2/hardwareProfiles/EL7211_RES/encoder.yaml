@@ -1,6 +1,0 @@
-# EL7211_RES standard primary encoder PDO; encoder unit scaling remains axis-specific.
-encoder:
-  type: 0
-  source: 0
-  bits: 32
-  position: ec$(MASTER).s$(SLAVE).positionActual01

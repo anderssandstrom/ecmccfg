@@ -26,8 +26,7 @@ class EcmcAxis:
         self.hasSyncPLC = False
         self.yamlHandler = ecmcYamlHandler.YamlHandler()
         self.axisTemplate = ecmcJinja2.JinjaTemplate(jinja_template_dir)
-        # Hardware command snippets live alongside the renderer module, not
-        # necessarily inside the chosen templates directory.
+        # Installed Jinja family templates are flattened alongside this renderer.
         profile_root = str(pathlib.Path(__file__).resolve().parent)
         if profile_root not in self.axisTemplate.env.loader.searchpath:
             self.axisTemplate.env.loader.searchpath.append(profile_root)
@@ -57,7 +56,7 @@ class EcmcAxis:
         )
         if has_selectors:
             template = self.axisTemplate.env.get_template(
-                "hardwareProfiles/renderDefaults.jinja2")
+                "hwProfileResolve.jinja2")
             rendered = template.render(axis_config=raw, hardware_env=os.environ)
             resolved = yaml.safe_load(rendered)
             if "__hardware_profile_error__" in resolved:

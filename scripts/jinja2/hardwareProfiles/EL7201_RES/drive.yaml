@@ -1,7 +1,0 @@
-# EL7201_RES standard CSV PDO mapping; demand scale must match the motor/drive.
-# Use explicit axis YAML PDO paths for CSP/CST or alternate process images.
-drive:
-  type: 1
-  control: ec$(MASTER).s$(SLAVE).driveControl01
-  status: ec$(MASTER).s$(SLAVE).driveStatus01
-  setpoint: ec$(MASTER).s$(SLAVE).velocitySetpoint01

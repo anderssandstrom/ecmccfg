@@ -165,6 +165,23 @@ The PDO names under `input.limit` in the latter example are **illustrative
 external digital input paths** and must be replaced with the actual registered
 EtherCAT entries. No generic EL72xx limit mapping is guaranteed.
 
+## Simulation IOC integration coverage
+
+A dedicated simulator configuration under
+[`tests/integration/hardware_profiles/`](../tests/integration/hardware_profiles/README.md)
+provides a 10-axis matrix: EL7031/7037/7041/7047, EL5021, EL5042,
+EL5101/5102, EL7201/7211/7221, and EL7062 channels 1/2 with open-loop
+and incremental feedback. It also covers mixed drive/encoder terminals,
+CSV/CSP selection and swapped limit mapping. The runner calls the actual
+`EcmcAxis` Jinja axis renderer and validator to check emitted PDO links,
+with a separate, optional `SIM=1` IOC startup script. It never enables
+motors or issues motion commands. Real IOC startup and hardware signal
+integrity remain separate acceptance checks.
+
+```sh
+python3 tests/test_hardware_profile_sim.py -v
+```
+
 ## Regression tests
 
 ```bash

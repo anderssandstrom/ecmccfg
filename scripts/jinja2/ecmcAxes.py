@@ -28,6 +28,11 @@ class EcmcAxis:
         self.hardwareProfiles = {}
         self.yamlHandler = ecmcYamlHandler.YamlHandler()
         self.axisTemplate = ecmcJinja2.JinjaTemplate(jinja_template_dir)
+        # Hardware command snippets live alongside the renderer module, not
+        # necessarily inside the chosen templates directory.
+        profile_root = str(pathlib.Path(__file__).resolve().parent)
+        if profile_root not in self.axisTemplate.env.loader.searchpath:
+            self.axisTemplate.env.loader.searchpath.append(profile_root)
         self.v = ecmcConfigValidator.ConfigValidator()
         self.plc = ecmcPlc.EcmcPlc(config_file, jinja_template_dir)
         self.data = ecmcConfigValidator.DictContainer()

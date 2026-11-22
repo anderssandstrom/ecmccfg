@@ -5,7 +5,7 @@ ${SCRIPTEXEC} "${ecmccfg_DIR}addSlave.cmd" "HW_DESC=EK1100,SLAVE_ID=0"
 ${SCRIPTEXEC} "${ecmccfg_DIR}addSlave.cmd" "HW_DESC=EL7062,SLAVE_ID=1"
 epicsEnvSet(DRV_SLAVE,1)
 epicsEnvSet(DRV_CHANNEL,1)
-epicsEnvSet(ENC_FEEDBACK,openloop)  # Set incremental for the _2 encoder PDO
+epicsEnvSet(ENC_FEEDBACK,openloop)  # Optional: incremental selects the _2 PDO
 # Motor-specific parameters are intentionally not guessed here.
 # Use the existing Motor-Generic-2Phase-Stepper component for channel 1.
 ${SCRIPTEXEC} "${ecmccfg_DIR}loadYamlAxis.cmd" "FILE=./cfg/axis.yaml,DEV=${IOC}"

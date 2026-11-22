@@ -34,7 +34,9 @@ epicsEnvSet(ECMC_ENC_CFG_ID,${ECMC_CONFIG_RETURN_VAL})
 {# #-     ecmcConfigOrDie "Cfg.LinkEcEntryToObject("{{ encoder.control }}","ax${ECMC_AXIS_NO}.enc.control")" #}
 {# #- {%- endif %} #}
 {#- scaling #}
+{%- if hardware is not defined or hardware.encoder is not defined or not hardware.encoder.snippet or 'denominator' in hardware.encoder.provided %}
 ecmcConfigOrDie "Cfg.SetAxisEncScaleDenom(${ECMC_AXIS_NO},{{ encoder.denominator|float }})"
+{%- endif %}
 ecmcConfigOrDie "Cfg.SetAxisEncScaleNum(${ECMC_AXIS_NO},{{ encoder.numerator }})"
 
 {#- source #}

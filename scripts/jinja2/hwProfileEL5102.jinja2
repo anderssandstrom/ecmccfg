@@ -1,0 +1,3 @@
+{% if part == 'encoder' %}
+{% set _ = cfg.defaults.update({'type': 0, 'source': 0, 'bits': 32, 'position': 'ec' ~ master ~ '.s' ~ slave ~ '.positionActual' ~ '%02d'|format(channel|int)}) %}
+{% endif %}

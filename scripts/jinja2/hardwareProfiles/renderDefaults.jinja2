@@ -28,7 +28,7 @@
       {% set reg = 'M' ~ master ~ '_S' ~ slave %}
       {% set component = hardware_env.get('ECMC_HW_' ~ reg, '') %}
       {% set script = hardware_env.get('ECMC_HW_SCRIPT_' ~ reg, component) %}
-      {% set family = 'EL7062' if component.startswith('EL7062') else 'EL70xx' if component.startswith(('EL7031','EL7037','EL7041','EL7047')) else 'EL72xx' if component.startswith(('EL7201','EL7211','EL7221')) else 'EL5042' if component.startswith('EL5042') else 'EL5102' if component.startswith('EL5102') else 'EL5101' if component.startswith('EL5101') else '' %}
+      {% set family = 'EL7062' if component.startswith('EL7062') else 'EL70xx' if component.startswith(('EL7031','EL7037','EL7041','EL7047')) else 'EL72xx' if component.startswith(('EL7201','EL7211','EL7221')) else 'EL5042' if component.startswith('EL5042') else 'EL5102' if component.startswith('EL5102') else 'EL5101' if component.startswith('EL5101') else 'EL5021' if component.startswith('EL5021') else '' %}
       {% set variant = 'CSP' if 'CSP' in script|upper else 'CSV' %}
       {% set mode = (axis_config.get('axis') or {}).get('mode', 'CSV')|upper %}
       {% if not component %}
@@ -37,7 +37,7 @@
         {% set cfg.error = 'Unsupported hardware type: ' ~ component %}
       {% elif channel|int > (2 if family in ['EL7062','EL5042','EL5102'] else 1) %}
         {% set cfg.error = 'Unsupported channel ' ~ channel ~ ' on ' ~ component %}
-      {% elif part == 'drive' and family in ['EL5042','EL5102','EL5101'] %}
+      {% elif part == 'drive' and family in ['EL5042','EL5102','EL5101','EL5021'] %}
         {% set cfg.error = 'Encoder-only hardware cannot be selected as drive: ' ~ component %}
       {% elif part == 'drive' and ('OPT' in script|upper or 'POSIF' in script|upper or 'CST' in script|upper or mode != variant) %}
         {% set cfg.error = 'Hardware drive PDO variant/mode mismatch: ' ~ script ~ ' / ' ~ mode %}
@@ -71,6 +71,8 @@
           {% include 'hardwareProfiles/EL5102/base.jinja2' %}
         {% elif family == 'EL5101' %}
           {% include 'hardwareProfiles/EL5101/base.jinja2' %}
+        {% elif family == 'EL5021' %}
+          {% include 'hardwareProfiles/EL5021/base.jinja2' %}
         {% endif %}
         {% if part == 'encoder' and family == 'EL7062' %}
           {% set raw_fb = user.get('feedback', 'openloop') | string %}

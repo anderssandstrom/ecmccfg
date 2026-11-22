@@ -34,6 +34,46 @@ class TestProfiles(unittest.TestCase):
         self.assertNotIn("slave", data["drive"])
         self.assertNotIn("slave", data["encoder"])
 
+    def test_ioc_slave_macros(self):
+        axis = {"drive": {"slave": "$(DRV_SLAVE)"},
+                "encoder": {"slave": "$(ENC_SLAVE)"}}
+        env = dict(self.env, DRV_SLAVE="7", ENC_SLAVE="8")
+        resolved = resolve(axis, self.root, env)
+        self.assertEqual(resolved["drive"]["control"], "ec0.s7.driveControl01")
+        self.assertEqual(resolved["encoder"]["type"], 0)
+
+    def test_macro_default_and_nested_macros(self):
+        axis = {"drive": {"slave": "$(DRV_SLAVE=7)"}}
+        resolved = resolve(axis, self.root, self.env)
+        self.assertEqual(resolved["drive"]["type"], 0)
+        env = dict(self.env, DRV_SLAVE="$(AXIS_SLAVE)", AXIS_SLAVE="7")
+        self.assertEqual(resolve({"drive": {"slave": "$(DRV_SLAVE)"}},
+                                 self.root, env)["drive"]["type"], 0)
+
+    def test_macro_master(self):
+        env = {"MASTER_ID": "1", "DRV_SLAVE": "7",
+               "ECMC_HW_M1_S7": "EL7041"}
+        axis = {"drive": {"master": "$(MASTER_ID)", "slave": "$(DRV_SLAVE)"}}
+        resolved = resolve(axis, self.root, env)
+        self.assertEqual(resolved["drive"]["control"], "ec1.s7.driveControl01")
+        self.assertNotIn("master", resolved["drive"])
+
+    def test_missing_and_recursive_macros_rejected(self):
+        for value, env in (
+            ("$(UNKNOWN)", self.env),
+            ("$(DRV_SLAVE)", dict(self.env, DRV_SLAVE="$(DRV_SLAVE)")),
+            ("$(DRV_SLAVE)", dict(self.env, DRV_SLAVE="xyz")),
+        ):
+            with self.subTest(value=value, env=env), self.assertRaises(ValueError):
+                resolve({"drive": {"slave": value}}, self.root, env)
+
+    def test_cli_preprocessing_expands_macros(self):
+        source, target = self.root / "macro-axis.yaml", self.root / "resolved.yaml"
+        source.write_text("drive:\\n  slave: $(DRV_SLAVE)\\n  numerator: 20\\n")
+        preprocess(source, target, self.root, dict(self.env, DRV_SLAVE="7"))
+        self.assertEqual(__import__("yaml").safe_load(target.read_text())["drive"]["numerator"], 20)
+        self.assertNotIn("slave", __import__("yaml").safe_load(target.read_text())["drive"])
+
     def test_original_yaml_unchanged_without_selectors(self):
         source, target = self.root / "axis.yaml", self.root / "result.yaml"
         text = "# comment\naxis:\n  id: 1\ndrive:\n  numerator: 1\n"
@@ -51,7 +91,7 @@ class TestProfiles(unittest.TestCase):
                     self.root, {"ECMC_HW_M0_S7": "MISSING"})
 
     def test_malformed_slave_fails(self):
-        for slave in (-1, True, "$(SLAVE)", "../../etc"):
+        for slave in (-1, True, "../../etc"):
             with self.subTest(slave=slave), self.assertRaises(ValueError):
                 resolve({"drive": {"slave": slave}}, self.root, self.env)
 

@@ -1,3 +1,9 @@
-# Minimal safe default. Motion scaling and EtherCAT PDO paths remain application-specific.
+# EL7041 CSV stepper drive default PDO paths, standard mapping.
+# Check mapping and sign against the installed terminal and motor component.
 drive:
   type: 0
+  control: ec$(MASTER).s$(SLAVE).driveControl01
+  status: ec$(MASTER).s$(SLAVE).driveStatus01
+  setpoint: ec$(MASTER).s$(SLAVE).velocitySetpoint01
+  enable: 0
+  enabled: 1

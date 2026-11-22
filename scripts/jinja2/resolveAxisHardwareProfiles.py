@@ -1,82 +1,119 @@
 #!/usr/bin/env python3
-"""Resolve opt-in section defaults before the existing Jinja/ECB axis pipeline.
+"""Resolve axis hardware defaults from slave IDs registered by addSlave.cmd.
 
-Example: python resolveAxisHardwareProfiles.py axis.yaml resolved.yaml --profiles hardwareProfiles
-The output contains only keys understood by the existing axis schema.
+No explicit hardware type is needed in axis YAML. Without a section's 'slave'
+selector, the original YAML is copied unchanged for legacy compatibility.
 """
 import argparse
 import copy
+import os
 import pathlib
 import re
 import shutil
 
 import yaml
 
-_SAFE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
-_SECTIONS = {
-    "drive": ("drive",),
-    "encoder": ("encoder",),
-    "encoder.homing": ("encoder", "homing"),
-    "input": ("input",),
-}
+_SAFE_TYPE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]*$")
+_SLAVE_ID = re.compile(r"^[0-9]+$")
+_SECTIONS = ("drive", "encoder", "input")
 
 
 def deep_merge(defaults, overrides):
-    """Recursively merge mappings; application settings win, including false/0/null."""
+    """Merge maps recursively; explicit axis values always win."""
     if not isinstance(defaults, dict) or not isinstance(overrides, dict):
         return copy.deepcopy(overrides)
     out = copy.deepcopy(defaults)
     for key, value in overrides.items():
-        if key in out:
-            out[key] = deep_merge(out[key], value)
-        else:
-            out[key] = copy.deepcopy(value)
+        out[key] = deep_merge(out[key], value) if key in out else copy.deepcopy(value)
     return out
 
 
-def resolve(document, profiles_dir):
+def _slave_id(value, section):
+    # Reject booleans, negative numbers and macro expressions until expanded.
+    if isinstance(value, bool) or not (
+        isinstance(value, int) and value >= 0 or
+        isinstance(value, str) and _SLAVE_ID.fullmatch(value)
+    ):
+        raise ValueError("%s.slave must be a nonnegative integer: %r" % (section, value))
+    return int(value)
+
+
+def _master_id(section_data, environ):
+    value = section_data.get("master", environ.get("ECMC_EC_MASTER_ID", "0"))
+    return _slave_id(value, "master")
+
+
+def _profile_path(profiles_dir, hardware, section):
+    # Prefer exact HW_DESC, then the base terminal model for variants.
+    names = [hardware]
+    model = re.match(r"^([A-Za-z]+[0-9]+)", hardware)
+    if model and model.group(1) not in names:
+        names.append(model.group(1))
+    for name in names:
+        profile = pathlib.Path(profiles_dir) / name / (section + ".yaml")
+        if profile.is_file():
+            return profile
+    return None
+
+
+def _substitute(value, master, slave):
+    """Substitute placeholders in profile-owned strings only."""
+    if isinstance(value, str):
+        return value.replace("$(MASTER)", str(master)).replace("$(SLAVE)", str(slave))
+    if isinstance(value, list):
+        return [_substitute(v, master, slave) for v in value]
+    if isinstance(value, dict):
+        return {k: _substitute(v, master, slave) for k, v in value.items()}
+    return value
+
+
+def resolve(document, profiles_dir, environ=None):
     if not isinstance(document, dict):
         raise ValueError("Axis YAML root must be a mapping")
-    selectors = document.get("hardwareProfiles")
-    if selectors is None:
-        return copy.deepcopy(document)
-    if not isinstance(selectors, dict):
-        raise ValueError("hardwareProfiles must be a section-to-hardware mapping")
-    result = {}
-    for section, hw in selectors.items():
-        if section not in _SECTIONS:
-            raise ValueError("Unsupported hardware profile section: %s" % section)
-        if not isinstance(hw, str) or not _SAFE_NAME.fullmatch(hw) or hw in (".", ".."):
-            raise ValueError("Invalid hardware profile name for %s: %r" % (section, hw))
-        target = _SECTIONS[section]
-        profile = pathlib.Path(profiles_dir) / hw / (section + ".yaml")
-        if not profile.is_file():
-            raise FileNotFoundError("No hardware profile for %s: %s" % (section, profile))
+    if "hardwareProfiles" in document:
+        raise ValueError("hardwareProfiles is not supported; use drive.slave/encoder.slave/input.slave")
+    env = os.environ if environ is None else environ
+    result = copy.deepcopy(document)
+    for section in _SECTIONS:
+        raw = result.get(section)
+        if not isinstance(raw, dict) or "slave" not in raw:
+            continue
+        slave = _slave_id(raw["slave"], section)
+        master = _master_id(raw, env)
+        key = "ECMC_HW_M%d_S%d" % (master, slave)
+        hardware = env.get(key)
+        if not hardware:
+            raise ValueError("Hardware type not registered for %s.slave=%d (master %d; expected %s)" %
+                             (section, slave, master, key))
+        if not _SAFE_TYPE.fullmatch(hardware):
+            raise ValueError("Invalid registered hardware type: %r" % hardware)
+        profile = _profile_path(profiles_dir, hardware, section)
+        if profile is None:
+            raise FileNotFoundError("Missing %s profile for %s (master %d, slave %d)" %
+                                    (section, hardware, master, slave))
         with profile.open(encoding="utf-8") as stream:
-            data = yaml.safe_load(stream)
-        if not isinstance(data, dict):
-            raise ValueError("Hardware profile must contain a mapping: %s" % profile)
-        if any(key != section.split(".")[-1] for key in data):
-            # Section documents use the exact section key and can be merged safely.
-            raise ValueError("Unexpected keys in hardware profile: %s" % profile)
-        # Wrap nested selectors (encoder.homing) inside their parent section.
-        for key in reversed(target[:-1]):
-            data = {key: data}
-        result = deep_merge(result, data)
-    axis = {k: v for k, v in document.items() if k != "hardwareProfiles"}
-    return deep_merge(result, axis)
+            defaults = yaml.safe_load(stream)
+        if not isinstance(defaults, dict) or set(defaults) != {section} or not isinstance(defaults[section], dict):
+            raise ValueError("Invalid profile structure: %s" % profile)
+        defaults = _substitute(defaults[section], master, slave)
+        # Selector keys are not supported by the existing axis schema.
+        overrides = {k: v for k, v in raw.items() if k not in ("slave", "master")}
+        result[section] = deep_merge(defaults, overrides)
+    return result
 
 
-def preprocess(src, dst, profiles_dir):
+def preprocess(src, dst, profiles_dir, environ=None):
     src = pathlib.Path(src)
     dst = pathlib.Path(dst)
     with src.open(encoding="utf-8") as stream:
         document = yaml.safe_load(stream)
-    # Exact byte-for-byte copy if the feature is unused (also preserves comments).
-    if isinstance(document, dict) and "hardwareProfiles" not in document:
+    if isinstance(document, dict) and not any(
+        isinstance(document.get(k), dict) and "slave" in document[k]
+        for k in _SECTIONS
+    ) and "hardwareProfiles" not in document:
         shutil.copyfile(src, dst)
         return
-    resolved = resolve(document, profiles_dir)
+    resolved = resolve(document, profiles_dir, environ)
     with dst.open("w", encoding="utf-8") as stream:
         yaml.safe_dump(resolved, stream, sort_keys=False, allow_unicode=True)
 

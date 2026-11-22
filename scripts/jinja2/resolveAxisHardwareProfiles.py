@@ -178,6 +178,26 @@ def select_profiles(document, profiles_dir, environ=None):
             values = deep_merge(values, variant)
         elif section == "encoder" and "feedback" in raw:
             raise ValueError("Encoder profile for %s does not support feedback selection" % hardware)
+        if section == "input":
+            # Swap only the hardware-provided default mapping. Explicit
+            # forward/backward paths in axis YAML retain highest priority.
+            limit = document.get("input", {}).get("limit", {})
+            swap = limit.get("swap", False) if isinstance(limit, dict) else False
+            swap = _expand_selector(swap, env, "input.limit.swap")
+            if isinstance(swap, str):
+                if swap.lower() in ("true", "1", "yes", "on"):
+                    swap = True
+                elif swap.lower() in ("false", "0", "no", "off"):
+                    swap = False
+            if not isinstance(swap, bool):
+                raise ValueError("input.limit.swap must be boolean")
+            if swap:
+                values = copy.deepcopy(values)
+                pair = values.get("limit", {})
+                if not isinstance(pair, dict) or not all(
+                        key in pair for key in ("forward", "backward")):
+                    raise ValueError("Cannot swap missing hardware limit defaults for %s" % hardware)
+                pair["forward"], pair["backward"] = pair["backward"], pair["forward"]
         selected[section] = {
             "model": profile.parent.name,
             "data": _substitute(values, master, slave, channel),
@@ -198,6 +218,8 @@ def resolve(document, profiles_dir, environ=None):
         raw = out.get(section, {})
         overrides = {k: v for k, v in raw.items() if k not in
                      ("slave", "master", "channel", "feedback")}
+        if section == "input" and isinstance(overrides.get("limit"), dict):
+            overrides["limit"].pop("swap", None)
         out[section] = deep_merge(profile["data"], overrides)
     return out
 

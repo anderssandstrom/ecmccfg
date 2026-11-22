@@ -74,6 +74,42 @@ class TestProfiles(unittest.TestCase):
         self.assertEqual(__import__("yaml").safe_load(target.read_text())["drive"]["numerator"], 20)
         self.assertNotIn("slave", __import__("yaml").safe_load(target.read_text())["drive"])
 
+    def test_el7062_two_channels_and_macro(self):
+        model = self.root / "EL7062"
+        model.mkdir()
+        (model / "drive.yaml").write_text(
+            "channels: 2\\ndrive:\\n  type: 1\\n"
+            "  setpoint: ec$(MASTER).s$(SLAVE).velocitySetpoint$(CHANNEL)\\n"
+            "  status: ec$(MASTER).s$(SLAVE).driveStatus$(CHANNEL)\\n")
+        (model / "encoder.yaml").write_text(
+            "channels: 2\\nencoder:\\n"
+            "  position: ec$(MASTER).s$(SLAVE).positionActual$(CHANNEL)\\n")
+        env = dict(self.env, ECMC_HW_M0_S9="EL7062", DRV_CHANNEL="2")
+        axis = {
+            "drive": {"slave": 9, "channel": "$(DRV_CHANNEL)"},
+            "encoder": {"slave": 9, "channel": "$(DRV_CHANNEL)"},
+        }
+        out = resolve(axis, self.root, env)
+        self.assertEqual(out["drive"]["type"], 1)
+        self.assertEqual(out["drive"]["setpoint"], "ec0.s9.velocitySetpoint02")
+        self.assertEqual(out["drive"]["status"], "ec0.s9.driveStatus02")
+        self.assertEqual(out["encoder"]["position"], "ec0.s9.positionActual02")
+        self.assertNotIn("channel", out["drive"])
+        self.assertNotIn("channel", out["encoder"])
+        axis["drive"]["channel"] = 1
+        self.assertEqual(resolve(axis, self.root, env)["drive"]["setpoint"],
+                         "ec0.s9.velocitySetpoint01")
+
+    def test_invalid_channel_rejected(self):
+        for channel in (0, 2, -1, True, "$(MISSING)", "abc"):
+            with self.subTest(channel=channel), self.assertRaises(ValueError):
+                resolve({"drive": {"slave": 7, "channel": channel}},
+                        self.root, self.env)
+
+    def test_default_channel_one(self):
+        resolved = resolve({"drive": {"slave": 7}}, self.root, self.env)
+        self.assertEqual(resolved["drive"]["control"], "ec0.s7.driveControl01")
+
     def test_original_yaml_unchanged_without_selectors(self):
         source, target = self.root / "axis.yaml", self.root / "result.yaml"
         text = "# comment\naxis:\n  id: 1\ndrive:\n  numerator: 1\n"

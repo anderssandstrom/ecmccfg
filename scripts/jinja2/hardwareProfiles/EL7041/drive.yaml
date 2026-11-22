@@ -1,0 +1,3 @@
+# Minimal safe default. Motion scaling and EtherCAT PDO paths remain application-specific.
+drive:
+  type: 0

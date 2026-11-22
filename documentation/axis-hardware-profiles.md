@@ -14,6 +14,7 @@ Example axis YAML:
 ```yaml
 drive:
   slave: $(DRV_SLAVE)
+  # channel: $(DRV_CHANNEL=1) # needed for multichannel terminals such as EL7062
   numerator: 20
   control: ec0.s7.driveControl01
 
@@ -29,7 +30,7 @@ input:
 
 Here the *drive* profile is selected automatically from slave 7 and the
 *encoder* profile from slave 8. Other existing axis YAML sections can remain
-unchanged. The new `slave` selector is consumed by the preprocessing step and
+unchanged. The new `slave` and optional `channel` selectors are consumed by the preprocessing step and
 is **not** passed to existing axis schemas or Jinja/ECB templates.
 
 Hardware defaults live at
@@ -37,7 +38,7 @@ Hardware defaults live at
 `encoder.yaml` and `input.yaml`. For variants such as EL7041-0052, the
 resolver tries the exact HW_DESC and then the base model EL7041.
 
-Hardware-profile values may use `$(MASTER)` and `$(SLAVE)` placeholders.
+Hardware-profile values may use `$(MASTER)`, `$(SLAVE)` and `$(CHANNEL)` placeholders. The channel is 1 by default and `$(CHANNEL)` expands to a two-digit suffix (`01` or `02`). Profiles declare `channels: 2` for multi-channel hardware; out-of-range channel numbers fail validation.
 For example:
 ```yaml
 drive:

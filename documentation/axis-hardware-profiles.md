@@ -45,13 +45,9 @@ the channel placeholder becomes a two-digit suffix `01` or `02`.
 Optional `hardwareProfiles/<model>/drive.jinja2` and `encoder.jinja2`
 files generate additional `ecmcConfigOrDie` commands. The renderer
 includes these **after `Cfg.CreateAxis()` and before the normal encoder
-and drive configuration**. The EL7041 and EL7062 snippets currently supply
-default scale denominators. If an axis YAML explicitly supplies a
-denominator, that value is emitted by the normal axis template instead.
+and drive configuration**. The EL7041 and EL7062 snippets emit default scale denominators and PDO links.\nNormal axis templates then apply the resolved YAML configuration, including\nexplicit overrides. ECMC permits configuration-time relinking: later commands\nreplace earlier links to the same axis slot.
 
-Values explicitly specified in the axis YAML always override hardware
-defaults. PDO links are emitted once by the normal encoder and drive
-templates using the selected paths; the snippets do not emit duplicate links.
+Values explicitly specified in the axis YAML always override hardware\ndefaults. Hardware snippets set defaults first; the regular templates run\nafterwards, so PDO links may be configured twice (last successful link wins).
 The hardware-defined drive type is available before `Cfg.CreateAxis()`.
 
 The ECB backend still uses the compatibility adapter
@@ -61,7 +57,7 @@ adapter is **not** part of the Jinja rendering path.
 
 ## Notes
 
-- Example denominators and scaling are illustrative and must match the
+- EL7062 example denominators (drive 2147483648, encoder 1048576) follow the\n  existing EL7062 open-loop IOC example and must be checked for the motor.\n- Example denominators and scaling must match the
   motor, encoder, microstepping and engineering units.
 - The EL7062 incremental encoder PDO suffix `_2` indicates the encoder
   feedback source, not the second motor channel.

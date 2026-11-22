@@ -58,8 +58,12 @@ class EcmcAxis:
         if self.hardwareProfiles:
             resolved = dict(raw)
             for section, profile in self.hardwareProfiles.items():
-                overrides = {k: v for k, v in raw[section].items()
+                user_section = raw.get(section, {})
+                overrides = {k: v for k, v in user_section.items()
                              if k not in ("slave", "master", "channel", "feedback")}
+                if section == "input" and isinstance(overrides.get("limit"), dict):
+                    overrides["limit"] = dict(overrides["limit"])
+                    overrides["limit"].pop("swap", None)
                 resolved[section] = deep_merge(profile["data"], overrides)
             self.v.document = resolved
         self.yamlHandler.yamlData = self.v.validate_axis()  # normal axis validation

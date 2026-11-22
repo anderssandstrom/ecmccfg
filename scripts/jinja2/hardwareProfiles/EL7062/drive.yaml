@@ -1,9 +1,0 @@
-# EL7062 in CSV mode, channels 1 and 2. The channel chooses the PDO suffix.
-# Drive scaling from existing EL7062 CSV example; verify numerator and engineering units.
-channels: 2
-drive:
-  type: 1
-  denominator: 2147483648
-  control: ec$(MASTER).s$(SLAVE).driveControl$(CHANNEL)
-  status: ec$(MASTER).s$(SLAVE).driveStatus$(CHANNEL)
-  setpoint: ec$(MASTER).s$(SLAVE).velocitySetpoint$(CHANNEL)

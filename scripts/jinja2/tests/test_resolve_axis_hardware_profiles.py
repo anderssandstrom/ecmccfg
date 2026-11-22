@@ -100,6 +100,45 @@ class TestProfiles(unittest.TestCase):
         self.assertEqual(resolve(axis, self.root, env)["drive"]["setpoint"],
                          "ec0.s9.velocitySetpoint01")
 
+    def test_el7062_encoder_feedback_both_channels(self):
+        model = self.root / "EL7062"
+        model.mkdir()
+        (model / "encoder.yaml").write_text(
+            "channels: 2\nencoder:\n  type: 0\n  source: 0\n"
+            "  denominator: 12800\nfeedbacks:\n"
+            "  openloop:\n"
+            "    position: ec$(MASTER).s$(SLAVE).positionActual$(CHANNEL)\n"
+            "  incremental:\n"
+            "    position: ec$(MASTER).s$(SLAVE).positionActual$(CHANNEL)_2\n")
+        env = dict(self.env, ECMC_HW_M0_S9="EL7062", ENC_FEEDBACK="incremental")
+        for channel in (1, 2):
+            for feedback, suffix in (("openloop", ""), ("incremental", "_2")):
+                with self.subTest(channel=channel, feedback=feedback):
+                    cfg = {"encoder": {"slave": 9, "channel": channel,
+                                       "feedback": feedback, "numerator": 2.0}}
+                    out = resolve(cfg, self.root, env)["encoder"]
+                    self.assertEqual(out["position"],
+                                     "ec0.s9.positionActual%02d%s" % (channel, suffix))
+                    self.assertEqual(out["numerator"], 2.0)
+                    self.assertEqual(out["denominator"], 12800)
+                    self.assertNotIn("feedback", out)
+                    self.assertNotIn("channel", out)
+
+        selected = resolve({"encoder": {"slave": 9, "feedback": "$(ENC_FEEDBACK)"}},
+                           self.root, env)["encoder"]
+        self.assertEqual(selected["position"], "ec0.s9.positionActual01_2")
+        default = resolve({"encoder": {"slave": 9}}, self.root, env)["encoder"]
+        self.assertEqual(default["position"], "ec0.s9.positionActual01")
+
+        for name in ("absolute", "", 1):
+            with self.subTest(unsupported=name), self.assertRaises(ValueError):
+                resolve({"encoder": {"slave": 9, "feedback": name}}, self.root, env)
+
+    def test_feedback_rejected_for_profile_without_variants(self):
+        with self.assertRaisesRegex(ValueError, "does not support feedback"):
+            resolve({"encoder": {"slave": 8, "feedback": "incremental"}},
+                    self.root, self.env)
+
     def test_invalid_channel_rejected(self):
         for channel in (0, 2, -1, True, "$(MISSING)", "abc"):
             with self.subTest(channel=channel), self.assertRaises(ValueError):

@@ -9,9 +9,11 @@ epics:
   unit: mm
 drive:
   slave: $(DRV_SLAVE)
+  channel: $(DRV_CHANNEL=1)
   numerator: 10.0
 encoder:
   slave: $(DRV_SLAVE)
+  channel: $(DRV_CHANNEL=1)
   numerator: 1.0
 trajectory:
   type: 0

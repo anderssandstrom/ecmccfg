@@ -6,13 +6,13 @@ import unittest
 import jinja2
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-TEMPLATES = ROOT / "hardwareProfiles"
+TEMPLATES = ROOT  # Installed scripts are flattened into the module root.
 
 
 def render(axis, env):
     loader = jinja2.FileSystemLoader([str(ROOT / "templates"), str(ROOT)])
     template = jinja2.Environment(loader=loader).get_template(
-        "hardwareProfiles/renderDefaults.jinja2")
+        "hwProfileResolve.jinja2")
     result = json.loads(template.render(axis_config=axis, hardware_env=env))
     if "__hardware_profile_error__" in result:
         raise ValueError(result["__hardware_profile_error__"])

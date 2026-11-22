@@ -3,7 +3,7 @@
 {% if part == 'drive' %}
 {% set _ = cfg.defaults.update({'type': 0, 'control': 'ec' ~ master ~ '.s' ~ slave ~ '.driveControl01', 'status': 'ec' ~ master ~ '.s' ~ slave ~ '.driveStatus01', 'enable': 0, 'enabled': 1}) %}
 {% elif part == 'encoder' %}
-{% set _ = cfg.defaults.update({'type': 0, 'source': 0, 'bits': 16, 'position': 'ec' ~ master ~ '.s' ~ slave ~ '.positionActual01'}) %}
+{% set _ = cfg.defaults.update({'type': 0, 'source': 0, 'bits': 16, 'denominator': 12800, 'position': 'ec' ~ master ~ '.s' ~ slave ~ '.positionActual01'}) %}
 {% endif %}
 
 {% if part == 'drive' %}

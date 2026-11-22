@@ -13,10 +13,12 @@ Both illustrate the intended hardware abstraction:
 ```yaml
 drive:
   slave: $(DRV_SLAVE)
+  # channel: $(DRV_CHANNEL=1) # EL7062 only
   numerator: 10.0
 
 encoder:
   slave: $(DRV_SLAVE)
+  # channel: $(DRV_CHANNEL=1) # EL7062 only
   numerator: 1.0
 ```
 
@@ -34,7 +36,6 @@ inductance, and controller parameters) before enabling the drive.
 
 The `ONE.0` limit links are **demonstration placeholders only**; they do
 not provide end-stop protection. Replace them with tested hardware limit
-inputs and validate polarity before any real movement. The EL7062 example
-only targets channel 1; channel 2 needs its own verified profile.
+inputs and validate polarity before any real movement. For EL7062, `drive.channel` and `encoder.channel` select channel 1 or 2.\nThe hardware profile expands `$(CHANNEL)` into PDO suffix `01` or `02`.\nSelect the same channel for drive and encoder when both belong to the same motor.\nBoth channels require real hardware verification.
 
 These examples have not been validated by an IOC build or hardware test.

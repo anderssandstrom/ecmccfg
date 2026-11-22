@@ -1,0 +1,6 @@
+# EL7062 channel 1 internal position feedback (open-loop step counter).
+encoder:
+  type: 0
+  source: 0
+  bits: 32
+  position: ec$(MASTER).s$(SLAVE).positionActual01

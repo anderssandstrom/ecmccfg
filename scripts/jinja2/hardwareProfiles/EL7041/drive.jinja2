@@ -1,0 +1,5 @@
+#- EL7041 drive default scaling (override in axis YAML).
+#- Only run when denominator was not explicitly provided by the axis.
+{%- if 'denominator' not in hardware.drive.provided %}
+ecmcConfigOrDie "Cfg.SetAxisDrvScaleDenom(${ECMC_AXIS_NO},{{ hardware.drive.data.denominator }})"
+{%- endif %}

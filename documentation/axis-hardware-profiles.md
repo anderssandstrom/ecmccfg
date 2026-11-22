@@ -1,89 +1,79 @@
-# Slave-selected axis hardware defaults (work in progress)
+# Axis hardware defaults and Jinja command snippets (draft)
 
-The axis YAML selects **slave positions**, not terminal types. The type is
-registered automatically by `addSlave.cmd` under the IOC environment key
-`ECMC_HW_M<master>_S<slave>`, using its `HW_DESC` argument.
+Axis YAML selects a slave and, for multichannel terminals, a channel. The IOC
+registers the hardware type during `addSlave.cmd` as
+`ECMC_HW_M<master>_S<slave>` using `HW_DESC`.
 
-Example startup configuration:
-```text
-addSlave.cmd HW_DESC=EL7041-0052,SLAVE_ID=7
-addSlave.cmd HW_DESC=EL5101,SLAVE_ID=8
-```
+## Axis example: EL7062
 
-Example axis YAML:
 ```yaml
 drive:
   slave: $(DRV_SLAVE)
-  # channel: $(DRV_CHANNEL=1) # needed for multichannel terminals such as EL7062
-  numerator: 20
-  control: ec0.s7.driveControl01
+  channel: $(DRV_CHANNEL=1)
+  numerator: 10.0
 
 encoder:
-  slave: $(ENC_SLAVE)
-  position: ec0.s8.positionActual01
-
-input:
-  limit:
-    forward: ec0.s7.binaryInput01
-    backward: ec0.s7.binaryInput02
+  slave: $(DRV_SLAVE)
+  channel: $(DRV_CHANNEL=1)
+  feedback: $(ENC_FEEDBACK=openloop)
+  numerator: 1.0
 ```
 
-Here the *drive* profile is selected automatically from slave 7 and the
-*encoder* profile from slave 8. Other existing axis YAML sections can remain
-unchanged. The new `slave` and optional `channel` selectors are consumed by the preprocessing step and
-is **not** passed to existing axis schemas or Jinja/ECB templates.
+The EL7041 example needs only `slave`, with channel 1 implicit. EL7062
+supports channels 1 and 2, and encoder feedback `openloop` (default) or
+`incremental`. Incremental feedback selects `positionActual01_2` for
+channel 1 or `positionActual02_2` for channel 2. This does not configure
+the drive's internal control loop.
 
-Hardware defaults live at
-`scripts/jinja2/hardwareProfiles/<HW_DESC>/drive.yaml`, with optional
-`encoder.yaml` and `input.yaml`. For variants such as EL7041-0052, the
-resolver tries the exact HW_DESC and then the base model EL7041.
+Master, slave and channel selectors accept IOC environment macros such as
+`$(DRV_SLAVE)`, including `$(NAME=default)`, where present in the IOC
+process environment. Unregistered hardware, unsupported channels/feedback,
+or missing profiles produce configuration errors.
 
-Hardware-profile values may use `$(MASTER)`, `$(SLAVE)` and `$(CHANNEL)` placeholders. The channel is 1 by default and `$(CHANNEL)` expands to a two-digit suffix (`01` or `02`). Profiles declare `channels: 2` for multi-channel hardware; out-of-range channel numbers fail validation.
-For example:
-```yaml
-drive:
-  type: 0
-  control: ec$(MASTER).s$(SLAVE).driveControl01
-```
+## Implementation
 
-For EL7062, encoder.feedback may be openloop (default) or incremental.\nThe open-loop PDO is positionActual$(CHANNEL); incremental feedback uses\npositionActual$(CHANNEL)_2. A separate `feedbacks` map in the EL7062 encoder\nprofile supplies the selected position link. Selecting feedback does not\nconfigure the terminal's internal drive control loop. Unsupported feedback\nselections fail with a configuration error.\n\nDeep merging means axis-specific fields always take precedence. Only
-sections with a numeric `slave` selector are enriched with defaults. Legacy
-configurations without these selectors are passed through unchanged.
-An unknown slave or missing explicitly selected hardware profile is an error.
+The **normal Jinja axis renderer** identifies hardware using the registered
+slave, loads `hardwareProfiles/<model>/<section>.yaml` and applies defaults
+in memory before the usual schema validation. No extra Python process or
+intermediate hardware-resolved YAML is needed on this path. For variants
+such as EL7041-0052, the base EL7041 profile is used if an exact profile is
+not available.
 
-The existing `loadYamlAxis.cmd` handles preprocessing before **both** Jinja
-and ECB. Unchanged legacy configs retain the original ECB path without an
-additional Python invocation. **New slave-selected hardware profiles currently
-use a Python preprocessing step even with ECB**. A native ECB implementation
-would be needed to remove that dependency completely.
+Hardware profile strings expand `$(MASTER)`, `$(SLAVE)` and `$(CHANNEL)`;
+the channel placeholder becomes a two-digit suffix `01` or `02`.
 
-## Current limitations
+Optional `hardwareProfiles/<model>/drive.jinja2` and `encoder.jinja2`
+files generate additional `ecmcConfigOrDie` commands. The renderer
+includes these **after `Cfg.CreateAxis()` and before the normal encoder
+and drive configuration**. The EL7041 and EL7062 snippets currently supply
+default scale denominators. If an axis YAML explicitly supplies a
+denominator, that value is emitted by the normal axis template instead.
 
-- The initial included EL7041 drive and EL5101 encoder profiles contain
-  conservative demonstration defaults only. Mechanical scaling and actual
-  PDO links must still be supplied and validated for each installation.
-- Slave registration assumes `addSlave.cmd` runs before axis YAML loading
-  in the same IOC environment.
-- Slave selectors may be numeric or reference IOC environment macros such as
-  `$(DRV_SLAVE)` and `$(ENC_SLAVE)`. The resolver expands these selectors
-  before looking up the registered slave hardware. Nested macros and
-  `$(NAME=default)` are supported. Missing or nonnumeric macro values fail
-  configuration rather than silently selecting another terminal.
-- The IOC must define the slave macros before `loadYamlAxis.cmd` executes.
-- Support for input profiles exists in the resolver, but default wiring for
-  actual terminal variants must be reviewed before shipping profiles.
-- ECMC bit aliases require the separate hardware-abstraction ECMC branch.
-- This is a draft feature requiring IOC integration testing.
+Values explicitly specified in the axis YAML always override hardware
+defaults. PDO links are emitted once by the normal encoder and drive
+templates using the selected paths; the snippets do not emit duplicate links.
+The hardware-defined drive type is available before `Cfg.CreateAxis()`.
 
-## Standalone test
+The ECB backend still uses the compatibility adapter
+`resolveAxisHardwareProfiles.py` for slave-selected profiles. Unchanged
+legacy ECB YAML continues through its original path. The ECB compatibility
+adapter is **not** part of the Jinja rendering path.
 
-```sh
-ECMC_HW_M0_S7=EL7041 ECMC_HW_M0_S8=EL5101 DRV_SLAVE=7 ENC_SLAVE=8 \
-python scripts/jinja2/resolveAxisHardwareProfiles.py axis.yaml resolved.yaml \
-  --profiles scripts/jinja2/hardwareProfiles
+## Notes
 
+- Example denominators and scaling are illustrative and must match the
+  motor, encoder, microstepping and engineering units.
+- The EL7062 incremental encoder PDO suffix `_2` indicates the encoder
+  feedback source, not the second motor channel.
+- Hardware profiles with no command snippet work normally via the
+  regular configuration templates.
+- This feature requires IOC integration and hardware testing before release.
+
+## Regression tests
+
+```bash
 python -m unittest discover -s scripts/jinja2/tests \
   -p 'test_resolve_axis_hardware_profiles.py'
 ```
 
-No change was made to either repository's `v11.2.0_RC2` branch.
+Only `feature/hardware-abstraction` is modified; `v11.2.0_RC2` is unchanged.

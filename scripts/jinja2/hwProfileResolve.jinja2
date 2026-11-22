@@ -1,0 +1,128 @@
+{# Jinja-native hardware profile resolution. Result is YAML-compatible JSON.
+   No Python hardware resolver. Explicit axis YAML always wins. #}
+{% set out = axis_config.copy() %}
+{% for part in ['drive', 'encoder', 'input'] %}
+  {% set original = axis_config.get(part, {}) %}
+  {% set user = original.copy() if original is mapping else {} %}
+  {% set drive_user = axis_config.get('drive', {}) %}
+  {% set inherited = part == 'input' and 'slave' not in user and drive_user is mapping and 'slave' in drive_user %}
+  {% if 'slave' in user or inherited %}
+    {% set selector = drive_user if inherited else user %}
+    {% set raw_slave = selector.get('slave') | string %}
+    {% set raw_master = user.get('master', selector.get('master', hardware_env.get('ECMC_EC_MASTER_ID', '0'))) | string %}
+    {% set raw_channel = user.get('channel', selector.get('channel', 1)) | string %}
+    {% set sel = namespace(values=[]) %}
+    {% for raw in [raw_master, raw_slave, raw_channel] %}
+      {% if raw.startswith('$(') and raw.endswith(')') %}
+        {% set token = raw[2:-1].split('=', 1) %}
+        {% set _ = sel.values.append(hardware_env.get(token[0], token[1] if token|length > 1 else '')) %}
+      {% else %}
+        {% set _ = sel.values.append(raw) %}
+      {% endif %}
+    {% endfor %}
+    {% set master, slave, channel = sel.values %}
+    {% set cfg = namespace(defaults={}, error='') %}
+    {% if not master.isdigit() or not slave.isdigit() or not channel.isdigit() or channel|int < 1 %}
+      {% set cfg.error = 'Invalid hardware master/slave/channel selector for ' ~ part %}
+    {% else %}
+      {% set reg = 'M' ~ master ~ '_S' ~ slave %}
+      {% set component = hardware_env.get('ECMC_HW_' ~ reg, '') %}
+      {% set script = hardware_env.get('ECMC_HW_SCRIPT_' ~ reg, component) %}
+      {% set family = 'EL7062' if component.startswith('EL7062') else 'EL70xx' if component.startswith(('EL7031','EL7037','EL7041','EL7047')) else 'EL72xx' if component.startswith(('EL7201','EL7211','EL7221')) else 'EL5042' if component.startswith('EL5042') else 'EL5102' if component.startswith('EL5102') else 'EL5101' if component.startswith('EL5101') else 'EL5021' if component.startswith('EL5021') else '' %}
+      {% set variant = 'CSP' if 'CSP' in script|upper else 'CSV' %}
+      {% set mode = (axis_config.get('axis') or {}).get('mode', 'CSV')|upper %}
+      {% set index_home = part == 'encoder' and (user.get('homing') or {}).get('type', 0)|string in ['11','12'] %}
+      {% set feedback = user.get('feedback', 'openloop') | string %}
+      {% if feedback.startswith('$(') and feedback.endswith(')') %}
+        {% set fb_token = feedback[2:-1].split('=', 1) %}
+        {% set feedback = hardware_env.get(fb_token[0],fb_token[1] if fb_token|length > 1 else 'openloop') %}
+      {% endif %}
+      {% if not component %}
+        {% set cfg.error = 'No registered hardware type for ' ~ reg %}
+      {% elif not family %}
+        {% set cfg.error = 'Unsupported hardware type: ' ~ component %}
+      {% elif channel|int > (2 if family in ['EL7062','EL5042','EL5102'] else 1) %}
+        {% set cfg.error = 'Unsupported channel ' ~ channel ~ ' on ' ~ component %}
+      {% elif index_home and family == 'EL5101' and '0011' in script %}
+        {% set cfg.error = 'EL5101-0011 oversampling does not provide a scalar index-latch PDO' %}
+      {% elif index_home and family == 'EL7062' and feedback != 'incremental' %}
+        {% set cfg.error = 'EL7062 index homing requires encoder.feedback: incremental and configured touch-probe index trigger' %}
+      {% elif part == 'drive' and family in ['EL5042','EL5102','EL5101','EL5021'] %}
+        {% set cfg.error = 'Encoder-only hardware cannot be selected as drive: ' ~ component %}
+      {% elif part == 'drive' and ('OPT' in script|upper or 'POSIF' in script|upper or 'CST' in script|upper or mode != variant) %}
+        {% set cfg.error = 'Hardware drive PDO variant/mode mismatch: ' ~ script ~ ' / ' ~ mode %}
+      {% endif %}
+      {% if not cfg.error %}
+        {% if family == 'EL70xx' %}
+          {% include 'hwProfileEL70xx.jinja2' %}
+          {% if component.startswith('EL7041') and part == 'drive' %}
+            {% set _ = cfg.defaults.update({'denominator': 32768}) %}
+          {% endif %}
+        {% elif family == 'EL7062' %}
+          {% include 'hwProfileEL7062.jinja2' %}
+        {% elif family == 'EL72xx' %}
+          {% include 'hwProfileEL72xx.jinja2' %}
+        {% elif family == 'EL5021' %}
+          {% include 'hwProfileEL5021.jinja2' %}
+        {% elif family == 'EL5042' %}
+          {% include 'hwProfileEL5042.jinja2' %}
+        {% elif family == 'EL5101' %}
+          {% include 'hwProfileEL5101.jinja2' %}
+        {% elif family == 'EL5102' %}
+          {% include 'hwProfileEL5102.jinja2' %}
+        {% endif %}
+        {% if part == 'encoder' and family == 'EL7062' %}
+          {% set raw_fb = feedback %}
+          {% if raw_fb == 'incremental' %}
+            {% set _ = cfg.defaults.update({'position': 'ec' ~ master ~ '.s' ~ slave ~ '.positionActual' ~ '%02d'|format(channel|int) ~ '_2'}) %}
+          {% elif raw_fb != 'openloop' %}
+            {% set cfg.error = 'Unsupported EL7062 feedback ' ~ raw_fb %}
+          {% endif %}
+        {% endif %}
+        {% if part == 'input' and 'limit' in cfg.defaults %}
+          {% set dlimit = cfg.defaults.limit.copy() %}
+          {% set ulimit = user.get('limit', {}) %}
+          {% set raw_swap = ulimit.get('swap', false)|string|lower %}
+          {% if raw_swap.startswith('$(') and raw_swap.endswith(')') %}
+            {% set token = raw_swap[2:-1].split('=',1) %}
+            {% set raw_swap = hardware_env.get(token[0],token[1] if token|length > 1 else 'false')|lower %}
+          {% endif %}
+          {% if raw_swap in ['true','1','yes','on'] %}
+            {% set fwd = dlimit.forward %}
+            {% set _ = dlimit.update({'forward':dlimit.backward,'backward':fwd}) %}
+          {% elif raw_swap not in ['false','0','no','off'] %}
+            {% set cfg.error = 'Invalid input.limit.swap ' ~ raw_swap %}
+          {% endif %}
+          {% set _ = cfg.defaults.update({'limit': dlimit}) %}
+        {% endif %}
+      {% endif %}
+      {% if not cfg.defaults and not cfg.error and (not inherited) %}
+        {% set cfg.error = 'No ' ~ part ~ ' defaults for ' ~ component %}
+      {% endif %}
+    {% endif %}
+    {% if cfg.error %}
+      {% set _ = out.update({'__hardware_profile_error__': cfg.error}) %}
+    {% elif cfg.defaults %}
+      {% for key in ['slave','master','channel','feedback'] %}
+        {% set _ = user.pop(key, none) %}
+      {% endfor %}
+      {% if part == 'input' and 'limit' in user %}
+        {% set limit = user.limit.copy() %}
+        {% set _ = limit.pop('swap', none) %}
+        {% set merged_limit = cfg.defaults.get('limit', {}).copy() %}
+        {% set _ = merged_limit.update(limit) %}
+        {% set _ = cfg.defaults.update({'limit':merged_limit}) %}
+        {% set _ = user.pop('limit') %}
+      {% endif %}
+      {% if part == 'encoder' and 'latch' in cfg.defaults and 'latch' in user %}
+        {% set merged_latch = cfg.defaults.latch.copy() %}
+        {% set _ = merged_latch.update(user.latch) %}
+        {% set _ = cfg.defaults.update({'latch': merged_latch}) %}
+        {% set _ = user.pop('latch') %}
+      {% endif %}
+      {% set _ = cfg.defaults.update(user) %}
+      {% set _ = out.update({part:cfg.defaults}) %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+{{ out | tojson }}

@@ -1,0 +1,14 @@
+{# EL72xx: installed-flat family template. Included by hwProfileResolve.jinja2. #}
+{% if part == 'drive' %}
+{% set _ = cfg.defaults.update({'type': 1, 'control': 'ec' ~ master ~ '.s' ~ slave ~ '.driveControl01', 'status': 'ec' ~ master ~ '.s' ~ slave ~ '.driveStatus01'}) %}
+{% elif part == 'encoder' %}
+{% set _ = cfg.defaults.update({'type': 0, 'source': 0, 'bits': 32, 'position': 'ec' ~ master ~ '.s' ~ slave ~ '.positionActual01'}) %}
+{% endif %}
+
+{% if part == 'drive' %}
+{% if variant == 'CSV' %}
+{% set _ = cfg.defaults.update({'setpoint': 'ec' ~ master ~ '.s' ~ slave ~ '.velocitySetpoint01'}) %}
+{% elif variant == 'CSP' %}
+{% set _ = cfg.defaults.update({'setpoint': 'ec' ~ master ~ '.s' ~ slave ~ '.positionSetpoint01'}) %}
+{% endif %}
+{% endif %}

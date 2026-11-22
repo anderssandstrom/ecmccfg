@@ -1,0 +1,29 @@
+# Example: EL7062 CSV, channel 1, open-loop counter by default.
+# Validate the actual channel's PDO mapping and scaling before motion.
+axis:
+  id: 1
+  type: 1
+  mode: CSV
+epics:
+  name: M1
+  unit: mm
+drive:
+  slave: $(DRV_SLAVE)
+  channel: $(DRV_CHANNEL=1)
+  numerator: 10.0
+encoder:
+  slave: $(DRV_SLAVE)
+  channel: $(DRV_CHANNEL=1)
+  feedback: $(ENC_FEEDBACK=openloop)
+  numerator: 1.0
+trajectory:
+  type: 0
+  source: 0
+  axis:
+    velocity: 1.0
+    acceleration: 2.0
+# Default limit PDOs: binaryInputs<channel>.1 (fwd) and .0 (bwd).
+# Set swap: true to exchange those two inputs; set explicit paths to override.
+input:
+  limit:
+    swap: $(SWAP_LIMITS=false)

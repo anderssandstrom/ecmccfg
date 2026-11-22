@@ -1,4 +1,6 @@
 import pathlib
+import os
+import yaml
 
 import ecmcYamlHandler
 import ecmcJinja2
@@ -24,6 +26,10 @@ class EcmcAxis:
         self.hasSyncPLC = False
         self.yamlHandler = ecmcYamlHandler.YamlHandler()
         self.axisTemplate = ecmcJinja2.JinjaTemplate(jinja_template_dir)
+        # Installed Jinja family templates are flattened alongside this renderer.
+        profile_root = str(pathlib.Path(__file__).resolve().parent)
+        if profile_root not in self.axisTemplate.env.loader.searchpath:
+            self.axisTemplate.env.loader.searchpath.append(profile_root)
         self.v = ecmcConfigValidator.ConfigValidator()
         self.plc = ecmcPlc.EcmcPlc(config_file, jinja_template_dir)
         self.data = ecmcConfigValidator.DictContainer()
@@ -40,7 +46,23 @@ class EcmcAxis:
         """
         wrapper around all steps needed to render an axis-script from a yaml-config
         """
-        self.yamlHandler.yamlData = self.v.validate_axis()  # validate the full axis schema
+        # Render family/variant defaults with Jinja BEFORE schema validation.
+        # Python is only the existing Jinja runner and YAML parser; it does
+        # not select hardware families, PDO variants or merge overrides.
+        raw = self.yamlHandler.yamlData
+        has_selectors = any(
+            isinstance(raw.get(section), dict) and "slave" in raw[section]
+            for section in ("drive", "encoder", "input")
+        )
+        if has_selectors:
+            template = self.axisTemplate.env.get_template(
+                "hwProfileResolve.jinja2")
+            rendered = template.render(axis_config=raw, hardware_env=os.environ)
+            resolved = yaml.safe_load(rendered)
+            if "__hardware_profile_error__" in resolved:
+                raise ValueError(resolved["__hardware_profile_error__"])
+            self.v.document = resolved
+        self.yamlHandler.yamlData = self.v.validate_axis()
         self.yamlHandler.checkForVariables()
         self.setAxisTemplate()
         if self.yamlHandler.hasVariables:

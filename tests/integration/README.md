@@ -1,5 +1,17 @@
 # IOC integration tests
 
+The [hardware-profile SIM IOC](hardware_profiles/README.md) adds a separate
+10-axis simulated startup matrix covering EL5021, EL5042, EL5101/5102,
+EL7031/7037/7041/7047, EL7062, and EL7201/7211/7221. It also runs
+hardware-free tests through the real Jinja axis renderer and schema validator:
+
+```sh
+python3 tests/test_hardware_profile_sim.py -v
+```
+
+A live `SIM=1` IOC startup is optional; the offline checks do not access
+EPICS or EtherCAT. The standalone fixture does not issue motion commands.
+
 The [slit suite](slit/README.md) includes its own simulation IOC in `slit/ioc/`.
 Shared external hardware models are in `tools/simulation/`. The standalone N6
 integration scripts remain here as well.

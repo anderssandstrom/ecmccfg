@@ -26,7 +26,7 @@ epicsEnvSet(ECMC_IS_LOAD_YAML_ENC, 1)
 ecmcIf("'$(ECMC_CFG_TOOL=jinja)'=='ecb'")
   ${IF_TRUE}ecb --yaml ${FILE} --schemafile ${ECMC_CONFIG_ROOT}ecbSchema.json --schema encoder --template ${ECMC_CONFIG_ROOT}add_encoder.jinja2 --templatedir ${ECMC_CONFIG_ROOT} --output ${ECMC_TMP_DIR}${FILE}.enc
 #- else
-  ${IF_FALSE}system ". ${ECMC_CONFIG_ROOT}pythonVenv.sh -d ${ECMC_TMP_DIR}; python ${ECMC_CONFIG_ROOT}encYamlJinja2.py -d ${ECMC_TMP_DIR} -T ${ECMC_CONFIG_ROOT} -D ${FILE} -o ${ECMC_TMP_DIR}${FILE}.enc"
+  ${IF_FALSE}system "bash -c '. ${ECMC_CONFIG_ROOT}pythonVenv.sh -d ${ECMC_TMP_DIR}; python ${ECMC_CONFIG_ROOT}encYamlJinja2.py -d ${ECMC_TMP_DIR} -T ${ECMC_CONFIG_ROOT} -D ${FILE} -o ${ECMC_TMP_DIR}${FILE}.enc'"
 ecmcEndIf()
 
 #- set device name, default to ${IOC}

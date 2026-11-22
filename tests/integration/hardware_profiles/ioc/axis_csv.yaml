@@ -1,0 +1,45 @@
+# Dedicated SIM fixture: shared CSV axis, hardware PDOs selected by Jinja.
+# All motor/encoder scales are illustrative; never use for physical motion.
+axis:
+  id: $(AX_ID)
+  type: 1
+  mode: CSV
+epics:
+  name: $(AX_NAME)
+  unit: mm
+  motorRecord:
+    enable: false
+drive:
+  slave: $(DRV_SLAVE)
+  numerator: 1.0
+  denominator: 32768
+encoder:
+  slave: $(ENC_SLAVE)
+  channel: $(ENC_CH=1)
+  numerator: 1.0
+  denominator: 4096
+  absBits: 24
+controller:
+  Kp: 1.0
+trajectory:
+  axis:
+    velocity: 0.1
+    acceleration: 0.5
+    deceleration: 0.5
+input:
+  limit:
+    # SIM-only placeholders. NO physical end-stop protection.
+    forward: ec0.s-1.ONE.0
+    backward: ec0.s-1.ONE.0
+
+# Explicit monitor parameters avoid invalid zero-tolerance startup defaults.
+# SIM fixture only: values are illustrative, not tuned for motor operation.
+monitoring:
+  target:
+    enable: true
+    tolerance: 0.01
+    time: 100
+  lag:
+    enable: true
+    tolerance: 0.1
+    time: 100

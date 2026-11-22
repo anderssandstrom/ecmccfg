@@ -1,0 +1,22 @@
+{# EL7062: installed-flat family template. Included by hwProfileResolve.jinja2. #}
+{% set suffix = '%02d'|format(channel|int) %}
+{% if part == 'drive' %}
+{% set _ = cfg.defaults.update({'type': 1, 'denominator': 2147483648, 'control': 'ec' ~ master ~ '.s' ~ slave ~ '.driveControl' ~ suffix, 'status': 'ec' ~ master ~ '.s' ~ slave ~ '.driveStatus' ~ suffix}) %}
+{% elif part == 'encoder' %}
+{% set _ = cfg.defaults.update({'type': 0, 'source': 0, 'bits': 32, 'denominator': 1048576, 'position': 'ec' ~ master ~ '.s' ~ slave ~ '.positionActual' ~ suffix}) %}
+{% if index_home and feedback == 'incremental' %}
+{% set p = 'ec' ~ master ~ '.s' ~ slave ~ '.' %}
+{% set _ = cfg.defaults.update({'control': p ~ 'touchProbeControl' ~ suffix, 'status': p ~ 'touchProbeStatus' ~ suffix,
+'latch': {'position': p ~ 'touchProbePositionPos' ~ suffix ~ '_1', 'control': 0, 'status': 1, 'armCmd': 17, 'armBits': 5}}) %}
+{% endif %}
+{% elif part == 'input' %}
+{% set _ = cfg.defaults.update({'limit': {'forward': 'ec' ~ master ~ '.s' ~ slave ~ '.binaryInputs' ~ suffix ~ '.1', 'backward': 'ec' ~ master ~ '.s' ~ slave ~ '.binaryInputs' ~ suffix ~ '.0'}}) %}
+{% endif %}
+
+{% if part == 'drive' %}
+{% if variant == 'CSV' %}
+{% set _ = cfg.defaults.update({'setpoint': 'ec' ~ master ~ '.s' ~ slave ~ '.velocitySetpoint' ~ '%02d'|format(channel|int)}) %}
+{% elif variant == 'CSP' %}
+{% set _ = cfg.defaults.update({'setpoint': 'ec' ~ master ~ '.s' ~ slave ~ '.positionSetpoint' ~ '%02d'|format(channel|int)}) %}
+{% endif %}
+{% endif %}

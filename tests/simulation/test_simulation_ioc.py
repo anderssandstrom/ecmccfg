@@ -41,7 +41,7 @@ class Factory:
         self.values = {PREFIX+'FirstSlave':0}
         self.puts = []
         self.lock = threading.Lock()
-        devices = [(0,'EK1100',12),(12,'EL7031',13),(13,'EL7031-0030',14),
+        devices = [(0,'EK1100',12),(12,'EL7031',13),(13,'EL7037',14),
                    (14,'EL7041-0052',18),(18,'EL7047',20),(20,'EL7041',22),(22,'EL7047_CSP',-1)]
         for slave,hardware,next_slave in devices:
             base = PREFIX+f'ec0:s{slave}:'
@@ -70,13 +70,14 @@ def rejects(function):
 
 
 assert ioc.model_module('EL7031') is ioc.el7041
+assert ioc.model_module('EL7037') is ioc.el7041
 assert ioc.model_module('EL7031-0030') is ioc.el7041
 assert ioc.model_module('EL7047') is ioc.el7041
 for unsupported in ('EL70310', 'EL7031_CSP', 'EL7047_CSP', 'EL7047_PosIF'):
     assert ioc.model_module(unsupported) is None
 factory = Factory()
 slaves = ioc.discover(PREFIX,0,factory)
-assert [(s.position,s.hardware) for s in slaves] == [(0,'EK1100'),(12,'EL7031'),(13,'EL7031-0030'),
+assert [(s.position,s.hardware) for s in slaves] == [(0,'EK1100'),(12,'EL7031'),(13,'EL7037'),
                                                        (14,'EL7041-0052'),(18,'EL7047'),(20,'EL7041'),(22,'EL7047_CSP')]
 assert not factory.puts
 factory.values[PREFIX+'ec0:s20:NxtObjId'] = 12

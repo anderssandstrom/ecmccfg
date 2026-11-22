@@ -1,0 +1,15 @@
+{# EL70xx: installed-flat family template. Included by hwProfileResolve.jinja2. #}
+{# Standard EX70XX stepper PDOs shared by EL7031/7037/7041/7047. #}
+{% if part == 'drive' %}
+{% set _ = cfg.defaults.update({'type': 0, 'control': 'ec' ~ master ~ '.s' ~ slave ~ '.driveControl01', 'status': 'ec' ~ master ~ '.s' ~ slave ~ '.driveStatus01', 'enable': 0, 'enabled': 1}) %}
+{% elif part == 'encoder' %}
+{% set _ = cfg.defaults.update({'type': 0, 'source': 0, 'bits': 16, 'denominator': 12800, 'position': 'ec' ~ master ~ '.s' ~ slave ~ '.positionActual01'}) %}
+{% endif %}
+
+{% if part == 'drive' %}
+{% if variant == 'CSV' %}
+{% set _ = cfg.defaults.update({'setpoint': 'ec' ~ master ~ '.s' ~ slave ~ '.velocitySetpoint01'}) %}
+{% elif variant == 'CSP' %}
+{% set _ = cfg.defaults.update({'setpoint': 'ec' ~ master ~ '.s' ~ slave ~ '.positionSetpoint01'}) %}
+{% endif %}
+{% endif %}

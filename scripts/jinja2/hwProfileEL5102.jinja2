@@ -1,0 +1,9 @@
+{% if part == 'encoder' %}
+{% set _ = cfg.defaults.update({'type': 0, 'source': 0, 'bits': 32, 'position': 'ec' ~ master ~ '.s' ~ slave ~ '.positionActual' ~ '%02d'|format(channel|int)}) %}
+{% if index_home %}
+{% set suffix = '%02d'|format(channel|int) %}
+{% set p = 'ec' ~ master ~ '.s' ~ slave ~ '.' %}
+{% set _ = cfg.defaults.update({'control': p ~ 'encoderControl' ~ suffix, 'status': p ~ 'encoderStatus' ~ suffix,
+'latch': {'position': p ~ 'encoderLatchPosition' ~ suffix, 'control': 0, 'status': 0, 'armCmd': 1, 'armBits': 1}}) %}
+{% endif %}
+{% endif %}

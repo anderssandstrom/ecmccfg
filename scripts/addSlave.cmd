@@ -65,6 +65,15 @@ epicsEnvUnset(ECMC_EC_COMP_TYPE)
 ecmcFileExist("${ECMC_CONFIG_ROOT}ecmc${HW_DESC}.cmd",1)
 ${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}ecmc${HW_DESC}.cmd" "NELM=${NELM=1},${OPT=}"
 
+#- Register the component type selected by the hardware script for axis
+#- hardware profiles. Fall back to HW_DESC if the script did not set one.
+#- ECMC_EC_COMP_TYPE was cleared just before executing the hardware script,
+#- so a value from a previous slave cannot leak into this registration.
+epicsEnvSet("ECMC_HW_M${ECMC_EC_MASTER_ID}_S${ECMC_EC_SLAVE_NUM}", "${ECMC_EC_COMP_TYPE=${HW_DESC}}")
+#- Preserve the actual hardware script variant too: component types can be
+#- shared between CSV/CSP/OPT mappings with different PDO layouts.
+epicsEnvSet("ECMC_HW_SCRIPT_M${ECMC_EC_MASTER_ID}_S${ECMC_EC_SLAVE_NUM}", "${HW_DESC}")
+
 #- deduce what the prefix should be
 ecmcFileExist("${ECMC_CONFIG_ROOT}ecmc${P_SCRIPT}.cmd",1)
 ${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}ecmc${P_SCRIPT}.cmd" "MASTER_ID=${ECMC_EC_MASTER_ID},SLAVE_POS=${ECMC_EC_SLAVE_NUM},HWTYPE=${ECMC_EC_HWTYPE}"

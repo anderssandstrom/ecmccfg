@@ -1,0 +1,41 @@
+# Dedicated SIM fixture: both channels / feedbacks / swapped limit links.
+axis:
+  id: $(AX_ID)
+  type: 1
+  mode: CSV
+epics:
+  name: $(AX_NAME)
+  unit: mm
+  motorRecord:
+    enable: false
+drive:
+  slave: $(DRV_SLAVE)
+  channel: $(DRV_CH=1)
+  numerator: 1.0
+encoder:
+  slave: $(DRV_SLAVE)
+  channel: $(DRV_CH=1)
+  feedback: $(ENC_FEEDBACK=openloop)
+  numerator: 1.0
+controller:
+  Kp: 1.0
+trajectory:
+  axis:
+    velocity: 0.1
+    acceleration: 0.5
+    deceleration: 0.5
+input:
+  limit:
+    swap: $(SWAP_LIMITS=false)
+
+# Explicit monitor parameters avoid invalid zero-tolerance startup defaults.
+# SIM fixture only: values are illustrative, not tuned for motor operation.
+monitoring:
+  target:
+    enable: true
+    tolerance: 0.01
+    time: 100
+  lag:
+    enable: true
+    tolerance: 0.1
+    time: 100

@@ -1,0 +1,9 @@
+# EL7062 in CSV mode, channel 1. Channel 2 needs a channel-specific profile.
+# Velocity/position scaling belongs to the axis application.
+drive:
+  type: 0
+  control: ec$(MASTER).s$(SLAVE).driveControl01
+  status: ec$(MASTER).s$(SLAVE).driveStatus01
+  setpoint: ec$(MASTER).s$(SLAVE).velocitySetpoint01
+  enable: 0
+  enabled: 1

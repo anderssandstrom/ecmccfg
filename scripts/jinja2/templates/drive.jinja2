@@ -71,9 +71,7 @@ ${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}addEcSlaveAxisName.cmd" "EC_PATH={{ drive.setp
 {%- endif %}
 {#- scaling #}
 ecmcConfigOrDie "Cfg.SetAxisDrvScaleNum(${ECMC_AXIS_NO},{{ drive.numerator }})"
-{%- if hardware is not defined or hardware.drive is not defined or not hardware.drive.snippet or 'denominator' in hardware.drive.provided %}
 ecmcConfigOrDie "Cfg.SetAxisDrvScaleDenom(${ECMC_AXIS_NO},{{ drive.denominator }})"
-{%- endif %}
 {#- position-dependent CSV output compensation #}
 {%- if drive.lookuptable is defined %}
     ecmcConfigOrDie "Cfg.LoadAxisDrvLookupTable(${ECMC_AXIS_NO},{{ drive.lookuptable.filename }})"

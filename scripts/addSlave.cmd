@@ -65,6 +65,11 @@ epicsEnvUnset(ECMC_EC_COMP_TYPE)
 ecmcFileExist("${ECMC_CONFIG_ROOT}ecmc${HW_DESC}.cmd",1)
 ${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}ecmc${HW_DESC}.cmd" "NELM=${NELM=1},${OPT=}"
 
+#- Register this slave's hardware type for axis YAML default resolution.
+#- Use HW_DESC (the selected hardware script) rather than a detected runtime ID.
+#- This is an IOC environment variable, inherited by both CLI renderers.
+epicsEnvSet("ECMC_HW_M${ECMC_EC_MASTER_ID}_S${ECMC_EC_SLAVE_NUM}", "${HW_DESC}")
+
 #- deduce what the prefix should be
 ecmcFileExist("${ECMC_CONFIG_ROOT}ecmc${P_SCRIPT}.cmd",1)
 ${SCRIPTEXEC} "${ECMC_CONFIG_ROOT}ecmc${P_SCRIPT}.cmd" "MASTER_ID=${ECMC_EC_MASTER_ID},SLAVE_POS=${ECMC_EC_SLAVE_NUM},HWTYPE=${ECMC_EC_HWTYPE}"

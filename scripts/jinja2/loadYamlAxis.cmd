@@ -51,11 +51,14 @@ ecmcEndIf()
 
 ecmcFileExist("${FILE_TEMP_2}",1)
 
-#- Resolve profiles automatically if slave selectors are present. Legacy axis YAML
-#- is copied unchanged; the ECB backend needs Python only when profiles are used.
+#- The Jinja backend resolves profiles inside its renderer, with no extra preprocessing.
+#- ECB uses the compatibility resolver only for new slave-selected profiles.
 epicsEnvSet(FILE_TEMP_4,${ECMC_TMP_DIR}${FILE}_4)
 system "rm -f ${FILE_TEMP_4}"
-system "if grep -Eq '^[[:space:]]+slave:[[:space:]]*' ${FILE_TEMP_2}; then . ${ECMC_CONFIG_ROOT}pythonVenv.sh -d ${ECMC_TMP_DIR}; python ${ECMC_CONFIG_ROOT}resolveAxisHardwareProfiles.py ${FILE_TEMP_2} ${FILE_TEMP_4} --profiles ${ECMC_CONFIG_ROOT}hardwareProfiles; else cp ${FILE_TEMP_2} ${FILE_TEMP_4}; fi"
+ecmcIf("'$(ECMC_CFG_TOOL=jinja)'=='ecb'")
+  ${IF_TRUE}system "if grep -Eq '^[[:space:]]+slave:[[:space:]]*' ${FILE_TEMP_2}; then . ${ECMC_CONFIG_ROOT}pythonVenv.sh -d ${ECMC_TMP_DIR}; python ${ECMC_CONFIG_ROOT}resolveAxisHardwareProfiles.py ${FILE_TEMP_2} ${FILE_TEMP_4} --profiles ${ECMC_CONFIG_ROOT}hardwareProfiles; else cp ${FILE_TEMP_2} ${FILE_TEMP_4}; fi"
+  ${IF_FALSE}system "cp ${FILE_TEMP_2} ${FILE_TEMP_4}"
+ecmcEndIf()
 ecmcFileExist("${FILE_TEMP_4}",1)
 
 #- cleanup

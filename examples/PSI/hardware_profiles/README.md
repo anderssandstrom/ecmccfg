@@ -19,6 +19,7 @@ drive:
 encoder:
   slave: $(DRV_SLAVE)
   # channel: $(DRV_CHANNEL=1) # EL7062 only
+  # feedback: $(ENC_FEEDBACK=openloop) # EL7062 only
   numerator: 1.0
 ```
 

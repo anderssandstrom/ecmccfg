@@ -5,7 +5,7 @@ chapter = false
 +++
 
 ## Scope
-Use this page for EL72xx servo-drive issues such as diagnostics, warning/fault
+Use this page for EL72xx and EP72xx servo-drive issues such as diagnostics, warning/fault
 states, tuning, and installation-related OCT problems.
 
 For the shared OPT profiles, supported devices, startup options and Qt panels, see
@@ -17,6 +17,7 @@ For the shared OPT profiles, supported devices, startup options and Qt panels, s
 3. [Tuning](#tuning)
 4. [Electrical installation issues](#electrical-installation-issues)
 5. [OCT cable failure](#oct-cable-failure)
+6. [EP7211-0034: frozen encoder position](#ep7211-0034-frozen-encoder-position)
 
 ## Diagnostics
 
@@ -167,6 +168,29 @@ In those cases, the EL72xx diagnostic buffer showed encoder-related errors.
 ## OCT cable failure
 One identified issue was a defective OCT cable. Symptoms included frequent drive
 disable events and repeated transitions into fault state.
+
+## EP7211-0034: frozen encoder position
+
+On 23 November 2026, an EP7211-0034 that had previously been operating
+normally stopped updating its actual encoder position.
+
+- The raw EtherCAT position value was also frozen when read directly using
+  the EtherLab `ethercat upload` tool. The symptom was therefore not limited
+  to the ECMC or EPICS position readback.
+- Restarting the IOC restored normal encoder position updates.
+- The root cause is unknown.
+
+Similar encoder feedback problems have been observed previously on Ex72xx
+drives. The
+[`ecmcEP7211-0034_ALL.cmd` hardware configuration](https://github.com/paulscherrerinstitute/ecmccfg/blob/master/hardware/Beckhoff_7XXX/EP/ecmcEP7211-0034_ALL.cmd)
+contains a note about incorrect encoder feedback following the PREOP-to-OP
+transition without an indication in the status word, and configures an
+EtherCAT startup delay as a workaround. It is not known whether the frozen
+position observed here has the same cause.
+
+If the issue recurs, capture the raw position, drive status, EtherCAT state
+and drive diagnostic buffer before restarting the IOC, where safe to do so.
+Do not command motion with unreliable position feedback.
 
 ## Related Pages
 - [hardware]({{< relref "/manual/knowledgebase/hardware/_index.md" >}})

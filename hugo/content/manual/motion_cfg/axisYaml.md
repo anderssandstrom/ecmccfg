@@ -165,8 +165,8 @@ therefore be silently ignored by Python. The loaders also differ for some
 optional monitoring blocks; supply `enable` and its dependent values together
 when configuring a monitor. See the reference table for conditional requirements.
 
-One current type mismatch is `monitoring.stall.enable`: Python accepts a YAML
-boolean (`true`/`false`), while the ECB schema requires an integer (`1`/`0`).
+For `monitoring.stall.enable`, integer `1`/`0` works with both backends.
+Python also accepts YAML boolean `true`/`false`.
 Use the form appropriate to the selected loader. The other monitoring enables
 use booleans in both schemas.
 

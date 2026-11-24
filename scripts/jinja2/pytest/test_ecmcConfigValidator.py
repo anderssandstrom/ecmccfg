@@ -71,3 +71,15 @@ def test_slave_control_deadband_belongs_to_target(myValidator):
         },
     }
     assert validator.validate(valid), validator.errors
+
+
+@pytest.mark.parametrize('value', [True, False, 0, 1])
+def test_stall_enable_accepts_boolean_and_binary_integer(value):
+    validator = cerberus.Validator({'monitoring': ecmcYamlSchema.Schema.monitoringSchema})
+    assert validator.validate({'monitoring': {'stall': {'enable': value}}}), validator.errors
+
+
+@pytest.mark.parametrize('value', [-1, 2, '1', 'true', 0.5])
+def test_stall_enable_rejects_invalid_values(value):
+    validator = cerberus.Validator({'monitoring': ecmcYamlSchema.Schema.monitoringSchema})
+    assert not validator.validate({'monitoring': {'stall': {'enable': value}}})

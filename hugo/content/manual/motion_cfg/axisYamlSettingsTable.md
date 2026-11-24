@@ -5,7 +5,7 @@ weight = 16
 chapter = false
 +++
 
-Reference for [Axis YAML configuration](../axisyaml/), grouped by section. Types are generated from the ECB schema; Python/Jinja may accept different forms (for example, `monitoring.stall.enable` is boolean in Python and integer in ECB). A mapping is a YAML block. A schema typo is identified rather than silently treated as a supported type. Defaults apply when the parent section exists; a dash means no documented fallback. Requirements distinguish loader, template and recommended explicit settings. Python discards unknown keys; ECB rejects them. See the [complete example]({{< relref "/manual/motion_cfg/axisYamlExample.md" >}}) for usage.
+Reference for [Axis YAML configuration](../axisyaml/), grouped by section. Types are generated from the ECB schema; Python/Jinja may accept different forms (for example, `monitoring.stall.enable` also accepts boolean values in Python). A mapping is a YAML block. A schema typo is identified rather than silently treated as a supported type. Defaults apply when the parent section exists; a dash means no documented fallback. Requirements distinguish loader, template and recommended explicit settings. Python discards unknown keys; ECB rejects them. See the [complete example]({{< relref "/manual/motion_cfg/axisYamlExample.md" >}}) for usage.
 
 <!-- BEGIN GENERATED AXIS YAML REFERENCE -->
 
@@ -278,7 +278,7 @@ Reference for [Axis YAML configuration](../axisyaml/), grouped by section. Types
 | `monitoring.velocityDifference.max` | integer / float | Allowed max difference | optional block; supply enable, max and time.trajectory; time.drive optional | — |
 | `monitoring.velocityDifference.time.trajectory` | integer | Time allowed outside max diff velo before system init halt (EtherCAT cycles) | optional block; supply enable, max and time.trajectory; time.drive optional | — |
 | `monitoring.velocityDifference.time.drive` | integer | Time allowed outside max diff velo before system disables drive (EtherCAT cycles) | optional block; supply enable, max and time.trajectory; time.drive optional | — |
-| `monitoring.stall.enable` | integer | Python: boolean true/false; ECB: integer 1/0 — Stall monitoring requires target monitoring. Python uses boolean enable (true/false); ECB currently requires integer enable (1/0). timeout is in EtherCAT cycles; factor is dimensionless. | optional | — |
+| `monitoring.stall.enable` | integer | Integer 1/0 (both backends); boolean true/false also accepted by Python — Stall monitoring requires target monitoring. Both backends accept integer enable (1/0); Python also accepts boolean true/false. timeout is in EtherCAT cycles; factor is dimensionless. | optional | — |
 | `monitoring.stall.time.timeout` | integer | If not at target after "timeout" cycles after trajectory generator is ready then drive will disable | optional | — |
 | `monitoring.stall.time.factor` | integer / float | Measures duration of last motion command (busy high edge to busy low edge). The new timeout will be defined as this duration multiplied by this factor. The timeout finally used for stall detection will be the longest (of time.timeout and calculated from time.factor). | optional | — |
 

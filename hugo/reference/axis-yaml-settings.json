@@ -2748,11 +2748,11 @@
             "monitoring.stall.time.factor"
           ],
           "requirement": "optional",
-          "description": "Stall monitoring requires target monitoring. Python uses boolean enable (true/false); ECB currently requires integer enable (1/0). timeout is in EtherCAT cycles; factor is dimensionless.",
+          "description": "Stall monitoring requires target monitoring. Both backends accept integer enable (1/0); Python also accepts boolean true/false. timeout is in EtherCAT cycles; factor is dimensionless.",
           "entries": [
             {
               "key": "monitoring.stall.enable",
-              "summary": "Python: boolean true/false; ECB: integer 1/0"
+              "summary": "Integer 1/0 (both backends); boolean true/false also accepted by Python"
             },
             {
               "key": "monitoring.stall.time.timeout",

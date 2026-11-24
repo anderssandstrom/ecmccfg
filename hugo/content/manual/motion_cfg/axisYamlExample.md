@@ -23,9 +23,8 @@ other displayed values are examples, not defaults. Verify all hardware links,
 limit polarity, scaling and monitoring before enabling motion. Do not use this
 illustration directly as a commissioned configuration.
 
-The example uses the Python loader's boolean syntax for `monitoring.stall.enable`.
-With ECB, change that value to integer `1` (or `0` to disable): the current ECB
-schema uses an integer for this field while the Python schema uses a boolean.
+The example uses integer `1`/`0` for `monitoring.stall.enable`, supported by
+both backends. Python also accepts YAML boolean `true`/`false`.
 
 ## All YAML settings
 ```yaml
@@ -293,7 +292,7 @@ monitoring:
 #      trajectory: 100                                          # Time allowed outside max diff velo before system init halt [cycles]
 #      drive: 200                                               # Time allowed outside max diff velo before system disables drive [cycles]
 #  stall:
-#    enable: True                                               # Enable stall monitoring. At target must be enabled for this functionality
+#    enable: 1                                                  # Enable stall monitoring. At target must be enabled for this functionality; 1 enables, 0 disables
 #    time:
 #      timeout: 10000                                           # If not at target after "timeout" cycles after trajectory generator is ready then drive will disable
 #      factor: 5.0                                              # Measures duration of last motion command (busy high edge to busy low edge). The new timeout will be defined as this duration multiplied by this factor. The timeout finally used for stall detection will be the longest (of time.timeout and calculated from time.factor).

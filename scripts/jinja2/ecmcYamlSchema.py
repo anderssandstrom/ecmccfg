@@ -609,7 +609,10 @@ class Schema:
                 'type': 'dict',
                 'required': False,
                 'schema': {
-                    'enable': {'type': 'boolean'},
+                    'enable': {'anyof': [
+                        {'type': 'boolean'},
+                        {'type': 'integer', 'allowed': [0, 1]},
+                    ]},
                     'time': {
                         'type': 'dict',
                         'schema': {

@@ -165,8 +165,10 @@ therefore be silently ignored by Python. The loaders also differ for some
 optional monitoring blocks; supply `enable` and its dependent values together
 when configuring a monitor. See the reference table for conditional requirements.
 
-For `monitoring.stall.enable`, prefer YAML boolean `true`/`false` with either
-backend. Integer `1`/`0` is also accepted for backward compatibility.
+For boolean schema fields, prefer YAML `true`/`false` with either backend.
+Binary integers `1`/`0` are also accepted and normalized to booleans in both
+backends for backward compatibility. Numeric settings such as bit indices
+remain integers.
 Use the form appropriate to the selected loader. The other monitoring enables
 use booleans in both schemas.
 

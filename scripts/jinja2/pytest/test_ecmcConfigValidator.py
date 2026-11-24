@@ -83,3 +83,39 @@ def test_stall_enable_accepts_boolean_and_binary_integer(value):
 def test_stall_enable_rejects_invalid_values(value):
     validator = cerberus.Validator({'monitoring': ecmcYamlSchema.Schema.monitoringSchema})
     assert not validator.validate({'monitoring': {'stall': {'enable': value}}})
+
+
+def boolean_rules(schema, prefix=''):
+    for key, rule in schema.items():
+        path = f'{prefix}.{key}' if prefix else key
+        if rule.get('type') == 'boolean':
+            yield path, rule
+        if rule.get('type') == 'dict':
+            yield from boolean_rules(rule.get('schema', {}), path)
+
+
+@pytest.mark.parametrize('path,rule', list(boolean_rules(ecmcYamlSchema.Schema.grandSchema)))
+def test_all_boolean_schema_fields_accept_binary_integers(path, rule):
+    # Dependencies are checked by the full-document tests; isolate each type rule.
+    validator = cerberus.Validator({'flag': {
+        key: value for key, value in rule.items() if key != 'dependencies'
+    }})
+    for value in (True, False, 0, 1):
+        assert validator.validate({'flag': value}), (path, validator.errors)
+        assert validator.document['flag'] is bool(value), path
+    for value in (-1, 2, 0.5, '1', 'false'):
+        assert not validator.validate({'flag': value}), (path, value)
+
+
+def test_binary_integer_normalization_preserves_numeric_fields(myValidator):
+    schema = {
+        'nested': {'type': 'dict', 'schema': {
+            'enabled': {'type': 'boolean', 'coerce': ecmcYamlSchema.normalize_boolean},
+            'bit': {'type': 'integer'},
+        }},
+    }
+    result = myValidator.validate(
+        document={'nested': {'enabled': 0, 'bit': 1}}, schema=schema, strict=True)
+    assert result['nested']['enabled'] is False
+    assert type(result['nested']['bit']) is int
+    assert result['nested']['bit'] == 1

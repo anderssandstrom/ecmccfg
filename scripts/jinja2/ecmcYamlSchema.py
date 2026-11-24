@@ -16,6 +16,14 @@ supportedAxisTypes = {
 }
 
 
+def normalize_boolean(value):
+    """Accept binary integers as booleans, matching ECB's boolean schema."""
+    if type(value) is int and value in (0, 1):
+        return bool(value)
+    # Leave other values to Cerberus' boolean type validation.
+    return value
+
+
 class Schema:
     axisSchemaDict = {
         0: None,
@@ -90,14 +98,14 @@ class Schema:
             'trajectory': {
                 'type': 'dict',                    
                 'schema': {
-                    'enable': {'required': False, 'type': 'boolean'},
+                    'enable': {'required': False, 'type': 'boolean', 'coerce': normalize_boolean},
                     'size': {'required': False, 'type': 'integer'}
                 }                
             },
             'encoder': {
                 'type': 'dict',                    
                 'schema': {
-                    'enable': {'required': False, 'type': 'boolean'},
+                    'enable': {'required': False, 'type': 'boolean', 'coerce': normalize_boolean},
                     'size': {'required': False, 'type': 'integer'}
                 }                
             }
@@ -111,21 +119,21 @@ class Schema:
             'velocity': {
                 'type': 'dict',
                 'schema': {
-                    'enable': {'required': False, 'type': 'boolean'},
+                    'enable': {'required': False, 'type': 'boolean', 'coerce': normalize_boolean},
                     'size': {'required': False, 'type': 'integer'}
                 }
             },
             'trajectory': {
                 'type': 'dict',
                 'schema': {
-                    'enable': {'required': False, 'type': 'boolean'},
+                    'enable': {'required': False, 'type': 'boolean', 'coerce': normalize_boolean},
                     'size': {'required': False, 'type': 'integer'}
                 }
             },
             'position': {
                 'type': 'dict',
                 'schema': {
-                    'enable': {'required': False, 'type': 'boolean'},
+                    'enable': {'required': False, 'type': 'boolean', 'coerce': normalize_boolean},
                     'size': {'required': False, 'type': 'integer'}
                 }
             }
@@ -142,7 +150,7 @@ class Schema:
                 {'type': 'string', 'regex': r'^\$(\{|\()\w*(=\d*(\.\d*)?)?(\}|\))$'}
             ]
             },
-            'postMoveEnable': {'type': 'boolean'},
+            'postMoveEnable': {'type': 'boolean', 'coerce': normalize_boolean},
             'postMovePosition': {'oneof': [
                 {'type': 'float'},
                 {'type': 'string', 'regex': r'^\$(\{|\()\w*(=\d*(\.\d*)?)?(\}|\))$'}
@@ -188,8 +196,8 @@ class Schema:
             'autoEnable': {'type': 'dict', 'schema': {
                 'enableTimeout': {'type': 'float','default': -1.0},
                 'disableTimeout': {'type': 'float','default': -1.0},
-                'autoDisableLatchAtTarget': {'type': 'boolean','default': False},
-                'atStartup': {'type': 'boolean','default': False},
+                'autoDisableLatchAtTarget': {'type': 'boolean', 'coerce': normalize_boolean,'default': False},
+                'atStartup': {'type': 'boolean', 'coerce': normalize_boolean,'default': False},
             }},
             'autoMode': {'type': 'dict', 'schema': {
                 'modeSet': {'type': 'string'},
@@ -198,14 +206,14 @@ class Schema:
                 'modeCmdHome': {'type': 'integer'},
             }},
             'features': {'type': 'dict', 'schema': {
-                'disableOnReset': {'type': 'boolean'},
-                'alarmAtHardLimits': {'type': 'boolean'},
-                'blockCom': {'type': 'boolean'},
-                'allowSrcChangeWhenEnabled': {'type': 'boolean'},
+                'disableOnReset': {'type': 'boolean', 'coerce': normalize_boolean},
+                'alarmAtHardLimits': {'type': 'boolean', 'coerce': normalize_boolean},
+                'blockCom': {'type': 'boolean', 'coerce': normalize_boolean},
+                'allowSrcChangeWhenEnabled': {'type': 'boolean', 'coerce': normalize_boolean},
                 'allowedFunctions': {'type': 'dict', 'schema': {
-                    'positioning': {'type': 'boolean'},
-                    'constantVelocity': {'type': 'boolean'},
-                    'homing': {'type': 'boolean'}
+                    'positioning': {'type': 'boolean', 'coerce': normalize_boolean},
+                    'constantVelocity': {'type': 'boolean', 'coerce': normalize_boolean},
+                    'homing': {'type': 'boolean', 'coerce': normalize_boolean}
                 }}
             }}            
         }
@@ -227,7 +235,7 @@ class Schema:
             'motorRecord': {
                 'type': 'dict',
                 'schema': {
-                    'enable': {'type': 'boolean', 'default': True},
+                    'enable': {'type': 'boolean', 'coerce': normalize_boolean, 'default': True},
                     'fieldInit': {'type': 'string'},
                     'description': {'type': 'string'},
                     'pvt': {
@@ -237,8 +245,8 @@ class Schema:
                         'nreadback': {'default': 0},
                         }                    
                     },
-                    'syncSoftLimits': {'type': 'boolean', 'default': False},
-                    'restoreSoftLimits': {'type': 'boolean', 'default': False},
+                    'syncSoftLimits': {'type': 'boolean', 'coerce': normalize_boolean, 'default': False},
+                    'restoreSoftLimits': {'type': 'boolean', 'coerce': normalize_boolean, 'default': False},
                 }
             }
         }
@@ -254,14 +262,14 @@ class Schema:
             'setpoint': {'required': True, 'type': 'string'},
             'control': {'required': True, 'type': 'string'},
             'status': {'type': 'string'},
-            'reduceTorqueEnable': {'type': 'boolean', 'dependencies': ['control', 'reduceTorque']},
+            'reduceTorqueEnable': {'type': 'boolean', 'coerce': normalize_boolean, 'dependencies': ['control', 'reduceTorque']},
             'reduceTorque': {'type': 'integer', 'min': 0, 'dependencies': ['control', 'reduceTorqueEnable']},
             'enable': {'type': 'integer', 'min': 0, 'dependencies': ['control']},
             'enabled': {'type': 'integer', 'min': 0, 'dependencies': ['status']},
             'brake': {
                 'type': 'dict',
                 'schema': {
-                    'enable': {'required': True, 'type': 'boolean'},
+                    'enable': {'required': True, 'type': 'boolean', 'coerce': normalize_boolean},
                     'output': {'required': True, 'type': 'string'},
                     'openDelay': {'type': 'integer', 'min': 0, 'default': 0},
                     'closeAhead': {'type': 'integer', 'min': 0, 'default': 0}
@@ -276,7 +284,7 @@ class Schema:
                     'filename': {'required': True, 'type': 'string'},
                     'range': {'type': 'float', 'min': 0},
                     'scale': {'type': 'float'},
-                    'enable': {'type': 'boolean'},
+                    'enable': {'type': 'boolean', 'coerce': normalize_boolean},
                 }
             },
         }
@@ -300,9 +308,9 @@ class Schema:
     encoderPowerSchema = {
         'type': 'dict',
         'schema': {
-            'enable': {'type': 'boolean', 'default': False},
+            'enable': {'type': 'boolean', 'coerce': normalize_boolean, 'default': False},
             'output': {'type': 'string'},
-            'activeHigh': {'type': 'boolean', 'default': True},
+            'activeHigh': {'type': 'boolean', 'coerce': normalize_boolean, 'default': True},
             'startupDelay': {'type': 'float', 'min': 0, 'default': 0.1},
             'startupTimeout': {'type': 'float', 'min': 0, 'default': 5.0},
             'idleDelay': {'type': 'float', 'min': 0, 'default': 2.0},
@@ -342,7 +350,7 @@ class Schema:
                     'filename': {'required': True, 'type': 'string'},
                     'range': {'type': 'float'},
                     'scale': {'type': 'float'},
-                    'enable': {'type': 'boolean'},
+                    'enable': {'type': 'boolean', 'coerce': normalize_boolean},
                 }
             },
             'unit': {'type': 'string'},
@@ -350,10 +358,10 @@ class Schema:
                 'type': 'dict',
                 'schema': {
                     'time': {'required': True, 'type': 'float'},
-                    'enable': {'type': 'boolean'},
+                    'enable': {'type': 'boolean', 'coerce': normalize_boolean},
                 }
             },
-            'allowOverUnderFlow': {'type': 'boolean'},
+            'allowOverUnderFlow': {'type': 'boolean', 'coerce': normalize_boolean},
             'desc': {'type': 'string'},
             'position': {'type': 'string'},
             'control': {'type': 'string'},
@@ -390,8 +398,8 @@ class Schema:
             'Ki': {'type': 'float', 'default': 0., 'min': 0},
             'Kd': {'type': 'float', 'default': 0., 'min': 0},
             'Kff': {'type': 'float', 'default': 1., 'min': 0},
-            'resetIAtRmp': {'type': 'boolean', 'required': False},
-            'freezeIAtRmp': {'type': 'boolean', 'required': False},
+            'resetIAtRmp': {'type': 'boolean', 'coerce': normalize_boolean, 'required': False},
+            'freezeIAtRmp': {'type': 'boolean', 'coerce': normalize_boolean, 'required': False},
             'inner': {
                 'type': 'dict',
                 'required': False,
@@ -485,7 +493,7 @@ class Schema:
                     'forwardPolarity': {'type': 'integer', 'allowed': [0, 1]},
                     'backward': {'required': True, 'type': 'string'},
                     'backwardPolarity': {'type': 'integer', 'allowed': [0, 1]},
-                    'latchInput': {'type': 'boolean'}
+                    'latchInput': {'type': 'boolean', 'coerce': normalize_boolean}
                 }
             },
             'home': {'required': False, 'type': 'string'},
@@ -499,7 +507,7 @@ class Schema:
                     'interlock': {'required': False, 'type': 'string'},
                     'rawLimit': {'required': False, 'type': 'float'},
                     'interlockPolarity': {'required': False, 'type': 'integer', 'allowed': [0, 1]},
-                    'enable': {'required': False, 'type': 'boolean'},
+                    'enable': {'required': False, 'type': 'boolean', 'coerce': normalize_boolean},
                 }
             },
         }
@@ -509,8 +517,8 @@ class Schema:
         'type': 'dict',
         'required': False,
         'schema': {
-            'enable': {'required': True, 'type': 'boolean'},
-            'externalCommands': {'type': 'boolean'},
+            'enable': {'required': True, 'type': 'boolean', 'coerce': normalize_boolean},
+            'externalCommands': {'type': 'boolean', 'coerce': normalize_boolean},
             'filter': filterSchema,
             'velocity_filter': plcVeloFilterSchema,
             'file': {'type': 'string'},
@@ -524,7 +532,7 @@ class Schema:
         'required': True,
         'schema': {
             'id': {'required': True, 'type': 'integer'},
-            'enable': {'type': 'boolean'},
+            'enable': {'type': 'boolean', 'coerce': normalize_boolean},
             'rateMilliseconds': {'type': 'integer'},
             'file': {'type': 'string'},
             'macros': {'type': 'string'},
@@ -536,10 +544,10 @@ class Schema:
         'type': 'dict',
         'required': False,
         'schema': {
-            'enable': {'required': False, 'type': 'boolean'},
-            'forwardEnable': {'type': 'boolean', 'dependencies': ['forward', 'enable']},
+            'enable': {'required': False, 'type': 'boolean', 'coerce': normalize_boolean},
+            'forwardEnable': {'type': 'boolean', 'coerce': normalize_boolean, 'dependencies': ['forward', 'enable']},
             'forward': {'type': 'float', 'dependencies': ['forwardEnable']},
-            'backwardEnable': {'type': 'boolean', 'dependencies': ['backward', 'enable']},
+            'backwardEnable': {'type': 'boolean', 'coerce': normalize_boolean, 'dependencies': ['backward', 'enable']},
             'backward': {'type': 'float', 'dependencies': ['backwardEnable']},
         }
     }
@@ -553,7 +561,7 @@ class Schema:
                 'required': False,
                 'default': {'enable': False, 'tolerance': 0.0, 'time': 100},
                 'schema': {
-                    'enable': {'required': True, 'type': 'boolean', 'dependencies': ['tolerance', 'time']},
+                    'enable': {'required': True, 'type': 'boolean', 'coerce': normalize_boolean, 'dependencies': ['tolerance', 'time']},
                     'tolerance': {'type': 'float', 'min': 0.0},
                     'time': {'type': 'integer', 'min': 0},
                 }
@@ -562,7 +570,7 @@ class Schema:
                 'type': 'dict',
                 'required': False,
                 'schema': {
-                    'enable': {'required': True, 'type': 'boolean', 'dependencies': ['tolerance', 'time']},
+                    'enable': {'required': True, 'type': 'boolean', 'coerce': normalize_boolean, 'dependencies': ['tolerance', 'time']},
                     'tolerance': {'type': 'float', 'min': 0.0},
                     'time': {'type': 'integer', 'min': 0},
                     'slaveControlDeadband': {
@@ -579,7 +587,7 @@ class Schema:
                 'type': 'dict',
                 'required': False,
                 'schema': {
-                    'enable': {'required': True, 'type': 'boolean', 'dependencies': ['max', 'time']},
+                    'enable': {'required': True, 'type': 'boolean', 'coerce': normalize_boolean, 'dependencies': ['max', 'time']},
                     'max': {'type': 'float', 'min': 0.0},
                     'time': {
                         'type': 'dict',
@@ -594,7 +602,7 @@ class Schema:
                 'type': 'dict',
                 'required': False,
                 'schema': {
-                    'enable': {'required': True, 'type': 'boolean', 'dependencies': ['max', 'time']},
+                    'enable': {'required': True, 'type': 'boolean', 'coerce': normalize_boolean, 'dependencies': ['max', 'time']},
                     'max': {'type': 'float', 'min': 0.0},
                     'time': {
                         'type': 'dict',
@@ -609,10 +617,7 @@ class Schema:
                 'type': 'dict',
                 'required': False,
                 'schema': {
-                    'enable': {'anyof': [
-                        {'type': 'boolean'},
-                        {'type': 'integer', 'allowed': [0, 1]},
-                    ]},
+                    'enable': {'type': 'boolean', 'coerce': normalize_boolean},
                     'time': {
                         'type': 'dict',
                         'schema': {

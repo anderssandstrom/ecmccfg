@@ -23,8 +23,8 @@ other displayed values are examples, not defaults. Verify all hardware links,
 limit polarity, scaling and monitoring before enabling motion. Do not use this
 illustration directly as a commissioned configuration.
 
-Boolean `true`/`false` is preferred for enable flags. For `monitoring.stall.enable`,
-both backends also accept integer `1`/`0` for backward compatibility.
+Boolean `true`/`false` is preferred for boolean settings. Both backends also
+accept integer `1`/`0` for these fields for backward compatibility.
 
 ## All YAML settings
 ```yaml

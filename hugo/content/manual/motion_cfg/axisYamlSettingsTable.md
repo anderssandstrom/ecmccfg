@@ -5,7 +5,7 @@ weight = 16
 chapter = false
 +++
 
-Reference for [Axis YAML configuration](../axisyaml/), grouped by section. Types are generated from the ECB schema; Python/Jinja may accept different forms. A mapping is a YAML block. A schema typo is identified rather than silently treated as a supported type. Defaults apply when the parent section exists; a dash means no documented fallback. Requirements distinguish loader, template and recommended explicit settings. Python discards unknown keys; ECB rejects them. See the [complete example]({{< relref "/manual/motion_cfg/axisYamlExample.md" >}}) for usage.
+Reference for [Axis YAML configuration](../axisyaml/), grouped by section. Types are generated from the ECB schema; Python/Jinja may accept different forms. A mapping is a YAML block. Boolean fields accept `true`/`false` and binary integers `1`/`0` in both backends. Defaults apply when the parent section exists; a dash means no documented fallback. Requirements distinguish loader, template and recommended explicit settings. Python discards unknown keys; ECB rejects them. See the [complete example]({{< relref "/manual/motion_cfg/axisYamlExample.md" >}}) for usage.
 
 <!-- BEGIN GENERATED AXIS YAML REFERENCE -->
 
@@ -135,7 +135,7 @@ Reference for [Axis YAML configuration](../axisyaml/), grouped by section. Types
 | `encoder.homing.position` | integer / float / string | Position to reference encoder to — Referenced position. | optional | — |
 | `encoder.homing.velocity.to` | integer / float | Velocity to cam/sensor (used for some homing seqs) — Velocity to cam/sensor. | optional | — |
 | `encoder.homing.velocity.from` | integer / float | Velocity from cam/sensor (used for some homing seqs) — Velocity off cam/sensor. | optional | velocity.to |
-| `encoder.homing.acceleration` | integer / float (schema typo) | Homing acceleration in engineering units/s². | optional | — |
+| `encoder.homing.acceleration` | integer / float | Homing acceleration in engineering units/s². | optional | — |
 | `encoder.homing.deceleration` | integer / float | Homing deceleration in engineering units/s². | optional | — |
 | `encoder.homing.refToEncIDAtStartup` | integer | Encoder id used as startup position reference; -1 disables copying. | optional | -1 |
 | `encoder.homing.refAtHome` | integer | Enable referencing this encoder at homing (integer flag, default 0). | optional | 0 |
@@ -170,7 +170,7 @@ Reference for [Axis YAML configuration](../axisyaml/), grouped by section. Types
 | Key | Type (ECB schema) | Description | Requirement | Default |
 | --- | --- | --- | --- | --- |
 | `controller.Kp` | integer / float | Kp proportional gain — Proportional gain. | optional | 1 |
-| `controller.Ki` | integer / float (schema typo) | Ki integral gain — Integral gain. | optional | 0 |
+| `controller.Ki` | integer / float | Ki integral gain — Integral gain. | optional | 0 |
 | `controller.Kd` | integer / float | Kd derivative gain — Derivative gain. | optional | 0 |
 | `controller.Kff` | integer / float | Feed forward gain — Feed-forward gain. | optional | 1 |
 | `controller.resetIAtRmp` | boolean | Reset the integral part to zero while an internal trajectory is busy. | optional | no command if omitted |

@@ -3,11 +3,11 @@
     "axis": {
       "axis.type=1": {
         "required": "axisSchema driveSchema encoderSchema trajectorySchema inputSchema",
-        "optional": "metaSchema homingSchema encoderHomingSchema encoderLutSchema encoderDelayCompSchema encoderLatchSchema encoderTouchProbeSchema touchProbeSchema positionCompareSchema varSchema epicsSchema controllerSchema controllerInnerSchema axisPlcSchema softlimitsSchema monitoringLagSchema monitoringTargetSchema monitoringVelocitySchema monitoringVelocityTimeSchema monitoringVelocityDifferenceSchema monitoringStallSchema driveBrakeSchema trajectoryModuloSchema epicsMotorRecordPvtSchema axisAutoEnableSchema encoderPowerSchema encoderPowerBackupSchema"
+        "optional": "metaSchema homingSchema encoderHomingSchema encoderLutSchema encoderDelayCompSchema encoderLatchSchema encoderTouchProbeSchema touchProbeSchema positionCompareSchema varSchema epicsSchema controllerSchema controllerInnerSchema axisPlcSchema softlimitsSchema monitoringLagSchema monitoringTargetSchema monitoringVelocitySchema monitoringVelocityTimeSchema monitoringVelocityDifferenceSchema monitoringStallSchema driveBrakeSchema trajectoryModuloSchema epicsMotorRecordPvtSchema axisAutoEnableSchema encoderPowerSchema encoderPowerBackupSchema driveLutSchema monitoringVelocityDifferenceTimeSchema"
       },
       "axis.type=2": {
         "required": "axisSchema encoderSchema trajectorySchema inputSchema",
-        "optional": "metaSchema homingSchema encoderHomingSchema encoderLutSchema encoderDelayCompSchema encoderLatchSchema encoderTouchProbeSchema touchProbeSchema positionCompareSchema varSchema epicsSchema axisPlcSchema softlimitsSchema monitoringLagSchema monitoringTargetSchema monitoringVelocitySchema monitoringVelocityTimeSchema monitoringVelocityDifferenceSchema monitoringStallSchema trajectoryModuloSchema epicsMotorRecordPvtSchema axisAutoEnableSchema encoderPowerSchema encoderPowerBackupSchema"
+        "optional": "metaSchema homingSchema encoderHomingSchema encoderLutSchema encoderDelayCompSchema encoderLatchSchema encoderTouchProbeSchema touchProbeSchema positionCompareSchema varSchema epicsSchema axisPlcSchema softlimitsSchema monitoringLagSchema monitoringTargetSchema monitoringVelocitySchema monitoringVelocityTimeSchema monitoringVelocityDifferenceSchema monitoringStallSchema trajectoryModuloSchema epicsMotorRecordPvtSchema axisAutoEnableSchema encoderPowerSchema encoderPowerBackupSchema monitoringVelocityDifferenceTimeSchema"
       }
     },
     "plc": {
@@ -549,7 +549,7 @@
         "required": false
       },
       "encoder.homing.acceleration": {
-        "type": "intger float",
+        "type": "integer float",
         "required": false
       },
       "encoder.homing.deceleration": {
@@ -799,7 +799,7 @@
       "controller.Ki": {
         "default": 0.0,
         "min": 0,
-        "type": "intger float"
+        "type": "integer float"
       },
       "controller.Kd": {
         "default": 0.0,

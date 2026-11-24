@@ -113,6 +113,18 @@ class YamlParityTests(unittest.TestCase):
             self.assertIn('Cfg.SetAxisMonVelDiffDriveILDelay(${ECMC_AXIS_NO},600)', text)
             self.assertNotIn('Cfg.SetAxisMonMaxVelDriveILDelay', text)
 
+    def test_binary_integer_boolean_flags(self):
+        for value in (0, 1):
+            document = self.yaml.safe_load((FIXTURES / 'virtual_monitoring.yaml').read_text())
+            document.pop('softlimits', None)
+            document['axis']['features'] = {'blockCom': value}
+            document['monitoring']['target']['enable'] = value
+            document['monitoring']['lag']['enable'] = value
+            with self.subTest(value=value), tempfile.TemporaryDirectory() as tmp:
+                source = Path(tmp) / 'boolean-flags.yaml'
+                source.write_text(self.yaml.safe_dump(document))
+                self.compare(source)
+
     def test_stall_enable_boolean_and_binary_integer(self):
         for value in (True, False, 0, 1):
             document = self.yaml.safe_load((FIXTURES / 'virtual_monitoring.yaml').read_text())

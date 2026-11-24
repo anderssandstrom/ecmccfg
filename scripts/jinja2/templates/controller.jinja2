@@ -56,5 +56,21 @@ ecmcConfigOrDie "Cfg.SetAxisCntrlFreezeIAtRmp(${ECMC_AXIS_NO},{{ controller.free
 #- Actually checked in ecmc monitor
 {%- if (controller is defined) and (controller.deadband is defined) %}
     ecmcConfigOrDie "Cfg.SetAxisCntrlDeadband(${ECMC_AXIS_NO},{{ controller.deadband.tol }})"
-    ecmcConfigOrDie "Cfg.SetAxisCntrlDeadbandTime(${ECMC_AXIS_NO},{{ controller.deadband.time }})"
+    {%- if (controller.deadband is defined) and (controller.deadband.timeMs is defined) %}
+        {%- if (controller.deadband is defined) and (controller.deadband.time is defined) %}
+            ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify only one of controller.deadband.time and controller.deadband.timeMs.")
+            ecmcExit
+        {%- else %}
+            epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
+            ecmcEpicsEnvSetCalc("ECMC_TMP_TIME_CYCLES", "ceil({{ controller.deadband.timeMs }}*${ECMC_EC_SAMPLE_RATE}/1000)", "%d")
+            ecmcConfigOrDie "Cfg.SetAxisCntrlDeadbandTime(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
+            epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
+        {%- endif %}
+    {%- elif (controller.deadband is defined) and (controller.deadband.time is defined) %}
+        ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: controller.deadband.time uses cycles; prefer controller.deadband.timeMs in milliseconds (legacy syntax remains supported).")
+        ecmcConfigOrDie "Cfg.SetAxisCntrlDeadbandTime(${ECMC_AXIS_NO},{{ controller.deadband.time }})"
+    {%- else %}
+        ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify controller.deadband.timeMs (milliseconds) or controller.deadband.time (cycles).")
+        ecmcExit
+    {%- endif %}
 {%- endif  %}

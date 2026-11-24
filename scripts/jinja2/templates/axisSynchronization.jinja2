@@ -21,13 +21,43 @@ ecmcConfigOrDie "Cfg.SetAxisAllowCommandsFromPLC(${ECMC_AXIS_NO},{{ plc.external
 
 #- PLC Encoder velocity filter
 {%- if (plc.velocity_filter is defined) and (plc.velocity_filter.encoder is defined) %}
-    ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterSize(${ECMC_AXIS_NO},{{ plc.velocity_filter.encoder.size|default(1)|int }})"
+    {%- if (plc.velocity_filter is defined) and (plc.velocity_filter.encoder is defined) and (plc.velocity_filter.encoder.timeMs is defined) %}
+        {%- if (plc.velocity_filter is defined) and (plc.velocity_filter.encoder is defined) and (plc.velocity_filter.encoder.size is defined) %}
+            ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify only one of plc.velocity_filter.encoder.size and plc.velocity_filter.encoder.timeMs.")
+            ecmcExit
+        {%- else %}
+            epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
+            ecmcEpicsEnvSetCalc("ECMC_TMP_TIME_CYCLES", "max(1,ceil({{ plc.velocity_filter.encoder.timeMs }}*${ECMC_EC_SAMPLE_RATE}/1000))", "%d")
+            ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterSize(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
+            epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
+        {%- endif %}
+    {%- elif (plc.velocity_filter is defined) and (plc.velocity_filter.encoder is defined) and (plc.velocity_filter.encoder.size is defined) %}
+        ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: plc.velocity_filter.encoder.size uses cycles; prefer plc.velocity_filter.encoder.timeMs in milliseconds (legacy syntax remains supported).")
+        ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterSize(${ECMC_AXIS_NO},{{ plc.velocity_filter.encoder.size|default(1)|int }})"
+    {%- else %}
+        ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterSize(${ECMC_AXIS_NO},1)"
+    {%- endif %}
     ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterEnable(${ECMC_AXIS_NO},{{ plc.velocity_filter.encoder.enable|default(0)|int }})"
 {%- else %}
     {%- if (plc.filter is defined) and (plc.filter.velocity is defined) %}
         # WARNING: Please use updated yaml syntax for encoder velo filtering: plc.velocity_filter.encoder.x
         ecmcLogBufferWrite("WARNING","Please use updated yaml syntax for encoder velo filtering: plc.velocity_filter.encoder.x")
-        ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterSize(${ECMC_AXIS_NO},{{ plc.filter.velocity.size|default(1) }})"
+        {%- if (plc.filter is defined) and (plc.filter.velocity is defined) and (plc.filter.velocity.timeMs is defined) %}
+            {%- if (plc.filter is defined) and (plc.filter.velocity is defined) and (plc.filter.velocity.size is defined) %}
+                ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify only one of plc.filter.velocity.size and plc.filter.velocity.timeMs.")
+                ecmcExit
+            {%- else %}
+                epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
+                ecmcEpicsEnvSetCalc("ECMC_TMP_TIME_CYCLES", "max(1,ceil({{ plc.filter.velocity.timeMs }}*${ECMC_EC_SAMPLE_RATE}/1000))", "%d")
+                ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterSize(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
+                epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
+            {%- endif %}
+        {%- elif (plc.filter is defined) and (plc.filter.velocity is defined) and (plc.filter.velocity.size is defined) %}
+            ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: plc.filter.velocity.size uses cycles; prefer plc.filter.velocity.timeMs in milliseconds (legacy syntax remains supported).")
+            ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterSize(${ECMC_AXIS_NO},{{ plc.filter.velocity.size }})"
+        {%- else %}
+            ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterSize(${ECMC_AXIS_NO},1)"
+        {%- endif %}
         ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterEnable(${ECMC_AXIS_NO},{{ plc.filter.velocity.enable|default(0)|int }})"
     {%- else %}
         ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterSize(${ECMC_AXIS_NO}, 1)"
@@ -40,19 +70,64 @@ ecmcConfigOrDie "Cfg.SetAxisEncSourceType(${ECMC_AXIS_NO},{{ encoder.source|defa
 #- Move to different syntax because of old bad naming
 #- PLC Encoder velocity velocity filter
 {%- if (plc.velocity_filter is defined) and (plc.velocity_filter.trajectory is defined) %}
-    ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},{{ plc.velocity_filter.trajectory.size|default(1)|int }})"
+    {%- if (plc.velocity_filter is defined) and (plc.velocity_filter.trajectory is defined) and (plc.velocity_filter.trajectory.timeMs is defined) %}
+        {%- if (plc.velocity_filter is defined) and (plc.velocity_filter.trajectory is defined) and (plc.velocity_filter.trajectory.size is defined) %}
+            ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify only one of plc.velocity_filter.trajectory.size and plc.velocity_filter.trajectory.timeMs.")
+            ecmcExit
+        {%- else %}
+            epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
+            ecmcEpicsEnvSetCalc("ECMC_TMP_TIME_CYCLES", "max(1,ceil({{ plc.velocity_filter.trajectory.timeMs }}*${ECMC_EC_SAMPLE_RATE}/1000))", "%d")
+            ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
+            epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
+        {%- endif %}
+    {%- elif (plc.velocity_filter is defined) and (plc.velocity_filter.trajectory is defined) and (plc.velocity_filter.trajectory.size is defined) %}
+        ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: plc.velocity_filter.trajectory.size uses cycles; prefer plc.velocity_filter.trajectory.timeMs in milliseconds (legacy syntax remains supported).")
+        ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},{{ plc.velocity_filter.trajectory.size|default(1)|int }})"
+    {%- else %}
+        ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},1)"
+    {%- endif %}
     ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterEnable(${ECMC_AXIS_NO},{{ plc.velocity_filter.trajectory.enable|default(0)|int }})"
 {%- else %}
     {%- if (plc.filter is defined) and (plc.filter.position is defined) %}
         # WARNING: Please use updated yaml syntax for trajectory velo filtering:  plc.velocity_filter.trajectory.x)
         ecmcLogBufferWrite("WARNING","Please use updated yaml syntax for trajectory velo filtering: plc.velocity_filter.trajectory.x")
-        ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},{{ plc.filter.position.size|default(1) }})"
+        {%- if (plc.filter is defined) and (plc.filter.position is defined) and (plc.filter.position.timeMs is defined) %}
+            {%- if (plc.filter is defined) and (plc.filter.position is defined) and (plc.filter.position.size is defined) %}
+                ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify only one of plc.filter.position.size and plc.filter.position.timeMs.")
+                ecmcExit
+            {%- else %}
+                epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
+                ecmcEpicsEnvSetCalc("ECMC_TMP_TIME_CYCLES", "max(1,ceil({{ plc.filter.position.timeMs }}*${ECMC_EC_SAMPLE_RATE}/1000))", "%d")
+                ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
+                epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
+            {%- endif %}
+        {%- elif (plc.filter is defined) and (plc.filter.position is defined) and (plc.filter.position.size is defined) %}
+            ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: plc.filter.position.size uses cycles; prefer plc.filter.position.timeMs in milliseconds (legacy syntax remains supported).")
+            ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},{{ plc.filter.position.size }})"
+        {%- else %}
+            ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},1)"
+        {%- endif %}
         ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterEnable(${ECMC_AXIS_NO},{{ plc.filter.position.enable|default(0)|int }})"
     {%- else %}
         {%- if (plc.filter is defined) and (plc.filter.trajectory is defined) %}
             # WARNING: Please use updated yaml syntax for trajectory velo filtering:  plc.velocity_filter.trajectory.x)
             ecmcLogBufferWrite("WARNING","Please use updated yaml syntax for trajectory velo filtering: plc.velocity_filter.trajectory.x")
-            ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},{{ plc.filter.trajectory.size|default(1) }})"
+            {%- if (plc.filter is defined) and (plc.filter.trajectory is defined) and (plc.filter.trajectory.timeMs is defined) %}
+                {%- if (plc.filter is defined) and (plc.filter.trajectory is defined) and (plc.filter.trajectory.size is defined) %}
+                    ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify only one of plc.filter.trajectory.size and plc.filter.trajectory.timeMs.")
+                    ecmcExit
+                {%- else %}
+                    epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
+                    ecmcEpicsEnvSetCalc("ECMC_TMP_TIME_CYCLES", "max(1,ceil({{ plc.filter.trajectory.timeMs }}*${ECMC_EC_SAMPLE_RATE}/1000))", "%d")
+                    ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
+                    epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
+                {%- endif %}
+            {%- elif (plc.filter is defined) and (plc.filter.trajectory is defined) and (plc.filter.trajectory.size is defined) %}
+                ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: plc.filter.trajectory.size uses cycles; prefer plc.filter.trajectory.timeMs in milliseconds (legacy syntax remains supported).")
+                ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},{{ plc.filter.trajectory.size }})"
+            {%- else %}
+                ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},1)"
+            {%- endif %}
             ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterEnable(${ECMC_AXIS_NO},{{ plc.filter.trajectory.enable|default(0)|int }})"
         {%- else %}
             ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO}, 1)"

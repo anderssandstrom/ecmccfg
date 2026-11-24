@@ -3,11 +3,11 @@
     "axis": {
       "axis.type=1": {
         "required": "axisSchema driveSchema encoderSchema trajectorySchema inputSchema",
-        "optional": "metaSchema homingSchema encoderHomingSchema encoderLutSchema encoderDelayCompSchema encoderLatchSchema encoderTouchProbeSchema touchProbeSchema positionCompareSchema varSchema epicsSchema controllerSchema controllerInnerSchema axisPlcSchema softlimitsSchema monitoringLagSchema monitoringTargetSchema monitoringVelocitySchema monitoringVelocityTimeSchema monitoringVelocityDifferenceSchema monitoringStallSchema driveBrakeSchema trajectoryModuloSchema epicsMotorRecordPvtSchema axisAutoEnableSchema encoderPowerSchema encoderPowerBackupSchema driveLutSchema monitoringVelocityDifferenceTimeSchema"
+        "optional": "metaSchema homingSchema encoderHomingSchema encoderLutSchema encoderDelayCompSchema encoderLatchSchema encoderTouchProbeSchema touchProbeSchema positionCompareSchema varSchema epicsSchema controllerSchema controllerInnerSchema axisPlcSchema softlimitsSchema monitoringLagSchema monitoringTargetSchema monitoringVelocitySchema monitoringVelocityTimeSchema monitoringVelocityDifferenceSchema monitoringStallSchema driveBrakeSchema trajectoryModuloSchema epicsMotorRecordPvtSchema axisAutoEnableSchema encoderPowerSchema encoderPowerBackupSchema driveLutSchema monitoringVelocityDifferenceTimeSchema monitoringVelocityTimeMsSchema monitoringVelocityDifferenceTimeMsSchema"
       },
       "axis.type=2": {
         "required": "axisSchema encoderSchema trajectorySchema inputSchema",
-        "optional": "metaSchema homingSchema encoderHomingSchema encoderLutSchema encoderDelayCompSchema encoderLatchSchema encoderTouchProbeSchema touchProbeSchema positionCompareSchema varSchema epicsSchema axisPlcSchema softlimitsSchema monitoringLagSchema monitoringTargetSchema monitoringVelocitySchema monitoringVelocityTimeSchema monitoringVelocityDifferenceSchema monitoringStallSchema trajectoryModuloSchema epicsMotorRecordPvtSchema axisAutoEnableSchema encoderPowerSchema encoderPowerBackupSchema monitoringVelocityDifferenceTimeSchema"
+        "optional": "metaSchema homingSchema encoderHomingSchema encoderLutSchema encoderDelayCompSchema encoderLatchSchema encoderTouchProbeSchema touchProbeSchema positionCompareSchema varSchema epicsSchema axisPlcSchema softlimitsSchema monitoringLagSchema monitoringTargetSchema monitoringVelocitySchema monitoringVelocityTimeSchema monitoringVelocityDifferenceSchema monitoringStallSchema trajectoryModuloSchema epicsMotorRecordPvtSchema axisAutoEnableSchema encoderPowerSchema encoderPowerBackupSchema monitoringVelocityDifferenceTimeSchema monitoringVelocityTimeMsSchema monitoringVelocityDifferenceTimeMsSchema"
       }
     },
     "plc": {
@@ -106,7 +106,7 @@
       "axis.tweakDist": {
         "type": "float",
         "required": false,
-        "default": 1.0
+        "default": 1
       },
       "axis.autoMode.modeSet": {
         "type": "string",
@@ -154,38 +154,35 @@
       }
     }
   },
-
   "axisAutoEnableSchema": {
     "identifier": "axis.autoEnable",
     "schema": {
-        "axis.autoEnable.enableTimeout": {
-           "type": "float",
-           "required": false,
-           "default": -1.0
-        },
-        "axis.autoEnable.disableTimeout": {
-            "type": "float",
-            "required": false,
-            "default": -1.0
-        },
-        "axis.autoEnable.autoDisableLatchAtTarget": {
-            "type": "boolean",
-            "required": false,
-            "default": false
-        },
-        "axis.autoEnable.atStartup": {
-            "type": "boolean",
-            "required": false,
-            "default": false
-        }
+      "axis.autoEnable.enableTimeout": {
+        "type": "float",
+        "required": false,
+        "default": -1
+      },
+      "axis.autoEnable.disableTimeout": {
+        "type": "float",
+        "required": false,
+        "default": -1
+      },
+      "axis.autoEnable.autoDisableLatchAtTarget": {
+        "type": "boolean",
+        "required": false,
+        "default": false
+      },
+      "axis.autoEnable.atStartup": {
+        "type": "boolean",
+        "required": false,
+        "default": false
+      }
     }
   },
-
   "varSchema": {
     "identifier": "var",
     "allowAnySubkey": true
   },
-
   "epicsSchema": {
     "identifier": "epics",
     "schema": {
@@ -234,7 +231,6 @@
       }
     }
   },
-
   "epicsMotorRecordPvtSchema": {
     "identifier": "epics.motorRecord.pvt",
     "schema": {
@@ -250,7 +246,6 @@
       }
     }
   },
-
   "driveSchema": {
     "identifier": "drive",
     "schema": {
@@ -337,15 +332,23 @@
       },
       "drive.brake.openDelay": {
         "type": "integer",
-        "default": 0,
         "min": 0,
         "required": false
       },
       "drive.brake.closeAhead": {
         "type": "integer",
-        "default": 0,
         "min": 0,
         "required": false
+      },
+      "drive.brake.openDelayMs": {
+        "type": "integer float",
+        "required": false,
+        "min": 0
+      },
+      "drive.brake.closeAheadMs": {
+        "type": "integer float",
+        "required": false,
+        "min": 0
       }
     }
   },
@@ -419,7 +422,7 @@
       },
       "encoder.absOffset": {
         "type": "integer float string",
-        "default": 0.0,
+        "default": 0,
         "required": false
       },
       "encoder.unit": {
@@ -513,6 +516,21 @@
       "encoder.allowOverUnderFlow": {
         "type": "boolean",
         "required": false
+      },
+      "encoder.filter.velocity.timeMs": {
+        "type": "integer float",
+        "required": false,
+        "min": 0
+      },
+      "encoder.filter.position.timeMs": {
+        "type": "integer float",
+        "required": false,
+        "min": 0
+      },
+      "encoder.filter.trajectory.timeMs": {
+        "type": "integer float",
+        "required": false,
+        "min": 0
       }
     }
   },
@@ -583,7 +601,6 @@
         "type": "string",
         "required": false
       }
-
     }
   },
   "encoderLutSchema": {
@@ -612,10 +629,14 @@
     "schema": {
       "encoder.delayComp.time": {
         "type": "integer float",
-        "required": true
+        "required": false
       },
       "encoder.delayComp.enable": {
         "type": "boolean",
+        "required": false
+      },
+      "encoder.delayComp.timeMs": {
+        "type": "integer float",
         "required": false
       }
     }
@@ -753,13 +774,13 @@
       "positionCompare.minLeadMs": {
         "type": "float",
         "required": false,
-        "default": 2.0,
+        "default": 2,
         "min": 0
       },
       "positionCompare.maxLeadMs": {
         "type": "float",
         "required": false,
-        "default": 100.0,
+        "default": 100,
         "min": 0
       },
       "positionCompare.activateIdle": {
@@ -777,7 +798,7 @@
       "positionCompare.pulseWidthMs": {
         "type": "float",
         "required": false,
-        "default": 0.0,
+        "default": 0,
         "min": 0
       },
       "positionCompare.resetValue": {
@@ -792,22 +813,22 @@
     "identifier": "controller",
     "schema": {
       "controller.Kp": {
-        "default": 1.0,
+        "default": 1,
         "min": 0,
         "type": "integer float"
       },
       "controller.Ki": {
-        "default": 0.0,
+        "default": 0,
         "min": 0,
         "type": "integer float"
       },
       "controller.Kd": {
-        "default": 0.0,
+        "default": 0,
         "min": 0,
         "type": "integer float"
       },
       "controller.Kff": {
-        "default": 1.0,
+        "default": 1,
         "min": 0,
         "type": "integer float"
       },
@@ -838,6 +859,11 @@
       "controller.deadband.time": {
         "type": "integer float",
         "min": 0
+      },
+      "controller.deadband.timeMs": {
+        "type": "integer float",
+        "required": false,
+        "min": 0
       }
     }
   },
@@ -845,22 +871,22 @@
     "identifier": "controller.inner",
     "schema": {
       "controller.inner.Kp": {
-        "default": 1.0,
+        "default": 1,
         "min": 0,
         "type": "integer float"
       },
       "controller.inner.Ki": {
-        "default": 0.0,
+        "default": 0,
         "min": 0,
         "type": "integer float"
       },
       "controller.inner.Kd": {
-        "default": 0.0,
+        "default": 0,
         "min": 0,
         "type": "integer float"
       },
       "controller.inner.tol": {
-        "default": 0.0,
+        "default": 0,
         "min": 0,
         "type": "integer float"
       }
@@ -979,13 +1005,12 @@
       }
     }
   },
-
   "trajectoryModuloSchema": {
     "identifier": "trajectory.modulo",
     "schema": {
       "trajectory.modulo.range": {
         "type": "integer float",
-        "default": 0.0
+        "default": 0
       },
       "trajectory.modulo.type": {
         "type": "integer",
@@ -995,14 +1020,13 @@
       }
     }
   },
-
   "monitoringLagSchema": {
     "identifier": "monitoring.lag",
     "schema": {
       "monitoring.lag.enable": {
         "type": "boolean",
         "required": true,
-        "dependencies": "monitoring.lag.tolerance monitoring.lag.time",
+        "dependencies": "monitoring.lag.tolerance",
         "default": false
       },
       "monitoring.lag.tolerance": {
@@ -1012,8 +1036,12 @@
       },
       "monitoring.lag.time": {
         "type": "integer",
-        "min": 0,
-        "default": 100
+        "min": 0
+      },
+      "monitoring.lag.timeMs": {
+        "type": "integer float",
+        "required": false,
+        "min": 0
       }
     }
   },
@@ -1023,7 +1051,7 @@
       "monitoring.target.enable": {
         "type": "boolean",
         "required": true,
-        "dependencies": "monitoring.target.tolerance monitoring.target.time",
+        "dependencies": "monitoring.target.tolerance",
         "default": false
       },
       "monitoring.target.tolerance": {
@@ -1041,6 +1069,16 @@
       "monitoring.target.slaveControlDeadband.time": {
         "type": "integer",
         "min": 0
+      },
+      "monitoring.target.timeMs": {
+        "type": "integer float",
+        "required": false,
+        "min": 0
+      },
+      "monitoring.target.slaveControlDeadband.timeMs": {
+        "type": "integer float",
+        "required": false,
+        "min": 0
       }
     }
   },
@@ -1050,7 +1088,7 @@
       "monitoring.velocity.enable": {
         "type": "boolean",
         "required": true,
-        "dependencies": "monitoring.velocity.max monitoring.velocity.time.trajectory",
+        "dependencies": "monitoring.velocity.max",
         "default": false
       },
       "monitoring.velocity.max": {
@@ -1065,7 +1103,7 @@
       "monitoring.velocity.time.trajectory": {
         "type": "integer",
         "min": 0,
-        "required": true
+        "required": false
       },
       "monitoring.velocity.time.drive": {
         "type": "integer",
@@ -1080,7 +1118,7 @@
       "monitoring.velocityDifference.enable": {
         "type": "boolean",
         "required": true,
-        "dependencies": "monitoring.velocityDifference.max monitoring.velocityDifference.time.trajectory",
+        "dependencies": "monitoring.velocityDifference.max",
         "default": false
       },
       "monitoring.velocityDifference.max": {
@@ -1095,7 +1133,7 @@
       "monitoring.velocityDifference.time.trajectory": {
         "type": "integer",
         "min": 0,
-        "required": true
+        "required": false
       },
       "monitoring.velocityDifference.time.drive": {
         "type": "integer",
@@ -1116,6 +1154,11 @@
       },
       "monitoring.stall.time.factor": {
         "type": "integer float",
+        "min": 0
+      },
+      "monitoring.stall.time.timeoutMs": {
+        "type": "integer float",
+        "required": false,
         "min": 0
       }
     }
@@ -1278,6 +1321,31 @@
       "plc.code": {
         "type": "list",
         "required": false
+      },
+      "plc.filter.velocity.timeMs": {
+        "type": "integer float",
+        "required": false,
+        "min": 0
+      },
+      "plc.filter.position.timeMs": {
+        "type": "integer float",
+        "required": false,
+        "min": 0
+      },
+      "plc.filter.trajectory.timeMs": {
+        "type": "integer float",
+        "required": false,
+        "min": 0
+      },
+      "plc.velocity_filter.encoder.timeMs": {
+        "type": "integer float",
+        "required": false,
+        "min": 0
+      },
+      "plc.velocity_filter.trajectory.timeMs": {
+        "type": "integer float",
+        "required": false,
+        "min": 0
       }
     }
   },
@@ -1336,13 +1404,13 @@
       "encoder.power.startupTimeout": {
         "type": "integer float",
         "required": false,
-        "default": 5.0,
+        "default": 5,
         "min": 0
       },
       "encoder.power.idleDelay": {
         "type": "integer float",
         "required": false,
-        "default": 2.0,
+        "default": 2,
         "min": 0
       }
     }
@@ -1360,6 +1428,36 @@
         "type": "integer float",
         "required": true,
         "min": 0
+      }
+    }
+  },
+  "monitoringVelocityTimeMsSchema": {
+    "identifier": "monitoring.velocity.timeMs",
+    "schema": {
+      "monitoring.velocity.timeMs.trajectory": {
+        "type": "integer float",
+        "min": 0,
+        "required": false
+      },
+      "monitoring.velocity.timeMs.drive": {
+        "type": "integer float",
+        "min": 0,
+        "required": false
+      }
+    }
+  },
+  "monitoringVelocityDifferenceTimeMsSchema": {
+    "identifier": "monitoring.velocityDifference.timeMs",
+    "schema": {
+      "monitoring.velocityDifference.timeMs.trajectory": {
+        "type": "integer float",
+        "min": 0,
+        "required": false
+      },
+      "monitoring.velocityDifference.timeMs.drive": {
+        "type": "integer float",
+        "min": 0,
+        "required": false
       }
     }
   }

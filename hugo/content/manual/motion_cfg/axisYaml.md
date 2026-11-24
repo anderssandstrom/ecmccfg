@@ -311,8 +311,8 @@ optional
 - `brake`
   * `enable`: required boolean when `brake` is present
   * `output`: required EtherCAT output entry when `brake` is present
-  * `openDelay`: number of cycles to wait after enable to disengage the brake
-  * `closeAhead`: number of cycles to wait after the brake was engaged
+  * `openDelayMs`: milliseconds (legacy `openDelay`: cycles) to wait after enable to disengage the brake
+  * `closeAheadMs`: milliseconds (legacy `closeAhead`: cycles) to wait after the brake was engaged
 - `reset`: control word _bit_ to set in order to reset the drive
 - `warning`: status word _bit_ for drive warning
 - `error`: list of status _bits_ for drive errors
@@ -330,8 +330,8 @@ drive:
   # brake:
   #   enable: true
   #   output: ec0.s$(BRAKE_SLAVE).binaryOutput01.0
-  #   openDelay: 0  # Brake timing parameter in EtherCAT cycles
-  #   closeAhead: 0 # Brake timing parameter in EtherCAT cycles
+  #   openDelayMs: 0 # Brake timing [ms]
+  #   closeAheadMs: 0 # Brake timing [ms]
   # reset: 1        # Reset bit in control word
   # warning: 2      # Warning bit of status word
   # error:          # max 3
@@ -369,8 +369,8 @@ optional
 - `reset`: control word _bit_ to set in order to reset the encoder
 - `warning`: status word _bit_ for encoder warning
 - `error`: list of status _bits_ for encoder errors
-- `filter.velocity`: `size` (default 100 cycles), `enable` (default true)
-- `filter.position`: `size` (default 10 cycles), `enable` (default true)
+- `filter.velocity`: `timeMs` (legacy `size`, default 100 cycles), `enable` (default true)
+- `filter.position`: `timeMs` (legacy `size`, default 10 cycles), `enable` (default true)
   These defaults apply when the corresponding filter block is supplied.
 - `latch`:
   * `position`: required latched position entry when `latch` is present
@@ -437,10 +437,10 @@ encoder:
   #   - 11          # Error 2
   # filter:
   #   velocity:
-  #     size: 100       # Samples: 100 ms at 1 kHz, 200 ms at 500 Hz
+  #     timeMs: 100   # Filter window [ms]
   #     enable: true
   #   position:
-  #     size: 1
+  #     timeMs: 1
   #     enable: false
   # latch:
   #   position: ''
@@ -480,15 +480,15 @@ Configure encoder velocity and position filters under `encoder.filter`:
 encoder:
   filter:
     velocity:
-      size: 100
+      timeMs: 100
       enable: true
     position:
-      size: 10
+      timeMs: 10
       enable: true
 ```
 
 Merge this into the existing `encoder` section; either filter can be configured
-independently. `size` is the window length in EtherCAT samples/cycles. For example,
+independently. Prefer `timeMs` for the window in milliseconds; legacy `size` is in samples/cycles. For example,
 100 samples correspond to 100 ms at 1 kHz and 200 ms at 500 Hz.
 
 When a filter block is supplied, its default `enable` is true. The default
@@ -561,7 +561,7 @@ controller:
   #freezeIAtRmp: false
   #deadband:
   #  tol: 0.01
-  #  time: 100
+  #  timeMs: 100
   #limits:
   #  minOutput: -100
   #  maxOutput: 100
@@ -878,11 +878,13 @@ and following-error monitoring is recommended for closed-loop axes.
 
 When supplying `lag` or `target`, include `enable`, `tolerance` and `time`.
 For `velocity` and `velocityDifference`, include `enable`, `max` and
-`time.trajectory`; `time.drive` is optional. Dependencies still apply when
+`timeMs.trajectory` (or legacy `time.trajectory`); `timeMs.drive` or legacy `time.drive` is optional. Dependencies still apply when
 `enable` is false. An empty `monitoring: {}` does not enable monitoring.
 
-The monitoring `time` values below are **EtherCAT cycles**, not milliseconds.
-At 1 kHz, 100 cycles is 100 ms; at 500 Hz it is 200 ms.
+Prefer `timeMs` for monitoring durations in milliseconds. Existing `time`
+values still mean EtherCAT cycles and generate a startup warning. At 1 kHz,
+100 cycles is 100 ms; at 500 Hz it is 200 ms. Do not supply both forms for
+the same parameter.
 
 The trajectory and drive delays for `velocityDifference` are independent of
 the corresponding maximum-velocity monitor delays. Either monitor can be
@@ -893,25 +895,24 @@ optional
 - `lag`
   * `enable`: enable lag monitoring
   * `tolerance`: tolerance in engineering units
-  * `time`: time for the condition to be true in EtherCAT cycles
+  * `timeMs`: time for the condition to be true in milliseconds (legacy `time`: cycles)
 - `target`
   * `enable`: enable target monitoring. This is mandatory for use with motor record.
   * `tolerance`: tolerance in engineering units
-  * `time`: time for the condition to be true in EtherCAT cycles
+  * `timeMs`: time for the condition to be true in milliseconds (legacy `time`: cycles)
   * `slaveControlDeadband`: optional independent band evaluated on a master axis
     and forwarded to its slaves for control decisions such as reduced torque
     * `tolerance`: master-axis error tolerance in engineering units
-    * `time`: qualification time inside that tolerance in EtherCAT cycles
+    * `timeMs`: qualification time inside that tolerance in milliseconds (legacy `time`: cycles)
 - `velocity`
   * `enable`: enable velocity monitoring
   * `max`: upper limit for velocity
   * `time`
-    * `trajectory`: violation delay in EtherCAT cycles
-    * `drive`: drive-interlock delay in EtherCAT cycles
+    * `trajectory`: violation delay in milliseconds under `timeMs`
+    * `drive`: drive-interlock delay in milliseconds under `timeMs`
 - `velocityDifference`: same `enable`, `max` and `time` structure as `velocity`;
   compares actual velocity with the trajectory velocity
-- `stall`: optional `enable` and `time.timeout` (minimum timeout in EtherCAT
-  cycles), `time.factor` (dimensionless motion-time multiplier); requires target
+- `stall`: optional `enable` and `time.timeoutMs` (minimum timeout in milliseconds; legacy `time.timeout`: cycles), `time.factor` (dimensionless motion-time multiplier); requires target
   monitoring for target detection
 
 ```yaml
@@ -919,19 +920,19 @@ monitoring:
   # lag:
   #   enable: false
   #   tolerance: 5
-  #   time: 100
+  #   timeMs: 100
   target:
     enable: true
     tolerance: 0.125
-    time: 100  # EtherCAT cycles
+    timeMs: 100 # milliseconds
     # Optional on a master axis. If omitted, ecmc uses target tolerance/time.
     slaveControlDeadband:
       tolerance: 0.01
-      time: 100  # EtherCAT cycles
+      timeMs: 100 # milliseconds
   # velocity:
   #   enable: false
   #   max: 100
-  #   time:
+  #   timeMs:
   #     trajectory: 100
   #     drive: 200
 ```

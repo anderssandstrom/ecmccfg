@@ -89,10 +89,36 @@ ecmcConfigOrDie "Cfg.SetAxisDrvScaleDenom(${ECMC_AXIS_NO},{{ drive.denominator }
 {%- if drive.brake is defined %}
     ecmcConfigOrDie "Cfg.LinkEcEntryToObject("{{ drive.brake.output }}","ax${ECMC_AXIS_NO}.drv.brake")"
     ecmcConfigOrDie "Cfg.SetAxisDrvBrakeEnable(${ECMC_AXIS_NO}, {{ drive.brake.enable|int }})"
-    {%- if drive.brake.openDelay is defined %}
+    {%- if (drive.brake is defined) and (drive.brake.openDelayMs is defined) %}
+        {%- if (drive.brake is defined) and (drive.brake.openDelay is defined) %}
+            ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify only one of drive.brake.openDelay and drive.brake.openDelayMs.")
+            ecmcExit
+        {%- else %}
+            epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
+            ecmcEpicsEnvSetCalc("ECMC_TMP_TIME_CYCLES", "ceil({{ drive.brake.openDelayMs }}*${ECMC_EC_SAMPLE_RATE}/1000)", "%d")
+            ecmcConfigOrDie "Cfg.SetAxisDrvBrakeOpenDelayTime(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
+            epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
+        {%- endif %}
+    {%- elif (drive.brake is defined) and (drive.brake.openDelay is defined) %}
+        ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: drive.brake.openDelay uses cycles; prefer drive.brake.openDelayMs in milliseconds (legacy syntax remains supported).")
         ecmcConfigOrDie "Cfg.SetAxisDrvBrakeOpenDelayTime(${ECMC_AXIS_NO},{{ drive.brake.openDelay }})"
+    {%- else %}
+        ecmcConfigOrDie "Cfg.SetAxisDrvBrakeOpenDelayTime(${ECMC_AXIS_NO},0)"
     {%- endif %}
-    {%- if drive.brake.closeAhead is defined %}
+    {%- if (drive.brake is defined) and (drive.brake.closeAheadMs is defined) %}
+        {%- if (drive.brake is defined) and (drive.brake.closeAhead is defined) %}
+            ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify only one of drive.brake.closeAhead and drive.brake.closeAheadMs.")
+            ecmcExit
+        {%- else %}
+            epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
+            ecmcEpicsEnvSetCalc("ECMC_TMP_TIME_CYCLES", "ceil({{ drive.brake.closeAheadMs }}*${ECMC_EC_SAMPLE_RATE}/1000)", "%d")
+            ecmcConfigOrDie "Cfg.SetAxisDrvBrakeCloseAheadTime(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
+            epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
+        {%- endif %}
+    {%- elif (drive.brake is defined) and (drive.brake.closeAhead is defined) %}
+        ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: drive.brake.closeAhead uses cycles; prefer drive.brake.closeAheadMs in milliseconds (legacy syntax remains supported).")
         ecmcConfigOrDie "Cfg.SetAxisDrvBrakeCloseAheadTime(${ECMC_AXIS_NO},{{ drive.brake.closeAhead }})"
+    {%- else %}
+        ecmcConfigOrDie "Cfg.SetAxisDrvBrakeCloseAheadTime(${ECMC_AXIS_NO},0)"
     {%- endif %}
 {%- endif %}

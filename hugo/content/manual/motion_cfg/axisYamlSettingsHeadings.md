@@ -96,8 +96,8 @@ unchanged. Both reference views are generated from the same audited source.
 - `drive.brake` (optional) — Brake control block.
 - `drive.brake.enable` (required when drive.brake is present) — Enable brake control.
 - `drive.brake.output` (required when drive.brake is present) — EtherCAT link to brake output.
-- `drive.brake.openDelay` (optional) — Brake open delay in cycles. Defaults: `drive.brake.openDelay`: 0.
-- `drive.brake.closeAhead` (optional) — Brake close-ahead time in cycles. Defaults: `drive.brake.closeAhead`: 0.
+- `drive.brake.openDelay` / `drive.brake.openDelayMs` (optional) — Brake open delay in cycles. Millisecond alternatives are preferred; do not specify both forms of the same parameter. Defaults: `drive.brake.openDelay`: 0.
+- `drive.brake.closeAhead` / `drive.brake.closeAheadMs` (optional) — Brake close-ahead time in cycles. Millisecond alternatives are preferred; do not specify both forms of the same parameter. Defaults: `drive.brake.closeAhead`: 0.
 - `drive.reset` (optional) — Reset bit.
 - `drive.warning` (optional) — Warning bit.
 - `drive.error` (optional, up to 3 entries) — Up to three error bit indices or full EtherCAT paths. Omit unused entries; do not use empty/null list items. The schema requires status when error is supplied.
@@ -125,9 +125,9 @@ unchanged. Both reference views are generated from the same audited source.
 - `encoder.warning` (optional) — Warning bit.
 - `encoder.error` (optional, up to 3 entries) — Up to three error bit indices or full EtherCAT paths. Omit unused entries; do not use empty/null list items. The schema requires status when error is supplied.
 - `encoder.filter` (optional) — Encoder filtering uses nested velocity and position blocks, each with size and enable. See the encoder-filter example in the YAML configuration guide.
-- `encoder.filter.velocity.size` (optional) — Velocity filter window in EtherCAT samples/cycles; applies when encoder.filter.velocity is supplied. Defaults: `encoder.filter.velocity.size`: 100.
+- `encoder.filter.velocity.size` / `encoder.filter.velocity.timeMs` (optional) — Velocity filter window in EtherCAT samples/cycles; applies when encoder.filter.velocity is supplied. Millisecond alternatives are preferred; do not specify both forms of the same parameter. Defaults: `encoder.filter.velocity.size`: 100.
 - `encoder.filter.velocity.enable` (optional) — Enable the encoder velocity filter; defaults to true when encoder.filter.velocity is supplied. Defaults: `encoder.filter.velocity.enable`: true.
-- `encoder.filter.position.size` (optional) — Position filter window in EtherCAT samples/cycles; applies when encoder.filter.position is supplied. Defaults: `encoder.filter.position.size`: 10.
+- `encoder.filter.position.size` / `encoder.filter.position.timeMs` (optional) — Position filter window in EtherCAT samples/cycles; applies when encoder.filter.position is supplied. Millisecond alternatives are preferred; do not specify both forms of the same parameter. Defaults: `encoder.filter.position.size`: 10.
 - `encoder.filter.position.enable` (optional) — Enable the encoder position filter; defaults to true when encoder.filter.position is supplied. Defaults: `encoder.filter.position.enable`: true.
 - `encoder.latch` (optional) — Homing latch settings. For EL7062/ED7062 touch-probe use outside homing, prefer the separate `touchProbe` section.
 - `encoder.latch.position` (required when encoder.latch is present) — Latched value link.
@@ -164,7 +164,7 @@ unchanged. Both reference views are generated from the same audited source.
 - `encoder.homing.ready` (optional) — Status entry for drive internal homing ready.
 - `encoder.homing.latchCount` (optional) — Latch count offset for homing.
 - `encoder.delayComp` (optional) — Delay compensation between set and act.
-- `encoder.delayComp.time` (required when encoder.delayComp is present) — Delay time in cycles.
+- `encoder.delayComp.time` / `encoder.delayComp.timeMs` (required when encoder.delayComp is present) — Delay time in cycles. Millisecond alternatives are preferred; do not specify both forms of the same parameter.
 - `encoder.delayComp.enable` (optional) — Enable flag (defaults to true if set). Defaults: `encoder.delayComp.enable`: true.
 - `encoder.lookuptable` (optional) — Correction lookup table (applied when homed).
 - `encoder.lookuptable.filename` (required when encoder.lookuptable is present) — LUT file; value subtracted from encoder value.
@@ -182,6 +182,7 @@ unchanged. Both reference views are generated from the same audited source.
 - `encoder.power.idleDelay` (optional; see encoder power configuration) — Continuous atTarget/tighter-deadband dwell before off, seconds. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}). Defaults: `encoder.power.idleDelay`: 2.0.
 - `encoder.power.backup.encoder` (optional; see encoder power configuration) — Always-powered incremental backup index (checked at final startup validation), 1…8. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}).
 - `encoder.power.backup.maxPositionDifference` (optional; see encoder power configuration) — Positive permitted wake discrepancy, engineering units. See [encoder power control]({{< relref "/manual/motion_cfg/encoder_power.md" >}}).
+- `encoder.filter.trajectory.timeMs` (optional) — Millisecond alternative to legacy encoder.filter.trajectory.size.
 
 ## controller
 
@@ -192,7 +193,7 @@ unchanged. Both reference views are generated from the same audited source.
 - `controller.resetIAtRmp` (optional) — Reset the integral part to zero while an internal trajectory is busy. Defaults: `controller.resetIAtRmp`: no command if omitted.
 - `controller.freezeIAtRmp` (optional) — Freeze the integral part at its current value while an internal trajectory is busy. Defaults: `controller.freezeIAtRmp`: no command if omitted.
 - `controller.deadband.tol` (optional) — Deadband tolerance in engineering units; supply together with time.
-- `controller.deadband.time` (optional) — Deadband time in EtherCAT cycles; supply together with tol.
+- `controller.deadband.time` / `controller.deadband.timeMs` (optional) — Deadband time in EtherCAT cycles; supply together with tol. Millisecond alternatives are preferred; do not specify both forms of the same parameter.
 - `controller.limits.minOutput` / `controller.limits.maxOutput` (optional) — Output clamps. Active only when `maxOutput > minOutput`; both `0` disables the limits.
 - `controller.limits.minIntegral` / `controller.limits.maxIntegral` (optional) — Integral clamps. Active only when `maxIntegral > minIntegral`; both `0` disables the limits.
 - `controller.inner.Kp` / `controller.inner.Ki` / `controller.inner.Kd` / `controller.inner.tol` (optional) — Inner PID used near target. Defaults when inner is present: Kp=1, Ki=0, Kd=0, tol=0; set tol explicitly to select the inner control band. Defaults: `controller.inner.Kp`: 1.0; `controller.inner.Ki`: 0; `controller.inner.Kd`: 0; `controller.inner.tol`: 0.
@@ -261,12 +262,12 @@ unchanged. Both reference views are generated from the same audited source.
 
 ## monitoring
 
-- `monitoring.lag.enable` / `monitoring.lag.tolerance` / `monitoring.lag.time` (optional block; Python requires enable, tolerance and time if explicitly supplied) — Following-error monitoring; time is in EtherCAT cycles. An omitted lag block defaults to disabled when monitoring is present. Defaults: `monitoring.lag.enable`: false when lag block omitted; `monitoring.lag.tolerance`: 0 when lag block omitted; `monitoring.lag.time`: 100 when lag block omitted.
-- `monitoring.target.enable` / `monitoring.target.tolerance` / `monitoring.target.time` (optional block; supply enable, tolerance and time together) — At-target monitoring; enable it for motor-record completion detection. Time is in EtherCAT cycles. Defaults: `monitoring.target.enable`: Python: required in block; ECB: false.
-- `monitoring.target.slaveControlDeadband.tolerance` / `monitoring.target.slaveControlDeadband.time` (required pair when slaveControlDeadband is present) — Independent live master-axis error band and qualification time forwarded to slaves for control-deadband decisions such as reduced torque. Configure these keys on the master axis. They apply to physical and virtual masters and may be tighter or slower than ordinary AtTarget. If omitted, ecmc uses the AtTarget tolerance and time. Example: `slaveControlDeadband: {tolerance: 0.01, time: 100}`. Defaults: `monitoring.target.slaveControlDeadband.tolerance`: monitoring.target.tolerance (ecmc); `monitoring.target.slaveControlDeadband.time`: monitoring.target.time (ecmc).
-- `monitoring.velocity.enable` / `monitoring.velocity.max` / `monitoring.velocity.time.trajectory` / `monitoring.velocity.time.drive` (optional block; supply enable, max and time.trajectory; time.drive optional) — Velocity monitoring. Times are in EtherCAT cycles. Defaults: `monitoring.velocity.enable`: Python: required in block; ECB: false.
-- `monitoring.velocityDifference.enable` / `monitoring.velocityDifference.max` / `monitoring.velocityDifference.time.trajectory` / `monitoring.velocityDifference.time.drive` (optional block; supply enable, max and time.trajectory; time.drive optional) — Velocity setpoint vs actual monitoring. Its trajectory and drive delays are independent of the maximum-velocity monitor. Times are in EtherCAT cycles. Defaults: `monitoring.velocityDifference.enable`: Python: required in block; ECB: false.
-- `monitoring.stall.enable` / `monitoring.stall.time.timeout` / `monitoring.stall.time.factor` (optional) — Stall monitoring requires target monitoring. Use boolean true/false with either backend; integer 1/0 is also accepted for compatibility. timeout is in EtherCAT cycles; factor is dimensionless.
+- `monitoring.lag.enable` / `monitoring.lag.tolerance` / `monitoring.lag.time` / `monitoring.lag.timeMs` (optional block; Python requires enable, tolerance and time/timeMs if explicitly supplied) — Following-error monitoring; time is in EtherCAT cycles. An omitted lag block defaults to disabled when monitoring is present. Millisecond alternatives are preferred; do not specify both forms of the same parameter. Defaults: `monitoring.lag.enable`: false when lag block omitted; `monitoring.lag.tolerance`: 0 when lag block omitted; `monitoring.lag.time`: 100 when lag block omitted.
+- `monitoring.target.enable` / `monitoring.target.tolerance` / `monitoring.target.time` / `monitoring.target.timeMs` (optional block; supply enable, tolerance and time/timeMs together) — At-target monitoring; enable it for motor-record completion detection. Time is in EtherCAT cycles. Millisecond alternatives are preferred; do not specify both forms of the same parameter. Defaults: `monitoring.target.enable`: Python: required in block; ECB: false.
+- `monitoring.target.slaveControlDeadband.tolerance` / `monitoring.target.slaveControlDeadband.time` / `monitoring.target.slaveControlDeadband.timeMs` (required pair when slaveControlDeadband is present) — Independent live master-axis error band and qualification time forwarded to slaves for control-deadband decisions such as reduced torque. Configure these keys on the master axis. They apply to physical and virtual masters and may be tighter or slower than ordinary AtTarget. If omitted, ecmc uses the AtTarget tolerance and time. Example: `slaveControlDeadband: {tolerance: 0.01, time: 100}`. Millisecond alternatives are preferred; do not specify both forms of the same parameter. Defaults: `monitoring.target.slaveControlDeadband.tolerance`: monitoring.target.tolerance (ecmc); `monitoring.target.slaveControlDeadband.time`: monitoring.target.time (ecmc).
+- `monitoring.velocity.enable` / `monitoring.velocity.max` / `monitoring.velocity.time.trajectory` / `monitoring.velocity.time.drive` / `monitoring.velocity.timeMs.trajectory` / `monitoring.velocity.timeMs.drive` (optional block; supply enable, max and timeMs.trajectory (or time.trajectory); drive delay optional) — Velocity monitoring. Times are in EtherCAT cycles. Millisecond alternatives are preferred; do not specify both forms of the same parameter. Defaults: `monitoring.velocity.enable`: Python: required in block; ECB: false.
+- `monitoring.velocityDifference.enable` / `monitoring.velocityDifference.max` / `monitoring.velocityDifference.time.trajectory` / `monitoring.velocityDifference.time.drive` / `monitoring.velocityDifference.timeMs.trajectory` / `monitoring.velocityDifference.timeMs.drive` (optional block; supply enable, max and timeMs.trajectory (or time.trajectory); drive delay optional) — Velocity setpoint vs actual monitoring. Its trajectory and drive delays are independent of the maximum-velocity monitor. Times are in EtherCAT cycles. Millisecond alternatives are preferred; do not specify both forms of the same parameter. Defaults: `monitoring.velocityDifference.enable`: Python: required in block; ECB: false.
+- `monitoring.stall.enable` / `monitoring.stall.time.timeout` / `monitoring.stall.time.factor` / `monitoring.stall.time.timeoutMs` (optional) — Stall monitoring requires target monitoring. Use boolean true/false with either backend; integer 1/0 is also accepted for compatibility. timeout is in EtherCAT cycles; factor is dimensionless. Millisecond alternatives are preferred; do not specify both forms of the same parameter.
 
 ## plc
 
@@ -275,10 +276,13 @@ unchanged. Both reference views are generated from the same audited source.
 - `plc.file` (optional) — PLC code file to include.
 - `plc.code` (optional) — Inline PLC code list (appended after `plc.file` content); example shows enable logic and setpoint calculation.
 - `plc.velocity_filter` (optional) — Velocity feedforward smoothing.
-- `plc.velocity_filter.encoder.enable` / `plc.velocity_filter.encoder.size` (optional) — Filter PLC encoder velocity. Defaults: `plc.velocity_filter.encoder.enable`: false; `plc.velocity_filter.encoder.size`: 1.
-- `plc.velocity_filter.trajectory.enable` / `plc.velocity_filter.trajectory.size` (optional) — Filter PLC trajectory velocity. Defaults: `plc.velocity_filter.trajectory.enable`: false; `plc.velocity_filter.trajectory.size`: 1.
+- `plc.velocity_filter.encoder.enable` / `plc.velocity_filter.encoder.size` / `plc.velocity_filter.encoder.timeMs` (optional) — Filter PLC encoder velocity. Millisecond alternatives are preferred; do not specify both forms of the same parameter. Defaults: `plc.velocity_filter.encoder.enable`: false; `plc.velocity_filter.encoder.size`: 1.
+- `plc.velocity_filter.trajectory.enable` / `plc.velocity_filter.trajectory.size` / `plc.velocity_filter.trajectory.timeMs` (optional) — Filter PLC trajectory velocity. Millisecond alternatives are preferred; do not specify both forms of the same parameter. Defaults: `plc.velocity_filter.trajectory.enable`: false; `plc.velocity_filter.trajectory.size`: 1.
 - `plc.filter` (optional; deprecated alias) — Deprecated filter syntax. Prefer plc.velocity_filter.encoder and plc.velocity_filter.trajectory.
 - `plc.macros` (optional) — Macros for an external axis PLC file.
+- `plc.filter.velocity.timeMs` (optional) — Millisecond alternative to legacy plc.filter.velocity.size.
+- `plc.filter.position.timeMs` (optional) — Millisecond alternative to legacy plc.filter.position.size.
+- `plc.filter.trajectory.timeMs` (optional) — Millisecond alternative to legacy plc.filter.trajectory.size.
 
 ## homing (legacy; prefer encoder.homing)
 

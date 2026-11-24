@@ -99,14 +99,16 @@ class Schema:
                 'type': 'dict',                    
                 'schema': {
                     'enable': {'required': False, 'type': 'boolean', 'coerce': normalize_boolean},
-                    'size': {'required': False, 'type': 'integer'}
+                    'size': {'required': False, 'type': 'integer'},
+                    'timeMs': {'type': 'float', 'min': 0}
                 }                
             },
             'encoder': {
                 'type': 'dict',                    
                 'schema': {
                     'enable': {'required': False, 'type': 'boolean', 'coerce': normalize_boolean},
-                    'size': {'required': False, 'type': 'integer'}
+                    'size': {'required': False, 'type': 'integer'},
+                    'timeMs': {'type': 'float', 'min': 0}
                 }                
             }
         }
@@ -120,21 +122,24 @@ class Schema:
                 'type': 'dict',
                 'schema': {
                     'enable': {'required': False, 'type': 'boolean', 'coerce': normalize_boolean},
-                    'size': {'required': False, 'type': 'integer'}
+                    'size': {'required': False, 'type': 'integer'},
+                    'timeMs': {'type': 'float', 'min': 0}
                 }
             },
             'trajectory': {
                 'type': 'dict',
                 'schema': {
                     'enable': {'required': False, 'type': 'boolean', 'coerce': normalize_boolean},
-                    'size': {'required': False, 'type': 'integer'}
+                    'size': {'required': False, 'type': 'integer'},
+                    'timeMs': {'type': 'float', 'min': 0}
                 }
             },
             'position': {
                 'type': 'dict',
                 'schema': {
                     'enable': {'required': False, 'type': 'boolean', 'coerce': normalize_boolean},
-                    'size': {'required': False, 'type': 'integer'}
+                    'size': {'required': False, 'type': 'integer'},
+                    'timeMs': {'type': 'float', 'min': 0}
                 }
             }
         }
@@ -271,8 +276,10 @@ class Schema:
                 'schema': {
                     'enable': {'required': True, 'type': 'boolean', 'coerce': normalize_boolean},
                     'output': {'required': True, 'type': 'string'},
-                    'openDelay': {'type': 'integer', 'min': 0, 'default': 0},
-                    'closeAhead': {'type': 'integer', 'min': 0, 'default': 0}
+                    'openDelay': {'type': 'integer', 'min': 0},
+                    'openDelayMs': {'type': 'float', 'min': 0},
+                    'closeAhead': {'type': 'integer', 'min': 0},
+                    'closeAheadMs': {'type': 'float', 'min': 0}
                 }
             },
             'warning': {'type': 'integer', 'min': 0, 'dependencies': ['status']},
@@ -357,7 +364,8 @@ class Schema:
             'delayComp': {
                 'type': 'dict',
                 'schema': {
-                    'time': {'required': True, 'type': 'float'},
+                    'time': {'type': 'float'},
+                    'timeMs': {'type': 'float'},
                     'enable': {'type': 'boolean', 'coerce': normalize_boolean},
                 }
             },
@@ -426,6 +434,7 @@ class Schema:
                 'schema': {
                     'tol': {'type': 'float', 'min': 0},
                     'time': {'type': 'integer', 'min': 0},
+                    'timeMs': {'type': 'float', 'min': 0},
                 }
             },
         }
@@ -559,26 +568,29 @@ class Schema:
             'lag': {
                 'type': 'dict',
                 'required': False,
-                'default': {'enable': False, 'tolerance': 0.0, 'time': 100},
+                'default': {'enable': False, 'tolerance': 0.0},
                 'schema': {
-                    'enable': {'required': True, 'type': 'boolean', 'coerce': normalize_boolean, 'dependencies': ['tolerance', 'time']},
+                    'enable': {'required': True, 'type': 'boolean', 'coerce': normalize_boolean, 'dependencies': ['tolerance']},
                     'tolerance': {'type': 'float', 'min': 0.0},
                     'time': {'type': 'integer', 'min': 0},
+                    'timeMs': {'type': 'float', 'min': 0},
                 }
             },
             'target': {
                 'type': 'dict',
                 'required': False,
                 'schema': {
-                    'enable': {'required': True, 'type': 'boolean', 'coerce': normalize_boolean, 'dependencies': ['tolerance', 'time']},
+                    'enable': {'required': True, 'type': 'boolean', 'coerce': normalize_boolean, 'dependencies': ['tolerance']},
                     'tolerance': {'type': 'float', 'min': 0.0},
                     'time': {'type': 'integer', 'min': 0},
+                    'timeMs': {'type': 'float', 'min': 0},
                     'slaveControlDeadband': {
                         'type': 'dict',
                         'required': False,
                         'schema': {
                             'tolerance': {'required': True, 'type': 'float', 'min': 0.0},
-                            'time': {'required': True, 'type': 'integer', 'min': 0},
+                            'time': {'type': 'integer', 'min': 0},
+                            'timeMs': {'type': 'float', 'min': 0},
                         }
                     },
                 }
@@ -587,13 +599,20 @@ class Schema:
                 'type': 'dict',
                 'required': False,
                 'schema': {
-                    'enable': {'required': True, 'type': 'boolean', 'coerce': normalize_boolean, 'dependencies': ['max', 'time']},
+                    'enable': {'required': True, 'type': 'boolean', 'coerce': normalize_boolean, 'dependencies': ['max']},
                     'max': {'type': 'float', 'min': 0.0},
                     'time': {
                         'type': 'dict',
                         'schema': {
-                            'trajectory': {'required': True, 'type': 'integer', 'min': 0},
+                            'trajectory': {'type': 'integer', 'min': 0},
                             'drive': {'type': 'integer', 'min': 0},
+                        }
+                    },
+                    'timeMs': {
+                        'type': 'dict',
+                        'schema': {
+                            'trajectory': {'type': 'float', 'min': 0},
+                            'drive': {'type': 'float', 'min': 0},
                         }
                     },
                 }
@@ -602,13 +621,20 @@ class Schema:
                 'type': 'dict',
                 'required': False,
                 'schema': {
-                    'enable': {'required': True, 'type': 'boolean', 'coerce': normalize_boolean, 'dependencies': ['max', 'time']},
+                    'enable': {'required': True, 'type': 'boolean', 'coerce': normalize_boolean, 'dependencies': ['max']},
                     'max': {'type': 'float', 'min': 0.0},
                     'time': {
                         'type': 'dict',
                         'schema': {
-                            'trajectory': {'required': True, 'type': 'integer', 'min': 0},
+                            'trajectory': {'type': 'integer', 'min': 0},
                             'drive': {'type': 'integer', 'min': 0},
+                        }
+                    },
+                    'timeMs': {
+                        'type': 'dict',
+                        'schema': {
+                            'trajectory': {'type': 'float', 'min': 0},
+                            'drive': {'type': 'float', 'min': 0},
                         }
                     },
                 }
@@ -622,6 +648,7 @@ class Schema:
                         'type': 'dict',
                         'schema': {
                             'timeout': {'type': 'integer', 'min': 0},
+                            'timeoutMs': {'type': 'float', 'min': 0},
                             'factor': {'type': 'float', 'min': 0},
                         }
                     },

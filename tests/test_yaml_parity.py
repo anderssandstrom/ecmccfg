@@ -153,6 +153,39 @@ class YamlParityTests(unittest.TestCase):
                     self.assertNotEqual(result.returncode, 0, name)
                     self.assertIn('stall', result.stdout + result.stderr)
 
+    def test_millisecond_monitoring_and_legacy_warnings(self):
+        base = self.yaml.safe_load((FIXTURES / 'virtual_monitoring.yaml').read_text())
+        base.pop('softlimits', None)
+        for modern in (False, True):
+            document = copy.deepcopy(base)
+            if modern:
+                for key in ('lag', 'target', 'velocity'):
+                    block = document['monitoring'][key]
+                    block['timeMs'] = block.pop('time')
+            with self.subTest(modern=modern), tempfile.TemporaryDirectory() as tmp:
+                source = Path(tmp) / 'timing.yaml'
+                source.write_text(self.yaml.safe_dump(document))
+                generated = '\n'.join(self.compare(source))
+                if modern:
+                    self.assertIn('ceil(100*${ECMC_EC_SAMPLE_RATE}/1000)', generated)
+                    self.assertIn('Cfg.SetAxisMonAtTargetTime(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})', generated)
+                    self.assertNotIn('monitoring.target.time uses cycles', generated)
+                else:
+                    self.assertIn('Cfg.SetAxisMonAtTargetTime(${ECMC_AXIS_NO},100)', generated)
+                    self.assertIn('monitoring.target.time uses cycles', generated)
+
+    def test_millisecond_timing_conflict(self):
+        document = self.yaml.safe_load((FIXTURES / 'virtual_monitoring.yaml').read_text())
+        document.pop('softlimits', None)
+        document['monitoring']['target']['timeMs'] = 100
+        with tempfile.TemporaryDirectory() as tmp:
+            source = Path(tmp) / 'conflict.yaml'
+            source.write_text(self.yaml.safe_dump(document))
+            generated = '\n'.join(self.compare(source))
+            self.assertIn('Specify only one of monitoring.target.time and monitoring.target.timeMs', generated)
+            self.assertIn('ecmcExit', generated)
+            self.assertNotIn('Cfg.SetAxisMonAtTargetTime(', generated)
+
     def test_additional_encoder(self):
         with tempfile.TemporaryDirectory() as tmp:
             source = Path(tmp) / 'encoder.yaml'

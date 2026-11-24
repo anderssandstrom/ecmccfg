@@ -696,29 +696,39 @@
         },
         {
           "keys": [
-            "drive.brake.openDelay"
+            "drive.brake.openDelay",
+            "drive.brake.openDelayMs"
           ],
           "requirement": "optional",
-          "description": "Brake open delay in cycles.",
+          "description": "Brake open delay in cycles. Millisecond alternatives are preferred; do not specify both forms of the same parameter.",
           "entries": [
             {
               "key": "drive.brake.openDelay",
-              "summary": "Brake timing parameter in cycles (default 1kHz)",
+              "summary": "Brake timing parameter in cycles (default 1kHz) — Legacy cycle/sample value; prefer drive.brake.openDelayMs. Explicit use logs a warning.",
               "default": "0"
+            },
+            {
+              "key": "drive.brake.openDelayMs",
+              "summary": "Preferred duration in milliseconds; alternative to drive.brake.openDelay. Converted using ECMC real-time sample rate at IOC startup. Rounded up to whole cycles."
             }
           ]
         },
         {
           "keys": [
-            "drive.brake.closeAhead"
+            "drive.brake.closeAhead",
+            "drive.brake.closeAheadMs"
           ],
           "requirement": "optional",
-          "description": "Brake close-ahead time in cycles.",
+          "description": "Brake close-ahead time in cycles. Millisecond alternatives are preferred; do not specify both forms of the same parameter.",
           "entries": [
             {
               "key": "drive.brake.closeAhead",
-              "summary": "Brake timing parameter in cycles (default 1kHz)",
+              "summary": "Brake timing parameter in cycles (default 1kHz) — Legacy cycle/sample value; prefer drive.brake.closeAheadMs. Explicit use logs a warning.",
               "default": "0"
+            },
+            {
+              "key": "drive.brake.closeAheadMs",
+              "summary": "Preferred duration in milliseconds; alternative to drive.brake.closeAhead. Converted using ECMC real-time sample rate at IOC startup. Rounded up to whole cycles."
             }
           ]
         },
@@ -1031,15 +1041,20 @@
         },
         {
           "keys": [
-            "encoder.filter.velocity.size"
+            "encoder.filter.velocity.size",
+            "encoder.filter.velocity.timeMs"
           ],
           "requirement": "optional",
-          "description": "Velocity filter window in EtherCAT samples/cycles; applies when encoder.filter.velocity is supplied.",
+          "description": "Velocity filter window in EtherCAT samples/cycles; applies when encoder.filter.velocity is supplied. Millisecond alternatives are preferred; do not specify both forms of the same parameter.",
           "entries": [
             {
               "key": "encoder.filter.velocity.size",
-              "summary": "",
+              "summary": "Legacy cycle/sample value; prefer encoder.filter.velocity.timeMs. Explicit use logs a warning.",
               "default": "100"
+            },
+            {
+              "key": "encoder.filter.velocity.timeMs",
+              "summary": "Preferred duration in milliseconds; alternative to encoder.filter.velocity.size. Converted using ECMC real-time sample rate at IOC startup. Rounded up to at least one sample."
             }
           ]
         },
@@ -1059,15 +1074,20 @@
         },
         {
           "keys": [
-            "encoder.filter.position.size"
+            "encoder.filter.position.size",
+            "encoder.filter.position.timeMs"
           ],
           "requirement": "optional",
-          "description": "Position filter window in EtherCAT samples/cycles; applies when encoder.filter.position is supplied.",
+          "description": "Position filter window in EtherCAT samples/cycles; applies when encoder.filter.position is supplied. Millisecond alternatives are preferred; do not specify both forms of the same parameter.",
           "entries": [
             {
               "key": "encoder.filter.position.size",
-              "summary": "",
+              "summary": "Legacy cycle/sample value; prefer encoder.filter.position.timeMs. Explicit use logs a warning.",
               "default": "10"
+            },
+            {
+              "key": "encoder.filter.position.timeMs",
+              "summary": "Preferred duration in milliseconds; alternative to encoder.filter.position.size. Converted using ECMC real-time sample rate at IOC startup. Rounded up to at least one sample."
             }
           ]
         },
@@ -1537,14 +1557,19 @@
         },
         {
           "keys": [
-            "encoder.delayComp.time"
+            "encoder.delayComp.time",
+            "encoder.delayComp.timeMs"
           ],
           "requirement": "required when encoder.delayComp is present",
-          "description": "Delay time in cycles.",
+          "description": "Delay time in cycles. Millisecond alternatives are preferred; do not specify both forms of the same parameter.",
           "entries": [
             {
               "key": "encoder.delayComp.time",
-              "summary": "Delay time between set and act [cycles]"
+              "summary": "Delay time between set and act [cycles] — Legacy cycle/sample value; prefer encoder.delayComp.timeMs. Explicit use logs a warning."
+            },
+            {
+              "key": "encoder.delayComp.timeMs",
+              "summary": "Preferred duration in milliseconds; alternative to encoder.delayComp.time. Converted using ECMC real-time sample rate at IOC startup. Fractional cycles preserved."
             }
           ]
         },
@@ -1772,6 +1797,19 @@
               "summary": "Positive permitted wake discrepancy, engineering units."
             }
           ]
+        },
+        {
+          "keys": [
+            "encoder.filter.trajectory.timeMs"
+          ],
+          "requirement": "optional",
+          "description": "Millisecond alternative to legacy encoder.filter.trajectory.size.",
+          "entries": [
+            {
+              "key": "encoder.filter.trajectory.timeMs",
+              "summary": "Preferred duration in milliseconds, converted to cycles at startup. Do not specify both forms."
+            }
+          ]
         }
       ]
     },
@@ -1877,14 +1915,19 @@
         },
         {
           "keys": [
-            "controller.deadband.time"
+            "controller.deadband.time",
+            "controller.deadband.timeMs"
           ],
           "requirement": "optional",
-          "description": "Deadband time in EtherCAT cycles; supply together with tol.",
+          "description": "Deadband time in EtherCAT cycles; supply together with tol. Millisecond alternatives are preferred; do not specify both forms of the same parameter.",
           "entries": [
             {
               "key": "controller.deadband.time",
-              "summary": ""
+              "summary": "Legacy cycle/sample value; prefer controller.deadband.timeMs. Explicit use logs a warning."
+            },
+            {
+              "key": "controller.deadband.timeMs",
+              "summary": "Preferred duration in milliseconds; alternative to controller.deadband.time. Converted using ECMC real-time sample rate at IOC startup. Rounded up to whole cycles."
             }
           ]
         },
@@ -2617,10 +2660,11 @@
           "keys": [
             "monitoring.lag.enable",
             "monitoring.lag.tolerance",
-            "monitoring.lag.time"
+            "monitoring.lag.time",
+            "monitoring.lag.timeMs"
           ],
-          "requirement": "optional block; Python requires enable, tolerance and time if explicitly supplied",
-          "description": "Following-error monitoring; time is in EtherCAT cycles. An omitted lag block defaults to disabled when monitoring is present.",
+          "requirement": "optional block; Python requires enable, tolerance and time/timeMs if explicitly supplied",
+          "description": "Following-error monitoring; time is in EtherCAT cycles. An omitted lag block defaults to disabled when monitoring is present. Millisecond alternatives are preferred; do not specify both forms of the same parameter.",
           "entries": [
             {
               "key": "monitoring.lag.enable",
@@ -2634,8 +2678,12 @@
             },
             {
               "key": "monitoring.lag.time",
-              "summary": "Allowed time outside tolerance (EtherCAT cycles)",
+              "summary": "Allowed time outside tolerance (EtherCAT cycles) — Legacy cycle/sample value; prefer monitoring.lag.timeMs. Explicit use logs a warning.",
               "default": "100 when lag block omitted"
+            },
+            {
+              "key": "monitoring.lag.timeMs",
+              "summary": "Preferred duration in milliseconds; alternative to monitoring.lag.time. Converted using ECMC real-time sample rate at IOC startup. Rounded up to whole cycles."
             }
           ]
         },
@@ -2643,10 +2691,11 @@
           "keys": [
             "monitoring.target.enable",
             "monitoring.target.tolerance",
-            "monitoring.target.time"
+            "monitoring.target.time",
+            "monitoring.target.timeMs"
           ],
-          "requirement": "optional block; supply enable, tolerance and time together",
-          "description": "At-target monitoring; enable it for motor-record completion detection. Time is in EtherCAT cycles.",
+          "requirement": "optional block; supply enable, tolerance and time/timeMs together",
+          "description": "At-target monitoring; enable it for motor-record completion detection. Time is in EtherCAT cycles. Millisecond alternatives are preferred; do not specify both forms of the same parameter.",
           "entries": [
             {
               "key": "monitoring.target.enable",
@@ -2659,17 +2708,22 @@
             },
             {
               "key": "monitoring.target.time",
-              "summary": "Filter time inside tolerance to be at target (EtherCAT cycles)"
+              "summary": "Filter time inside tolerance to be at target (EtherCAT cycles) — Legacy cycle/sample value; prefer monitoring.target.timeMs. Explicit use logs a warning."
+            },
+            {
+              "key": "monitoring.target.timeMs",
+              "summary": "Preferred duration in milliseconds; alternative to monitoring.target.time. Converted using ECMC real-time sample rate at IOC startup. Rounded up to whole cycles."
             }
           ]
         },
         {
           "keys": [
             "monitoring.target.slaveControlDeadband.tolerance",
-            "monitoring.target.slaveControlDeadband.time"
+            "monitoring.target.slaveControlDeadband.time",
+            "monitoring.target.slaveControlDeadband.timeMs"
           ],
           "requirement": "required pair when slaveControlDeadband is present",
-          "description": "Independent live master-axis error band and qualification time forwarded to slaves for control-deadband decisions such as reduced torque. Configure these keys on the master axis. They apply to physical and virtual masters and may be tighter or slower than ordinary AtTarget. If omitted, ecmc uses the AtTarget tolerance and time. Example: `slaveControlDeadband: {tolerance: 0.01, time: 100}`.",
+          "description": "Independent live master-axis error band and qualification time forwarded to slaves for control-deadband decisions such as reduced torque. Configure these keys on the master axis. They apply to physical and virtual masters and may be tighter or slower than ordinary AtTarget. If omitted, ecmc uses the AtTarget tolerance and time. Example: `slaveControlDeadband: {tolerance: 0.01, time: 100}`. Millisecond alternatives are preferred; do not specify both forms of the same parameter.",
           "entries": [
             {
               "key": "monitoring.target.slaveControlDeadband.tolerance",
@@ -2678,8 +2732,12 @@
             },
             {
               "key": "monitoring.target.slaveControlDeadband.time",
-              "summary": "Filter time inside slave-control deadband; defaults to AtTarget time (EtherCAT cycles)",
+              "summary": "Filter time inside slave-control deadband; defaults to AtTarget time (EtherCAT cycles) — Legacy cycle/sample value; prefer monitoring.target.slaveControlDeadband.timeMs. Explicit use logs a warning.",
               "default": "monitoring.target.time (ecmc)"
+            },
+            {
+              "key": "monitoring.target.slaveControlDeadband.timeMs",
+              "summary": "Preferred duration in milliseconds; alternative to monitoring.target.slaveControlDeadband.time. Converted using ECMC real-time sample rate at IOC startup. Rounded up to whole cycles."
             }
           ]
         },
@@ -2688,10 +2746,12 @@
             "monitoring.velocity.enable",
             "monitoring.velocity.max",
             "monitoring.velocity.time.trajectory",
-            "monitoring.velocity.time.drive"
+            "monitoring.velocity.time.drive",
+            "monitoring.velocity.timeMs.trajectory",
+            "monitoring.velocity.timeMs.drive"
           ],
-          "requirement": "optional block; supply enable, max and time.trajectory; time.drive optional",
-          "description": "Velocity monitoring. Times are in EtherCAT cycles.",
+          "requirement": "optional block; supply enable, max and timeMs.trajectory (or time.trajectory); drive delay optional",
+          "description": "Velocity monitoring. Times are in EtherCAT cycles. Millisecond alternatives are preferred; do not specify both forms of the same parameter.",
           "entries": [
             {
               "key": "monitoring.velocity.enable",
@@ -2704,11 +2764,19 @@
             },
             {
               "key": "monitoring.velocity.time.trajectory",
-              "summary": "Time allowed outside max velocity before system init halt (EtherCAT cycles)"
+              "summary": "Time allowed outside max velocity before system init halt (EtherCAT cycles) — Legacy cycle/sample value; prefer monitoring.velocity.timeMs.trajectory. Explicit use logs a warning."
             },
             {
               "key": "monitoring.velocity.time.drive",
-              "summary": "Time allowed outside max velocity before system disables drive (EtherCAT cycles)"
+              "summary": "Time allowed outside max velocity before system disables drive (EtherCAT cycles) — Legacy cycle/sample value; prefer monitoring.velocity.timeMs.drive. Explicit use logs a warning."
+            },
+            {
+              "key": "monitoring.velocity.timeMs.trajectory",
+              "summary": "Preferred duration in milliseconds; alternative to monitoring.velocity.time.trajectory. Converted using ECMC real-time sample rate at IOC startup. Rounded up to whole cycles."
+            },
+            {
+              "key": "monitoring.velocity.timeMs.drive",
+              "summary": "Preferred duration in milliseconds; alternative to monitoring.velocity.time.drive. Converted using ECMC real-time sample rate at IOC startup. Rounded up to whole cycles."
             }
           ]
         },
@@ -2717,10 +2785,12 @@
             "monitoring.velocityDifference.enable",
             "monitoring.velocityDifference.max",
             "monitoring.velocityDifference.time.trajectory",
-            "monitoring.velocityDifference.time.drive"
+            "monitoring.velocityDifference.time.drive",
+            "monitoring.velocityDifference.timeMs.trajectory",
+            "monitoring.velocityDifference.timeMs.drive"
           ],
-          "requirement": "optional block; supply enable, max and time.trajectory; time.drive optional",
-          "description": "Velocity setpoint vs actual monitoring. Its trajectory and drive delays are independent of the maximum-velocity monitor. Times are in EtherCAT cycles.",
+          "requirement": "optional block; supply enable, max and timeMs.trajectory (or time.trajectory); drive delay optional",
+          "description": "Velocity setpoint vs actual monitoring. Its trajectory and drive delays are independent of the maximum-velocity monitor. Times are in EtherCAT cycles. Millisecond alternatives are preferred; do not specify both forms of the same parameter.",
           "entries": [
             {
               "key": "monitoring.velocityDifference.enable",
@@ -2733,11 +2803,19 @@
             },
             {
               "key": "monitoring.velocityDifference.time.trajectory",
-              "summary": "Time allowed outside max diff velo before system init halt (EtherCAT cycles)"
+              "summary": "Time allowed outside max diff velo before system init halt (EtherCAT cycles) — Legacy cycle/sample value; prefer monitoring.velocityDifference.timeMs.trajectory. Explicit use logs a warning."
             },
             {
               "key": "monitoring.velocityDifference.time.drive",
-              "summary": "Time allowed outside max diff velo before system disables drive (EtherCAT cycles)"
+              "summary": "Time allowed outside max diff velo before system disables drive (EtherCAT cycles) — Legacy cycle/sample value; prefer monitoring.velocityDifference.timeMs.drive. Explicit use logs a warning."
+            },
+            {
+              "key": "monitoring.velocityDifference.timeMs.trajectory",
+              "summary": "Preferred duration in milliseconds; alternative to monitoring.velocityDifference.time.trajectory. Converted using ECMC real-time sample rate at IOC startup. Rounded up to whole cycles."
+            },
+            {
+              "key": "monitoring.velocityDifference.timeMs.drive",
+              "summary": "Preferred duration in milliseconds; alternative to monitoring.velocityDifference.time.drive. Converted using ECMC real-time sample rate at IOC startup. Rounded up to whole cycles."
             }
           ]
         },
@@ -2745,10 +2823,11 @@
           "keys": [
             "monitoring.stall.enable",
             "monitoring.stall.time.timeout",
-            "monitoring.stall.time.factor"
+            "monitoring.stall.time.factor",
+            "monitoring.stall.time.timeoutMs"
           ],
           "requirement": "optional",
-          "description": "Stall monitoring requires target monitoring. Use boolean true/false with either backend; integer 1/0 is also accepted for compatibility. timeout is in EtherCAT cycles; factor is dimensionless.",
+          "description": "Stall monitoring requires target monitoring. Use boolean true/false with either backend; integer 1/0 is also accepted for compatibility. timeout is in EtherCAT cycles; factor is dimensionless. Millisecond alternatives are preferred; do not specify both forms of the same parameter.",
           "entries": [
             {
               "key": "monitoring.stall.enable",
@@ -2756,11 +2835,15 @@
             },
             {
               "key": "monitoring.stall.time.timeout",
-              "summary": "If not at target after \"timeout\" cycles after trajectory generator is ready then drive will disable"
+              "summary": "If not at target after \"timeout\" cycles after trajectory generator is ready then drive will disable — Legacy cycle/sample value; prefer monitoring.stall.time.timeoutMs. Explicit use logs a warning."
             },
             {
               "key": "monitoring.stall.time.factor",
               "summary": "Measures duration of last motion command (busy high edge to busy low edge). The new timeout will be defined as this duration multiplied by this factor. The timeout finally used for stall detection will be the longest (of time.timeout and calculated from time.factor)."
+            },
+            {
+              "key": "monitoring.stall.time.timeoutMs",
+              "summary": "Preferred duration in milliseconds; alternative to monitoring.stall.time.timeout. Converted using ECMC real-time sample rate at IOC startup. Rounded up to whole cycles."
             }
           ]
         }
@@ -2837,10 +2920,11 @@
         {
           "keys": [
             "plc.velocity_filter.encoder.enable",
-            "plc.velocity_filter.encoder.size"
+            "plc.velocity_filter.encoder.size",
+            "plc.velocity_filter.encoder.timeMs"
           ],
           "requirement": "optional",
-          "description": "Filter PLC encoder velocity.",
+          "description": "Filter PLC encoder velocity. Millisecond alternatives are preferred; do not specify both forms of the same parameter.",
           "entries": [
             {
               "key": "plc.velocity_filter.encoder.enable",
@@ -2849,18 +2933,23 @@
             },
             {
               "key": "plc.velocity_filter.encoder.size",
-              "summary": "Filter size",
+              "summary": "Filter size — Legacy cycle/sample value; prefer plc.velocity_filter.encoder.timeMs. Explicit use logs a warning.",
               "default": "1"
+            },
+            {
+              "key": "plc.velocity_filter.encoder.timeMs",
+              "summary": "Preferred duration in milliseconds; alternative to plc.velocity_filter.encoder.size. Converted using ECMC real-time sample rate at IOC startup. Rounded up to at least one sample."
             }
           ]
         },
         {
           "keys": [
             "plc.velocity_filter.trajectory.enable",
-            "plc.velocity_filter.trajectory.size"
+            "plc.velocity_filter.trajectory.size",
+            "plc.velocity_filter.trajectory.timeMs"
           ],
           "requirement": "optional",
-          "description": "Filter PLC trajectory velocity.",
+          "description": "Filter PLC trajectory velocity. Millisecond alternatives are preferred; do not specify both forms of the same parameter.",
           "entries": [
             {
               "key": "plc.velocity_filter.trajectory.enable",
@@ -2869,8 +2958,12 @@
             },
             {
               "key": "plc.velocity_filter.trajectory.size",
-              "summary": "Filter size",
+              "summary": "Filter size — Legacy cycle/sample value; prefer plc.velocity_filter.trajectory.timeMs. Explicit use logs a warning.",
               "default": "1"
+            },
+            {
+              "key": "plc.velocity_filter.trajectory.timeMs",
+              "summary": "Preferred duration in milliseconds; alternative to plc.velocity_filter.trajectory.size. Converted using ECMC real-time sample rate at IOC startup. Rounded up to at least one sample."
             }
           ]
         },
@@ -2909,6 +3002,45 @@
             {
               "key": "plc.macros",
               "summary": ""
+            }
+          ]
+        },
+        {
+          "keys": [
+            "plc.filter.velocity.timeMs"
+          ],
+          "requirement": "optional",
+          "description": "Millisecond alternative to legacy plc.filter.velocity.size.",
+          "entries": [
+            {
+              "key": "plc.filter.velocity.timeMs",
+              "summary": "Preferred duration in milliseconds, converted to cycles at startup. Do not specify both forms."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "plc.filter.position.timeMs"
+          ],
+          "requirement": "optional",
+          "description": "Millisecond alternative to legacy plc.filter.position.size.",
+          "entries": [
+            {
+              "key": "plc.filter.position.timeMs",
+              "summary": "Preferred duration in milliseconds, converted to cycles at startup. Do not specify both forms."
+            }
+          ]
+        },
+        {
+          "keys": [
+            "plc.filter.trajectory.timeMs"
+          ],
+          "requirement": "optional",
+          "description": "Millisecond alternative to legacy plc.filter.trajectory.size.",
+          "entries": [
+            {
+              "key": "plc.filter.trajectory.timeMs",
+              "summary": "Preferred duration in milliseconds, converted to cycles at startup. Do not specify both forms."
             }
           ]
         }

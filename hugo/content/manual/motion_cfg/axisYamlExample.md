@@ -26,6 +26,12 @@ illustration directly as a commissioned configuration.
 Boolean `true`/`false` is preferred for boolean settings. Both backends also
 accept integer `1`/`0` for these fields for backward compatibility.
 
+Timing examples use milliseconds for settings that historically used cycles.
+At 1 kHz these values match the previous examples; at other rates the loader
+converts them to cycles. Existing cycle-based keys remain supported with a
+startup warning. Do not specify both forms for the same parameter. Defaults
+that were historically expressed in cycles remain in cycles.
+
 ## All YAML settings
 ```yaml
 axis:
@@ -95,8 +101,8 @@ drive:
 #  brake:
 #    enable: false
 #    output: ec0...                                             # Ethercat link to brake output
-#    openDelay: 0                                               # Brake timing in EtherCAT cycles; default 0
-#    closeAhead: 0                                              # Brake timing in EtherCAT cycles; default 0
+#    openDelayMs: 0                                             # Brake timing [ms]; legacy default: 0 cycles
+#    closeAheadMs: 0                                            # Brake timing [ms]; legacy default: 0 cycles
 #  reset: 1                                                     # Reset bit; omit key if unused
 #  warning: 2                                                   # Warning bit; omit key if unused
 #  error:                                                       # max 3
@@ -131,10 +137,10 @@ encoder:
 #    - 11                                                       # Error 2
 #  filter:
 #    velocity:
-#      size: 100                                                # Velocity filter window in EtherCAT samples; default: 100
+#      timeMs: 100                                              # Velocity filter window [ms]; legacy default: 100 samples
 #      enable: true                                             # Enable encoder velocity filter; default: true
 #    position:
-#      size: 100                                                # Position filter window in EtherCAT samples (default 10)
+#      timeMs: 100                                              # Position filter window [ms]; legacy default: 10 samples
 #      enable: true                                             # Enable encoder position filter; default: true
 #  latch:
 #    position: ''                                               # Link to latched value. Used for some homing seqs
@@ -175,7 +181,7 @@ encoder:
 #    latchCount: 1                                              # Latch number to reference on (1 = first latch)
 #    timeout: 30                                                # Homing sequence timeout [s]
 #  delayComp:                                                   # Delay compensation for time between application of setpoint to reading of encoder (normally at least 1 cycle)
-#    time: 1.5                                                  # Delay time between set and act [cycles]
+#    timeMs: 1.5                                                # Delay between setpoint and feedback [ms]; fractional cycles supported
 #    enable: true                                               # enable (defaults to 1 if not set)
 #  lookuptable:                                                 # Lookup tables are only applied when encoder is homed
 #    filename: ./cfg/enc.corr                                   # Load correction lookup table file. Value will be subtracted from encoder value.
@@ -202,7 +208,7 @@ encoder:
 #  freezeIAtRmp: false                                          # Freeze I-part while an internal trajectory is busy; default: no command if omitted
 #  deadband:
 #    tol: 0.01                                                  # Stop control if within this distance from target for the below time
-#    time: 100                                                  # Time inside controller deadband [EtherCAT cycles]
+#    timeMs: 100                                                # Time inside controller deadband [ms]
 #  limits:
 #    minOutput: -100                                            # Minimum controller output
 #    maxOutput: 100                                             # Maximum controller output
@@ -271,30 +277,30 @@ monitoring:
 #  lag:
 #    enable: false                                              # Enable position lag monitoring (following error); default: false when lag block omitted
 #    tolerance: 0.5                                             # Allowed tolerance; default: 0 when lag block omitted
-#    time: 10                                                   # Allowed time outside tolerance [cycles]; default: 100 when lag block omitted
+#    timeMs: 10                                                 # Allowed time outside tolerance [ms]; legacy omitted-lag default: 100 cycles
   target:
     enable: true                                                # Enable at target monitoring (needs to be enabled and configured if using motor record); default: Python: required in block; ECB: false; explicit recommended baseline
     tolerance: 0.5                                              # Allowed tolerance; explicit recommended baseline
-    time: 10                                                    # Filter time inside tolerance to be at target [cycles]; explicit recommended baseline
+    timeMs: 10                                                  # Time inside tolerance to be at target [ms]; explicit recommended baseline
 #    slaveControlDeadband:                                      # Optional independent master-axis band forwarded to slaves
 #      tolerance: 0.01                                          # Master error tolerance for slave control decisions; default: monitoring.target.tolerance (ecmc)
-#      time: 100                                                # Qualification time inside tolerance [cycles]; default: monitoring.target.time (ecmc)
+#      timeMs: 100                                              # Qualification time inside tolerance [ms]; defaults to target timing (ecmc)
 #  velocity:
 #    enable: false                                              # Enable velocity monitoring; default: Python: required in block; ECB: false
 #    max: 100                                                   # Allowed max velocity
-#    time:
-#      trajectory: 100                                          # Time allowed outside max velo before trajectory halt [cycles]
-#      drive: 200                                               # Time allowed outside max velo before system disables drive [cycles]
+#    timeMs:                                                    
+#      trajectory: 100                                          # Time allowed outside max velo before trajectory halt [ms]
+#      drive: 200                                               # Time allowed outside max velo before system disables drive [ms]
 #  velocityDifference:
 #    enable: true                                               # Enable velocity diff monitoring (velo set vs velo act); default: Python: required in block; ECB: false
 #    max: 100                                                   # Allowed max difference
-#    time:
-#      trajectory: 100                                          # Time allowed outside max diff velo before system init halt [cycles]
-#      drive: 200                                               # Time allowed outside max diff velo before system disables drive [cycles]
+#    timeMs:                                                    
+#      trajectory: 100                                          # Time allowed outside max diff velo before system init halt [ms]
+#      drive: 200                                               # Time allowed outside max diff velo before system disables drive [ms]
 #  stall:
 #    enable: true                                               # Enable stall monitoring. At target must be enabled for this functionality
 #    time:
-#      timeout: 10000                                           # If not at target after "timeout" cycles after trajectory generator is ready then drive will disable
+#      timeoutMs: 10000                                         # Minimum stall timeout after trajectory generator is ready [ms]
 #      factor: 5.0                                              # Measures duration of last motion command (busy high edge to busy low edge). The new timeout will be defined as this duration multiplied by this factor. The timeout finally used for stall detection will be the longest (of time.timeout and calculated from time.factor).
 
 #plc:
@@ -309,20 +315,20 @@ monitoring:
 #  velocity_filter:                                             # Preferred filters for PLC-derived velocity feedforward
 #    encoder:                                                   # Filter velocity derived from external encoder position
 #      enable: false                                            # Filter enable; default: false
-#      size: 100                                                # Filter size; default: 1
+#      timeMs: 100                                              # Filter window [ms]; legacy default: 1 sample
 #    trajectory:                                                # Filter velocity derived from external trajectory position
 #      enable: false                                            # Filter enable; default: false
-#      size: 100                                                # Filter size; default: 1
+#      timeMs: 100                                              # Filter window [ms]; legacy default: 1 sample
 #  filter:                                                      # Use "velocity_filter" instead since this naming is misleading and should be phased out
 #    velocity:                                                  # Filter plc enc velo
 #      enable: false
-#      size: 100
+#      timeMs: 100                                              # Filter window [ms]; legacy default: 1 sample
 #    trajectory:                                                # Filter plc traj velo
 #      enable: false
-#      size: 100
+#      timeMs: 100                                              # Filter window [ms]; legacy default: 1 sample
 #    position:                                                  # Legacy filter option
 #      enable: false
-#      size: 100
+#      timeMs: 100                                              # Filter window [ms]; legacy default: 1 sample
 
 ```
 

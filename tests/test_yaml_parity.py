@@ -113,6 +113,34 @@ class YamlParityTests(unittest.TestCase):
             self.assertIn('Cfg.SetAxisMonVelDiffDriveILDelay(${ECMC_AXIS_NO},600)', text)
             self.assertNotIn('Cfg.SetAxisMonMaxVelDriveILDelay', text)
 
+    def test_stall_enable_boolean_and_binary_integer(self):
+        for value in (True, False, 0, 1):
+            document = self.yaml.safe_load((FIXTURES / 'virtual_monitoring.yaml').read_text())
+            document.pop('softlimits', None)
+            document['monitoring']['stall'] = {
+                'enable': value, 'time': {'timeout': 10000, 'factor': 5.0},
+            }
+            with self.subTest(value=value), tempfile.TemporaryDirectory() as tmp:
+                source = Path(tmp) / 'stall.yaml'
+                source.write_text(self.yaml.safe_dump(document))
+                generated = '\n'.join(self.compare(source))
+                self.assertIn(f'Cfg.SetAxisMonEnableStallMon(${{ECMC_AXIS_NO}},{int(value)})',
+                              generated)
+                self.assertIn('Cfg.SetAxisMonStallMinTimeOut(${ECMC_AXIS_NO},10000)', generated)
+                self.assertIn('Cfg.SetAxisMonStallTimeFactor(${ECMC_AXIS_NO},5)', generated)
+
+    def test_stall_enable_rejects_non_binary_integer(self):
+        for value in (-1, 2):
+            document = self.yaml.safe_load((FIXTURES / 'virtual_monitoring.yaml').read_text())
+            document['monitoring']['stall'] = {'enable': value}
+            with self.subTest(value=value), tempfile.TemporaryDirectory() as tmp:
+                directory = Path(tmp)
+                source = directory / 'invalid-stall.yaml'
+                source.write_text(self.yaml.safe_dump(document))
+                for name, result, _ in self.render(source, directory):
+                    self.assertNotEqual(result.returncode, 0, name)
+                    self.assertIn('stall', result.stdout + result.stderr)
+
     def test_additional_encoder(self):
         with tempfile.TemporaryDirectory() as tmp:
             source = Path(tmp) / 'encoder.yaml'

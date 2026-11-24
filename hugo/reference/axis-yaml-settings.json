@@ -2748,11 +2748,11 @@
             "monitoring.stall.time.factor"
           ],
           "requirement": "optional",
-          "description": "Stall monitoring requires target monitoring. Both backends accept integer enable (1/0); Python also accepts boolean true/false. timeout is in EtherCAT cycles; factor is dimensionless.",
+          "description": "Stall monitoring requires target monitoring. Use boolean true/false with either backend; integer 1/0 is also accepted for compatibility. timeout is in EtherCAT cycles; factor is dimensionless.",
           "entries": [
             {
               "key": "monitoring.stall.enable",
-              "summary": "Integer 1/0 (both backends); boolean true/false also accepted by Python"
+              "summary": "Boolean true/false (preferred); integer 1/0 also accepted by both backends"
             },
             {
               "key": "monitoring.stall.time.timeout",

@@ -23,8 +23,8 @@ other displayed values are examples, not defaults. Verify all hardware links,
 limit polarity, scaling and monitoring before enabling motion. Do not use this
 illustration directly as a commissioned configuration.
 
-The example uses integer `1`/`0` for `monitoring.stall.enable`, supported by
-both backends. Python also accepts YAML boolean `true`/`false`.
+Boolean `true`/`false` is preferred for enable flags. For `monitoring.stall.enable`,
+both backends also accept integer `1`/`0` for backward compatibility.
 
 ## All YAML settings
 ```yaml
@@ -60,7 +60,7 @@ axis:
 #    enableTimeout: 5.0                                         # If defined, ecmc tries to auto-enable for a maximum enableTimeout seconds.; default: -1.0
 #    disableTimeout:   5.0                                      # If defined, ecmc disables axis after the configured idle timeout in seconds; default: -1.0
 #    autoDisableLatchAtTarget: false                            # Continue auto-disable timing after AtTarget has been reached once; default: false
-#    atStartup: True                                            # Auto enable axis at ioc start, default False
+#    atStartup: true                                            # Auto enable axis at ioc start, default False
 #  tweakDist: 2.0                                               # Tweak value (both ecmc interface and motor record tweak value); default: 1.0
 
 epics:
@@ -91,7 +91,7 @@ drive:
   status: ec0.s$(DRV_SLAVE).driveStatus01                       # Status word EtherCAT entry
   setpoint: ec0.s$(DRV_SLAVE).velocitySetpoint01                # Velocity setpoint if CSV. Position setpoint if CSP
 #  reduceTorque: 2                                              # Reduce torque bit in drive control word
-#  reduceTorqueEnable: True                                     # Enable reduce torque functionality
+#  reduceTorqueEnable: true                                     # Enable reduce torque functionality
 #  brake:
 #    enable: false
 #    output: ec0...                                             # Ethercat link to brake output
@@ -152,11 +152,11 @@ encoder:
 #    statusBit: 0                                               # Captured-event status bit; default: 0
 #    armCmd: 17                                                 # EL7062/ED7062 TP1 positive-edge arm command; default: 17
 #    armBits: 5                                                 # Number of bits written from armCmd; default: 5
-#  primary: True                                                # Use this encoder as primary (for control)
-#  useAsCSPDrvEnc: True                                         # Select encoder used for CSP drive position mapping (especially CSP_PC)
+#  primary: true                                                # Use this encoder as primary (for control)
+#  useAsCSPDrvEnc: true                                         # Select encoder used for CSP drive position mapping (especially CSP_PC)
 #  unit: mm                                                     # Optional encoder engineering unit
 #  desc: Main encoder                                           # Optional encoder description
-#  allowOverUnderFlow: True                                     # Allow over/under flow of encoder raw counter (default true). Set to false for linear encoders.
+#  allowOverUnderFlow: true                                     # Allow over/under flow of encoder raw counter (default true). Set to false for linear encoders.
 #  homing:
 #    type: 3                                                    # Homing sequence type
 #    position: -30                                              # Position to reference encoder to
@@ -292,7 +292,7 @@ monitoring:
 #      trajectory: 100                                          # Time allowed outside max diff velo before system init halt [cycles]
 #      drive: 200                                               # Time allowed outside max diff velo before system disables drive [cycles]
 #  stall:
-#    enable: 1                                                  # Enable stall monitoring. At target must be enabled for this functionality; 1 enables, 0 disables
+#    enable: true                                               # Enable stall monitoring. At target must be enabled for this functionality
 #    time:
 #      timeout: 10000                                           # If not at target after "timeout" cycles after trajectory generator is ready then drive will disable
 #      factor: 5.0                                              # Measures duration of last motion command (busy high edge to busy low edge). The new timeout will be defined as this duration multiplied by this factor. The timeout finally used for stall detection will be the longest (of time.timeout and calculated from time.factor).

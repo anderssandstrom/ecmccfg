@@ -1108,7 +1108,7 @@
     "identifier": "monitoring.stall",
     "schema": {
       "monitoring.stall.enable": {
-        "type": "integer"
+        "type": "boolean"
       },
       "monitoring.stall.time.timeout": {
         "type": "integer",

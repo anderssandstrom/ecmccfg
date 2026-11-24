@@ -4,8 +4,8 @@
 
 {%- if controller is defined %}
     {%- set controllerKp  = controller.Kp %}
-    {%- set controllerKi  = controller.Ki %}
-    {%- set controllerKd  = controller.Kd %}
+    {%- set controllerKi  = controller.Ki|default(0) %}
+    {%- set controllerKd  = controller.Kd|default(0) %}
     {%- set controllerKff = controller.Kff %}
 {%- else %}
     {%- set controllerKp  = 1.0 %}
@@ -15,8 +15,36 @@
 {%- endif %}
 
 ecmcConfigOrDie "Cfg.SetAxisCntrlKp(${ECMC_AXIS_NO},{{ controllerKp }})"
-ecmcConfigOrDie "Cfg.SetAxisCntrlKi(${ECMC_AXIS_NO},{{ controllerKi }})"
-ecmcConfigOrDie "Cfg.SetAxisCntrlKd(${ECMC_AXIS_NO},{{ controllerKd }})"
+{%- if (controller is defined) and (controller.TiMs is defined) %}
+    {%- if controller.Ki is defined %}
+        ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify only one of controller.Ki and controller.TiMs.")
+        ecmcExit
+    {%- elif controller.TiMs == 0 %}
+        ecmcConfigOrDie "Cfg.SetAxisCntrlKi(${ECMC_AXIS_NO},0)"
+    {%- else %}
+        epicsEnvUnset(ECMC_TMP_PID_KI)
+        ecmcEpicsEnvSetCalc("ECMC_TMP_PID_KI", "{{ controllerKp }}*1000/({{ controller.TiMs }}*${ECMC_EC_SAMPLE_RATE})", "%.15g")
+        ecmcConfigOrDie "Cfg.SetAxisCntrlKi(${ECMC_AXIS_NO},${ECMC_TMP_PID_KI})"
+        epicsEnvUnset(ECMC_TMP_PID_KI)
+    {%- endif %}
+{%- else %}
+    ecmcConfigOrDie "Cfg.SetAxisCntrlKi(${ECMC_AXIS_NO},{{ controllerKi }})"
+{%- endif %}
+{%- if (controller is defined) and (controller.TdMs is defined) %}
+    {%- if controller.Kd is defined %}
+        ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify only one of controller.Kd and controller.TdMs.")
+        ecmcExit
+    {%- elif controller.TdMs == 0 %}
+        ecmcConfigOrDie "Cfg.SetAxisCntrlKd(${ECMC_AXIS_NO},0)"
+    {%- else %}
+        epicsEnvUnset(ECMC_TMP_PID_KD)
+        ecmcEpicsEnvSetCalc("ECMC_TMP_PID_KD", "{{ controllerKp }}*{{ controller.TdMs }}*${ECMC_EC_SAMPLE_RATE}/1000", "%.15g")
+        ecmcConfigOrDie "Cfg.SetAxisCntrlKd(${ECMC_AXIS_NO},${ECMC_TMP_PID_KD})"
+        epicsEnvUnset(ECMC_TMP_PID_KD)
+    {%- endif %}
+{%- else %}
+    ecmcConfigOrDie "Cfg.SetAxisCntrlKd(${ECMC_AXIS_NO},{{ controllerKd }})"
+{%- endif %}
 ecmcConfigOrDie "Cfg.SetAxisCntrlKff(${ECMC_AXIS_NO},{{ controllerKff }})"
 
 {%- if (controller is defined) and (controller.resetIAtRmp is defined) %}
@@ -29,7 +57,49 @@ ecmcConfigOrDie "Cfg.SetAxisCntrlFreezeIAtRmp(${ECMC_AXIS_NO},{{ controller.free
 #- Set controller params for when near target
 {%- if (controller is defined) and (controller.inner is defined) %}
     {%- if controller.inner.tol is defined %}
-        ecmcConfigOrDie "Cfg.SetAxisCntrlInnerParams(${ECMC_AXIS_NO},{{ controller.inner.Kp|default(0) }},{{ controller.inner.Ki|default(0) }},{{ controller.inner.Kd|default(0) }},{{ controller.inner.tol }})"
+        {%- if (controller.inner.TiMs is defined) or (controller.inner.TdMs is defined) %}
+            {%- if ((controller.inner.TiMs is defined) and (controller.inner.Ki is defined)) or ((controller.inner.TdMs is defined) and (controller.inner.Kd is defined)) %}
+                ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify only one of controller.inner.Ki and TiMs, and only one of controller.inner.Kd and TdMs.")
+                ecmcExit
+            {%- else %}
+                {%- set innerKp = controller.inner.Kp|default(0) %}
+                {%- if controller.inner.TiMs is defined %}
+                    {%- if controller.inner.Ki is defined %}
+                        ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify only one of controller.inner.Ki and controller.inner.TiMs.")
+                        ecmcExit
+                    {%- else %}
+                        {%- if controller.inner.TiMs == 0 %}
+                            epicsEnvSet(ECMC_TMP_PID_INNER_KI,0)
+                        {%- else %}
+                            epicsEnvUnset(ECMC_TMP_PID_INNER_KI)
+                            ecmcEpicsEnvSetCalc("ECMC_TMP_PID_INNER_KI", "{{ innerKp }}*1000/({{ controller.inner.TiMs }}*${ECMC_EC_SAMPLE_RATE})", "%.15g")
+                        {%- endif %}
+                    {%- endif %}
+                {%- else %}
+                    epicsEnvSet(ECMC_TMP_PID_INNER_KI,{{ controller.inner.Ki|default(0) }})
+                {%- endif %}
+                {%- if controller.inner.TdMs is defined %}
+                    {%- if controller.inner.Kd is defined %}
+                        ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify only one of controller.inner.Kd and controller.inner.TdMs.")
+                        ecmcExit
+                    {%- else %}
+                        {%- if controller.inner.TdMs == 0 %}
+                            epicsEnvSet(ECMC_TMP_PID_INNER_KD,0)
+                        {%- else %}
+                            epicsEnvUnset(ECMC_TMP_PID_INNER_KD)
+                            ecmcEpicsEnvSetCalc("ECMC_TMP_PID_INNER_KD", "{{ innerKp }}*{{ controller.inner.TdMs }}*${ECMC_EC_SAMPLE_RATE}/1000", "%.15g")
+                        {%- endif %}
+                    {%- endif %}
+                {%- else %}
+                    epicsEnvSet(ECMC_TMP_PID_INNER_KD,{{ controller.inner.Kd|default(0) }})
+                {%- endif %}
+                ecmcConfigOrDie "Cfg.SetAxisCntrlInnerParams(${ECMC_AXIS_NO},{{ innerKp }},${ECMC_TMP_PID_INNER_KI},${ECMC_TMP_PID_INNER_KD},{{ controller.inner.tol }})"
+                epicsEnvUnset(ECMC_TMP_PID_INNER_KI)
+                epicsEnvUnset(ECMC_TMP_PID_INNER_KD)
+            {%- endif %}
+        {%- else %}
+            ecmcConfigOrDie "Cfg.SetAxisCntrlInnerParams(${ECMC_AXIS_NO},{{ controller.inner.Kp|default(0) }},{{ controller.inner.Ki|default(0) }},{{ controller.inner.Kd|default(0) }},{{ controller.inner.tol }})"
+        {%- endif %}
     {%- else  %}
          # WARNING: Controller inner tolerance not defined.
          ecmcLogBufferWrite("WARNING","Controller inner tolerance not defined.")

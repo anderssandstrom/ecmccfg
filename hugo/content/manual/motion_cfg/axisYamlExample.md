@@ -201,8 +201,10 @@ encoder:
 
 #controller:
 #  Kp: 1                                                        # Kp proportional gain; default: 1
-#  Ki: 0.001                                                    # Ki integral gain; default: 0
-#  Kd: 0                                                        # Kd derivative gain; default: 0
+#  TiMs: 1000                                                   # Integral time [ms]; alternative to Ki; 0 disables I
+#  TdMs: 0                                                      # Derivative time [ms]; alternative to Kd; 0 disables D
+#  Ki: 0.001                                                    # Direct integral gain; default 0; do not combine with TiMs
+#  Kd: 0                                                        # Direct derivative gain; default 0; do not combine with TdMs
 #  Kff: 1                                                       # Feed forward gain; default: 1
 #  resetIAtRmp: false                                           # Reset I-part while an internal trajectory is busy; default: no command if omitted
 #  freezeIAtRmp: false                                          # Freeze I-part while an internal trajectory is busy; default: no command if omitted
@@ -216,8 +218,10 @@ encoder:
 #    maxIntegral: 100                                           # Maximum integral output
 #  inner:
 #    Kp: 0.1                                                    # Kp for when close to target; default: 1.0
-#    Ki: 0.1                                                    # Ki for when close to target; default: 0
-#    Kd: 0.1                                                    # Kd for when close to target; default: 0
+#    TiMs: 1                                                    # Inner integral time [ms]; alternative to inner.Ki
+#    TdMs: 1                                                    # Inner derivative time [ms]; alternative to inner.Kd
+#    Ki: 0.1                                                    # Direct inner integral gain; default 0
+#    Kd: 0.1                                                    # Direct inner derivative gain; default 0
 #    tol: 0.1                                                   # Distance band for inner PID; schema default 0
 
 trajectory:

@@ -403,8 +403,10 @@ class Schema:
         'required': False,
         'schema': {
             'Kp': {'type': 'float', 'default': 1., 'min': 0},
-            'Ki': {'type': 'float', 'default': 0., 'min': 0},
-            'Kd': {'type': 'float', 'default': 0., 'min': 0},
+            'Ki': {'type': 'float', 'min': 0},
+            'TiMs': {'type': 'float', 'min': 0},
+            'Kd': {'type': 'float', 'min': 0},
+            'TdMs': {'type': 'float', 'min': 0},
             'Kff': {'type': 'float', 'default': 1., 'min': 0},
             'resetIAtRmp': {'type': 'boolean', 'coerce': normalize_boolean, 'required': False},
             'freezeIAtRmp': {'type': 'boolean', 'coerce': normalize_boolean, 'required': False},
@@ -413,8 +415,10 @@ class Schema:
                 'required': False,
                 'schema': {
                     'Kp': {'type': 'float', 'default': 1., 'min': 0},
-                    'Ki': {'type': 'float', 'default': 0., 'min': 0},
-                    'Kd': {'type': 'float', 'default': 0., 'min': 0},
+                    'Ki': {'type': 'float', 'min': 0},
+                    'TiMs': {'type': 'float', 'min': 0},
+                    'Kd': {'type': 'float', 'min': 0},
+                    'TdMs': {'type': 'float', 'min': 0},
                     'tol': {'type': 'float', 'default': 0., 'min': 0},
                 }
             },

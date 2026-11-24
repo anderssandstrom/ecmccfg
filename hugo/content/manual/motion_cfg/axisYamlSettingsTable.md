@@ -176,8 +176,10 @@ Reference for [Axis YAML configuration](../axisyaml/), grouped by section. Types
 | Key | Type (ECB schema) | Description | Requirement | Default |
 | --- | --- | --- | --- | --- |
 | `controller.Kp` | integer / float | Kp proportional gain — Proportional gain. | optional | 1 |
-| `controller.Ki` | integer / float | Ki integral gain — Integral gain. | optional | 0 |
-| `controller.Kd` | integer / float | Kd derivative gain — Derivative gain. | optional | 0 |
+| `controller.Ki` | integer / float | Ki integral gain; alternative to controller.TiMs. — Integral gain. controller.TiMs is an optional alternative to controller.Ki. | optional | 0 |
+| `controller.TiMs` | integer / float | Integral time in milliseconds; Ki = 1000*Kp/(sampleRateHz*TiMs). Zero disables I. Alternative to controller.Ki; do not specify both. | optional | — |
+| `controller.Kd` | integer / float | Kd derivative gain; alternative to controller.TdMs. — Derivative gain. controller.TdMs is an optional alternative to controller.Kd. | optional | 0 |
+| `controller.TdMs` | integer / float | Derivative time in milliseconds; Kd = Kp*TdMs*sampleRateHz/1000. Zero disables D. Alternative to controller.Kd; do not specify both. | optional | — |
 | `controller.Kff` | integer / float | Feed forward gain — Feed-forward gain. | optional | 1 |
 | `controller.resetIAtRmp` | boolean | Reset the integral part to zero while an internal trajectory is busy. | optional | no command if omitted |
 | `controller.freezeIAtRmp` | boolean | Freeze the integral part at its current value while an internal trajectory is busy. | optional | no command if omitted |
@@ -188,10 +190,12 @@ Reference for [Axis YAML configuration](../axisyaml/), grouped by section. Types
 | `controller.limits.maxOutput` | integer / float | Maximum controller output. Output limiting is active only when `maxOutput > minOutput`; `minOutput=0` and `maxOutput=0` disables it. | optional | — |
 | `controller.limits.minIntegral` | integer / float | Minimum integral output. Integral limiting is active only when `maxIntegral > minIntegral`; `minIntegral=0` and `maxIntegral=0` disables it. — Integral clamps. Active only when `maxIntegral > minIntegral`; both `0` disables the limits. | optional | — |
 | `controller.limits.maxIntegral` | integer / float | Maximum integral output. Integral limiting is active only when `maxIntegral > minIntegral`; `minIntegral=0` and `maxIntegral=0` disables it. | optional | — |
-| `controller.inner.Kp` | integer / float | Inner PID used near target. Defaults when inner is present: Kp=1, Ki=0, Kd=0, tol=0; set tol explicitly to select the inner control band. | optional | 1.0 |
-| `controller.inner.Ki` | integer / float | Inner PID used near target. Defaults when inner is present: Kp=1, Ki=0, Kd=0, tol=0; set tol explicitly to select the inner control band. | optional | 0 |
-| `controller.inner.Kd` | integer / float | Inner PID used near target. Defaults when inner is present: Kp=1, Ki=0, Kd=0, tol=0; set tol explicitly to select the inner control band. | optional | 0 |
-| `controller.inner.tol` | integer / float | Inner PID used near target. Defaults when inner is present: Kp=1, Ki=0, Kd=0, tol=0; set tol explicitly to select the inner control band. | optional | 0 |
+| `controller.inner.Kp` | integer / float | Inner PID used near target. Defaults when inner is present: Kp=1, Ki=0, Kd=0, tol=0; set tol explicitly to select the inner control band. controller.inner.TiMs is an optional alternative to controller.inner.Ki. controller.inner.TdMs is an optional alternative to controller.inner.Kd. | optional | 1.0 |
+| `controller.inner.Ki` | integer / float | Direct discrete gain; alternative to controller.inner.TiMs. | optional | 0 |
+| `controller.inner.Kd` | integer / float | Direct discrete gain; alternative to controller.inner.TdMs. | optional | 0 |
+| `controller.inner.tol` | integer / float | Inner PID used near target. Defaults when inner is present: Kp=1, Ki=0, Kd=0, tol=0; set tol explicitly to select the inner control band. controller.inner.TiMs is an optional alternative to controller.inner.Ki. controller.inner.TdMs is an optional alternative to controller.inner.Kd. | optional | 0 |
+| `controller.inner.TiMs` | integer / float | Integral time in milliseconds; Ki = 1000*Kp/(sampleRateHz*TiMs). Zero disables I. Alternative to controller.inner.Ki; do not specify both. | optional | — |
+| `controller.inner.TdMs` | integer / float | Derivative time in milliseconds; Kd = Kp*TdMs*sampleRateHz/1000. Zero disables D. Alternative to controller.inner.Kd; do not specify both. | optional | — |
 
 ## trajectory
 

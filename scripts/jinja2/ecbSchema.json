@@ -818,12 +818,10 @@
         "type": "integer float"
       },
       "controller.Ki": {
-        "default": 0,
         "min": 0,
         "type": "integer float"
       },
       "controller.Kd": {
-        "default": 0,
         "min": 0,
         "type": "integer float"
       },
@@ -864,6 +862,16 @@
         "type": "integer float",
         "required": false,
         "min": 0
+      },
+      "controller.TiMs": {
+        "type": "integer float",
+        "min": 0,
+        "required": false
+      },
+      "controller.TdMs": {
+        "type": "integer float",
+        "min": 0,
+        "required": false
       }
     }
   },
@@ -876,12 +884,10 @@
         "type": "integer float"
       },
       "controller.inner.Ki": {
-        "default": 0,
         "min": 0,
         "type": "integer float"
       },
       "controller.inner.Kd": {
-        "default": 0,
         "min": 0,
         "type": "integer float"
       },
@@ -889,6 +895,16 @@
         "default": 0,
         "min": 0,
         "type": "integer float"
+      },
+      "controller.inner.TiMs": {
+        "type": "integer float",
+        "min": 0,
+        "required": false
+      },
+      "controller.inner.TdMs": {
+        "type": "integer float",
+        "min": 0,
+        "required": false
       }
     }
   },

@@ -521,8 +521,10 @@ The `controller` section is optional. Defaults are `Kp: 1`, `Ki: 0`,
 
 optional
 - `Kp`: proportional; default 1
-- `Ki`: integral; default 0
-- `Kd`: differential; default 0
+- `Ki`: discrete integral gain; default 0; alternatively specify `TiMs`
+- `Kd`: discrete derivative gain; default 0; alternatively specify `TdMs`
+- `TiMs`: integral time in milliseconds; 0 disables integral action
+- `TdMs`: derivative time in milliseconds; 0 disables derivative action
 - `Kff`: feed forward; default 1
 - `resetIAtRmp`: Reset the integral part to zero while the internal trajectory is busy; default false
 - `freezeIAtRmp`: Keep the current integral part unchanged while the internal trajectory is busy; default false
@@ -539,6 +541,65 @@ optional
   - `Kp`: Kp for when close to target
   - `Ki`: Ki for when close to target
   - `Kd`: Kd for when close to target
+  - `TiMs`, `TdMs`: alternative time constants using `inner.Kp`
+
+### PID time constants and sample-rate conversion
+
+The ECMC controller uses discrete gains directly. With error \(e[n]\) at
+sample \(n\), its unconstrained PID contributions are:
+
+\[
+P[n] = K_p e[n], \qquad
+I[n] = I[n-1] + K_i e[n], \qquad
+D[n] = K_d(e[n]-e[n-1]).
+\]
+
+For the ideal PID form, \(K_p(e + (1/T_i)\int e\,dt + T_d\,de/dt)\),
+rectangular integration and backward differentiation with sampling period
+\(T_s=1/f_s\) give the ECMC gains:
+
+\[
+K_i = K_p\frac{T_s}{T_i}, \qquad
+K_d = K_p\frac{T_d}{T_s}.
+\]
+
+For the YAML time constants in milliseconds and the ECMC sample rate
+\(f_s\) in Hz, the conversion is therefore:
+
+\[
+K_i = \frac{1000K_p}{f_s T_{i,\mathrm{ms}}}, \qquad
+K_d = \frac{K_p T_{d,\mathrm{ms}} f_s}{1000}.
+\]
+
+For clarity, in plain text: Ki = Kp * 1000 / (sampleRateHz * TiMs);
+Kd = Kp * TdMs * sampleRateHz / 1000.
+
+The IOC computes these gains once at configuration time using
+`ecmcEpicsEnvSetCalc` and `${ECMC_EC_SAMPLE_RATE}`.
+The inner controller uses its own proportional gain in exactly the same
+equations. Runtime changes to Kp or the gains do not recalculate the
+time constants automatically. This preserves the nominal continuous-time
+PID tuning across sampling rates, but does not guarantee identical closed-loop
+behavior: sampling, delay, saturation, and integral reset/freeze still matter.
+
+Use either Ki or TiMs, and either Kd or TdMs, not both for the same term.
+Negative time constants are invalid. By convention TiMs: 0 disables the
+integrator rather than dividing by zero; TdMs: 0 disables the derivative.
+Omitting both forms of either gain retains its previous zero default.
+Direct Ki and Kd settings are supported without a warning. With Kp = 0,
+the time-constant form yields zero integral and derivative gains; use
+direct gains for independent I or D action.
+
+Example: Kp = 10, TiMs = 200 and TdMs = 5.
+
+| ECMC sample rate | Sample period | Ki | Kd |
+| --- | --- | --- | --- |
+| 500 Hz | 2 ms | 0.1 | 25 |
+| 1000 Hz | 1 ms | 0.05 | 50 |
+| 2000 Hz | 0.5 ms | 0.025 | 100 |
+
+The conversion follows the discrete implementation in
+[ecmcPIDController.cpp (v11.2.0)](https://github.com/epics-modules/ecmc/blob/v11.2.0/devEcmcSup/motion/ecmcPIDController.cpp).
 
 Limit handling for `controller.limits`:
 
@@ -554,8 +615,10 @@ both `resetIAtRmp` and `freezeIAtRmp` are enabled, reset takes precedence.
 ```yaml
 controller:
   Kp:  90
-  #Ki:  0.1
-  #Kd:  0
+  #TiMs: 900  # Integral time [ms]; alternative to Ki
+  #TdMs: 0    # Derivative time [ms]; alternative to Kd
+  #Ki:  0.1   # Alternative direct gain (do not combine with TiMs)
+  #Kd:  0     # Alternative direct gain (do not combine with TdMs)
   #Kff: 1
   #resetIAtRmp: false
   #freezeIAtRmp: false
@@ -569,8 +632,10 @@ controller:
   #  maxIntegral: 100
   #inner:
   #  Kp: 0.1
-  #  Ki: 0.1
-  #  Kd: 0.1
+  #  TiMs: 1  # Alternative to inner.Ki
+  #  TdMs: 1  # Alternative to inner.Kd
+  #  Ki: 0.1  # Direct discrete gain alternative
+  #  Kd: 0.1  # Direct discrete gain alternative
   #  tol: 0.1
 ```
 

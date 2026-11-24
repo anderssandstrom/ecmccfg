@@ -1832,29 +1832,41 @@
         },
         {
           "keys": [
-            "controller.Ki"
+            "controller.Ki",
+            "controller.TiMs"
           ],
           "requirement": "optional",
-          "description": "Integral gain.",
+          "description": "Integral gain. controller.TiMs is an optional alternative to controller.Ki.",
           "entries": [
             {
               "key": "controller.Ki",
-              "summary": "Ki integral gain",
+              "summary": "Ki integral gain; alternative to controller.TiMs.",
               "default": "0"
+            },
+            {
+              "key": "controller.TiMs",
+              "summary": "Integral time in milliseconds; Ki = 1000*Kp/(sampleRateHz*TiMs). Zero disables I. Alternative to controller.Ki; do not specify both.",
+              "default": "—"
             }
           ]
         },
         {
           "keys": [
-            "controller.Kd"
+            "controller.Kd",
+            "controller.TdMs"
           ],
           "requirement": "optional",
-          "description": "Derivative gain.",
+          "description": "Derivative gain. controller.TdMs is an optional alternative to controller.Kd.",
           "entries": [
             {
               "key": "controller.Kd",
-              "summary": "Kd derivative gain",
+              "summary": "Kd derivative gain; alternative to controller.TdMs.",
               "default": "0"
+            },
+            {
+              "key": "controller.TdMs",
+              "summary": "Derivative time in milliseconds; Kd = Kp*TdMs*sampleRateHz/1000. Zero disables D. Alternative to controller.Kd; do not specify both.",
+              "default": "—"
             }
           ]
         },
@@ -1972,10 +1984,12 @@
             "controller.inner.Kp",
             "controller.inner.Ki",
             "controller.inner.Kd",
-            "controller.inner.tol"
+            "controller.inner.tol",
+            "controller.inner.TiMs",
+            "controller.inner.TdMs"
           ],
           "requirement": "optional",
-          "description": "Inner PID used near target. Defaults when inner is present: Kp=1, Ki=0, Kd=0, tol=0; set tol explicitly to select the inner control band.",
+          "description": "Inner PID used near target. Defaults when inner is present: Kp=1, Ki=0, Kd=0, tol=0; set tol explicitly to select the inner control band. controller.inner.TiMs is an optional alternative to controller.inner.Ki. controller.inner.TdMs is an optional alternative to controller.inner.Kd.",
           "entries": [
             {
               "key": "controller.inner.Kp",
@@ -1984,18 +1998,28 @@
             },
             {
               "key": "controller.inner.Ki",
-              "summary": "",
+              "summary": "Direct discrete gain; alternative to controller.inner.TiMs.",
               "default": "0"
             },
             {
               "key": "controller.inner.Kd",
-              "summary": "",
+              "summary": "Direct discrete gain; alternative to controller.inner.TdMs.",
               "default": "0"
             },
             {
               "key": "controller.inner.tol",
               "summary": "",
               "default": "0"
+            },
+            {
+              "key": "controller.inner.TiMs",
+              "summary": "Integral time in milliseconds; Ki = 1000*Kp/(sampleRateHz*TiMs). Zero disables I. Alternative to controller.inner.Ki; do not specify both.",
+              "default": "—"
+            },
+            {
+              "key": "controller.inner.TdMs",
+              "summary": "Derivative time in milliseconds; Kd = Kp*TdMs*sampleRateHz/1000. Zero disables D. Alternative to controller.inner.Kd; do not specify both.",
+              "default": "—"
             }
           ]
         }

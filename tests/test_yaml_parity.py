@@ -186,6 +186,46 @@ class YamlParityTests(unittest.TestCase):
             self.assertIn('ecmcExit', generated)
             self.assertNotIn('Cfg.SetAxisMonAtTargetTime(', generated)
 
+    def test_pid_time_constants(self):
+        base = self.yaml.safe_load((FIXTURES / 'physical_csv.yaml').read_text())
+        for controller in (
+            dict(Kp=10, TiMs=200, TdMs=5, inner=dict(Kp=5, TiMs=500, TdMs=0, tol=.01)),
+            dict(Kp=10, TiMs=0, TdMs=0),
+            dict(Kp=10, Ki=.05, Kd=50),
+            dict(Kp=10, Ki=.05, TdMs=5),
+        ):
+            document = copy.deepcopy(base)
+            document['controller'] = controller
+            with self.subTest(controller=controller), tempfile.TemporaryDirectory() as tmp:
+                source = Path(tmp) / 'pid.yaml'
+                source.write_text(self.yaml.safe_dump(document))
+                for name, process, output in self.render(source, Path(tmp)):
+                    self.assertEqual(process.returncode, 0, name + process.stderr)
+                    generated = '\n'.join(commands(output))
+                    self.assertNotIn('ecmcExit', generated)
+                    if controller.get('TiMs') == 200:
+                        self.assertRegex(generated, r'10(?:\.0)?\*1000/\(200(?:\.0)?\*\$\{ECMC_EC_SAMPLE_RATE\}\)')
+                        self.assertRegex(generated, r'5(?:\.0)?\*1000/\(500(?:\.0)?\*\$\{ECMC_EC_SAMPLE_RATE\}\)')
+                    if controller.get('TdMs') == 5:
+                        self.assertRegex(generated, r'10(?:\.0)?\*5(?:\.0)?\*\$\{ECMC_EC_SAMPLE_RATE\}/1000')
+                    if controller.get('TiMs') == 0:
+                        self.assertIn('Cfg.SetAxisCntrlKi(${ECMC_AXIS_NO},0)', generated)
+                    if controller.get('TdMs') == 0:
+                        self.assertIn('Cfg.SetAxisCntrlKd(${ECMC_AXIS_NO},0)', generated)
+
+    def test_pid_time_constant_conflicts(self):
+        for controller in (dict(Ki=0, TiMs=100), dict(Kd=0, TdMs=5),
+                           dict(inner=dict(tol=.1, Ki=0, TiMs=100))):
+            document = self.yaml.safe_load((FIXTURES / 'physical_csv.yaml').read_text())
+            document['controller'] = controller
+            with self.subTest(controller=controller), tempfile.TemporaryDirectory() as tmp:
+                source = Path(tmp) / 'pid-conflict.yaml'
+                source.write_text(self.yaml.safe_dump(document))
+                for name, process, output in self.render(source, Path(tmp)):
+                    self.assertEqual(process.returncode, 0, name + process.stderr)
+                    self.assertIn('Specify only one', output)
+                    self.assertIn('ecmcExit', output)
+
     def test_additional_encoder(self):
         with tempfile.TemporaryDirectory() as tmp:
             source = Path(tmp) / 'encoder.yaml'

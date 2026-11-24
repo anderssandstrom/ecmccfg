@@ -187,8 +187,8 @@ unchanged. Both reference views are generated from the same audited source.
 ## controller
 
 - `controller.Kp` (optional) — Proportional gain. Defaults: `controller.Kp`: 1.
-- `controller.Ki` (optional) — Integral gain. Defaults: `controller.Ki`: 0.
-- `controller.Kd` (optional) — Derivative gain. Defaults: `controller.Kd`: 0.
+- `controller.Ki` / `controller.TiMs` (optional) — Integral gain. controller.TiMs is an optional alternative to controller.Ki. Defaults: `controller.Ki`: 0; `controller.TiMs`: —.
+- `controller.Kd` / `controller.TdMs` (optional) — Derivative gain. controller.TdMs is an optional alternative to controller.Kd. Defaults: `controller.Kd`: 0; `controller.TdMs`: —.
 - `controller.Kff` (optional) — Feed-forward gain. Defaults: `controller.Kff`: 1.
 - `controller.resetIAtRmp` (optional) — Reset the integral part to zero while an internal trajectory is busy. Defaults: `controller.resetIAtRmp`: no command if omitted.
 - `controller.freezeIAtRmp` (optional) — Freeze the integral part at its current value while an internal trajectory is busy. Defaults: `controller.freezeIAtRmp`: no command if omitted.
@@ -196,7 +196,7 @@ unchanged. Both reference views are generated from the same audited source.
 - `controller.deadband.time` / `controller.deadband.timeMs` (optional) — Deadband time in EtherCAT cycles; supply together with tol. Millisecond alternatives are preferred; do not specify both forms of the same parameter.
 - `controller.limits.minOutput` / `controller.limits.maxOutput` (optional) — Output clamps. Active only when `maxOutput > minOutput`; both `0` disables the limits.
 - `controller.limits.minIntegral` / `controller.limits.maxIntegral` (optional) — Integral clamps. Active only when `maxIntegral > minIntegral`; both `0` disables the limits.
-- `controller.inner.Kp` / `controller.inner.Ki` / `controller.inner.Kd` / `controller.inner.tol` (optional) — Inner PID used near target. Defaults when inner is present: Kp=1, Ki=0, Kd=0, tol=0; set tol explicitly to select the inner control band. Defaults: `controller.inner.Kp`: 1.0; `controller.inner.Ki`: 0; `controller.inner.Kd`: 0; `controller.inner.tol`: 0.
+- `controller.inner.Kp` / `controller.inner.Ki` / `controller.inner.Kd` / `controller.inner.tol` / `controller.inner.TiMs` / `controller.inner.TdMs` (optional) — Inner PID used near target. Defaults when inner is present: Kp=1, Ki=0, Kd=0, tol=0; set tol explicitly to select the inner control band. controller.inner.TiMs is an optional alternative to controller.inner.Ki. controller.inner.TdMs is an optional alternative to controller.inner.Kd. Defaults: `controller.inner.Kp`: 1.0; `controller.inner.Ki`: 0; `controller.inner.Kd`: 0; `controller.inner.tol`: 0; `controller.inner.TiMs`: —; `controller.inner.TdMs`: —.
 
 ## trajectory
 

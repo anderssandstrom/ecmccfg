@@ -8,7 +8,7 @@ chapter = false
 This annotated example collects the available settings in one place. Adapt the
 hardware entries, macros, values, and enabled features to your configuration.
 Use the [axis YAML configuration guide]({{< relref "/manual/motion_cfg/axisYaml.md" >}})
-for explanations and the [settings table]({{< relref "/manual/motion_cfg/axisYamlSettingsTable.md" >}})
+for explanations and the [settings reference]({{< relref "/manual/motion_cfg/axisYamlSettingsTable.md" >}})
 for key lookup. This example includes optional and alternative settings; it is
 not a minimal configuration to run unchanged.
 
@@ -16,16 +16,16 @@ The example uses the Python loader's boolean syntax for `monitoring.stall.enable
 With ECB, change that value to integer `1` (or `0` to disable): the current ECB
 schema uses an integer for this field while the Python schema uses a boolean.
 
-## All yaml settings
-```
+## All YAML settings
+```yaml
 axis:
   id: 1                                               # Axis id
   type: joint                                         # physical axis (1); virtual/end_effector is 2
   mode: CSV                                           # CSV, CSP or CSP_PC; default CSV
   # Please switch to ecmc auto-enable/disable (axis.autoEnable) instead of the motor record.
-  parameters: 'axisPar' # additional parameters       # Additional params to motor record driver
-  #                                                       "powerAutoOnOff=<value>;"  //2: What you want, 1:do not use, 0 to disable
-  #                                                       "powerOffDelay=<value>:"
+  parameters: ''                                      # Optional semicolon-terminated motor driver options
+  #                                                       "powerAutoOnOff=<value>;"  # Legacy motor-record auto-power: 2 for automatic, 0 to disable; prefer axis.autoEnable
+  #                                                       "powerOffDelay=<value>;"
   #                                                       "powerOnDelay=<value>;"
   healthOutput: ec0...                                # EtherCAT entry for health output
   feedSwitchesOutput: ec0...                          # EtherCAT entry for fed switches
@@ -35,8 +35,8 @@ axis:
   autoMode:                                           # Switch drive modes automatically for normal motion and homing (smaract for instance)
     modeSet: ec0..                                    # EtherCAT entry drive mode write (set CSV,CSP,homing)
     modeAct: ec0..                                    # EtherCAT entry drive mode reading (set CSV,CSP,homing)
-    modeCmdMotion: 9                                  # Drive mode value for normal motion (written to axis.drvMode.modeSet when normal motion)
-    modeCmdHome: 10                                   # Drive mode value for when homing (written to axis.drvMode.modeSet when homing)
+    modeCmdMotion: 9                                  # Drive-specific normal-motion mode (CiA 402 CSV = 9)
+    modeCmdHome: 6                                    # Drive-specific homing mode (CiA 402 homing = 6; check device)
   features:
     blockCom: false                                   # Block communication to axis
     allowSrcChangeWhenEnabled: false                  # Allow traj/enc source change when axis is enabled
@@ -48,7 +48,7 @@ axis:
       positioning: true                               # Allow positioning
   autoEnable:                                         # ecmc auto enable of axis (Please use this instead of motor record version..)
     enableTimeout: 5.0                                # If defined, ecmc tries to auto-enable for a maximum enableTimeout seconds.
-    disableTimeout:   5.0                             # If defined, ecmc disables axis after idle (non busy) in disableTime seconds
+    disableTimeout:   5.0                             # If defined, ecmc disables axis after the configured idle timeout in seconds
     autoDisableLatchAtTarget: false                   # Continue auto-disable timing after AtTarget has been reached once
     atStartup: True                                   # Auto enable axis at ioc start, default False
   tweakDist: 2.0                                      # Tweak value (both ecmc interface and motor record tweak value)
@@ -59,21 +59,21 @@ epics:
   description: very important motor axis              # Axis description
   unit: mm                                            # Unit
   motorRecord:
-    enable: true
-    description: This is MR
+    enable: true                                      # Create an EPICS motor record (default true)
+    description: This is MR                           # Motor record description
     fieldInit: 'RRES=1.0,RTRY=2,RMOD=1,UEIP=0,RDBD=0.1,URIP=1,RDBL=$(IOC):$(ECMC_MOTOR_NAME)-PosActSim' # Extra config for Motor record
     syncSoftLimits: false                             # Optional: Sync softlimits between motor and ecmc (default false).
                                                       # On false->true, ecmc soft limits are copied to the motor record.
                                                       # While true, later motor record soft-limit changes are written back to ecmc.
-    restoreSoftLimits: false                          # Startup-only: autosave motor DLLM/DHLM overrides ecmc limits and enables sync
+    restoreSoftLimits: false                          # Startup-only: restore motor dial limits DLLM/DHLM; syncSoftLimits decides whether they also replace ECMC limits
     pvt:
       npoints: 1000                                   # Maximum PVT target points
       nreadback: 1000                                 # Maximum PVT readback points
 
 drive:
-  numerator: 360                                      # Fastest speed in engineering units
-  denominator: 4096                                   # I/O range for ECMC_EC_ALIAS_DRV_VELO_SET
-  type: 0                                             # Stepper: 0. DS402: 1 (DS402 = servos and advanced stepper drives)
+  numerator: 360                                      # Engineering-unit scaling numerator (velocity in CSV, position in CSP)
+  denominator: 4096                                   # Raw drive-unit scaling denominator; scale = numerator / denominator
+  type: 0                                             # 0: simple bit-controlled drive; 1: CiA 402 drive
   control: ec0.s$(DRV_SLAVE).driveControl01           # Control word EtherCAT entry
   enable: 0                                           # Enable bit index in control word (not used if DS402)
   enabled: 1                                          # Enabled bit index in status word (not used if DS402)
@@ -92,6 +92,12 @@ drive:
     - 3                                               # Error bit 0; omit unused list items
     - 7                                               # Error bit 1
     - 14                                              # Error bit 2
+  # Optional position-dependent CSV drive-output compensation (not encoder correction).
+  # lookuptable:
+  #   filename: ./cfg/drive.corr                       # Compensation table file
+  #   enable: true                                    # Enable compensation
+  #   scale: 1.0                                      # Scale or invert compensation
+  #   range: 360.0                                    # Optional modulo range [axis engineering units]
 
 encoder:
   numerator: 360                                      # Scaling numerator example 360 deg/rev
@@ -100,10 +106,10 @@ encoder:
   bits: 16                                            # Total bit count of encoder raw data
   absBits: 0                                          # Absolute bit count (for absolute encoders) always least significant part of 'bits'
   absOffset: 0                                        # Encoder offset in eng units (for absolute encoders)
-  mask: '0xFFF00'                                     # Mask applied to raw encoder value
+  mask: '0xFFF00'                                     # Select raw encoder position bits; match mask and bit count to hardware
   position: ec0.s$(ENC_SLAVE).positionActual01        # EtherCAT entry for actual position input (encoder)
-  control: ec0.s$(ENC_SLAVE).encoderControl01         # mandatory only if 'reset' is used
-  status: ec0.s$(DRV_SLAVE).encoderStatus01           # mandatory only if 'warning' or 'error' are used
+  control: ec0.s$(ENC_SLAVE).encoderControl01         # Control word required for reset or control-word-based latch
+  status: ec0.s$(ENC_SLAVE).encoderStatus01           # Required for ready, warning, error or status-word-based latch
   ready: 10                                           # Bit in encoder status word for encoder ready
   source: 0                                           # 0 = Encoder value from EtherCAT hardware, 1 = Encoder value from PLC
   reset: 1                                            # Reset   (optional)
@@ -136,7 +142,7 @@ encoder:
     armCmd: 17                                        # EL7062/ED7062 TP1 positive-edge arm command
     armBits: 5                                        # Number of bits written from armCmd
   primary: True                                       # Use this encoder as primary (for control)
-  useAsCSPDrvEnc: True                                # Use this encoder as CSP drive encoder (ecmc controller enabled in CSP)
+  useAsCSPDrvEnc: True                                # Select encoder used for CSP drive position mapping (especially CSP_PC)
   unit: mm                                            # Optional encoder engineering unit
   desc: Main encoder                                  # Optional encoder description
 # allowOverUnderFlow: True                            # Allow over/under flow of encoder raw counter (default true). Set to false for linear encoders.
@@ -148,14 +154,15 @@ encoder:
       from: 5                                         # Velocity from cam/sensor (used for some homing seqs)
     acceleration: 20                                  # Acceleration during homing
     deceleration: 100                                 # Deceleration during homing
-    refToEncIDAtStartup: 1                            # At startup then set the start value of this encoder to actpos of this encoder id
+    refToEncIDAtStartup: 1                            # Reference this encoder at startup to the actual position of the specified encoder ID
     refAtHome: 1                                      # If homing is executed then set position of this encoder
     tolToPrim: 0                                      # If set then this is the max allowed tolerance between prim encoder and this encoder
-    postMoveEnable: yes                               # Enable move after successful homing
+    postMoveEnable: true                               # Enable move after successful homing
     postMovePosition: 10                              # Position to move to after successful homing
     trigg: ec0..                                      # EtherCAT entry for triggering drive internal homing seq (seq id 26)
     ready: ec0..                                      # EtherCAT entry for reading drive internal homing seq ready (seq id 26)
-    latchCount: 1                                     # latch number to ref on (1=ref on first latch)
+    latchCount: 1                                     # Latch number to reference on (1 = first latch)
+    timeout: 30                                       # Homing sequence timeout [s]
   delayComp:                                          # Delay compensation for time between application of setpoint to reading of encoder (normally at least 1 cycle)
     time: 1.5                                         # Delay time between set and act [cycles]
 #    enable: true                                     # enable (defaults to 1 if not set)
@@ -168,12 +175,12 @@ encoder:
     enable: false
     output: ec0.s$(PWR_SLAVE).binaryOutput01
     activeHigh: true
-    idleDelay: 5.0                                    # Seconds idle before power is removed
-    startupDelay: 0.5                                 # Seconds after power-on before checking ready
-    startupTimeout: 5.0                               # Seconds allowed for encoder ready
+    idleDelay: 5.0                                    # Continuous at-target / required deadband dwell before power-off [s]
+    startupDelay: 0.5                                 # Minimum encoder warm-up time after power-on [s]
+    startupTimeout: 5.0                               # Maximum wake-up time [s]; must exceed startupDelay
     backup:
-      encoder: 1                                      # Encoder index used while the absolute encoder is off
-      maxPositionDifference: 0.1                     # Maximum accepted wake-up position difference
+      encoder: 1                                      # Always-powered incremental backup encoder index (1–8)
+      maxPositionDifference: 0.1                     # Maximum accepted wake-up position difference [engineering units]
 
 controller:
   Kp: 1                                               # Kp proportional gain
@@ -184,7 +191,7 @@ controller:
 #  freezeIAtRmp: false                                 # Freeze I-part while an internal trajectory is busy
 #  deadband:
 #    tol: 0.01                                         # Stop control if within this distance from target for the below time
-#    time: 100
+#    time: 100                                        # Time inside controller deadband [EtherCAT cycles]
 #  limits:
 #    minOutput: -100                                   # Minimum controller output
 #    maxOutput: 100                                    # Maximum controller output
@@ -207,10 +214,10 @@ trajectory:
     jerk: 10                                          # Default jerk for axis
   jog:
     velocity: 5                                       # Default velocity for JOG (motor record)
-    acceleration: 1                                   # Optional JOG acceleration
+    acceleration: 1                                   # Optional jog acceleration
   modulo:
     range: 360                                        # Modulo range 0..360
-    type: 0                                           # Modulo type
+    type: 0                                           # Modulo motion type; select the mode required by the application
 
 positionCompare:                                      # Optional timed output at a position crossing
   output: ec0.s$(OUT_SLAVE).binaryOutput01            # Output value entry, for example EL2252 BO1
@@ -227,9 +234,9 @@ positionCompare:                                      # Optional timed output at
 
 input:
   limit:
-    forward: ec0.s$(ENC_SLAVE).ONE.0                  # EtherCAT entry for low limit switch input,
+    forward: ec0.s$(ENC_SLAVE).ONE.0                  # EtherCAT entry for forward (high) limit switch
     forwardPolarity: 0                                # Polarity of forward limit switch
-    backward: ec0.s1.BI_2.0                           # EtherCAT entry for high limit switch input
+    backward: ec0.s1.BI_2.0                           # EtherCAT entry for backward (low) limit switch
     backwardPolarity: 0                               # Polarity of backward limit switch
     latchInput: false                                 # Latch limit input activation when supported
   home: 'ec0.s$(MCS2_SLAVE_NUM).ONE.0'                # EtherCAT entry for home switch
@@ -245,9 +252,9 @@ input:
 softlimits:
   enable: false                                       # Enable soft limits
   forward: 100                                        # Soft limit position fwd
-  forwardEnable: false                                # Soft limit position fwd enable
+  forwardEnable: false                                # Enable forward soft limit
   backward: -100                                      # Soft limit position bwd
-  backwardEnable: false                               # Soft limit position bwd enable
+  backwardEnable: false                               # Enable backward soft limit
 
 monitoring:
   lag:
@@ -265,7 +272,7 @@ monitoring:
     enable: false                                     # Enable velocity monitoring
     max: 100                                          # Allowed max velocity
     time:
-      trajectory: 100                                 # Time allowed outside max velo before system init halt [cycles]
+      trajectory: 100                                 # Time allowed outside max velo before trajectory halt [cycles]
       drive: 200                                      # Time allowed outside max velo before system disables drive [cycles]
   velocityDifference:
     enable: true                                      # Enable velocity diff monitoring (velo set vs velo act)
@@ -281,17 +288,17 @@ monitoring:
 
 plc:
   enable: true                                        # Enable axis plc
-  externalCommands: true                              # Allow axis to inputs from PLC
+  externalCommands: true                              # Allow PLC to influence axis commands and setpoints (default false)
   file: myplcfile.plc                                 # File with plc code
   macros: 'MY_MACRO=1'                                # Optional macros passed while loading plc.file
   code:                                               # Sync code (appended after code in plc.file)
     - if(ax2.traj.source){ax2.drv.enable:=(ax10.drv.enable or ax11.drv.enable)}; # Enable axis if one of master axes is enabled
     - ax2.traj.setpos:=ax10.traj.setpos-ax11.traj.setpos/2; # calculate set pos for physical axis
-  velocity_filter:                                    # Filter used to smooth velocity feedforward
-    encoder:                                          # Filter plc enc velo
+  velocity_filter:                                    # Preferred filters for PLC-derived velocity feedforward
+    encoder:                                          # Filter velocity derived from external encoder position
       enable: false                                   # Filter enable
       size: 100                                       # Filter size
-    trajectory:                                       # Filter plc traj velo
+    trajectory:                                       # Filter velocity derived from external trajectory position
       enable: false                                   # Filter enable
       size: 100                                       # Filter size
 #  filter:                                            # Use "velocity_filter" instead since this naming is misleading and should be phased out
@@ -303,3 +310,9 @@ plc:
 #      size: 100
 
 ```
+
+## Compatibility and alternative settings
+
+Prefer the nested `encoder.homing` and `encoder.touchProbe` blocks shown above. Top-level `homing` and `touchProbe` are alternative forms; see the [settings reference]({{< relref "/manual/motion_cfg/axisYamlSettingsTable.md" >}}) and do not configure competing mappings for the same function.
+
+Use `encoder.filter.position` rather than the deprecated alias `encoder.filter.trajectory` (same `enable` and `size` keys). The older flat keys `encoder.velocityFilterSize`, `encoder.positionFilterSize` and `encoder.positionFilterEnable` are not effective filter configuration: Python discards them, while ECB still accepts them in its schema. Use the nested filter blocks instead.

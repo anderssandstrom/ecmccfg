@@ -91,15 +91,11 @@ ecmcEpicsEnvSetCalc("ECMC_TEMP_PERIOD_NANO_SECS",1000/${ECMC_EC_SAMPLE_RATE=1000
 # Peak current (to be overwritten by motor config)
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8011,0x11,100,4)"
 
-ecmcEpicsEnvSetCalc("ECMC_TEMP_WHATCHDOG_1",1000/${ECMC_EC_SAMPLE_RATE=1000}*1000)
-ecmcEpicsEnvSetCalc("ECMC_TEMP_WHATCHDOG_2",${ECMC_TEMP_WHATCHDOG_1}*10)
 
-ecmcConfigOrDie "Cfg.EcSlaveConfigWatchDog(${ECMC_EC_SLAVE_NUM},${ECMC_TEMP_WHATCHDOG_1},${ECMC_TEMP_WHATCHDOG_2})"
+${SCRIPTEXEC} ${ecmccfg_DIR}ecmcWatchDog.cmd
 
 epicsEnvUnset(ECMC_TEMP_PERIOD_NANO_SECS)
 epicsEnvUnset(ECMC_TEMP_PERIOD_NANO_SECS_HALF)
-epicsEnvUnset(ECMC_TEMP_WHATCHDOG_1)
-epicsEnvUnset(ECMC_TEMP_WHATCHDOG_2)
 
 #- Set 4000 ms delay of the EtherCAT bus at startup:
 #- Sometimes the Ex72xx-xxxx will not report a correct encoder signal when transitioning from PREOP to OP. This is not reflected in any status word or bit.

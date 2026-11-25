@@ -385,11 +385,11 @@ class OptTests(unittest.TestCase):
 
     def test_legacy_el7201_timing_and_watchdog(self):
         for rate, period in [(500, 2000000), (1000, 1000000)]:
-            for options, watchdog, shift in [({}, '2498,1000', 0),
+            for options, watchdog, shift in [({}, '2498,2000', 0),
                                       (dict(WATCHDOG_DIVIDER='2498',
                                             WATCHDOG_INTERVALS='500'), '2498,500', 0),
                                       (dict(SYNC_0_SHIFT=str(period // 2)),
-                                       '2498,1000', period // 2)]:
+                                       '2498,2000', period // 2)]:
                 with self.subTest(rate=rate, options=options):
                     startup = Startup.__new__(Startup)
                     startup.env = dict(SCRIPTEXEC='iocshLoad', ecmccfg_DIR='',
@@ -405,6 +405,15 @@ class OptTests(unittest.TestCase):
                     self.assertIn(f'Cfg.EcSlaveConfigWatchDog(13,{watchdog})',
                                   startup.commands)
 
+    def test_watchdog_default_independent_of_rate(self):
+        for model in MODELS:
+            for rate in (250, 500, 1000, 2000):
+                with self.subTest(model=model, rate=rate):
+                    startup = Startup(model, rate=rate)
+                    watchdog = [c for c in startup.commands
+                                if c.startswith('Cfg.EcSlaveConfigWatchDog(')]
+                    self.assertEqual(watchdog, ['Cfg.EcSlaveConfigWatchDog(1,2498,2000)'])
+
     def test_family_timing_and_overrides(self):
         for model in MODELS:
             startup = Startup(model, rate=2000)
@@ -414,7 +423,7 @@ class OptTests(unittest.TestCase):
             expected = ('62500,0,500000,0' if model.startswith('ELM') else
                         '500000,250000,0,0' if model == 'EL7201' else '500000,0,0,0')
             self.assertEqual(dc, f'Cfg.EcSlaveConfigDC(1,0x700,{expected})')
-            self.assertIn('Cfg.EcSlaveConfigWatchDog(1,500,5000)', startup.commands)
+            self.assertIn('Cfg.EcSlaveConfigWatchDog(1,2498,2000)', startup.commands)
             if model.startswith('ELM'):
                 self.assertFalse(any('0x8011,0x11' in x for x in startup.commands))
                 self.assertIn('Cfg.EcWriteSdo(1,0x8008,0x1,1,1)', startup.commands)

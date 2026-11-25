@@ -69,10 +69,8 @@ ecmcConfigOrDie "Cfg.EcSlaveConfigDC(${ECMC_EC_SLAVE_NUM},0x700,${ECMC_TEMP_PERI
 # Peak current (to be overwritten by motor config)
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8011,0x11,1000,4)"
 
-ecmcEpicsEnvSetCalc("ECMC_TEMP_WHATCHDOG_1",1000/${ECMC_EC_SAMPLE_RATE=1000}*1000)
-ecmcEpicsEnvSetCalc("ECMC_TEMP_WHATCHDOG_2",${ECMC_TEMP_WHATCHDOG_1}*10)
 
-ecmcConfigOrDie "Cfg.EcSlaveConfigWatchDog(${ECMC_EC_SLAVE_NUM},${ECMC_TEMP_WHATCHDOG_1},${ECMC_TEMP_WHATCHDOG_2})"
+${SCRIPTEXEC} ${ecmccfg_DIR}ecmcWatchDog.cmd
 
 #- NOTE: Sometimes the EP7211-0034 will not go to op with the following error in /var/log/messages:
 #- Sep  8 09:54:21 mcag-epics4 kernel: EtherCAT ERROR 0-40: SDO download 0x1C32:01 (2 bytes) aborted.
@@ -92,8 +90,6 @@ ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x1C33,0x2,${ECMC_TEMP_PERIOD
 
 epicsEnvUnset(ECMC_TEMP_PERIOD_NANO_SECS)
 epicsEnvUnset(ECMC_TEMP_PERIOD_NANO_SECS_HALF)
-epicsEnvUnset(ECMC_TEMP_WHATCHDOG_1)
-epicsEnvUnset(ECMC_TEMP_WHATCHDOG_2)
 
 #- Set 4000 ms delay of the EtherCAT bus at startup:
 #- Sometimes the Ex72xx-xxxx will not report a correct encoder signal when transitioning from PREOP to OP. This is not reflected in any status word or bit.

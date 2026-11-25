@@ -19,13 +19,15 @@ ecmcConfigOrDie "Cfg.SetAxisCntrlKp(${ECMC_AXIS_NO},{{ controllerKp }})"
     {%- if controller.Ki is defined %}
         ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify only one of controller.Ki and controller.TiMs.")
         ecmcExit
-    {%- elif controller.TiMs == 0 %}
+    {%- else %}
+    {%- if controller.TiMs == 0 %}
         ecmcConfigOrDie "Cfg.SetAxisCntrlKi(${ECMC_AXIS_NO},0)"
     {%- else %}
         epicsEnvUnset(ECMC_TMP_PID_KI)
         ecmcEpicsEnvSetCalc("ECMC_TMP_PID_KI", "{{ controllerKp }}*1000/({{ controller.TiMs }}*${ECMC_EC_SAMPLE_RATE})", "%.15g")
         ecmcConfigOrDie "Cfg.SetAxisCntrlKi(${ECMC_AXIS_NO},${ECMC_TMP_PID_KI})"
         epicsEnvUnset(ECMC_TMP_PID_KI)
+    {%- endif %}
     {%- endif %}
 {%- else %}
     ecmcConfigOrDie "Cfg.SetAxisCntrlKi(${ECMC_AXIS_NO},{{ controllerKi }})"
@@ -34,13 +36,15 @@ ecmcConfigOrDie "Cfg.SetAxisCntrlKp(${ECMC_AXIS_NO},{{ controllerKp }})"
     {%- if controller.Kd is defined %}
         ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify only one of controller.Kd and controller.TdMs.")
         ecmcExit
-    {%- elif controller.TdMs == 0 %}
+    {%- else %}
+    {%- if controller.TdMs == 0 %}
         ecmcConfigOrDie "Cfg.SetAxisCntrlKd(${ECMC_AXIS_NO},0)"
     {%- else %}
         epicsEnvUnset(ECMC_TMP_PID_KD)
         ecmcEpicsEnvSetCalc("ECMC_TMP_PID_KD", "{{ controllerKp }}*{{ controller.TdMs }}*${ECMC_EC_SAMPLE_RATE}/1000", "%.15g")
         ecmcConfigOrDie "Cfg.SetAxisCntrlKd(${ECMC_AXIS_NO},${ECMC_TMP_PID_KD})"
         epicsEnvUnset(ECMC_TMP_PID_KD)
+    {%- endif %}
     {%- endif %}
 {%- else %}
     ecmcConfigOrDie "Cfg.SetAxisCntrlKd(${ECMC_AXIS_NO},{{ controllerKd }})"
@@ -136,11 +140,13 @@ ecmcConfigOrDie "Cfg.SetAxisCntrlFreezeIAtRmp(${ECMC_AXIS_NO},{{ controller.free
             ecmcConfigOrDie "Cfg.SetAxisCntrlDeadbandTime(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
             epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
         {%- endif %}
-    {%- elif (controller.deadband is defined) and (controller.deadband.time is defined) %}
+    {%- else %}
+    {%- if (controller.deadband is defined) and (controller.deadband.time is defined) %}
         ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: controller.deadband.time uses cycles; prefer controller.deadband.timeMs in milliseconds (legacy syntax remains supported).")
         ecmcConfigOrDie "Cfg.SetAxisCntrlDeadbandTime(${ECMC_AXIS_NO},{{ controller.deadband.time }})"
     {%- else %}
         ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify controller.deadband.timeMs (milliseconds) or controller.deadband.time (cycles).")
         ecmcExit
+    {%- endif %}
     {%- endif %}
 {%- endif  %}

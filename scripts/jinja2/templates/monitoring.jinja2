@@ -17,11 +17,13 @@
                 ecmcConfigOrDie "Cfg.SetAxisMonPosLagTime(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
                 epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
             {%- endif %}
-        {%- elif (monitoring.lag is defined) and (monitoring.lag.time is defined) %}
+        {%- else %}
+        {%- if (monitoring.lag is defined) and (monitoring.lag.time is defined) %}
             ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: monitoring.lag.time uses cycles; prefer monitoring.lag.timeMs in milliseconds (legacy syntax remains supported).")
             ecmcConfigOrDie "Cfg.SetAxisMonPosLagTime(${ECMC_AXIS_NO},{{ monitoring.lag.time }})"
         {%- else %}
             ecmcConfigOrDie "Cfg.SetAxisMonPosLagTime(${ECMC_AXIS_NO},100)"
+        {%- endif %}
         {%- endif %}
     {%- else  %}
         {%- if (monitoring.lag is defined) and (monitoring.lag.time is defined) %}
@@ -49,12 +51,14 @@
                 ecmcConfigOrDie "Cfg.SetAxisMonAtTargetTime(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
                 epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
             {%- endif %}
-        {%- elif (monitoring.target is defined) and (monitoring.target.time is defined) %}
+        {%- else %}
+        {%- if (monitoring.target is defined) and (monitoring.target.time is defined) %}
             ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: monitoring.target.time uses cycles; prefer monitoring.target.timeMs in milliseconds (legacy syntax remains supported).")
             ecmcConfigOrDie "Cfg.SetAxisMonAtTargetTime(${ECMC_AXIS_NO},{{ monitoring.target.time }})"
         {%- else %}
             ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify monitoring.target.timeMs (milliseconds) or monitoring.target.time (cycles).")
             ecmcExit
+        {%- endif %}
         {%- endif %}
         {%- if monitoring.target.slaveControlDeadband is defined %}
             #- Tight, live master-axis band forwarded to slaves for reduced torque.
@@ -69,12 +73,14 @@
                     ecmcConfigOrDie "Cfg.SetAxisMonSlvCtrlDbTime(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
                     epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
                 {%- endif %}
-            {%- elif (monitoring.target is defined) and (monitoring.target.slaveControlDeadband is defined) and (monitoring.target.slaveControlDeadband.time is defined) %}
+            {%- else %}
+            {%- if (monitoring.target is defined) and (monitoring.target.slaveControlDeadband is defined) and (monitoring.target.slaveControlDeadband.time is defined) %}
                 ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: monitoring.target.slaveControlDeadband.time uses cycles; prefer monitoring.target.slaveControlDeadband.timeMs in milliseconds (legacy syntax remains supported).")
                 ecmcConfigOrDie "Cfg.SetAxisMonSlvCtrlDbTime(${ECMC_AXIS_NO},{{ monitoring.target.slaveControlDeadband.time }})"
             {%- else %}
                 ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify monitoring.target.slaveControlDeadband.timeMs (milliseconds) or monitoring.target.slaveControlDeadband.time (cycles).")
                 ecmcExit
+            {%- endif %}
             {%- endif %}
         {%- endif %}
     {%- else  %}
@@ -95,12 +101,14 @@
                 ecmcConfigOrDie "Cfg.SetAxisMonMaxVelTrajILDelay(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
                 epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
             {%- endif %}
-        {%- elif (monitoring.velocity is defined) and (monitoring.velocity.time is defined) and (monitoring.velocity.time.trajectory is defined) %}
+        {%- else %}
+        {%- if (monitoring.velocity is defined) and (monitoring.velocity.time is defined) and (monitoring.velocity.time.trajectory is defined) %}
             ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: monitoring.velocity.time.trajectory uses cycles; prefer monitoring.velocity.timeMs.trajectory in milliseconds (legacy syntax remains supported).")
             ecmcConfigOrDie "Cfg.SetAxisMonMaxVelTrajILDelay(${ECMC_AXIS_NO},{{ monitoring.velocity.time.trajectory }})"
         {%- else %}
             ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify monitoring.velocity.timeMs.trajectory (milliseconds) or monitoring.velocity.time.trajectory (cycles).")
             ecmcExit
+        {%- endif %}
         {%- endif %}
         {%- if (monitoring.velocity is defined) and (monitoring.velocity.timeMs is defined) and (monitoring.velocity.timeMs.drive is defined) %}
             {%- if (monitoring.velocity is defined) and (monitoring.velocity.time is defined) and (monitoring.velocity.time.drive is defined) %}
@@ -112,9 +120,11 @@
                 ecmcConfigOrDie "Cfg.SetAxisMonMaxVelDriveILDelay(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
                 epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
             {%- endif %}
-        {%- elif (monitoring.velocity is defined) and (monitoring.velocity.time is defined) and (monitoring.velocity.time.drive is defined) %}
+        {%- else %}
+        {%- if (monitoring.velocity is defined) and (monitoring.velocity.time is defined) and (monitoring.velocity.time.drive is defined) %}
             ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: monitoring.velocity.time.drive uses cycles; prefer monitoring.velocity.timeMs.drive in milliseconds (legacy syntax remains supported).")
             ecmcConfigOrDie "Cfg.SetAxisMonMaxVelDriveILDelay(${ECMC_AXIS_NO},{{ monitoring.velocity.time.drive }})"
+        {%- endif %}
         {%- endif %}
     {%- else %}
         ecmcConfigOrDie "Cfg.SetAxisMonEnableMaxVel(${ECMC_AXIS_NO},0)"
@@ -134,12 +144,14 @@
                 ecmcConfigOrDie "Cfg.SetAxisMonVelDiffTrajILDelay(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
                 epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
             {%- endif %}
-        {%- elif (monitoring.velocityDifference is defined) and (monitoring.velocityDifference.time is defined) and (monitoring.velocityDifference.time.trajectory is defined) %}
+        {%- else %}
+        {%- if (monitoring.velocityDifference is defined) and (monitoring.velocityDifference.time is defined) and (monitoring.velocityDifference.time.trajectory is defined) %}
             ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: monitoring.velocityDifference.time.trajectory uses cycles; prefer monitoring.velocityDifference.timeMs.trajectory in milliseconds (legacy syntax remains supported).")
             ecmcConfigOrDie "Cfg.SetAxisMonVelDiffTrajILDelay(${ECMC_AXIS_NO},{{ monitoring.velocityDifference.time.trajectory }})"
         {%- else %}
             ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify monitoring.velocityDifference.timeMs.trajectory (milliseconds) or monitoring.velocityDifference.time.trajectory (cycles).")
             ecmcExit
+        {%- endif %}
         {%- endif %}
         {%- if (monitoring.velocityDifference is defined) and (monitoring.velocityDifference.timeMs is defined) and (monitoring.velocityDifference.timeMs.drive is defined) %}
             {%- if (monitoring.velocityDifference is defined) and (monitoring.velocityDifference.time is defined) and (monitoring.velocityDifference.time.drive is defined) %}
@@ -151,9 +163,11 @@
                 ecmcConfigOrDie "Cfg.SetAxisMonVelDiffDriveILDelay(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
                 epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
             {%- endif %}
-        {%- elif (monitoring.velocityDifference is defined) and (monitoring.velocityDifference.time is defined) and (monitoring.velocityDifference.time.drive is defined) %}
+        {%- else %}
+        {%- if (monitoring.velocityDifference is defined) and (monitoring.velocityDifference.time is defined) and (monitoring.velocityDifference.time.drive is defined) %}
             ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: monitoring.velocityDifference.time.drive uses cycles; prefer monitoring.velocityDifference.timeMs.drive in milliseconds (legacy syntax remains supported).")
             ecmcConfigOrDie "Cfg.SetAxisMonVelDiffDriveILDelay(${ECMC_AXIS_NO},{{ monitoring.velocityDifference.time.drive }})"
+        {%- endif %}
         {%- endif %}
     {%- endif %}
 
@@ -169,9 +183,11 @@
                 ecmcConfigOrDie "Cfg.SetAxisMonStallMinTimeOut(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
                 epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
             {%- endif %}
-        {%- elif (monitoring.stall is defined) and (monitoring.stall.time is defined) and (monitoring.stall.time.timeout is defined) %}
+        {%- else %}
+        {%- if (monitoring.stall is defined) and (monitoring.stall.time is defined) and (monitoring.stall.time.timeout is defined) %}
             ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: monitoring.stall.time.timeout uses cycles; prefer monitoring.stall.time.timeoutMs in milliseconds (legacy syntax remains supported).")
             ecmcConfigOrDie "Cfg.SetAxisMonStallMinTimeOut(${ECMC_AXIS_NO},{{ monitoring.stall.time.timeout }})"
+        {%- endif %}
         {%- endif %}
         {%- if (monitoring.stall.time is defined) and (monitoring.stall.time.factor is defined) %}
             ecmcConfigOrDie "Cfg.SetAxisMonStallTimeFactor(${ECMC_AXIS_NO},{{ monitoring.stall.time.factor }})"

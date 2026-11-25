@@ -31,11 +31,13 @@ ecmcConfigOrDie "Cfg.SetAxisAllowCommandsFromPLC(${ECMC_AXIS_NO},{{ plc.external
             ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterSize(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
             epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
         {%- endif %}
-    {%- elif (plc.velocity_filter is defined) and (plc.velocity_filter.encoder is defined) and (plc.velocity_filter.encoder.size is defined) %}
+    {%- else %}
+    {%- if (plc.velocity_filter is defined) and (plc.velocity_filter.encoder is defined) and (plc.velocity_filter.encoder.size is defined) %}
         ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: plc.velocity_filter.encoder.size uses cycles; prefer plc.velocity_filter.encoder.timeMs in milliseconds (legacy syntax remains supported).")
         ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterSize(${ECMC_AXIS_NO},{{ plc.velocity_filter.encoder.size|default(1)|int }})"
     {%- else %}
         ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterSize(${ECMC_AXIS_NO},1)"
+    {%- endif %}
     {%- endif %}
     ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterEnable(${ECMC_AXIS_NO},{{ plc.velocity_filter.encoder.enable|default(0)|int }})"
 {%- else %}
@@ -52,11 +54,13 @@ ecmcConfigOrDie "Cfg.SetAxisAllowCommandsFromPLC(${ECMC_AXIS_NO},{{ plc.external
                 ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterSize(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
                 epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
             {%- endif %}
-        {%- elif (plc.filter is defined) and (plc.filter.velocity is defined) and (plc.filter.velocity.size is defined) %}
+        {%- else %}
+        {%- if (plc.filter is defined) and (plc.filter.velocity is defined) and (plc.filter.velocity.size is defined) %}
             ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: plc.filter.velocity.size uses cycles; prefer plc.filter.velocity.timeMs in milliseconds (legacy syntax remains supported).")
             ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterSize(${ECMC_AXIS_NO},{{ plc.filter.velocity.size }})"
         {%- else %}
             ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterSize(${ECMC_AXIS_NO},1)"
+        {%- endif %}
         {%- endif %}
         ecmcConfigOrDie "Cfg.SetAxisPLCEncVelFilterEnable(${ECMC_AXIS_NO},{{ plc.filter.velocity.enable|default(0)|int }})"
     {%- else %}
@@ -80,11 +84,13 @@ ecmcConfigOrDie "Cfg.SetAxisEncSourceType(${ECMC_AXIS_NO},{{ encoder.source|defa
             ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
             epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
         {%- endif %}
-    {%- elif (plc.velocity_filter is defined) and (plc.velocity_filter.trajectory is defined) and (plc.velocity_filter.trajectory.size is defined) %}
+    {%- else %}
+    {%- if (plc.velocity_filter is defined) and (plc.velocity_filter.trajectory is defined) and (plc.velocity_filter.trajectory.size is defined) %}
         ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: plc.velocity_filter.trajectory.size uses cycles; prefer plc.velocity_filter.trajectory.timeMs in milliseconds (legacy syntax remains supported).")
         ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},{{ plc.velocity_filter.trajectory.size|default(1)|int }})"
     {%- else %}
         ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},1)"
+    {%- endif %}
     {%- endif %}
     ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterEnable(${ECMC_AXIS_NO},{{ plc.velocity_filter.trajectory.enable|default(0)|int }})"
 {%- else %}
@@ -101,11 +107,13 @@ ecmcConfigOrDie "Cfg.SetAxisEncSourceType(${ECMC_AXIS_NO},{{ encoder.source|defa
                 ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
                 epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
             {%- endif %}
-        {%- elif (plc.filter is defined) and (plc.filter.position is defined) and (plc.filter.position.size is defined) %}
+        {%- else %}
+        {%- if (plc.filter is defined) and (plc.filter.position is defined) and (plc.filter.position.size is defined) %}
             ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: plc.filter.position.size uses cycles; prefer plc.filter.position.timeMs in milliseconds (legacy syntax remains supported).")
             ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},{{ plc.filter.position.size }})"
         {%- else %}
             ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},1)"
+        {%- endif %}
         {%- endif %}
         ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterEnable(${ECMC_AXIS_NO},{{ plc.filter.position.enable|default(0)|int }})"
     {%- else %}
@@ -122,11 +130,13 @@ ecmcConfigOrDie "Cfg.SetAxisEncSourceType(${ECMC_AXIS_NO},{{ encoder.source|defa
                     ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
                     epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
                 {%- endif %}
-            {%- elif (plc.filter is defined) and (plc.filter.trajectory is defined) and (plc.filter.trajectory.size is defined) %}
+            {%- else %}
+            {%- if (plc.filter is defined) and (plc.filter.trajectory is defined) and (plc.filter.trajectory.size is defined) %}
                 ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: plc.filter.trajectory.size uses cycles; prefer plc.filter.trajectory.timeMs in milliseconds (legacy syntax remains supported).")
                 ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},{{ plc.filter.trajectory.size }})"
             {%- else %}
                 ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterSize(${ECMC_AXIS_NO},1)"
+            {%- endif %}
             {%- endif %}
             ecmcConfigOrDie "Cfg.SetAxisPLCTrajVelFilterEnable(${ECMC_AXIS_NO},{{ plc.filter.trajectory.enable|default(0)|int }})"
         {%- else %}

@@ -48,7 +48,7 @@ ecmcEpicsEnvSetCalc("ECMC_TEMP_PERIOD_NANO_SECS",1000/${ECMC_EC_SAMPLE_RATE=1000
 # Peak current (to be overwritten by motor config)
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8011,0x11,1000,4)"
 
-#- Beckhoff default: (2498 + 2) * 40 ns * 1000 = 200 ms.
+#- Beckhoff default: (2498 + 2) * 40 ns * 2000 = 200 ms.
 #- Keep watchdog timing independent of the EtherCAT sample rate.
 ${SCRIPTEXEC} ${ecmccfg_DIR}ecmcWatchDog.cmd
 

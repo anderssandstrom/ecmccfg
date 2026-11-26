@@ -1,6 +1,9 @@
 # PLC compile-time metadata. Requests do not execute PLC code.
 # Write a positive request token, then process DiagStat and DiagData explicitly.
 # A positive matching status is success; a negative matching status is failure.
+# Requests across all PLCs share one IOC-wide one-second rate limit.
+# A rejected write leaves the previous response unchanged; retry after one second.
+# DiagData.NORD is the actual payload byte count (no terminator or padding).
 # No periodic scan, and no waveform interrupt callbacks.
 record(longout,"$(P)PLC$(Index2Char)-DiagCmd") {
   field(DESC,"PLC metadata request token")

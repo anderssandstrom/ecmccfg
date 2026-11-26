@@ -1,0 +1,24 @@
+# PLC compile-time metadata. Requests do not execute PLC code.
+# Write a positive request token, then process DiagStat and DiagData explicitly.
+# A positive matching status is success; a negative matching status is failure.
+# No periodic scan, and no waveform interrupt callbacks.
+record(longout,"$(P)PLC$(Index2Char)-DiagCmd") {
+  field(DESC,"PLC metadata request token")
+  field(DTYP,"asynInt32")
+  field(OUT,"@asyn($(PORT=ecmcRTLog),$(PLC_ID),1)RTLOG_PLC_DIAG_CMD")
+  field(DRVL,"1")
+  field(DRVH,"2147483647")
+}
+record(longin,"$(P)PLC$(Index2Char)-DiagStat") {
+  field(DESC,"PLC metadata request result")
+  field(DTYP,"asynInt32")
+  field(INP,"@asyn($(PORT=ecmcRTLog),$(PLC_ID),1)RTLOG_PLC_DIAG_STAT")
+}
+record(waveform,"$(P)PLC$(Index2Char)-DiagData") {
+  field(DESC,"PLC metadata payload")
+  field(DTYP,"asynInt8ArrayIn")
+  field(INP,"@asyn($(PORT=ecmcRTLog),$(PLC_ID),1)RTLOG_PLC_DIAG_DATA")
+  field(FTVL,"CHAR")
+  field(NELM,"65536")
+  field(SCAN,"Passive")
+}

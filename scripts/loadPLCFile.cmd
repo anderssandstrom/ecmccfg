@@ -65,6 +65,11 @@ system "rm -f ${ECMC_TMP_FILE}"
 ecmcFileExist(${SUBST_FILE="ecmcPlc.substitutions"},1,1)
 ecmcEpicsEnvSetCalc(ECMC_PLC_ID_2_CHARS, "${ECMC_PLC_ID}", "%02d")
 dbLoadTemplate(${SUBST_FILE="ecmcPlc.substitutions"}, "PORT=${ECMC_ASYN_PORT},A=0,P=${ECMC_PREFIX},Index=${ECMC_PLC_ID},Name=${ECMC_PREFIX},Index2Char=${ECMC_PLC_ID_2_CHARS},T_SMP_MS=${ECMC_SAMPLE_RATE_MS},PREV_OBJ_ID=${ECMC_PREV_PLC_OBJ_ID=-1}, DESC='${DESC=PLC_${ECMC_PLC_ID}}'")
+#- Read-only diagnostic payload via the separate RT logger port.
+#- Optional for installations using older ECMC versions.
+ecmcEpicsEnvSetCalcTernary(ECMC_EXE_PLC_DIAG,"${PLC_DIAG=1}=1","","#- ")
+${ECMC_EXE_PLC_DIAG}dbLoadRecords(ecmcPlcDiag.db,"P=${ECMC_PREFIX},Index2Char=${ECMC_PLC_ID_2_CHARS},PLC_ID=${ECMC_PLC_ID},PORT=ecmcRTLog")
+epicsEnvUnset(ECMC_EXE_PLC_DIAG)
 epicsEnvUnset(ECMC_PLC_ID_2_CHARS)
 
 #- Below for facilitate auto gui generation

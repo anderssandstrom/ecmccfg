@@ -1,9 +1,6 @@
-#- watchdog settings
-ecmcEpicsEnvSetCalc("ECMC_TEMP_WHATCHDOG_1",1000/${ECMC_EC_SAMPLE_RATE=1000}*1000)
-ecmcEpicsEnvSetCalc("ECMC_TEMP_WHATCHDOG_2",${ECMC_TEMP_WHATCHDOG_1}*10)
 
-ecmcConfigOrDie "Cfg.EcSlaveConfigWatchDog(${ECMC_EC_SLAVE_NUM},${WATCHDOG_DIVIDER=${ECMC_TEMP_WHATCHDOG_1}},${WATCHDOG_INTERVALS=${ECMC_TEMP_WHATCHDOG_2}})"
+#- Watchdog configuration.
+#- Default: 100 ms, independent of EtherCAT sample rate.
+#- Timeout = (divider + 2) * 40 ns * intervals.
 
-#- cleanup
-epicsEnvUnset(ECMC_TEMP_WHATCHDOG_1)
-epicsEnvUnset(ECMC_TEMP_WHATCHDOG_2)
+ecmcConfigOrDie "Cfg.EcSlaveConfigWatchDog(${ECMC_EC_SLAVE_NUM},${WATCHDOG_DIVIDER=2498},${WATCHDOG_INTERVALS=1000})"

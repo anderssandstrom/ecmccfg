@@ -119,3 +119,24 @@ def test_binary_integer_normalization_preserves_numeric_fields(myValidator):
     assert result['nested']['enabled'] is False
     assert type(result['nested']['bit']) is int
     assert result['nested']['bit'] == 1
+
+
+@pytest.mark.parametrize('section', ['drive', 'encoder'])
+@pytest.mark.parametrize('numerator,denominator', [
+    (1, 2),
+    (1.5, 2),
+    (1, 2.5),
+    (1.5, 2.5),
+])
+def test_axis_scaling_accepts_integer_and_float_values(section, numerator, denominator):
+    schema = getattr(ecmcYamlSchema.Schema, f'{section}Schema')
+    scaling_schema = {
+        key: schema['schema'][key]
+        for key in ('numerator', 'denominator')
+    }
+    validator = cerberus.Validator(scaling_schema)
+
+    assert validator.validate({
+        'numerator': numerator,
+        'denominator': denominator,
+    }), validator.errors

@@ -250,12 +250,12 @@
     "identifier": "drive",
     "schema": {
       "drive.numerator": {
-        "type": "integer float",
+        "type": "integer float string",
         "default": 0,
         "required": false
       },
       "drive.denominator": {
-        "type": "integer",
+        "type": "integer float",
         "default": 1,
         "min": 1,
         "required": false
@@ -390,7 +390,7 @@
         "required": false
       },
       "encoder.denominator": {
-        "type": "integer",
+        "type": "integer float string",
         "default": 1,
         "min": 1,
         "required": false

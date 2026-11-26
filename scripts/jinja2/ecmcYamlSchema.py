@@ -24,6 +24,11 @@ def normalize_boolean(value):
     return value
 
 
+_scale_macro_body = r'\w+(?:=[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)?'
+scale_macro = {'type': 'string',
+               'regex': rf'^\$(?:\{{{_scale_macro_body}\}}|\({_scale_macro_body}\))$'}
+
+
 class Schema:
     axisSchemaDict = {
         0: None,
@@ -261,8 +266,10 @@ class Schema:
         'type': 'dict',
         'required': True,
         'schema': {
-            'numerator': {'type': 'float', 'default': 0},
-            'denominator': {'type': 'integer', 'default': 1, 'min': 1},
+            'numerator': {'anyof': [
+                {'anyof_type': ['integer', 'float']}, scale_macro,
+            ], 'default': 0},
+            'denominator': {'anyof_type': ['integer', 'float'], 'default': 1, 'min': 1},
             'type': {'type': 'integer', 'default': 0, 'allowed': [0, 1]},
             'setpoint': {'required': True, 'type': 'string'},
             'control': {'required': True, 'type': 'string'},
@@ -337,11 +344,13 @@ class Schema:
         'schema': {
             'source': {'type': 'integer', 'allowed': [0, 1], 'default': 0},
             'numerator': {'oneof': [
-                {'type': 'float'},
+                {'anyof_type': ['integer', 'float']},
                 {'type': 'string', 'regex': r'^\$(\{|\()\w*(=\d*(\.\d*)?)?(\}|\))$'}
                 ], 'default': 0.0
             },
-            'denominator': {'type': 'integer', 'default': 1, 'min': 1},
+            'denominator': {'anyof': [
+                {'anyof_type': ['integer', 'float'], 'min': 1}, scale_macro,
+            ], 'default': 1},
             'type': {'type': 'integer', 'allowed': [0, 1], 'default': 0},
             'mask': {'type': 'string'},
             'bits': {'type': 'integer', 'min': 0, 'max': 64, 'default': 16},

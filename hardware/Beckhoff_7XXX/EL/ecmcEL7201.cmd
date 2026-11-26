@@ -4,7 +4,7 @@
 #-d   \author Anders Sandstroem
 #-d   \file
 #-d   \param WATCHDOG_DIVIDER Watchdog divider, default 2498 (100 us tick)
-#-d   \param WATCHDOG_INTERVALS Watchdog intervals, default 1000 (100 ms)
+#-d   \param WATCHDOG_INTERVALS Watchdog intervals, default 2000 (200 ms)
 #-d   \note SDOS
 #-d   \param [out] SDO 0x1011:01 --> 1684107116 \b reset
 #-d */
@@ -48,9 +48,9 @@ ecmcEpicsEnvSetCalc("ECMC_TEMP_PERIOD_NANO_SECS",1000/${ECMC_EC_SAMPLE_RATE=1000
 # Peak current (to be overwritten by motor config)
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8011,0x11,1000,4)"
 
-#- Beckhoff default: (2498 + 2) * 40 ns * 1000 = 100 ms.
+#- Beckhoff default: (2498 + 2) * 40 ns * 2000 = 200 ms.
 #- Keep watchdog timing independent of the EtherCAT sample rate.
-ecmcConfigOrDie "Cfg.EcSlaveConfigWatchDog(${ECMC_EC_SLAVE_NUM},${WATCHDOG_DIVIDER=2498},${WATCHDOG_INTERVALS=1000})"
+${SCRIPTEXEC} ${ecmccfg_DIR}ecmcWatchDog.cmd
 
 #- Sync mode
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x1C32,0x1,3,2)"

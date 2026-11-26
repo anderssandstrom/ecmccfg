@@ -94,11 +94,13 @@ ecmcConfigOrDie "Cfg.SetAxisEncOffset(${ECMC_AXIS_NO},{{ encoder.absOffset }})"
                 ecmcConfigOrDie "Cfg.SetAxisEncVelFilterSize(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
                 epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
             {%- endif %}
-        {%- elif (encoder.filter is defined) and (encoder.filter.velocity is defined) and (encoder.filter.velocity.size is defined) %}
+        {%- else %}
+        {%- if (encoder.filter is defined) and (encoder.filter.velocity is defined) and (encoder.filter.velocity.size is defined) %}
             ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: encoder.filter.velocity.size uses cycles; prefer encoder.filter.velocity.timeMs in milliseconds (legacy syntax remains supported).")
             ecmcConfigOrDie "Cfg.SetAxisEncVelFilterSize(${ECMC_AXIS_NO},{{ encoder.filter.velocity.size }})"
         {%- else %}
             ecmcConfigOrDie "Cfg.SetAxisEncVelFilterSize(${ECMC_AXIS_NO},100)"
+        {%- endif %}
         {%- endif %}
         ecmcConfigOrDie "Cfg.SetAxisEncVelFilterEnable(${ECMC_AXIS_NO},{{ encoder.filter.velocity.enable|default(1)|int }})"
     {%- endif %}
@@ -116,11 +118,13 @@ ecmcConfigOrDie "Cfg.SetAxisEncOffset(${ECMC_AXIS_NO},{{ encoder.absOffset }})"
                 ecmcConfigOrDie "Cfg.SetAxisEncPosFilterSize(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
                 epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
             {%- endif %}
-        {%- elif (encoder.filter is defined) and (encoder.filter.trajectory is defined) and (encoder.filter.trajectory.size is defined) %}
+        {%- else %}
+        {%- if (encoder.filter is defined) and (encoder.filter.trajectory is defined) and (encoder.filter.trajectory.size is defined) %}
             ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: encoder.filter.trajectory.size uses cycles; prefer encoder.filter.trajectory.timeMs in milliseconds (legacy syntax remains supported).")
             ecmcConfigOrDie "Cfg.SetAxisEncPosFilterSize(${ECMC_AXIS_NO},{{ encoder.filter.trajectory.size }})"
         {%- else %}
             ecmcConfigOrDie "Cfg.SetAxisEncPosFilterSize(${ECMC_AXIS_NO},10)"
+        {%- endif %}
         {%- endif %}
     {%- endif %}
     #- "encoder.filter.position" is a duplicate to "encoder.filter.trajectory" but better name
@@ -136,11 +140,13 @@ ecmcConfigOrDie "Cfg.SetAxisEncOffset(${ECMC_AXIS_NO},{{ encoder.absOffset }})"
                 ecmcConfigOrDie "Cfg.SetAxisEncPosFilterSize(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES})"
                 epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
             {%- endif %}
-        {%- elif (encoder.filter is defined) and (encoder.filter.position is defined) and (encoder.filter.position.size is defined) %}
+        {%- else %}
+        {%- if (encoder.filter is defined) and (encoder.filter.position is defined) and (encoder.filter.position.size is defined) %}
             ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: encoder.filter.position.size uses cycles; prefer encoder.filter.position.timeMs in milliseconds (legacy syntax remains supported).")
             ecmcConfigOrDie "Cfg.SetAxisEncPosFilterSize(${ECMC_AXIS_NO},{{ encoder.filter.position.size }})"
         {%- else %}
             ecmcConfigOrDie "Cfg.SetAxisEncPosFilterSize(${ECMC_AXIS_NO},10)"
+        {%- endif %}
         {%- endif %}
     {%- endif %}
 {%- endif %}
@@ -272,12 +278,14 @@ epicsEnvSet(ENC_EGU,'{{ encoderUnit }}')
             ecmcConfigOrDie "Cfg.SetAxisEncDelayCyclesAndEnable(${ECMC_AXIS_NO},${ECMC_TMP_TIME_CYCLES},{{ encoder.delayComp.enable|default(1)|int }})"
             epicsEnvUnset(ECMC_TMP_TIME_CYCLES)
         {%- endif %}
-    {%- elif (encoder.delayComp is defined) and (encoder.delayComp.time is defined) %}
+    {%- else %}
+    {%- if (encoder.delayComp is defined) and (encoder.delayComp.time is defined) %}
         ecmcLogBufferWrite("WARNING","Axis ${ECMC_AXIS_NO}: encoder.delayComp.time uses cycles; prefer encoder.delayComp.timeMs in milliseconds (legacy syntax remains supported).")
         ecmcConfigOrDie "Cfg.SetAxisEncDelayCyclesAndEnable(${ECMC_AXIS_NO},{{ encoder.delayComp.time }},{{ encoder.delayComp.enable|default(1)|int }})"
     {%- else %}
         ecmcLogBufferWrite("ERROR","Axis ${ECMC_AXIS_NO}: Specify encoder.delayComp.timeMs (milliseconds) or encoder.delayComp.time (cycles).")
         ecmcExit
+    {%- endif %}
     {%- endif %}
 {%- endif %}
 

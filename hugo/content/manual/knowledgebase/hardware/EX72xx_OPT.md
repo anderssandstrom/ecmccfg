@@ -178,8 +178,10 @@ wrappers do not enable this check.
 
 All wrappers accept `SYNC_0_CYCLE`, `SYNC_0_SHIFT`, `SYNC_1_CYCLE` and
 `SYNC_1_SHIFT` overrides in ns. ELM timing does not issue EL-specific `0x1C32:02`
-and `0x1C33:02` cycle-time SDOs. The watchdog helper retains its sample-rate-based
-defaults and accepts `WATCHDOG_DIVIDER` and `WATCHDOG_INTERVALS`. The existing
+and `0x1C33:02` cycle-time SDOs. The watchdog helper defaults to a fixed 200 ms timeout (divider 2498, intervals 2000),
+independent of the EtherCAT sample rate, and accepts `WATCHDOG_DIVIDER` and
+`WATCHDOG_INTERVALS`. This replaces the previous sample-rate-dependent timeout;
+communication interruptions may therefore be detected sooner at lower sample rates. The existing
 `ECMC_EC_STARTUP_DELAY_EL72XX` startup-delay setting is retained.
 
 ## Extending a family

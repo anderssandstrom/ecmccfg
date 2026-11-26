@@ -128,8 +128,8 @@ epicsEnvSet(ECMC_MR_DCOF,0)
 {% endif %}
 
 {%- if drive is defined %}
-    ecmcEpicsEnvSetCalc(ECMC_TEMP_SREV,'abs({{ drive.denominator|default(1)|int }})')
-    ecmcEpicsEnvSetCalc(ECMC_TEMP_UREV,'abs({{ drive.numerator|default(1) }})')
+    ecmcEpicsEnvSetCalc(ECMC_TEMP_SREV,"abs({{ drive.denominator|default(1) }})")
+    ecmcEpicsEnvSetCalc(ECMC_TEMP_UREV,"abs({{ drive.numerator|default(1) }})")
 {%- else %}
     ecmcEpicsEnvSetCalc(ECMC_TEMP_SREV,'abs(1)')
     ecmcEpicsEnvSetCalc(ECMC_TEMP_UREV,'abs(1)')

@@ -1,24 +1,25 @@
-# PLC compile-time metadata. Requests do not execute PLC code.
-# Write a positive request token, then process DiagStat and DiagData explicitly.
-# A positive matching status is success; a negative matching status is failure.
+# PLC diagnostics: positive command tokens request compiled metadata.
+# Negative command tokens request bounded variable snapshots (low six bits of magnitude select page).
+# Process DiagStat and DiagData explicitly. Matching status identifies a completed response.
+# For negative commands, status zero means pending or unavailable; verify the waveform header.
 # Requests across all PLCs share one IOC-wide one-second rate limit.
 # A rejected write leaves the previous response unchanged; retry after one second.
 # DiagData.NORD is the actual payload byte count (no terminator or padding).
 # No periodic scan, and no waveform interrupt callbacks.
 record(longout,"$(P)PLC$(Index2Char)-DiagCmd") {
-  field(DESC,"PLC metadata request token")
+  field(DESC,"PLC diagnostic request token")
   field(DTYP,"asynInt32")
   field(OUT,"@asyn($(PORT=ecmcRTLog),$(PLC_ID),1)RTLOG_PLC_DIAG_CMD")
-  field(DRVL,"1")
+  field(DRVL,"-2147483647")
   field(DRVH,"2147483647")
 }
 record(longin,"$(P)PLC$(Index2Char)-DiagStat") {
-  field(DESC,"PLC metadata request result")
+  field(DESC,"PLC diagnostic request result")
   field(DTYP,"asynInt32")
   field(INP,"@asyn($(PORT=ecmcRTLog),$(PLC_ID),1)RTLOG_PLC_DIAG_STAT")
 }
 record(waveform,"$(P)PLC$(Index2Char)-DiagData") {
-  field(DESC,"PLC metadata payload")
+  field(DESC,"PLC diagnostic payload")
   field(DTYP,"asynInt8ArrayIn")
   field(INP,"@asyn($(PORT=ecmcRTLog),$(PLC_ID),1)RTLOG_PLC_DIAG_DATA")
   field(FTVL,"CHAR")

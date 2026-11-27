@@ -53,3 +53,11 @@ record(bi,"${ECMC_P}CfgEncoderStatus${CFG_SUFFIX=}") {
   field(ZNAM,"Not mapped")
   field(ONAM,"Mapped")
 }
+
+#- Static resolved metadata, no device support or periodic processing.
+record(lsi,"${ECMC_P}HWOptions${CFG_SUFFIX=}") {
+  field(DESC,"Resolved hardware options")
+  field(SIZV,"256")
+  field(VAL,"v=1;Mode=${CFG_MODE};Info2=${CFG_INFO2};TouchProbe=${CFG_TP};Diagnostics=${CFG_DIAG};TorqueOffset=${CFG_OFFSET};FollowingError=${CFG_FOLLOWING};EncoderStatus=${CFG_ENCODER_STATUS}")
+  field(UDF,"0")
+}

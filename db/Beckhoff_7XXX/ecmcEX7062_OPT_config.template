@@ -49,10 +49,3 @@ record(bi,"${ECMC_P}CfgFollowingError${CFG_SUFFIX=}") {
   field(ONAM,"Mapped")
 }
 
-#- Static resolved metadata, no device support or periodic processing.
-record(lsi,"${ECMC_P}HWOptions${CFG_SUFFIX=}") {
-  field(DESC,"Resolved hardware options")
-  field(SIZV,"256")
-  field(VAL,"v=1;Mode=${MODE_VALUE};TouchProbe=${TP};Inputs=${INPUTS};Encoder2=${ENC2};Diagnostics=${EXT_DIAG};TpDc=${TP_DC};AutoTune=${AUTOTUNE};FollowingError=${FOLLOWING}")
-  field(UDF,"0")
-}

@@ -231,3 +231,11 @@ record(stringin,"$(ECMC_P)PnlTyp") {
   field(DESC, "Default panel type")
   field(VAL,  "${PANEL=GenericSlave}")
 }
+
+#- Static resolved options, empty for ordinary hardware.
+record(lsi,"${ECMC_P}HWOptions") {
+  field(DESC,"Resolved hardware options")
+  field(SIZV,"1024")
+  field(VAL,"${HWOptions=}")
+  field(UDF,"0")
+}

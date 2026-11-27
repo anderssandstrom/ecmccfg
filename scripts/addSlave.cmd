@@ -46,6 +46,7 @@ epicsEnvUnset(ECMC_ADD_SLAVE_INVALID_CONFIG)
 
 #-Clear panel data (ensure new)
 epicsEnvUnset(ECMC_HW_PANEL)
+epicsEnvSet(ECMC_HW_OPTIONS, "")
 
 epicsEnvSet("ECMC_EC_SLAVE_NUM",  "${SLAVE_ID=0}")
 epicsEnvSet("HW_DESC",            "${HW_DESC}")
@@ -84,6 +85,7 @@ ecmcEpicsEnvSetCalcTernary(ECMC_SIM_META_CMD, "${ECMC_SIM=0}=1", "", "#-")
 ${ECMC_SIM_META_CMD}${DEFAULT_SLAVE_PVS}dbLoadRecords("ecmcSimulationSlaveAliases.db","SOURCE_P=${ECMC_P},SIM_P=${ECMC_SIM_PREFIX=${ECMC_PREFIX}SIM:},MASTER_ID=${ECMC_EC_MASTER_ID},SLAVE_POS=${ECMC_EC_SLAVE_NUM}")
 epicsEnvUnset(ECMC_SIM_META_CMD)
 epicsEnvUnset(DEFAULT_SLAVE_PVS)
+epicsEnvUnset(ECMC_HW_OPTIONS)
 
 #- Do not set NxtSlv "pointer" if this is the first slave (ECMC_EC_PREVIOUS_SLAVE==-1)
 ecmcEpicsEnvSetCalcTernary(ECMC_EXE_NEXT_SLV,"${ECMC_EC_PREV_SLAVE_NUM=-1}>=0", "","#- ")
